@@ -52,6 +52,9 @@ export default class ListRecordState extends BaseClass {
         eventManager.set("visibility", () => {
             this.#updateVisibility();
         });
+        this.addEventListener("visible", () => {
+            this.#updateVisibility();
+        });
         this.#updateVisibility();
     }
 
