@@ -1,0 +1,28 @@
+{
+  "name": "gametrackerjs",
+  "version": "0.0.1",
+  "description": "Framework for GameTrackers",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/gametrackerjs/emcjs.git"
+  },
+  "author": "Denis Peters (ZidArgs)",
+  "license": "MIT",
+  "peerDependencies": {
+    "emcjs": "git+https://bitbucket.org/zidargs/emcjs.git#0.4.35"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.10",
+    "@babel/eslint-parser": "^7.16.5",
+    "@babel/plugin-syntax-top-level-await": "^7.14.5",
+    "eslint": "^8.0.0"
+  },
+  "exports": {
+    "./*": "./src/*"
+  },
+  "scripts": {
+    "lint": "yarn eslint .",
+    "lintfix": "yarn eslint --fix ."
+  }
+}
