@@ -21,7 +21,7 @@ class Language {
     }
 
     getLanguages() {
-        return i18n.getLanguages();
+        return I18n.getLanguages();
     }
 
     translate(index) {
