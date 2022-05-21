@@ -1,6 +1,6 @@
 // frameworks
 import Import from "/emcJS/util/import/Import.js";
-import Path from "/emcJS/util/Path.js";
+import Path from "/emcJS/util/file/Path.js";
 
 const path = new Path(import.meta.url);
 

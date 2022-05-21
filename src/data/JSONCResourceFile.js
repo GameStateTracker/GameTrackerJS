@@ -1,5 +1,5 @@
 // frameworks
-import FileLoader from "/emcJS/util/FileLoader.js";
+import FileLoader from "/emcJS/util/file/FileLoader.js";
 
 const PROXY_HANDLER = {
     get(target, key) {
