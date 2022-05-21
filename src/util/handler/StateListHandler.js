@@ -56,18 +56,15 @@ export default class StateListHandler extends EventTarget {
         super();
         INSTANCES.set(ref, this);
         /* --- */
-        this.#ref = ref;
-        setTimeout(() => {
-            this.#generateList(list);
-        }, 0);
-
-        /* --- */
         detachedEntrancesObserver.addEventListener("change", () => {
             this.#refreshAccess();
         });
+        /* --- */
+        this.#ref = ref;
+        this.#generateList(list);
     }
 
-    #generateList(list) {
+    #generateList = debounce((list) => {
         if (list != null) {
             for (const idx in list) {
                 const record = list[idx];
@@ -110,7 +107,7 @@ export default class StateListHandler extends EventTarget {
         this.#setVisibility(!!this.#filteredEntityList.size);
         this.#notifyListChange();
         this.#refreshAccess();
-    }
+    });
 
     #notifyListChange = debounce(() => {
         const event = new Event("change");

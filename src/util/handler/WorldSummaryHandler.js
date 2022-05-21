@@ -1,4 +1,7 @@
 // frameworks
+import {
+    debounce
+} from "/emcJS/util/Debouncer.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import Helper from "/emcJS/util/helper/Helper.js";
 
@@ -33,12 +36,10 @@ export default class WorldSummaryHandler extends EventTarget {
         super();
         instance = this;
         /* --- */
-        setTimeout(() => {
-            this.#generateList();
-        }, 0);
+        this.#generateList();
     }
 
-    #generateList() {
+    #generateList = debounce(() => {
         let idx = 0;
         for (const [key] of LocationStateManager) {
             const record = {
@@ -72,7 +73,7 @@ export default class WorldSummaryHandler extends EventTarget {
         }
         /* --- */
         this.#refreshAccess();
-    }
+    });
 
     #setAccess(value) {
         if (value != null) {

@@ -112,7 +112,7 @@ export default class WorldMap extends BaseClass {
                 viewEl.setZoom(zoom - delta, anchorX, anchorY);
             }
             // event.stopPropagation();
-        }, {capture: true});
+        }, {capture: true, passive: true});
     }
 
     connectedCallback() {

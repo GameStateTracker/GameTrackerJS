@@ -1,4 +1,7 @@
 // frameworks
+import {
+    debounce
+} from "/emcJS/util/Debouncer.js";
 import LogicGraph from "/emcJS/util/graph/LogicGraph.js";
 
 import SettingsObserver from "../observer/SettingsObserver.js";
@@ -6,7 +9,6 @@ import SettingsObserver from "../observer/SettingsObserver.js";
 const logicDebugObserver = new SettingsObserver("debug_logic");
 
 const LOGIC_PROCESSOR = new LogicGraph(logicDebugObserver.value != "off" && logicDebugObserver.value);
-const CALL_TIMERS = new Map();
 
 logicDebugObserver.addEventListener("change", event => {
     LOGIC_PROCESSOR.debug = event.value != "off" && event.value;
@@ -14,22 +16,21 @@ logicDebugObserver.addEventListener("change", event => {
 
 class TrackerLogic extends EventTarget {
 
+    #callLogic = debounce((root) => {
+        const data = LOGIC_PROCESSOR.traverse(root);
+        if (Object.keys(data).length > 0) {
+            const ev = new Event("change");
+            ev.data = data;
+            this.dispatchEvent(ev);
+        }
+    });
+
     setLogic(logic, root) {
         if (logic) {
             LOGIC_PROCESSOR.clearGraph();
             LOGIC_PROCESSOR.load(logic);
             if (root != null) {
-                if (!CALL_TIMERS.has(root)) {
-                    CALL_TIMERS.set(root, setTimeout(() => {
-                        const data = LOGIC_PROCESSOR.traverse(root);
-                        if (Object.keys(data).length > 0) {
-                            const ev = new Event("change");
-                            ev.data = data;
-                            this.dispatchEvent(ev);
-                        }
-                        CALL_TIMERS.delete(root);
-                    }, 0));
-                }
+                this.#callLogic(root);
             }
         }
     }
@@ -37,17 +38,7 @@ class TrackerLogic extends EventTarget {
     clearRedirects(root) {
         LOGIC_PROCESSOR.clearRedirects();
         if (root != null) {
-            if (!CALL_TIMERS.has(root)) {
-                CALL_TIMERS.set(root, setTimeout(() => {
-                    const data = LOGIC_PROCESSOR.traverse(root);
-                    if (Object.keys(data).length > 0) {
-                        const ev = new Event("change");
-                        ev.data = data;
-                        this.dispatchEvent(ev);
-                    }
-                    CALL_TIMERS.delete(root);
-                }, 0));
-            }
+            this.#callLogic(root);
         }
     }
 
@@ -56,17 +47,7 @@ class TrackerLogic extends EventTarget {
             LOGIC_PROCESSOR.setAllRedirects(redirects);
         }
         if (root != null) {
-            if (!CALL_TIMERS.has(root)) {
-                CALL_TIMERS.set(root, setTimeout(() => {
-                    const data = LOGIC_PROCESSOR.traverse(root);
-                    if (Object.keys(data).length > 0) {
-                        const ev = new Event("change");
-                        ev.data = data;
-                        this.dispatchEvent(ev);
-                    }
-                    CALL_TIMERS.delete(root);
-                }, 0));
-            }
+            this.#callLogic(root);
         }
     }
 
@@ -86,17 +67,7 @@ class TrackerLogic extends EventTarget {
         if (data) {
             LOGIC_PROCESSOR.setAll(data);
             if (root != null) {
-                if (!CALL_TIMERS.has(root)) {
-                    CALL_TIMERS.set(root, setTimeout(() => {
-                        const data = LOGIC_PROCESSOR.traverse(root);
-                        if (Object.keys(data).length > 0) {
-                            const ev = new Event("change");
-                            ev.data = data;
-                            this.dispatchEvent(ev);
-                        }
-                        CALL_TIMERS.delete(root);
-                    }, 0));
-                }
+                this.#callLogic(root);
             }
         }
     }
