@@ -1,5 +1,5 @@
 // frameworks
-import IDBStorage from "/emcJS/storage/IDBStorage.js";
+import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
 import DateUtil from "/emcJS/util/DateUtil.js";
 
 import VersionData from "../data/VersionData.js";

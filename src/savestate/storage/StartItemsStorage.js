@@ -1,10 +1,10 @@
 // frameworks
-import DataStorage from "/emcJS/datastorage/DataStorage.js";
+import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
 
 import {
     parseSafeRange
 } from "../../util/helper/ItemHelper.js";
-import ItemsResource from "../../resource/ItemsResource.js";
+import ItemsResource from "../../data/resource/ItemsResource.js";
 
 const MAX = new Map();
 
@@ -12,7 +12,7 @@ for (const [key, value] of Object.entries(ItemsResource.get())) {
     MAX.set(key, parseSafeRange(value.max, 0));
 }
 
-class StartItemsStorage extends DataStorage {
+class StartItemsStorage extends ObservableStorage {
 
     set(key, value) {
         const parsedValue = parseSafeRange(value);

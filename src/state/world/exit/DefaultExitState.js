@@ -6,7 +6,7 @@ import {
     debounce
 } from "/emcJS/util/Debouncer.js";
 import Helper from "/emcJS/util/helper/Helper.js";
-import DataStorageValueObserver from "/emcJS/datastorage/DataStorageValueObserver.js";
+import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
 
 import Savestate from "../../../savestate/Savestate.js";
 import OptionsObserver from "../../../util/observer/OptionsObserver.js";
@@ -130,7 +130,7 @@ export default class DefaultExitState extends BaseClass {
         const logicAccess = props.logicAccess;
         this.#access = getLogicAccess(logicAccess);
 
-        const exitBindingsObserver = new DataStorageValueObserver(STORAGES.exitBindings, ref, "");
+        const exitBindingsObserver = new ObservableStorageObserver(STORAGES.exitBindings, ref);
         this.#value = exitBindingsObserver.value;
         exitBindingsObserver.addEventListener("change", (event) => {
             this.value = event.value;

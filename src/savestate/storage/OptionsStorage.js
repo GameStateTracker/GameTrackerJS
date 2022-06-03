@@ -1,7 +1,7 @@
 // frameworks
-import DataStorage from "/emcJS/datastorage/DataStorage.js";
+import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
 
-import OptionsResource from "../../resource/OptionsResource.js";
+import OptionsResource from "../../data/resource/OptionsResource.js";
 
 const SET_TYPES = [
     "list",
@@ -21,7 +21,7 @@ for (const [key, value] of Object.entries(OptionsResource.get())) {
     }
 }
 
-class OptionsStorage extends DataStorage {
+class OptionsStorage extends ObservableStorage {
 
     set(key, value) {
         if (DEFAULTS.has(key)) {

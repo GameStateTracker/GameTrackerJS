@@ -1,4 +1,4 @@
-import ItemsRecource from "../../resource/ItemsResource.js";
+import ItemsRecource from "../../data/resource/ItemsResource.js";
 import AbstractStateManager from "../../statemanager/AbstractStateManager.js";
 import DefaultItemState from "./DefaultState.js";
 

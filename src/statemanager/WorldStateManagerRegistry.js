@@ -1,4 +1,4 @@
-import WorldResource from "../resource/WorldResource.js";
+import WorldResource from "../data/resource/WorldResource.js";
 import {
     emptyState
 } from "../state/world/EmptyState.js";

@@ -1,7 +1,7 @@
 // frameworks
-import DataStorage from "/emcJS/datastorage/DataStorage.js";
+import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
 
-import FilterResource from "../../resource/FilterResource.js";
+import FilterResource from "../../data/resource/FilterResource.js";
 
 const DEFAULTS = new Map();
 const PERSISTED = new Set();
@@ -13,7 +13,7 @@ for (const [key, value] of Object.entries(FilterResource.get())) {
     }
 }
 
-class FilterStorage extends DataStorage {
+class FilterStorage extends ObservableStorage {
 
     constructor() {
         super();

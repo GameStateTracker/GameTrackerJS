@@ -3,7 +3,6 @@ import {
     mix
 } from "/emcJS/util/Mixin.js";
 
-import AccessStateEnum from "../../../../../enum/AccessStateEnum.js";
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
 import WorldListButton from "./Button.js";
@@ -24,8 +23,8 @@ export default class WorldListStateButton extends BaseClass {
     applyStateValues(state) {
         /* access */
         const access = this.getStateAccess(state);
-        const accessValue = AccessStateEnum.getName(access.value);
-        this.applyAccess(accessValue.toLowerCase(), access);
+        const accessValue = access.value;
+        this.applyAccess(("" + accessValue).toLowerCase(), access);
     }
 
     getStateAccess(state) {

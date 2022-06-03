@@ -5,7 +5,7 @@ import {
     mix
 } from "/emcJS/util/Mixin.js";
 import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
-import EventTargetMixin from "/emcJS/ui/mixin/EventTargetMixin.js";
+import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
 
 import Savestate from "../../savestate/Savestate.js";
 import Language from "../../util/Language.js";
@@ -30,7 +30,7 @@ const SELECT_EL = new WeakMap();
 const BaseClass = mix(
     ContextMenu
 ).with(
-    EventTargetMixin
+    EventTargetListenerElementMixin
 );
 
 export default class ExitBindingContextMenu extends BaseClass {

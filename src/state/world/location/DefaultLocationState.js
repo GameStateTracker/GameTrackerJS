@@ -5,7 +5,7 @@ import {
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
-import DataStorageValueObserver from "/emcJS/datastorage/DataStorageValueObserver.js";
+import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
 import Helper from "/emcJS/util/helper/Helper.js";
 
 import Savestate from "../../../savestate/Savestate.js";
@@ -76,13 +76,13 @@ export default class DefaultLocationState extends BaseClass {
         super(ref, props);
 
         /* VALUES */
-        const locationsObserver = new DataStorageValueObserver(STORAGES.locations, ref, false);
+        const locationsObserver = new ObservableStorageObserver(STORAGES.locations, ref);
         this.#value = locationsObserver.value;
         locationsObserver.addEventListener("change", (event) => {
             this.value = event.value;
         });
 
-        const locationItemsObserver = new DataStorageValueObserver(STORAGES.locationItems, ref, "");
+        const locationItemsObserver = new ObservableStorageObserver(STORAGES.locationItems, ref);
         this.#item = locationItemsObserver.value;
         locationItemsObserver.addEventListener("change", (event) => {
             this.item = event.value;

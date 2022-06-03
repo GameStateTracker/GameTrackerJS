@@ -4,8 +4,8 @@ import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import Panel from "/emcJS/ui/layout/Panel.js";
 
 // GameTrackerJS
-import GridsResource from "../../../resource/GridsResource.js";
-import ItemsResource from "../../../resource/ItemsResource.js";
+import GridsResource from "../../../data/resource/GridsResource.js";
+import ItemsResource from "../../../data/resource/ItemsResource.js";
 import UIRegistry from "../../../registry/UIRegistry.js";
 import "./components/entries/Item.js";
 import "./components/entries/ProgressiveItem.js";

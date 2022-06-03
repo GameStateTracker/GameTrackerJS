@@ -1,5 +1,5 @@
 // frameworks
-import IDBProxyStorage from "/emcJS/datastorage/IDBProxyStorage.js";
+import IDBProxyStorage from "/emcJS/data/storage/observable/ObservableIDBProxyStorage.js";
 
 // TODO sync data to other page instances
 

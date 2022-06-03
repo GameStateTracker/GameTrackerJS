@@ -2,30 +2,7 @@
 import FileLoader from "/emcJS/util/file/FileLoader.js";
 import DateUtil from "/emcJS/util/DateUtil.js";
 import Helper from "/emcJS/util/helper/Helper.js";
-
-const REQUEST_OS_DATA = ["platform", "platformVersion"];
-
-function getOSData() {
-    return new Promise(resolve => {
-        navigator.userAgentData.getHighEntropyValues(REQUEST_OS_DATA).then(resolve);
-    });
-}
-
-async function getDeviceData() {
-    const data = {
-        vendor: navigator.vendor,
-        userAgent: navigator.userAgent
-    };
-    if (navigator.userAgentData != null) {
-        const uaData = navigator.userAgentData;
-        data.platform = await getOSData();
-        data.application = {
-            mobile: uaData.mobile,
-            brands: Helper.deepClone(uaData.brands)
-        };
-    }
-    return data;
-}
+import DeviceData from "/emcJS/data/DeviceData.js";
 
 async function getData() {
     const res = {
@@ -55,12 +32,11 @@ async function getData() {
 }
 
 const APP_DATA = await getData();
-const BROWSER_DATA = await getDeviceData();
 console.groupCollapsed("APP VERSION");
 console.log(JSON.stringify(APP_DATA, null, 4));
 console.groupEnd("APP VERSION");
 console.groupCollapsed("BROWSER DATA");
-console.log(JSON.stringify(BROWSER_DATA, null, 4));
+console.log(JSON.stringify(DeviceData, null, 4));
 console.groupEnd("BROWSER DATA");
 
 class VersionData extends EventTarget {
@@ -82,7 +58,7 @@ class VersionData extends EventTarget {
     }
 
     get browserData() {
-        return BROWSER_DATA;
+        return DeviceData;
     }
 
 }

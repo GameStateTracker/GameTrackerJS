@@ -1,3 +1,4 @@
+import Helper from "/emcJS/util/helper/Helper.js";
 import DataState from "../state/DataState.js";
 
 const PROPDATA = new WeakMap();
@@ -9,7 +10,7 @@ export default class AbstractStateManager {
 
     constructor(DefaultState, props) {
         if (new.target === AbstractStateManager) {
-            throw new TypeError("can not construct abstract class");
+            throw new Error("can not construct abstract class");
         }
         if (!(DefaultState.prototype instanceof DataState)) {
             throw new Error("DefaultState must be an instance of DataState");
@@ -32,12 +33,15 @@ export default class AbstractStateManager {
     }
 
     get(ref) {
+        if (ref == null || ref === "") {
+            return;
+        }
         const instances = INSTANCES.get(this);
         if (instances.has(ref)) {
             return instances.get(ref);
         }
         const propdata = PROPDATA.get(this);
-        const props = propdata[ref];
+        const props = Helper.getFromPath(propdata, ref.split("/"));
         if (props != null) {
             const classes = CLASSES.get(this);
             if (classes.has(props.type)) {

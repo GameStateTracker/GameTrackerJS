@@ -8,7 +8,7 @@ import "/emcJS/ui/input/SearchSelect.js";
 import "/emcJS/ui/input/TokenSelect.js";
 import "/emcJS/ui/input/InputWrapper.js";
 
-import WorldResource from "../../../resource/WorldResource.js";
+import WorldResource from "../../../data/resource/WorldResource.js";
 import WorldStateManagerRegistry from "../../../statemanager/WorldStateManagerRegistry.js";
 import Language from "../../../util/Language.js";
 import "./components/ExitChoice.js";

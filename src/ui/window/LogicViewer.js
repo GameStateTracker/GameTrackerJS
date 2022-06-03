@@ -1,5 +1,5 @@
 // frameworks
-import IDBStorage from "/emcJS/storage/IDBStorage.js";
+import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
 import Dialog from "/emcJS/ui/overlay/window/Dialog.js";
 import LogicUIAbstractElement from "/editors/ui/logic/AbstractElement.js";
 

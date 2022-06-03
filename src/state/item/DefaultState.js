@@ -1,5 +1,5 @@
 // frameworks
-import DataStorageValueObserver from "/emcJS/datastorage/DataStorageValueObserver.js";
+import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
@@ -94,13 +94,13 @@ export default class DefaultItemState extends BaseClass {
         }
 
         /* VALUES */
-        const startItemsObserver = new DataStorageValueObserver(STORAGES.startItems, ref, 0);
+        const startItemsObserver = new ObservableStorageObserver(STORAGES.startItems, ref);
         START.set(this, parseSafeRange(startItemsObserver.value, 0));
         startItemsObserver.addEventListener("change", (event) => {
             this.#setStart(event.value);
         });
 
-        const itemsObserver = new DataStorageValueObserver(STORAGES.items, ref, 0);
+        const itemsObserver = new ObservableStorageObserver(STORAGES.items, ref);
         VALUE.set(this, this.#restrictValue(itemsObserver.value));
         itemsObserver.addEventListener("change", (event) => {
             this.value = event.value;

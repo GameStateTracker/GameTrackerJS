@@ -4,7 +4,7 @@ import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
-import EventTargetMixin from "/emcJS/ui/mixin/EventTargetMixin.js";
+import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
 import ElementManager from "/emcJS/util/html/ElementManager.js";
 import ContextMenuManagerMixin from "/emcJS/ui/overlay/ctxmenu/ContextMenuManagerMixin.js";
 
@@ -68,7 +68,7 @@ function elementComposer(key, props) {
 const BaseClass = mix(
     WorldListStateEntry
 ).with(
-    EventTargetMixin,
+    EventTargetListenerElementMixin,
     ContextMenuManagerMixin
 );
 
@@ -94,8 +94,8 @@ export default class WorldListSubList extends BaseClass {
             return false;
         });
         /* settings */
-        this.switchTarget("sublistCollapsible", sublistCollapsibleObserver);
-        this.setTargetEventListener("sublistCollapsible", "change", event => {
+        this.switchEventTarget("sublistCollapsible", sublistCollapsibleObserver);
+        this.setEventTargetListener("sublistCollapsible", "change", event => {
             const collapsible = event.value;
             if (collapsible != "off") {
                 headerEl.classList.add("collapsible");

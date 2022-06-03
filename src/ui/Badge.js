@@ -2,10 +2,10 @@
 import Template from "/emcJS/util/html/Template.js";
 import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import CustomElement from "/emcJS/ui/CustomElement.js";
-import EventTargetMixin from "/emcJS/ui/mixin/EventTargetMixin.js";
+import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
 import "/emcJS/ui/Icon.js";
 
-import FilterResource from "../resource/FilterResource.js";
+import FilterResource from "../data/resource/FilterResource.js";
 import SettingsObserver from "../util/observer/SettingsObserver.js";
 
 const colorBlindObserver = new SettingsObserver("color_blind_badge_icons");
@@ -85,7 +85,7 @@ function getLoneFilterIndex(name, filter, data) {
     return current;
 }
 
-export default class Badge extends EventTargetMixin(CustomElement) {
+export default class Badge extends EventTargetListenerElementMixin(CustomElement) {
 
     constructor() {
         super();
@@ -105,8 +105,8 @@ export default class Badge extends EventTargetMixin(CustomElement) {
         if (filtersEl != null) {
             filtersEl.style.display = showFiltersObserver.value ? "" : "none";
         }
-        this.switchTarget("showFilters", showFiltersObserver);
-        this.setTargetEventListener("showFilters", "change", event => {
+        this.switchEventTarget("showFilters", showFiltersObserver);
+        this.setEventTargetListener("showFilters", "change", event => {
             if (filtersEl != null) {
                 filtersEl.style.display = event.value ? "" : "none";
             }
@@ -116,8 +116,8 @@ export default class Badge extends EventTargetMixin(CustomElement) {
         if (colorBlindEl != null) {
             colorBlindEl.style.display = colorBlindObserver.value ? "" : "none";
         }
-        this.switchTarget("colorBlind", colorBlindObserver);
-        this.setTargetEventListener("colorBlind", "change", event => {
+        this.switchEventTarget("colorBlind", colorBlindObserver);
+        this.setEventTargetListener("colorBlind", "change", event => {
             if (colorBlindEl != null) {
                 colorBlindEl.style.display = event.value ? "" : "none";
             }

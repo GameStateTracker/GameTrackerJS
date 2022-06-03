@@ -1,5 +1,5 @@
 // frameworks
-import IDBStorage from "/emcJS/storage/IDBStorage.js";
+import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
 
 import VersionData from "../data/VersionData.js";
 import SavestateConverter from "./SavestateConverter.js";

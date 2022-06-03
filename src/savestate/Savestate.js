@@ -1,5 +1,6 @@
 // frameworks
-import DataStorage from "/emcJS/datastorage/DataStorage.js";
+import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
+import ObservableDefaultValueStorage from "/emcJS/data/storage/observable/ObservableDefaultValueStorage.js";
 
 import OptionsStorage from "./storage/OptionsStorage.js";
 import FilterStorage from "./storage/FilterStorage.js";
@@ -31,11 +32,11 @@ class Savestate extends EventTarget {
     constructor() {
         super();
         /* --- */
-        this.registerStorage("items", new DataStorage());
-        this.registerStorage("locations", new DataStorage());
-        this.registerStorage("exitBindings", new DataStorage());
-        this.registerStorage("areaHints", new DataStorage());
-        this.registerStorage("locationItems", new DataStorage());
+        this.registerStorage("items", new ObservableDefaultValueStorage(0));
+        this.registerStorage("locations", new ObservableDefaultValueStorage(false));
+        this.registerStorage("exitBindings", new ObservableDefaultValueStorage(""));
+        this.registerStorage("areaHints", new ObservableDefaultValueStorage(""));
+        this.registerStorage("locationItems", new ObservableDefaultValueStorage(""));
         this.registerStorage("startItems", StartItemsStorage);
         this.registerStorage("options", OptionsStorage);
         this.registerStorage("filter", FilterStorage, "persistedchange");
@@ -155,7 +156,7 @@ class Savestate extends EventTarget {
     /* STORAGES */
     registerStorage(category, dataStorage, eventName = "change") {
         const storageCategory = category.toString();
-        if (!(dataStorage instanceof DataStorage)) {
+        if (!(dataStorage instanceof ObservableStorage)) {
             throw new TypeError("unknown storage implementation, expected DataStorage");
         }
         if (ST_DEF.has(storageCategory)) {
@@ -180,7 +181,7 @@ class Savestate extends EventTarget {
         if (ST_ADD.has(storageCategory)) {
             return ST_ADD.get(storageCategory);
         }
-        const dataStorage = new DataStorage();
+        const dataStorage = new ObservableStorage();
         dataStorage.addEventListener("change", this.getChangeHandler(storageCategory));
         ST_ADD.set(storageCategory, dataStorage);
         return dataStorage;

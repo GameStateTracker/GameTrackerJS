@@ -1,4 +1,4 @@
-import WorldResource from "../../resource/WorldResource.js";
+import WorldResource from "../../data/resource/WorldResource.js";
 
 const CONFIG = WorldResource.get("config");
 const AREA_PROPS = WorldResource.get("area");

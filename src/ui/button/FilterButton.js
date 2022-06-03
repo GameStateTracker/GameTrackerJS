@@ -2,11 +2,11 @@
 import Template from "/emcJS/util/html/Template.js";
 import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import CustomElement from "/emcJS/ui/CustomElement.js";
-import EventTargetMixin from "/emcJS/ui/mixin/EventTargetMixin.js";
+import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
 import "/emcJS/ui/input/Option.js";
 
 // GameTrackerJS
-import FilterResource from "../../resource/FilterResource.js";
+import FilterResource from "../../data/resource/FilterResource.js";
 import FilterStorage from "../../savestate/storage/FilterStorage.js";
 import FilterObserver from "../../util/observer/FilterObserver.js";
 
@@ -47,7 +47,7 @@ slot {
 }
 `);
 
-class FilterButton extends EventTargetMixin(CustomElement) {
+class FilterButton extends EventTargetListenerElementMixin(CustomElement) {
 
     constructor() {
         super();
@@ -57,7 +57,7 @@ class FilterButton extends EventTargetMixin(CustomElement) {
         this.addEventListener("click", event => this.next(event));
         this.addEventListener("contextmenu", event => this.revert(event));
         /* event bus */
-        this.setTargetEventListener("filterObserver", "change", event => {
+        this.setEventTargetListener("filterObserver", "change", event => {
             this.value = event.value;
         });
     }
@@ -97,7 +97,7 @@ class FilterButton extends EventTargetMixin(CustomElement) {
                 if (oldValue != newValue) {
                     const data = FilterResource.get(this.ref);
                     const filterObserver = new FilterObserver(this.ref);
-                    this.switchTarget("filterObserver", filterObserver);
+                    this.switchEventTarget("filterObserver", filterObserver);
                     this.innerHTML = "";
                     this.value = filterObserver.value;
                     for (const i in data.values) {

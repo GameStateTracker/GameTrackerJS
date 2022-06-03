@@ -2,7 +2,7 @@
 import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
 
-import FilterResource from "../../resource/FilterResource.js";
+import FilterResource from "../../data/resource/FilterResource.js";
 import "../button/FilterButton.js";
 
 const STYLE = new GlobalStyle(`

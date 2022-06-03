@@ -7,7 +7,6 @@ import {
 } from "/emcJS/util/Mixin.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
 
-import AccessStateEnum from "../../../../enum/AccessStateEnum.js";
 import AreaStateManager from "../../../../statemanager/world/area/AreaStateManager.js";
 import StateDataEventManagerMixin from "../../../mixin/StateDataEventManagerMixin.js";
 
@@ -69,8 +68,8 @@ export default class WorldMapTitle extends BaseClass {
         /* state handler */
         this.registerStateHandler("access", event => {
             const access = event.value;
-            const accessValue = AccessStateEnum.getName(access.value);
-            this.applyAccess(accessValue.toLowerCase(), access);
+            const accessValue = access.value;
+            this.applyAccess(("" + accessValue).toLowerCase(), access);
         });
     }
 
@@ -87,8 +86,8 @@ export default class WorldMapTitle extends BaseClass {
     applyStateValues(state) {
         /* access */
         const access = this.getStateAccess(state);
-        const accessValue = AccessStateEnum.getName(access.value);
-        this.applyAccess(accessValue.toLowerCase(), access);
+        const accessValue = access.value;
+        this.applyAccess(("" + accessValue).toLowerCase(), access);
         /* text */
         const textEl = this.shadowRoot.getElementById("text");
         if (textEl != null) {

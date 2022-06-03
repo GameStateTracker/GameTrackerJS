@@ -1,9 +1,9 @@
 // frameworks
-import IDBStorage from "/emcJS/storage/IDBStorage.js";
-import LocalStorage from "/emcJS/storage/LocalStorage.js";
+import ThreadDataSync from "/emcJS/data/sync/ThreadDataSync.js";
+import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
+import LocalStorage from "/emcJS/data/storage/global/LocalStorage.js";
 import BusyIndicator from "/emcJS/ui/BusyIndicator.js";
 
-import DataSync from "../data/DataSync.js";
 import Counter from "../util/Counter.js";
 import Savestate from "./Savestate.js";
 import SavestateConverter from "./SavestateConverter.js";
@@ -27,7 +27,7 @@ function updateTitle() {
 
 /* SYNC */ {
     const muted = new Counter();
-    DataSync.addEventListener("message", (event) => {
+    ThreadDataSync.addEventListener("message", (event) => {
         muted.add();
         if (event.data.type == "load") {
             const {state = {}} = event.data;
@@ -41,13 +41,13 @@ function updateTitle() {
     Savestate.addEventListener("change", (event) => {
         if (!muted.value) {
             const {category = "", data = {}} = event;
-            DataSync.postMessage({type: "change", category, data});
+            ThreadDataSync.postMessage({type: "change", category, data});
         }
     });
     Savestate.addEventListener("load", (event) => {
         if (!muted.value) {
             const {data = {}} = event;
-            DataSync.postMessage({type: "load", data});
+            ThreadDataSync.postMessage({type: "load", data});
         }
     });
 }

@@ -1,4 +1,4 @@
-import WorldResource from "../../resource/WorldResource.js";
+import WorldResource from "../../data/resource/WorldResource.js";
 import AbstractStateManager from "../AbstractStateManager.js";
 
 export default class WorldStateManager extends AbstractStateManager {

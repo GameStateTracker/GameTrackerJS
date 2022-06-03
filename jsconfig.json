@@ -3,6 +3,12 @@
         "target": "es2020",
         "allowSyntheticDefaultImports": false,
         "checkJs": false,
-        "baseUrl": "./src/"
+        "baseUrl": "./src/",
+        "paths": {
+            "/emcJS/*": [
+                "../../emcJS/src/*",
+                "../node_modules/emcjs/src/*"
+            ]
+        }
     }
 }

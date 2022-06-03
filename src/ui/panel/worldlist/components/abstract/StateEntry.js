@@ -3,7 +3,6 @@ import {
     mix
 } from "/emcJS/util/Mixin.js";
 
-import AccessStateEnum from "../../../../../enum/AccessStateEnum.js";
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
 import WorldListEntry from "./Entry.js";
@@ -24,8 +23,8 @@ export default class WorldListStateEntry extends BaseClass {
         });
         this.registerStateHandler("access", (event) => {
             const access = event.value;
-            const accessValue = AccessStateEnum.getName(access.value);
-            this.applyAccess(accessValue.toLowerCase(), access);
+            const accessValue = access.value;
+            this.applyAccess(("" + accessValue).toLowerCase(), access);
         });
     }
 
@@ -55,8 +54,8 @@ export default class WorldListStateEntry extends BaseClass {
     applyStateValues(state) {
         /* access */
         const access = this.getStateAccess(state);
-        const accessValue = AccessStateEnum.getName(access.value);
-        this.applyAccess(accessValue.toLowerCase(), access);
+        const accessValue = access.value;
+        this.applyAccess(("" + accessValue).toLowerCase(), access);
         /* visible */
         this.hidden = !state.isVisible();
     }

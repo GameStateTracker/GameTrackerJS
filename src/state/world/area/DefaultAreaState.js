@@ -5,7 +5,7 @@ import {
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
-import DataStorageValueObserver from "/emcJS/datastorage/DataStorageValueObserver.js";
+import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
 
 import Savestate from "../../../savestate/Savestate.js";
 // import OptionsStorage from "../../../savestate/storage/OptionsStorage.js";
@@ -42,7 +42,7 @@ export default class DefaultAreaState extends BaseClass {
         super(ref, props);
 
         /* VALUES */
-        const areaHintsObserver = new DataStorageValueObserver(STORAGES.areaHints, ref, "");
+        const areaHintsObserver = new ObservableStorageObserver(STORAGES.areaHints, ref);
         this.#hint = areaHintsObserver.value;
         areaHintsObserver.addEventListener("change", (event) => {
             this.hint = event.value;
