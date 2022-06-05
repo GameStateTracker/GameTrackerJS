@@ -5,7 +5,6 @@ import BusyIndicator from "/emcJS/ui/BusyIndicator.js";
 import AbstractSettingsWindow from "./AbstractSettingsWindow.js";
 import SettingsResource from "../../../data/resource/SettingsResource.js";
 import SettingsStorage from "../../../storage/SettingsStorage.js";
-import AutosaveHandler from "../../../savestate/AutosaveHandler.js";
 
 // TODO bind erase stored data button
 
@@ -13,8 +12,6 @@ function applySettingsChoices(settings) {
     const viewpane = document.getElementById("main-content");
     viewpane.setAttribute("data-font", settings.font);
     document.querySelector("#layout-container").setAttribute("layout", settings.layout);
-    AutosaveHandler.time = settings.autosave_time;
-    AutosaveHandler.slots = settings.autosave_amount;
 }
 
 applySettingsChoices(SettingsStorage.getAll());

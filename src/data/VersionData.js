@@ -58,7 +58,7 @@ class VersionData extends EventTarget {
     }
 
     get browserData() {
-        return DeviceData;
+        return Helper.deepClone(DeviceData);
     }
 
 }
