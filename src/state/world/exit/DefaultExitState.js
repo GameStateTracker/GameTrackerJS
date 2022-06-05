@@ -31,7 +31,7 @@ const mixedEntrancePoolObserver = new OptionsObserver("option.mixed_entrance_poo
 const STORAGES = {exitBindings: Savestate.getStorage("exitBindings")};
 
 function getEntranceArea(value) {
-    if (value == "") {
+    if (value == null || value == "") {
         return null;
     }
     if (value == "\u0000") {
