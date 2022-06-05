@@ -14,7 +14,7 @@ function initRedirects() {
         }
     }
     if (initTransalation.length) {
-        Logic.setRedirect(initTransalation, "region.root");
+        Logic.setRedirect(initTransalation, "region[root]");
     }
 }
 

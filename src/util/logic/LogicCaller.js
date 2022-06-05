@@ -108,19 +108,19 @@ class LogicCaller extends EventTarget {
             this.#changeData(renameKeys(augmentStartItemValues(event.data), "item[", "]"));
         });
         STORAGES.locations.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "location."));
+            this.#changeData(renameKeys(event.data, "location[", "]"));
         });
         STORAGES.dungeonTypes.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "dungeontype."));
+            this.#changeData(renameKeys(event.data, "dungeontype[", "]"));
         });
         STORAGES.options.addEventListener("change", (event) => {
-            this.#changeData(event.data);
+            this.#changeData(renameKeys(event.data, "option[", "]"));
         });
         STORAGES.filter.addEventListener("change", (event) => {
-            this.#changeData(event.data);
+            this.#changeData(renameKeys(event.data, "filter[", "]"));
         });
         SettingsStorage.addEventListener("change", (event) => {
-            this.#changeData(event.data);
+            this.#changeData(renameKeys(event.data, "setting[", "]"));
         });
         /* --- */
         this.#init();
@@ -129,16 +129,18 @@ class LogicCaller extends EventTarget {
     #init() {
         const data = {
             ...renameKeys(initItemValues(), "item[", "]"),
-            ...renameKeys(STORAGES.locations.getAll(), "location."),
-            ...STORAGES.options.getAll(),
-            ...STORAGES.filter.getAll(),
-            ...SettingsStorage.getAll()
+            ...renameKeys(STORAGES.locations.getAll(), "location[", "]"),
+            ...renameKeys(STORAGES.dungeonTypes.getAll(), "dungeontype[", "]"),
+            ...renameKeys(STORAGES.options.getAll(), "option[", "]"),
+            ...renameKeys(STORAGES.filter.getAll(), "filter[", "]"),
+            ...renameKeys(SettingsStorage.getAll(), "setting[", "]")
         };
         // startitems
         const startItems = STORAGES.startItems.getAll();
         for (const [key, value] of Object.entries(startItems)) {
-            if (data[key] == null || data[key] < value) {
-                data[key] = value;
+            const renamedKey = `item[${key}]`;
+            if (data[renamedKey] == null || data[renamedKey] < value) {
+                data[renamedKey] = value;
             }
         }
         // ---
@@ -148,7 +150,7 @@ class LogicCaller extends EventTarget {
         }
         Logic.reset();
         const augmentedData = execAugment(data);
-        Logic.execute(augmentedData, "region.root");
+        Logic.execute(augmentedData, "region[root]");
     }
 
     #changeData(newData) {
@@ -162,7 +164,7 @@ class LogicCaller extends EventTarget {
         }
         if (Object.keys(changes).length > 0) {
             const augmentedData = execAugment(changes);
-            Logic.execute(augmentedData, "region.root");
+            Logic.execute(augmentedData, "region[root]");
         }
     }
 

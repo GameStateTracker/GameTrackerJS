@@ -26,7 +26,7 @@ import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";
 
-const mixedEntrancePoolObserver = new OptionsObserver("option.mixed_entrance_pool");
+const mixedEntrancePoolObserver = new OptionsObserver("mixed_entrance_pool");
 
 const STORAGES = {exitBindings: Savestate.getStorage("exitBindings")};
 

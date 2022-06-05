@@ -10,7 +10,7 @@ import OptionsObserver from "/GameTrackerJS/util/observer/OptionsObserver.js";
 import LogicResource from "/script/resource/LogicResource.js";
 import LogicGlitchedResource from "/script/resource/LogicGlitchedResource.js";
 
-const logicRulesObserver = new OptionsObserver("option.logic_rules");
+const logicRulesObserver = new OptionsObserver("logic_rules");
 const customLogicObserver = new SettingsObserver("use_custom_logic");
 
 function extractLogic(data, customData, ref) {

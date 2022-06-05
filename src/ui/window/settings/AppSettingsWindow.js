@@ -38,6 +38,10 @@ export default class AppSettingsWindow extends AbstractSettingsWindow {
         super.show(values, category);
     }
 
+    static getLabel(label) {
+        return `setting[${label}]`;
+    }
+
 }
 
 customElements.define("gt-window-appsettings", AppSettingsWindow);

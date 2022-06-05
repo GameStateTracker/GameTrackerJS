@@ -9,7 +9,7 @@ import AccessStateEnum from "../../enum/AccessStateEnum.js";
 import OptionsObserver from "../observer/OptionsObserver.js";
 import ListRecordState from "../../state/world/ListRecordState.js";
 
-const detachedEntrancesObserver = new OptionsObserver("option.detached_entrances");
+const detachedEntrancesObserver = new OptionsObserver("detached_entrances");
 
 const INSTANCES = new Map();
 

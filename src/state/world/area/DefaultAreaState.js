@@ -118,7 +118,7 @@ export default class DefaultAreaState extends BaseClass {
 
     // TODO add this to world config
     // get listContents() {
-    //     return !OptionsStorage.get("option.mixed_entrance_pool") && (this.props.listContents ?? false);
+    //     return !OptionsStorage.get("mixed_entrance_pool") && (this.props.listContents ?? false);
     // }
 
     get defaultAccess() {

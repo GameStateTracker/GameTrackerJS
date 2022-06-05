@@ -52,6 +52,10 @@ export default class SavestateOptionsWindow extends AbstractSettingsWindow {
         storage.deserialize(data);
     }
 
+    static getLabel(label) {
+        return `option[${label}]`;
+    }
+
 }
 
 customElements.define("gt-window-savestateoptions", SavestateOptionsWindow);

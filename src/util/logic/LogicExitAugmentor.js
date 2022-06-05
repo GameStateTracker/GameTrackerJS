@@ -3,7 +3,7 @@ import OptionsObserver from "../observer/OptionsObserver.js";
 import ExitStateManager from "../../statemanager/world/exit/ExitStateManager.js";
 import Logic from "./Logic.js";
 
-const detachedEntrancesObserver = new OptionsObserver("option.detached_entrances");
+const detachedEntrancesObserver = new OptionsObserver("detached_entrances");
 
 const INSTANCES = new Map();
 
@@ -65,7 +65,7 @@ export default class LogicExitAugmentor {
             LogicExitAugmentor.applyBinding(changes, this.#exit.ref, null);
         }
         if (changes.length) {
-            Logic.setRedirect(changes, "region.root");
+            Logic.setRedirect(changes, "region[root]");
         }
     }
 

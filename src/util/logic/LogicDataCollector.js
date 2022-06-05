@@ -100,16 +100,16 @@ class LogicDataCollector extends EventTarget {
             this.#changeData(renameKeys(augmentStartItemValues(event.data), "item[", "]"));
         });
         STORAGES.locations.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "location."));
+            this.#changeData(renameKeys(event.data, "location[", "]"));
         });
         STORAGES.options.addEventListener("change", (event) => {
-            this.#changeData(event.data);
+            this.#changeData(renameKeys(event.data, "option[", "]"));
         });
         STORAGES.filter.addEventListener("change", (event) => {
-            this.#changeData(event.data);
+            this.#changeData(renameKeys(event.data, "filter[", "]"));
         });
         SettingsStorage.addEventListener("change", (event) => {
-            this.#changeData(event.data);
+            this.#changeData(renameKeys(event.data, "setting[", "]"));
         });
         /* --- */
         this.#init();
@@ -118,16 +118,17 @@ class LogicDataCollector extends EventTarget {
     #init() {
         const data = {
             ...renameKeys(initItemValues(), "item[", "]"),
-            ...renameKeys(STORAGES.locations.getAll(), "location."),
-            ...STORAGES.options.getAll(),
-            ...STORAGES.filter.getAll(),
-            ...SettingsStorage.getAll()
+            ...renameKeys(STORAGES.locations.getAll(), "location[", "]"),
+            ...renameKeys(STORAGES.options.getAll(), "option[", "]"),
+            ...renameKeys(STORAGES.filter.getAll(), "filter[", "]"),
+            ...renameKeys(SettingsStorage.getAll(), "setting[", "]")
         };
         // startitems
         const startItems = STORAGES.startItems.getAll();
         for (const [key, value] of Object.entries(startItems)) {
-            if (data[key] == null || data[key] < value) {
-                data[key] = value;
+            const renamedKey = `item[${key}]`;
+            if (data[renamedKey] == null || data[renamedKey] < value) {
+                data[renamedKey] = value;
             }
         }
         // ---
