@@ -1,21 +1,16 @@
 // frameworks
+import {
+    debounce, debounceCacheData
+} from "/emcJS/util/Debouncer.js";
 import MapLocker from "/emcJS/data/locker/MapLocker.js";
+import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
 
 // GameTrackerJS
 import Savestate from "../../savestate/Savestate.js";
 import SettingsStorage from "../../storage/SettingsStorage.js";
 import Logic from "./Logic.js";
 
-const STORAGES = {
-    // GameTrackerJS
-    items: Savestate.getStorage("items"),
-    locations: Savestate.getStorage("locations"),
-    startItems: Savestate.getStorage("startItems"),
-    options: Savestate.getStorage("options"),
-    filter: Savestate.getStorage("filter"),
-    // Track-OOT
-    dungeonTypes: Savestate.getStorage("dungeonTypes")
-};
+const STORAGES = new Map();
 
 const AUGMENT = new Set();
 const CACHE = new Map();
@@ -29,37 +24,19 @@ function execAugment(data) {
     return data;
 }
 
-function renameKeys(src = {}, prefix = "", postfix = "") {
+function renameKeys(source = {}, prefix = "", postfix = "") {
     const res = {};
-    for (const [key, value] of Object.entries(src)) {
+    for (const [key, value] of Object.entries(source)) {
         res[`${prefix}${key}${postfix}`] = value;
     }
     return res;
 }
 
-function initItemValues() {
-    const itemData = STORAGES.items.getAll();
-    const startItemData = STORAGES.items.getAll();
-    const res = {};
-    for (const [key, value] of Object.entries(itemData)) {
-        const startValue = startItemData[key];
-        if (startValue != null) {
-            res[key] = Math.max(startValue, value);
-        } else {
-            res[key] = value;
-        }
+function addRenameKeys(target = {}, source = {}, prefix = "", postfix = "") {
+    for (const [key, value] of Object.entries(source)) {
+        target[`${prefix}${key}${postfix}`] = value;
     }
-    for (const [key, value] of Object.entries(startItemData)) {
-        if (res[key] == null) {
-            const startValue = itemData[key];
-            if (startValue != null) {
-                res[key] = Math.max(startValue, value);
-            } else {
-                res[key] = value;
-            }
-        }
-    }
-    return res;
+    return target;
 }
 
 function augmentItemValues(newData) {
@@ -101,47 +78,21 @@ class LogicCaller extends EventTarget {
         Savestate.addEventListener("load", () => {
             this.#init();
         });
-        STORAGES.items.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(augmentItemValues(event.data), "item[", "]"));
-        });
-        STORAGES.startItems.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(augmentStartItemValues(event.data), "item[", "]"));
-        });
-        STORAGES.locations.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "location[", "]"));
-        });
-        STORAGES.dungeonTypes.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "dungeontype[", "]"));
-        });
-        STORAGES.options.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "option[", "]"));
-        });
-        STORAGES.filter.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "filter[", "]"));
-        });
-        SettingsStorage.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "setting[", "]"));
-        });
+        /* STORAGES */
+        this.registerStorage(Savestate.getStorage("items"), "item[", "]", augmentItemValues);
+        this.registerStorage(Savestate.getStorage("startItems"), "item[", "]", augmentStartItemValues);
+        this.registerStorage(Savestate.getStorage("locations"), "location[", "]");
+        this.registerStorage(Savestate.getStorage("options"), "option[", "]");
+        this.registerStorage(Savestate.getStorage("filter"), "filter[", "]");
+        this.registerStorage(SettingsStorage, "setting[", "]");
         /* --- */
         this.#init();
     }
 
-    #init() {
-        const data = {
-            ...renameKeys(initItemValues(), "item[", "]"),
-            ...renameKeys(STORAGES.locations.getAll(), "location[", "]"),
-            ...renameKeys(STORAGES.dungeonTypes.getAll(), "dungeontype[", "]"),
-            ...renameKeys(STORAGES.options.getAll(), "option[", "]"),
-            ...renameKeys(STORAGES.filter.getAll(), "filter[", "]"),
-            ...renameKeys(SettingsStorage.getAll(), "setting[", "]")
-        };
-        // startitems
-        const startItems = STORAGES.startItems.getAll();
-        for (const [key, value] of Object.entries(startItems)) {
-            const renamedKey = `item[${key}]`;
-            if (data[renamedKey] == null || data[renamedKey] < value) {
-                data[renamedKey] = value;
-            }
+    #init = debounce(() => {
+        const data = {};
+        for (const [storage, {prefix, postfix}] of STORAGES) {
+            addRenameKeys(data, storage.getAll(), prefix, postfix);
         }
         // ---
         CACHE.clear();
@@ -151,21 +102,44 @@ class LogicCaller extends EventTarget {
         Logic.reset();
         const augmentedData = execAugment(data);
         Logic.execute(augmentedData, "region[root]");
-    }
+    });
 
-    #changeData(newData) {
+    #changeData = debounceCacheData((newData) => {
         const changes = {};
-        for (const [key, value] of Object.entries(newData)) {
-            const oldValue = CACHE.get(key);
-            if (oldValue != value) {
-                changes[key] = value;
-                CACHE.set(key, value);
+        for (const data of newData) {
+            for (const [key, value] of Object.entries(data)) {
+                const oldValue = CACHE.get(key);
+                if (oldValue != value) {
+                    changes[key] = value;
+                    CACHE.set(key, value);
+                }
             }
         }
         if (Object.keys(changes).length > 0) {
             const augmentedData = execAugment(changes);
             Logic.execute(augmentedData, "region[root]");
         }
+    });
+
+    registerStorage(storage, prefix = "", postfix = "", precall = null) {
+        if (!(storage instanceof ObservableStorage)) {
+            throw new TypeError("storage must be ObservableStorage");
+        }
+        if (!STORAGES.has(storage)) {
+            storage.addEventListener("change", (event) => {
+                if (typeof precall === "function") {
+                    this.#changeData(renameKeys(precall(event.data), prefix, postfix));
+                } else {
+                    this.#changeData(renameKeys(event.data, prefix, postfix));
+                }
+            });
+        }
+        STORAGES.set(storage, {
+            prefix,
+            postfix,
+            precall
+        });
+        this.#init();
     }
 
     registerAugment(augment) {

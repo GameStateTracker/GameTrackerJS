@@ -52,14 +52,14 @@ class FilterStorage extends ObservableStorage {
 
     get(key) {
         if (DEFAULTS.has(key)) {
-            return super.get(key, DEFAULTS.get(key));
+            return super.get(key) ?? DEFAULTS.get(key);
         }
     }
 
     getAll() {
         const res = {};
         for (const [key, value] of DEFAULTS) {
-            res[key] = super.get(key, value);
+            res[key] = super.get(key) ?? value;
         }
         return res;
     }

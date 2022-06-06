@@ -34,14 +34,14 @@ class StartItemsStorage extends ObservableStorage {
 
     get(key) {
         if (MAX.has(key)) {
-            return super.get(key, 0);
+            return super.get(key) ?? 0;
         }
     }
 
     getAll() {
         const res = {};
         for (const [key] of MAX) {
-            res[key] = super.get(key, 0);
+            res[key] = super.get(key) ?? 0;
         }
         return res;
     }
