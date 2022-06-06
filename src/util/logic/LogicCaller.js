@@ -10,7 +10,14 @@ import Savestate from "../../savestate/Savestate.js";
 import SettingsStorage from "../../storage/SettingsStorage.js";
 import Logic from "./Logic.js";
 
-const STORAGES = new Map();
+const STORAGES = {
+    items: Savestate.getStorage("items"),
+    startItems: Savestate.getStorage("startItems"),
+    locations: Savestate.getStorage("locations"),
+    options: Savestate.getStorage("options"),
+    filter: Savestate.getStorage("filter")
+};
+const STORAGE_REGISTER = new Map();
 
 const AUGMENT = new Set();
 const CACHE = new Map();
@@ -79,11 +86,11 @@ class LogicCaller extends EventTarget {
             this.#init();
         });
         /* STORAGES */
-        this.registerStorage(Savestate.getStorage("items"), "item[", "]", augmentItemValues);
-        this.registerStorage(Savestate.getStorage("startItems"), "item[", "]", augmentStartItemValues);
-        this.registerStorage(Savestate.getStorage("locations"), "location[", "]");
-        this.registerStorage(Savestate.getStorage("options"), "option[", "]");
-        this.registerStorage(Savestate.getStorage("filter"), "filter[", "]");
+        this.registerStorage(STORAGES.items, "item[", "]", augmentItemValues);
+        this.registerStorage(STORAGES.startItems, "item[", "]", augmentStartItemValues);
+        this.registerStorage(STORAGES.locations, "location[", "]");
+        this.registerStorage(STORAGES.options, "option[", "]");
+        this.registerStorage(STORAGES.filter, "filter[", "]");
         this.registerStorage(SettingsStorage, "setting[", "]");
         /* --- */
         this.#init();
@@ -91,7 +98,7 @@ class LogicCaller extends EventTarget {
 
     #init = debounce(() => {
         const data = {};
-        for (const [storage, {prefix, postfix}] of STORAGES) {
+        for (const [storage, {prefix, postfix}] of STORAGE_REGISTER) {
             addRenameKeys(data, storage.getAll(), prefix, postfix);
         }
         // ---
@@ -125,7 +132,7 @@ class LogicCaller extends EventTarget {
         if (!(storage instanceof ObservableStorage)) {
             throw new TypeError("storage must be ObservableStorage");
         }
-        if (!STORAGES.has(storage)) {
+        if (!STORAGE_REGISTER.has(storage)) {
             storage.addEventListener("change", (event) => {
                 if (typeof precall === "function") {
                     this.#changeData(renameKeys(precall(event.data), prefix, postfix));
@@ -134,7 +141,7 @@ class LogicCaller extends EventTarget {
                 }
             });
         }
-        STORAGES.set(storage, {
+        STORAGE_REGISTER.set(storage, {
             prefix,
             postfix,
             precall
