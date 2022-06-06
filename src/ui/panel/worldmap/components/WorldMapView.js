@@ -264,13 +264,26 @@ export default class WorldMapView extends BaseClass {
             const y = OFFSET_Y.get(this);
 
             /* calculate anchor focus shift */
-            const scale = 100 / zoom;
-            const oldScale = 100 / old;
-            const focusDiffX = anchorX * (oldScale - scale) * 4;
-            const focusDiffY = anchorY * (oldScale - scale) * 4;
+            // const scale = 100 / zoom;
+            // const oldScale = 100 / old;
+
+            // const newX = x * oldScale / scale;
+            // const newY = y * oldScale / scale;
+
+            // const newDiffX = anchorX * scale;
+            // const newDiffY = anchorY * scale;
+            // const oldDiffX = anchorX * oldScale;
+            // const oldDiffY = anchorY * oldScale;
+
+            // console.log("zoom diff\n\"x\": %d, \"y\": %d", focusDiffX, focusDiffY);
+
+            // const newX = x - focusDiffX;
+            // const newY = y - focusDiffY;
+
+            // console.log("zoom result\n\"x\": %d, \"y\": %d", newX, newY);
 
             /* recalculate offsets to stay inside boundaries */
-            const [offsetX, offsetY] = this.#containBoundaries(x - focusDiffX, y - focusDiffY, zoom);
+            const [offsetX, offsetY] = this.#containBoundaries(x, y, zoom);
             OFFSET_X.set(this, offsetX);
             OFFSET_Y.set(this, offsetY);
 
