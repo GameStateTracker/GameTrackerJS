@@ -71,7 +71,7 @@ class SavestateHandler extends EventTarget {
             this.dispatchEvent(new Event("afterload"));
         }
         /* --- */
-        Savestate.addEventListener("change", event => {
+        Savestate.addEventListener("change", (event) => {
             const state = Savestate.serialize();
             this.#cacheData(state, true);
             if (!event.category) {
@@ -84,18 +84,18 @@ class SavestateHandler extends EventTarget {
                 this.dispatchEvent(ev);
             }
         });
-        Savestate.addEventListener("notes", event => {
+        Savestate.addEventListener("notes", (event) => {
             const state = Savestate.serialize();
             this.#cacheData(state, true);
             const ev = new Event("notes");
             ev.value = event.value;
             this.dispatchEvent(ev);
         });
-        Savestate.addEventListener("options", event => {
+        Savestate.addEventListener("options", () => {
             const state = Savestate.serialize();
             this.#cacheData(state, true);
         });
-        Savestate.addEventListener("filter", event => {
+        Savestate.addEventListener("filter", () => {
             const state = Savestate.serialize();
             this.#cacheData(state, true);
         });

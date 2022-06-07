@@ -85,7 +85,7 @@ export default class WorldMap extends BaseClass {
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* state handler */
-        WorldListState.addEventListener("area", event => {
+        WorldListState.addEventListener("area", (event) => {
             this.ref = event.value;
         });
         /* view */

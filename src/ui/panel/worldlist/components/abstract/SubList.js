@@ -79,10 +79,10 @@ export default class WorldListSubList extends BaseClass {
         TPL.apply(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* state handler */
-        this.registerStateHandler("listChange", (event) => {
+        this.registerStateHandler("listChange", () => {
             this.refreshList();
         });
-        this.registerStateHandler("listContents", (event) => {
+        this.registerStateHandler("listContents", () => {
             this.refreshList();
         });
         /* mouse events */
@@ -95,7 +95,7 @@ export default class WorldListSubList extends BaseClass {
         });
         /* settings */
         this.switchEventTarget("sublistCollapsible", sublistCollapsibleObserver);
-        this.setEventTargetListener("sublistCollapsible", "change", event => {
+        this.setEventTargetListener("sublistCollapsible", "change", (event) => {
             const collapsible = event.value;
             if (collapsible != "off") {
                 headerEl.classList.add("collapsible");
@@ -163,11 +163,13 @@ export default class WorldListSubList extends BaseClass {
             if (list != null && list.length > 0) {
                 for (const record of list) {
                     const loc = record.entry;
-                    elManagerData.push({
-                        key: loc.ref,
-                        category: record.category,
-                        type: loc.props.type
-                    });
+                    if (!loc.props.visibleRootOnly) {
+                        elManagerData.push({
+                            key: loc.ref,
+                            category: record.category,
+                            type: loc.props.type
+                        });
+                    }
                 }
             }
         }

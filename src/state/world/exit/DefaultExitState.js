@@ -50,7 +50,11 @@ function getEntranceArea(value) {
     return area;
 }
 
-function getLogicAccess(access) {
+function getReachable(logicAccess) {
+    return !!Logic.getValue(`${logicAccess}{child}`) || !!Logic.getValue(`${logicAccess}{adult}`);
+}
+
+function getLogicAccess(reachable) {
     const res = {
         done: 0,
         unopened: 0,
@@ -59,7 +63,6 @@ function getLogicAccess(access) {
         value: AccessStateEnum.OPENED,
         entrances: 0
     };
-    const reachable = !!Logic.getValue(`${access}{child}`) || !!Logic.getValue(`${access}{adult}`);
     if (reachable) {
         res.entrances = 1;
         res.value = AccessStateEnum.AVAILABLE;
@@ -90,6 +93,8 @@ export default class DefaultExitState extends BaseClass {
 
     #visible = true;
 
+    #reachable = false;
+
     constructor(ref, props) {
         super(ref, props);
 
@@ -102,7 +107,7 @@ export default class DefaultExitState extends BaseClass {
         })
 
         /* AREA */
-        this.#manager.registerStateHandler("access", event => {
+        this.#manager.registerStateHandler("access", (event) => {
             const access = event.value;
             const ev = new Event("access");
             ev.value = access;
@@ -110,17 +115,17 @@ export default class DefaultExitState extends BaseClass {
             // logic data
             this.setLogicData("$IS_DONE", access.value == AccessStateEnum.OPENED);
         });
-        this.#manager.registerStateHandler("hint", event => {
+        this.#manager.registerStateHandler("hint", (event) => {
             const ev = new Event("hint");
             ev.value = event.value;
             this.dispatchEvent(ev);
         });
-        this.#manager.registerStateHandler("listChange", event => {
+        this.#manager.registerStateHandler("listChange", (event) => {
             const ev = new Event("listChange");
             ev.value = event.value;
             this.dispatchEvent(ev);
         });
-        this.#manager.registerStateHandler("listContents", event => {
+        this.#manager.registerStateHandler("listContents", (event) => {
             const ev = new Event("listContents");
             ev.value = event.value;
             this.dispatchEvent(ev);
@@ -146,18 +151,28 @@ export default class DefaultExitState extends BaseClass {
         }, 0);
 
         /* LOGIC */
+        this.#reachable = getReachable(logicAccess);
         Logic.addEventListener("change", () => {
-            const access = getLogicAccess(logicAccess);
-            if (!Helper.isEqual(access, this.#access)) {
-                this.#access = access;
-                if (this.#area == null) {
-                    // external
-                    const ev = new Event("access");
-                    ev.value = access;
-                    this.dispatchEvent(ev);
-                    // logic data
-                    this.setLogicData("$IS_DONE", access.value == AccessStateEnum.OPENED);
+            const reachable = getReachable(logicAccess);
+            if (reachable != this.#reachable) {
+                this.#reachable = reachable;
+                /* access */
+                const access = getLogicAccess(reachable);
+                if (!Helper.isEqual(access, this.#access)) {
+                    this.#access = access;
+                    if (this.#area == null) {
+                        // external
+                        const ev = new Event("access");
+                        ev.value = access;
+                        this.dispatchEvent(ev);
+                        // logic data
+                        this.setLogicData("$IS_DONE", access.value == AccessStateEnum.OPENED);
+                    }
                 }
+                // external
+                const ev = new Event("reachable");
+                ev.value = reachable;
+                this.dispatchEvent(ev);
             }
         });
 
@@ -195,6 +210,10 @@ export default class DefaultExitState extends BaseClass {
             // logic data
             this.setLogicData("$IS_DONE", access.value == AccessStateEnum.OPENED);
         }
+    }
+
+    get reachable() {
+        return this.#reachable;
     }
 
     get active() {

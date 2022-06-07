@@ -45,7 +45,8 @@ const STYLE = new GlobalStyle(`
     padding: 2px;
     word-break: break-word;
 }
-.textarea:empty {
+.textarea:empty,
+.textarea.hidden {
     display: none;
 }
 .textarea + .textarea {
@@ -76,7 +77,7 @@ export default class WorldListEntry extends CustomElement {
         });
     }
 
-    clickHandler(event) {
+    clickHandler(/* event */) {
         // nothing
     }
 

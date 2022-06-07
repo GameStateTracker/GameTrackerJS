@@ -97,7 +97,7 @@ export default class WorldMapView extends BaseClass {
         ZOOM.set(this, 1);
 
         /* state handler */
-        this.registerStateHandler("listChange", event => {
+        this.registerStateHandler("listChange", () => {
             this.refreshList();
         });
 
@@ -254,7 +254,7 @@ export default class WorldMapView extends BaseClass {
         }
     }
 
-    setZoom(zoom, anchorX = 0, anchorY = 0) {
+    setZoom(zoom/* , anchorX = 0, anchorY = 0 */) {
         zoom = Math.min(Math.max(ZOOM_MIN, Math.floor(zoom)), ZOOM_MAX);
         const old = ZOOM.get(this);
         if (old != zoom) {

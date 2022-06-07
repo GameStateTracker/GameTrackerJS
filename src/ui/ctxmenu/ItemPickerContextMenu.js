@@ -23,7 +23,7 @@ export default class ItemPickerContextMenu extends ContextMenu {
                 itemPickerEl.setAttribute("items", JSON.stringify(config));
             }
         }
-        itemPickerEl.addEventListener("pick", event => {
+        itemPickerEl.addEventListener("pick", (event) => {
             const ev = new Event("pick");
             ev.item = event.value;
             this.dispatchEvent(ev);

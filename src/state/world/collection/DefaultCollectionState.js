@@ -17,7 +17,7 @@ export default class DefaultCollectionState extends DataState {
 
         /* LIST HANDLER */
         this.#listHandler = this.generateList();
-        this.#listHandler.addEventListener("visibility", (event) => {
+        this.#listHandler.addEventListener("visibility", () => {
             this.checkVisibility();
         });
         this.#listHandler.addEventListener("access", (event) => {

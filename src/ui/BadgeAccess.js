@@ -48,7 +48,7 @@ export default class BadgeAccess extends Badge {
             accessValuesEl.style.display = accessValuesObserver.value ? "" : "none";
         }
         this.switchEventTarget("accessValues", accessValuesObserver);
-        this.setEventTargetListener("accessValues", "change", event => {
+        this.setEventTargetListener("accessValues", "change", (event) => {
             if (accessValuesEl != null) {
                 accessValuesEl.style.display = event.value ? "" : "none";
             }

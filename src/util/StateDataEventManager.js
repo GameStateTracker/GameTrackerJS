@@ -32,7 +32,7 @@ export default class StateDataEventManager {
 
     registerStateHandler(name, fn) {
         if (Array.isArray(name)) {
-            name.forEach(n => this.registerStateHandler(n, fn));
+            name.forEach((n) => this.registerStateHandler(n, fn));
         } else {
             const subs = SUBS.get(this);
             const target = TARGET.get(this);
@@ -48,7 +48,7 @@ export default class StateDataEventManager {
 
     unregisterStateHandler(name, fn) {
         if (Array.isArray(name)) {
-            name.forEach(n => this.unregisterStateHandler(n, fn));
+            name.forEach((n) => this.unregisterStateHandler(n, fn));
         } else {
             const subs = SUBS.get(this);
             const target = TARGET.get(this);

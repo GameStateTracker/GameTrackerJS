@@ -54,13 +54,13 @@ export default class WorldMapEntry extends BaseClass {
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* mouse events */
-        this.addEventListener("click", event => {
+        this.addEventListener("click", (event) => {
             this.clickHandler(event);
             event.stopPropagation();
             event.preventDefault();
             return false;
         });
-        this.addEventListener("contextmenu", event => {
+        this.addEventListener("contextmenu", (event) => {
             this.contextmenuHandler(event);
             event.stopPropagation();
             event.preventDefault();
@@ -68,7 +68,7 @@ export default class WorldMapEntry extends BaseClass {
         });
     }
 
-    clickHandler(event) {
+    clickHandler(/* event */) {
         // nothing
     }
 

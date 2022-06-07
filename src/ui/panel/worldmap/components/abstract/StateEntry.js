@@ -46,7 +46,8 @@ const STYLE = new GlobalStyle(`
     min-height: 35px;
     word-break: break-word;
 }
-.textarea:empty {
+.textarea:empty,
+.textarea.hidden {
     display: none;
 }
 .textarea + .textarea {
@@ -113,7 +114,7 @@ export default class WorldMapStateEntry extends BaseClass {
         return state.access;
     }
 
-    applyAccess(value = "unavailable", data = {}) {
+    applyAccess(value = "unavailable"/* , data = {} */) {
         /* marker */
         const markerEl = this.shadowRoot.getElementById("marker");
         if (markerEl != null) {

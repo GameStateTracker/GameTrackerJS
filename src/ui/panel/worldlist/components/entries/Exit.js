@@ -75,10 +75,10 @@ export default class WorldListExit extends BaseClass {
         applyElements(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* state handler */
-        this.registerStateHandler("value", event => {
+        this.registerStateHandler("value", (event) => {
             this.applyValue(event.value);
         });
-        this.registerStateHandler("hint", event => {
+        this.registerStateHandler("hint", (event) => {
             this.applyHint(event.value);
         });
         /* context menu */

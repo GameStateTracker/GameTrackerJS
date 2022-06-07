@@ -92,7 +92,7 @@ export default class MapLocation extends WorldMapMarkedEntry {
         });
         /* context menu - item picker */
         this.setContextMenu("itempicker", ItemPickerContextMenu);
-        this.addContextMenuHandler("itempicker", "pick", event => {
+        this.addContextMenuHandler("itempicker", "pick", (event) => {
             const state = this.getState();
             if (state != null) {
                 state.item = event.item;
@@ -100,7 +100,7 @@ export default class MapLocation extends WorldMapMarkedEntry {
         });
     }
 
-    clickHandler(event) {
+    clickHandler(/* event */) {
         const state = this.getState();
         if (state != null) {
             state.value = !state.value;

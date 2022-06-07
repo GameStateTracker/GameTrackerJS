@@ -61,7 +61,7 @@ export default class DefaultItemState extends BaseClass {
                     MAX.set(this, maxVal);
                 }
                 optionObserver.addEventListener("change", (event) => {
-                    this.#setMax(event.data);
+                    this.#setMax(event.data ?? 0);
                 });
             }
         }
@@ -88,7 +88,7 @@ export default class DefaultItemState extends BaseClass {
                     MIN.set(this, minVal);
                 }
                 optionObserver.addEventListener("change", (event) => {
-                    this.#setMin(event.data);
+                    this.#setMin(event.data ?? 0);
                 });
             }
         }
@@ -97,13 +97,13 @@ export default class DefaultItemState extends BaseClass {
         const startItemsObserver = new ObservableStorageObserver(STORAGES.startItems, ref);
         START.set(this, parseSafeRange(startItemsObserver.value, 0));
         startItemsObserver.addEventListener("change", (event) => {
-            this.#setStart(event.value);
+            this.#setStart(event.value ?? 0);
         });
 
         const itemsObserver = new ObservableStorageObserver(STORAGES.items, ref);
         VALUE.set(this, this.#restrictValue(itemsObserver.value));
         itemsObserver.addEventListener("change", (event) => {
-            this.value = event.value;
+            this.value = event.value ?? 0;
         });
     }
 

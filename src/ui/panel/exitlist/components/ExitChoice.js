@@ -50,7 +50,8 @@ const STYLE = new GlobalStyle(`
     margin: 2px;
     word-break: break-word;
 }
-.textarea:empty {
+.textarea:empty,
+.textarea.hidden {
     display: none;
 }
 .pointer {
@@ -102,24 +103,24 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
         this.registerStateHandler("visibility", (event) => {
             this.hidden = !event.value;
         });
-        this.registerStateHandler("value", event => {
+        this.registerStateHandler("value", (event) => {
             this.value = event.value;
         });
 
         /* context menu */
         this.setDefaultContextMenu(ExitChoiceContextMenu);
         this.setContextMenu("exitbinding", ExitBindingContextMenu);
-        this.addContextMenuHandler("exitbinding", "change", event => {
+        this.addContextMenuHandler("exitbinding", "change", (event) => {
             const state = this.getState();
             if (state != null) {
                 state.value = event.value;
             }
         });
-        this.addDefaultContextMenuHandler("associate", event => {
+        this.addDefaultContextMenuHandler("associate", (event) => {
             const state = this.getState();
             this.showContextMenu("exitbinding", event, this.ref, state.value);
         });
-        this.addDefaultContextMenuHandler("deassociate", event => {
+        this.addDefaultContextMenuHandler("deassociate", () => {
             const state = this.getState();
             if (state != null) {
                 state.value = "";
@@ -127,7 +128,7 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
         });
 
         /* mouse events */
-        this.addEventListener("click", event => {
+        this.addEventListener("click", (event) => {
             const state = this.getState();
             if (state != null) {
                 const area = state.area;
@@ -139,7 +140,7 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
             event.preventDefault();
             return false;
         });
-        this.addEventListener("contextmenu", event => {
+        this.addEventListener("contextmenu", (event) => {
             this.showDefaultContextMenu(event);
             event.stopPropagation();
             event.preventDefault();

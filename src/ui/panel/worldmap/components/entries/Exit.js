@@ -71,15 +71,15 @@ export default class MapExit extends WorldMapMarkedEntry {
         applyElements(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* state handler */
-        this.registerStateHandler("value", event => {
+        this.registerStateHandler("value", (event) => {
             this.applyValue(event.value);
         });
-        this.registerStateHandler("hint", event => {
+        this.registerStateHandler("hint", (event) => {
             this.applyHint(event.value);
         });
         /* context menu */
         this.setDefaultContextMenu(ExitContextMenu);
-        this.addDefaultContextMenuHandler("associate", event => {
+        this.addDefaultContextMenuHandler("associate", () => {
             const state = this.getState();
             const mnu_ctx = this.getDefaultContextMenu();
             const mnu_ext = this.getContextMenu("exitbinding");
@@ -91,7 +91,7 @@ export default class MapExit extends WorldMapMarkedEntry {
             mnu_ext.setValue(state.value);
             mnu_ext.show(mnu_ctx.left, mnu_ctx.top);
         });
-        this.addDefaultContextMenuHandler("deassociate", event => {
+        this.addDefaultContextMenuHandler("deassociate", () => {
             const state = this.getState();
             if (state != null) {
                 state.value = "";
@@ -106,7 +106,7 @@ export default class MapExit extends WorldMapMarkedEntry {
                 }
             }
         });
-        this.addDefaultContextMenuHandler("check", event => {
+        this.addDefaultContextMenuHandler("check", () => {
             const state = this.getState();
             if (state != null) {
                 const area = state.area;
@@ -115,7 +115,7 @@ export default class MapExit extends WorldMapMarkedEntry {
                 }
             }
         });
-        this.addDefaultContextMenuHandler("uncheck", event => {
+        this.addDefaultContextMenuHandler("uncheck", () => {
             const state = this.getState();
             if (state != null) {
                 const area = state.area;
@@ -124,7 +124,7 @@ export default class MapExit extends WorldMapMarkedEntry {
                 }
             }
         });
-        this.addDefaultContextMenuHandler("setwoth", event => {
+        this.addDefaultContextMenuHandler("setwoth", () => {
             const state = this.getState();
             if (state != null) {
                 const area = state.area;
@@ -133,7 +133,7 @@ export default class MapExit extends WorldMapMarkedEntry {
                 }
             }
         });
-        this.addDefaultContextMenuHandler("setbarren", event => {
+        this.addDefaultContextMenuHandler("setbarren", () => {
             const state = this.getState();
             if (state != null) {
                 const area = state.area;
@@ -142,7 +142,7 @@ export default class MapExit extends WorldMapMarkedEntry {
                 }
             }
         });
-        this.addDefaultContextMenuHandler("clearhint", event => {
+        this.addDefaultContextMenuHandler("clearhint", () => {
             const state = this.getState();
             if (state != null) {
                 const area = state.area;
@@ -153,7 +153,7 @@ export default class MapExit extends WorldMapMarkedEntry {
         });
         /* context menu - exit binding */
         this.setContextMenu("exitbinding", ExitBindingContextMenu);
-        this.addContextMenuHandler("exitbinding", "change", event => {
+        this.addContextMenuHandler("exitbinding", "change", (event) => {
             const state = this.getState();
             if (state != null) {
                 state.value = event.value;

@@ -54,10 +54,10 @@ class FilterButton extends EventTargetListenerElementMixin(CustomElement) {
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* --- */
-        this.addEventListener("click", event => this.next(event));
-        this.addEventListener("contextmenu", event => this.revert(event));
+        this.addEventListener("click", (event) => this.next(event));
+        this.addEventListener("contextmenu", (event) => this.revert(event));
         /* event bus */
-        this.setEventTargetListener("filterObserver", "change", event => {
+        this.setEventTargetListener("filterObserver", "change", (event) => {
             this.value = event.value;
         });
     }

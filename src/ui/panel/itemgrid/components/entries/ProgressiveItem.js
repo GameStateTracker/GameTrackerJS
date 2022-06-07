@@ -120,13 +120,13 @@ export default class ProgressiveItem extends ItemElement {
         applyElements(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* --- */
-        this.registerStateHandler("max", event => {
+        this.registerStateHandler("max", () => {
             this.#fillItemChoices();
         });
-        this.registerStateHandler("min", event => {
+        this.registerStateHandler("min", () => {
             this.#fillItemChoices();
         });
-        this.registerStateHandler("start", event => {
+        this.registerStateHandler("start", () => {
             this.#fillItemChoices();
         });
     }

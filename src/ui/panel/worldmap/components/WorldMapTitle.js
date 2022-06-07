@@ -66,7 +66,7 @@ export default class WorldMapTitle extends BaseClass {
         STYLE.apply(this.shadowRoot);
 
         /* state handler */
-        this.registerStateHandler("access", event => {
+        this.registerStateHandler("access", (event) => {
             const access = event.value;
             const accessValue = access.value;
             this.applyAccess(("" + accessValue).toLowerCase(), access);
@@ -99,7 +99,7 @@ export default class WorldMapTitle extends BaseClass {
         return state.access;
     }
 
-    applyAccess(value = "unavailable", data = {}) {
+    applyAccess(value = "unavailable"/* , data = {} */) {
         this.access = value;
     }
 

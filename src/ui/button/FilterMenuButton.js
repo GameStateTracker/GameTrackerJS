@@ -43,7 +43,7 @@ class FilterMenuButton extends ContextMenuManagerMixin(CustomElement) {
         this.setContextMenu("filter", FilterContextMenu);
 
         /* mouse events */
-        this.addEventListener("click", event => {
+        this.addEventListener("click", (event) => {
             const rect = this.getBoundingClientRect();
             const mnu_flt = this.getContextMenu("filter");
             if (this.classList.contains("map-menu")) {

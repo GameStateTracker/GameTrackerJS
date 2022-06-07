@@ -77,7 +77,7 @@ class LogicCaller extends EventTarget {
     constructor() {
         super();
         /* EVENTS */
-        Logic.addEventListener("change", event => {
+        Logic.addEventListener("change", (event) => {
             const ev = new Event("change");
             ev.data = event.data;
             this.dispatchEvent(ev);
@@ -92,22 +92,25 @@ class LogicCaller extends EventTarget {
         this.registerStorage(STORAGES.options, "option[", "]");
         this.registerStorage(STORAGES.filter, "filter[", "]");
         this.registerStorage(SettingsStorage, "setting[", "]");
-        /* --- */
-        this.#init();
     }
 
     #init = debounce(() => {
-        const data = {};
-        for (const [storage, {prefix, postfix}] of STORAGE_REGISTER) {
-            addRenameKeys(data, storage.getAll(), prefix, postfix);
+        const logicData = {};
+        for (const [storage, {prefix, postfix, precall}] of STORAGE_REGISTER) {
+            const data = storage.getAll();
+            if (typeof precall === "function") {
+                addRenameKeys(logicData, precall(data), prefix, postfix);
+            } else {
+                addRenameKeys(logicData, data, prefix, postfix);
+            }
         }
         // ---
         CACHE.clear();
-        for (const [key, value] of Object.entries(data)) {
+        for (const [key, value] of Object.entries(logicData)) {
             CACHE.set(key, value);
         }
         Logic.reset();
-        const augmentedData = execAugment(data);
+        const augmentedData = execAugment(logicData);
         Logic.execute(augmentedData, "region[root]");
     });
 
@@ -134,10 +137,11 @@ class LogicCaller extends EventTarget {
         }
         if (!STORAGE_REGISTER.has(storage)) {
             storage.addEventListener("change", (event) => {
+                const data = event.data;
                 if (typeof precall === "function") {
-                    this.#changeData(renameKeys(precall(event.data), prefix, postfix));
+                    this.#changeData(renameKeys(precall(data), prefix, postfix));
                 } else {
-                    this.#changeData(renameKeys(event.data, prefix, postfix));
+                    this.#changeData(renameKeys(data, prefix, postfix));
                 }
             });
         }

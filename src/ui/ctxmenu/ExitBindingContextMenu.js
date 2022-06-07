@@ -43,12 +43,12 @@ export default class ExitBindingContextMenu extends BaseClass {
     initItems() {
         const exitSelectEl = document.createElement("emc-listselect");
         exitSelectEl.id = "select";
-        exitSelectEl.addEventListener("change", event => {
+        exitSelectEl.addEventListener("change", (event) => {
             const ev = new Event("change");
             ev.value = event.value;
             this.dispatchEvent(ev);
         });
-        exitSelectEl.addEventListener("click", event => {
+        exitSelectEl.addEventListener("click", (event) => {
             event.stopPropagation();
             event.preventDefault();
             return false;

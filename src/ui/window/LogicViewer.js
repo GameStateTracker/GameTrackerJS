@@ -91,7 +91,7 @@ class LogicViewer {
                 if (parent) {
                     const p = document.createElement("button");
                     p.innerHTML = `From:<br>${parent}`;
-                    p.addEventListener("click", event => {
+                    p.addEventListener("click", () => {
                         d.close();
                         this.show(parent);
                     });

@@ -75,7 +75,7 @@ export default class MapArea extends WorldMapMarkedEntry {
         applyElements(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* state handler */
-        this.registerStateHandler("hint", event => {
+        this.registerStateHandler("hint", (event) => {
             this.applyHint(event.value);
         });
         /* context menu */
@@ -86,31 +86,31 @@ export default class MapArea extends WorldMapMarkedEntry {
                 WorldListState.area = this.ref;
             }
         });
-        this.addDefaultContextMenuHandler("check", event => {
+        this.addDefaultContextMenuHandler("check", () => {
             const state = this.getState();
             if (state != null) {
                 state.setAllEntries(true);
             }
         });
-        this.addDefaultContextMenuHandler("uncheck", event => {
+        this.addDefaultContextMenuHandler("uncheck", () => {
             const state = this.getState();
             if (state != null) {
                 state.setAllEntries(false);
             }
         });
-        this.addDefaultContextMenuHandler("setwoth", event => {
+        this.addDefaultContextMenuHandler("setwoth", () => {
             const state = this.getState();
             if (state != null) {
                 state.hint = "woth";
             }
         });
-        this.addDefaultContextMenuHandler("setbarren", event => {
+        this.addDefaultContextMenuHandler("setbarren", () => {
             const state = this.getState();
             if (state != null) {
                 state.hint = "barren";
             }
         });
-        this.addDefaultContextMenuHandler("clearhint", event => {
+        this.addDefaultContextMenuHandler("clearhint", () => {
             const state = this.getState();
             if (state != null) {
                 state.hint = "";

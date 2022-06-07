@@ -1,6 +1,6 @@
 import ItemsRecource from "../../data/resource/ItemsResource.js";
 import AbstractStateManager from "../../statemanager/AbstractStateManager.js";
-import DefaultItemState from "./DefaultState.js";
+import DefaultItemState from "./DefaultItemState.js";
 
 const resourceData = ItemsRecource.get();
 

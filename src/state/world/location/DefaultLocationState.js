@@ -93,17 +93,19 @@ export default class DefaultLocationState extends BaseClass {
             this.#itemData = itemData?.props;
         }
 
-        this.#reachable = Logic.getValue(props.logicAccess);
+        this.#reachable = !!Logic.getValue(props.logicAccess);
         this.#access = getLogicAccess(this.value, this.reachable);
 
         /* LOGIC */
         Logic.addEventListener("change", () => {
-            const reachable = Logic.getValue(props.logicAccess);
-            if (reachable != null) {
-                if (reachable != this.#reachable) {
-                    this.#reachable = reachable;
-                    this.refreshAccess();
-                }
+            const reachable = !!Logic.getValue(props.logicAccess);
+            if (reachable != this.#reachable) {
+                this.#reachable = reachable;
+                this.refreshAccess();
+                // external
+                const ev = new Event("reachable");
+                ev.value = reachable;
+                this.dispatchEvent(ev);
             }
         });
 

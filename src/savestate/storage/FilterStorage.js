@@ -17,7 +17,7 @@ class FilterStorage extends ObservableStorage {
 
     constructor() {
         super();
-        this.addEventListener("change", event => {
+        this.addEventListener("change", (event) => {
             const data = {};
             const changes = {};
             for (const key in event.data) {

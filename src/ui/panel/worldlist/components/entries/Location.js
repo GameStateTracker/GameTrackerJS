@@ -102,7 +102,7 @@ export default class WorldListLocation extends BaseClass {
         });
     }
 
-    clickHandler(event) {
+    clickHandler(/* event */) {
         const state = this.getState();
         if (state != null) {
             state.value = !state.value;

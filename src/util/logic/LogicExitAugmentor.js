@@ -75,15 +75,18 @@ export default class LogicExitAugmentor {
 
     static applyBinding(changes, from, to) {
         const [source, target] = from.split(" -> ");
+        const sourceVal = `region[${source}]`;
+        const targetVal = `region[${target}]`;
         if (source && target) {
             if (!to) {
-                changes.push({source: `${source}{child}`, target: `${target}{child}`, reroute: to});
-                changes.push({source: `${source}{adult}`, target: `${target}{adult}`, reroute: to});
+                changes.push({source: `${sourceVal}{child}`, target: `${targetVal}{child}`, reroute: to});
+                changes.push({source: `${sourceVal}{adult}`, target: `${targetVal}{adult}`, reroute: to});
             } else {
                 const [reroute] = to.split(" -> ");
+                const rerouteVal = `region[${reroute}]`;
                 if (reroute) {
-                    changes.push({source: `${source}{child}`, target: `${target}{child}`, reroute: `${reroute}{child}`});
-                    changes.push({source: `${source}{adult}`, target: `${target}{adult}`, reroute: `${reroute}{adult}`});
+                    changes.push({source: `${sourceVal}{child}`, target: `${targetVal}{child}`, reroute: `${rerouteVal}{child}`});
+                    changes.push({source: `${sourceVal}{adult}`, target: `${targetVal}{adult}`, reroute: `${rerouteVal}{adult}`});
                 }
             }
         }

@@ -84,7 +84,7 @@ export default class TextEditor extends CustomElement {
             ParameterStorage.set("notes.font_size", size);
             textEl.style.fontSize = `${size}px`;
         });
-        textEl.addEventListener("input", (event) => {
+        textEl.addEventListener("input", () => {
             if (textTimer) {
                 clearTimeout(textTimer);
             }

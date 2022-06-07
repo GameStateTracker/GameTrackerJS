@@ -68,7 +68,7 @@ export default class Item extends BaseClass {
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* --- */
-        this.registerStateHandler("visibility", event => {
+        this.registerStateHandler("visibility", (event) => {
             if (event.value) {
                 this.style.visibility = "";
             } else {

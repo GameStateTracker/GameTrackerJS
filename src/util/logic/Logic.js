@@ -10,7 +10,7 @@ const logicDebugObserver = new SettingsObserver("debug_logic");
 
 const LOGIC_PROCESSOR = new LogicGraph(logicDebugObserver.value != "off" && logicDebugObserver.value);
 
-logicDebugObserver.addEventListener("change", event => {
+logicDebugObserver.addEventListener("change", (event) => {
     LOGIC_PROCESSOR.debug = event.value != "off" && event.value;
 });
 

@@ -31,7 +31,7 @@ export default class WorldListStateButton extends BaseClass {
         return state.access;
     }
 
-    applyAccess(value = "undefined", data = {}) {
+    applyAccess(value = "undefined"/* , data = {} */) {
         this.access = value;
     }
 

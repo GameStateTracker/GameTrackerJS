@@ -85,13 +85,13 @@ async function autosave() {
     }
 }
 
-autosaveTimeObserver.addEventListener("change", (event) => {
+autosaveTimeObserver.addEventListener("change", () => {
     registerAutosaveTimer();
 });
-autosaveAmountObserver.addEventListener("change", (event) => {
+autosaveAmountObserver.addEventListener("change", () => {
     registerAutosaveTimer();
 });
-SavestateHandler.addEventListener("load", (event) => {
+SavestateHandler.addEventListener("load", () => {
     lastAutoSave = new Date();
     autosaveDirtyTrigger = false;
     registerAutosaveTimer();

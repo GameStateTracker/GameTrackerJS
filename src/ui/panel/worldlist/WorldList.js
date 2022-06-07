@@ -128,20 +128,20 @@ export default class WorldList extends BaseClass {
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* state handler */
-        WorldListState.addEventListener("area", event => {
+        WorldListState.addEventListener("area", (event) => {
             this.ref = event.value;
         });
-        this.registerStateHandler("access", event => {
+        this.registerStateHandler("access", (event) => {
             const access = event.value;
             const accessValue = access.value;
             this.applyAccess(("" + accessValue).toLowerCase(), access);
         });
-        this.registerStateHandler("listChange", event => {
+        this.registerStateHandler("listChange", () => {
             this.refreshList();
         });
         /* back button */
         const backEl = this.shadowRoot.getElementById("back");
-        backEl.addEventListener("trigger", event => {
+        backEl.addEventListener("trigger", () => {
             WorldListState.reset();
         });
         /* --- */
@@ -194,7 +194,7 @@ export default class WorldList extends BaseClass {
         return state.access;
     }
 
-    applyAccess(value = "unavailable", data = {}) {
+    applyAccess(value = "unavailable"/* , data = {} */) {
         this.access = value;
     }
 

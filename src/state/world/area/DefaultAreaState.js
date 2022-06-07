@@ -12,6 +12,7 @@ import Savestate from "../../../savestate/Savestate.js";
 import StateListHandler, {
     getDefaultAccess
 } from "../../../util/handler/StateListHandler.js";
+import Logic from "../../../util/logic/Logic.js";
 import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";
@@ -38,6 +39,8 @@ export default class DefaultAreaState extends BaseClass {
 
     #visible = true;
 
+    #reachable = false;
+
     constructor(ref, props) {
         super(ref, props);
 
@@ -48,9 +51,22 @@ export default class DefaultAreaState extends BaseClass {
             this.hint = event.value;
         });
 
+        /* LOGIC */
+        this.#reachable = !!Logic.getValue(props.logicAccess);
+        Logic.addEventListener("change", () => {
+            const reachable = !!Logic.getValue(props.logicAccess);
+            if (reachable != this.#reachable) {
+                this.#reachable = reachable;
+                // external
+                const ev = new Event("reachable");
+                ev.value = reachable;
+                this.dispatchEvent(ev);
+            }
+        });
+
         /* LIST HANDLER */
         this.#listHandler = this.generateList();
-        this.#listHandler.addEventListener("visibility", (event) => {
+        this.#listHandler.addEventListener("visibility", () => {
             this.checkVisibility();
         });
         this.#listHandler.addEventListener("access", (event) => {
@@ -95,6 +111,10 @@ export default class DefaultAreaState extends BaseClass {
         ev.value = event.value;
         this.dispatchEvent(ev);
         this.checkVisibility();
+    }
+
+    get reachable() {
+        return this.#reachable;
     }
 
     set hint(value) {
