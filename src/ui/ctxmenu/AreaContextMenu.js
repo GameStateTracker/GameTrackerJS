@@ -12,7 +12,9 @@ export default class AreaContextMenu extends ContextMenu {
             "splitter",
             {menuAction: "setwoth", content: "Set WOTH"},
             {menuAction: "setbarren", content: "Set Barren"},
-            {menuAction: "clearhint", content: "Clear Hint"}
+            {menuAction: "clearhint", content: "Clear Hint"},
+            "splitter",
+            {menuAction: "show_logic", content: "Show Logic"}
         ]);
     }
 

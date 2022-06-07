@@ -18,6 +18,8 @@ import AccessTextMarkerMixin from "../mixin/AccessTextMarkerMixin.js";
 import AccessListMarkerMixin from "../mixin/AccessListMarkerMixin.js";
 import ExitContextMenu from "../../../../ctxmenu/ExitContextMenu.js";
 import ExitBindingContextMenu from "../../../../ctxmenu/ExitBindingContextMenu.js";
+import Language from "../../../../../util/Language.js";
+import LogicViewer from "../../../../window/LogicViewer.js";
 
 const TPL = new Template(`
 <div id="area" class="textarea">
@@ -145,6 +147,13 @@ export default class WorldListExit extends BaseClass {
                 if (area != null) {
                     area.hint = "";
                 }
+            }
+        });
+        this.addDefaultContextMenuHandler("show_logic", () => {
+            const state = this.getState();
+            if (state != null) {
+                const title = Language.generateLabel(this.ref);
+                LogicViewer.show(state.props.logicAccess, title);
             }
         });
         /* context menu - exit binding */
