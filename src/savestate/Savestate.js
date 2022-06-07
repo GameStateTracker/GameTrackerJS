@@ -19,14 +19,6 @@ const INFO = {
     notes: ""
 };
 
-function changeHandler(category, event) {
-    const ev = new Event("change");
-    ev.category = category;
-    ev.data = event.data;
-    ev.changes = event.changes;
-    this.dispatchEvent(ev);
-}
-
 class Savestate extends EventTarget {
 
     constructor() {
@@ -192,7 +184,13 @@ class Savestate extends EventTarget {
         if (HANDLER.has(storageCategory)) {
             return HANDLER.get(storageCategory);
         }
-        const handler = changeHandler.bind(this, storageCategory);
+        const handler = (event) => {
+            const ev = new Event("change");
+            ev.category = storageCategory;
+            ev.data = event.data;
+            ev.changes = event.changes;
+            this.dispatchEvent(ev);
+        };
         HANDLER.set(storageCategory, handler);
         return handler;
     }
