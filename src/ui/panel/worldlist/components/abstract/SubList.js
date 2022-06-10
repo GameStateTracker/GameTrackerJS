@@ -6,7 +6,7 @@ import {
 } from "/emcJS/util/Mixin.js";
 import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
 import ElementManager from "/emcJS/util/html/ElementManager.js";
-import ContextMenuManagerMixin from "/emcJS/ui/overlay/ctxmenu/ContextMenuManagerMixin.js";
+import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
 
 import SettingsObserver from "../../../../../util/observer/SettingsObserver.js";
 import UIRegistry from "../../../../../registry/UIRegistry.js";

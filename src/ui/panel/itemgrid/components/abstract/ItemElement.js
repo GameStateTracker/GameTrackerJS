@@ -4,7 +4,7 @@ import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
-import CustomElement from "/emcJS/ui/CustomElement.js";
+import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import "/emcJS/ui/input/Option.js";
 import "/emcJS/ui/i18n/I18nTooltip.js";
 
