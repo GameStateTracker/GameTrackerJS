@@ -22,9 +22,9 @@ import "./components/WorldMapTitle.js";
 const TPL = new Template(`
 <gt-worldmap-view id="view"></gt-worldmap-view>
 <div class="overview-wrapper">
-    <emc-slider min="10" max="200" value="50" id="zoom-slider"></emc-slider>
     <gt-worldmap-overview id="overview"></gt-worldmap-overview>
-    <div class="icon">🧭</div>
+    <emc-slider min="10" max="200" value="50" id="zoom-slider"></emc-slider>
+    <div id="overview-icon">🧭</div>
 </div>
 <gt-worldmap-title id="title">
     <gt-hintbutton class="button" id="hint">
@@ -61,31 +61,33 @@ const STYLE = new GlobalStyle(`
     width: 200px;
     height: 230px;
 }
-.overview-wrapper .icon {
+.overview-wrapper #zoom-slider {
+    width: 200px;
+    height: 30px;
+    padding: 5px;
+}
+.overview-wrapper #overview-icon {
     position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
     top: 0;
     left: 0;
-    bottom: 0;
-    right: 0;
+    width: 100%;
+    height: 100%;
     background-color: #000000;
     font-size: 30px;
     line-height: 1em;
+    overflow: hidden;
     opacity: 1;
-    transition: opacity 0s, font-size 0s;
+    transition: opacity 0s, font-size 0s, width 0s, height 0s;
 }
-.overview-wrapper:hover .icon {
+.overview-wrapper:hover #overview-icon {
     font-size: 100px;
     opacity: 0;
-    pointer-events: none;
-    transition: opacity .2s .2s, font-size .2s .2s;
-}
-#zoom-slider {
-    width: 200px;
-    height: 30px;
-    padding: 5px;
+    width: 0%;
+    height: 0%;
+    transition: opacity .2s .2s, font-size .2s .2s, width 0s .4s, height 0s .4s;
 }
 #title {
     position: absolute;
@@ -125,13 +127,17 @@ export default class WorldMap extends BaseClass {
         /* view */
         const viewEl = this.shadowRoot.getElementById("view");
         const overviewEl = this.shadowRoot.getElementById("overview");
+        const iconEl = this.shadowRoot.getElementById("overview-icon");
         viewEl.addEventListener("transform", (event) => {
-            // console.log("transform", event.x, event.y, event.zoom);
             overviewEl.setTransform(event.x, event.y, event.zoom);
         });
         overviewEl.addEventListener("move", (event) => {
-            // console.log("move", event.x, event.y);
             viewEl.setTranslation(event.x, event.y);
+        });
+        iconEl.addEventListener("click", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            return false;
         });
 
         /* ZOOM */

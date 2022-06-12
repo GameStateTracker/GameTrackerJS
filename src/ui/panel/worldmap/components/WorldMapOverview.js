@@ -37,6 +37,10 @@ const STYLE = new GlobalStyle(`
     background-position: center;
     background-origin: content-box;
     overflow: hidden;
+    cursor: grab;
+}
+#map:active {
+    cursor: grabbing;
 }
 #shadow {
     position: relative;

@@ -55,6 +55,10 @@ const STYLE = new GlobalStyle(`
         scale(
             calc(var(--zoom, 100) / 100)
         );
+    cursor: grab;
+}
+#map.grabbed {
+    cursor: grabbing;
 }
 ::slotted(*) {
     position: absolute;
@@ -119,29 +123,41 @@ export default class WorldMapView extends BaseClass {
         const mapEl = this.shadowRoot.getElementById("map");
         const mapEventManager = new EventTargetManager(mapEl, false);
         mapEl.addEventListener("mousedown", (event) => {
-            if (!this.fixed && event.button === 0) {
-                const target = event.target;
-                console.log("map position\n\"x\": %d, \"y\": %d", event.offsetX, event.offsetY);
-                target.classList.add("grabbed");
-                mapEventManager.setActive(true);
+            if (event.target === mapEl || event.target.tagName === "GT-CONNECTION-POINT") {
+                if (!this.fixed && event.button === 0) {
+                    console.log("map position\n\"x\": %d, \"y\": %d", event.offsetX, event.offsetY);
+                    mapEl.classList.add("grabbed");
+                    mapEventManager.setActive(true);
+                }
+                event.preventDefault();
+                return false;
             }
-            event.preventDefault();
-            return false;
         });
         mapEventManager.set("mousemove", (event) => {
-            if (event.button === 0) {
-                const vrtX = OFFSET_X.get(this);
-                const vrtY = OFFSET_Y.get(this);
-                const forceX = event.movementX;
-                const forceY = event.movementY;
-                this.setTranslation(vrtX + forceX, vrtY + forceY);
+            if (mapEl.classList.contains("grabbed")) {
+                if (event.button === 0) {
+                    const vrtX = OFFSET_X.get(this);
+                    const vrtY = OFFSET_Y.get(this);
+                    const forceX = event.movementX;
+                    const forceY = event.movementY;
+                    this.setTranslation(vrtX + forceX, vrtY + forceY);
+                }
             }
         });
-        mapEventManager.set(["mouseup", "mouseleave"], (event) => {
-            if (event.button === 0) {
-                const target = event.target;
-                target.classList.remove("grabbed");
-                mapEventManager.setActive(false);
+        mapEventManager.set("mouseup", (event) => {
+            if (mapEl.classList.contains("grabbed")) {
+                if (event.button === 0) {
+                    mapEl.classList.remove("grabbed");
+                    mapEventManager.setActive(false);
+                }
+            }
+        });
+        mapEventManager.set("mouseleave", (event) => {
+            if (event.target === mapEl) {
+                if (event.button === 0) {
+                    mapEl.classList.remove("grabbed");
+                    mapEventManager.setActive(false);
+                }
             }
         });
         /* settings */
