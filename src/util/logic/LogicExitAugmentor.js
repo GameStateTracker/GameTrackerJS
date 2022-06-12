@@ -47,7 +47,7 @@ export default class LogicExitAugmentor {
 
         /* EXIT */
         this.#exit = ExitStateManager.get(ref);
-        this.#exit.addEventListener("visibility", () => {
+        this.#exit.addEventListener("visible", () => {
             this.#changeBinding();
         });
         this.#exit.addEventListener("value", (event) => {
@@ -59,7 +59,7 @@ export default class LogicExitAugmentor {
 
     #changeBinding() {
         const changes = [];
-        if (this.#exit.isVisible()) {
+        if (this.#exit.visible) {
             LogicExitAugmentor.applyBinding(changes, this.#exit.ref, this.#exit.value);
         } else {
             LogicExitAugmentor.applyBinding(changes, this.#exit.ref, null);

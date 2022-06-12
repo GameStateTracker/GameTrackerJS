@@ -9,7 +9,7 @@ function initRedirects() {
     Logic.clearRedirects();
     const initTransalation = [];
     for (const entry of AUGMENTORS) {
-        if (entry.exit.isVisible()) {
+        if (entry.exit.visible) {
             LogicExitAugmentor.applyBinding(initTransalation, entry.exit.ref, entry.exit.value);
         }
     }

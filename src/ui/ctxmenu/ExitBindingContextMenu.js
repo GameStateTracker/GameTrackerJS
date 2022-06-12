@@ -109,7 +109,7 @@ export default class ExitBindingContextMenu extends BaseClass {
             // add options
             for (const [, entrance] of EntranceStateManager) {
                 setTimeout(() => {
-                    if (access != entrance.ref && (!entrance.props.isBiDir || !bound.has(entrance.ref))) {
+                    if (access != entrance.ref && (exit.props.ignoreBound || !bound.has(entrance.ref))) {
                         const isBindable = exit.checkBindable(entrance);
                         if (isBindable) {
                             const opt = document.createElement("emc-option");

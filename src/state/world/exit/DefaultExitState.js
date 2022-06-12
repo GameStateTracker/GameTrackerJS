@@ -247,7 +247,7 @@ export default class DefaultExitState extends BaseClass {
     }
 
     get value() {
-        return this.#value;
+        return this.#value ?? "";
     }
 
     get area() {
