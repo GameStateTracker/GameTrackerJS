@@ -38,8 +38,6 @@ const TPL = new Template(`
 
 const STYLE = new GlobalStyle(`
 :host {
-    position: relative;
-    box-sizing: border-box;
     display: inline-flex;
     flex-direction: column;
     min-height: 100%;
