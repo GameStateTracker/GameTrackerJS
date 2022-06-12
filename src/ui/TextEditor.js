@@ -1,68 +1,7 @@
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
-
 import ParameterStorage from "../storage/ParameterStorage.js";
-
-const TPL = new Template(`
-<div id="title"></div>
-<div class="controls">
-    <label>
-        <span>Font size</span><input type="number" id="font_size" min="8" max="50">
-    </label>
-</div>
-<textarea id="text"></textarea>
-`);
-
-const STYLE = new GlobalStyle(`
-:host {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-}
-#title {
-    margin: 10px 0;
-    font-size: 2em;
-    line-height: 1em;
-}
-#title:empty {
-    display: none;
-}
-.controls label {
-    display: inline-flex;
-    padding: 5px;
-    background-color: var(--edit-background-color, #ffffff);
-    color: var(--edit-text-color, #000000);
-    border: solid 2px;
-    border-bottom: none 0px;
-    border-color: var(--edit-text-color, #ffffff);
-}
-.controls span {
-    display: flex;
-    align-items: center;
-    margin-right: 5px;
-}
-.controls input {
-    font-size: 1em;
-    width: 70px;
-    text-align: right;
-}
-#text {
-    flex: 1;
-    padding: 5px;
-    resize: none;
-    overflow: scroll;
-    background-color: var(--edit-background-color, #ffffff);
-    color: var(--edit-text-color, #000000);
-    border: solid 2px;
-    border-color: var(--edit-text-color, #ffffff);
-    word-wrap: unset;
-    white-space: pre;
-    user-select: text;
-}
-`);
+import TPL from "./TextEditor.js.html" assert {type: "html"};
+import STYLE from "./TextEditor.js.css" assert {type: "css"};
 
 export default class TextEditor extends CustomElement {
 

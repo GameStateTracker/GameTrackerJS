@@ -1,0 +1,19 @@
+#access-values {
+    display: flex;
+    flex-direction: column;
+    width: 24px;
+    height: 24px;
+    margin: 1px;
+}
+#access-values div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 24px;
+    height: 12px;
+    font-size: 0.5em;
+    line-height: 1em;
+    padding: 2px;
+    white-space: pre;
+    word-break: keep-all;
+}

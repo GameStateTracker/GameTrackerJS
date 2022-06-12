@@ -9,7 +9,7 @@ export default class ItemPickerContextMenu extends ContextMenu {
 
     show(posX, posY, items) {
         super.show(posX, posY);
-        this.loadItems(items);
+        this.setItems(items);
     }
 
     initItems() {
@@ -31,7 +31,11 @@ export default class ItemPickerContextMenu extends ContextMenu {
             event.preventDefault();
             return false;
         });
-        super.loadItems([itemPickerEl]);
+        super.setItems([itemPickerEl]);
+    }
+
+    setItems() {
+        // nothing
     }
 
     loadItems(config = "") {

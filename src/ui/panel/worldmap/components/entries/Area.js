@@ -23,6 +23,8 @@ const STYLE = new GlobalStyle(`
 }
 #marker {
     border-radius: 25%;
+    font-size: 21px;
+    line-height: 1em;
 }
 #marker[data-entrances="true"]:after {
     position: absolute;
@@ -68,7 +70,7 @@ function applyElements(target) {
     textEl.insertAdjacentElement("afterend", hintEl);
 }
 
-export default class MapArea extends WorldMapMarkedEntry {
+export default class WorldMapArea extends WorldMapMarkedEntry {
 
     constructor() {
         super();
@@ -226,5 +228,5 @@ export default class MapArea extends WorldMapMarkedEntry {
 
 }
 
-customElements.define("gt-worldmap-area", MapArea);
-UIRegistry.set("worldmap-area", new UIRegistry(MapArea));
+customElements.define("gt-worldmap-area", WorldMapArea);
+UIRegistry.set("worldmap-area", new UIRegistry(WorldMapArea));

@@ -11,8 +11,6 @@ import WorldListElement from "../abstract/Element.js";
 import AccessTextMarkerMixin from "../mixin/AccessTextMarkerMixin.js";
 import LocationContextMenu from "../../../../ctxmenu/LocationContextMenu.js";
 import ItemPickerContextMenu from "../../../../ctxmenu/ItemPickerContextMenu.js";
-import LogicViewer from "../../../../window/LogicViewer.js";
-import Language from "../../../../../util/Language.js";
 
 const TPL = new Template(`
 <emc-labeledicon id="item" halign="center" valign="center"></emc-labeledicon>
@@ -83,13 +81,6 @@ export default class WorldListLocation extends BaseClass {
             const state = this.getState();
             if (state != null) {
                 state.item = "";
-            }
-        });
-        this.addDefaultContextMenuHandler("show_logic", () => {
-            const state = this.getState();
-            if (state != null) {
-                const title = Language.generateLabel(this.ref);
-                LogicViewer.show(state.props.logicAccess, title);
             }
         });
         /* context menu - item picker */

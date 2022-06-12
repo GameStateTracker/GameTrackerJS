@@ -31,7 +31,6 @@ const STYLE = new GlobalStyle(`
     border: solid 4px black;
     color: black;
     background-color: var(--page-text-color, #000000);
-    font-size: 1em;
     font-weight: bold;
     cursor: pointer;
 }

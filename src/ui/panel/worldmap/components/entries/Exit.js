@@ -30,11 +30,8 @@ const STYLE = new GlobalStyle(`
 }
 #marker {
     border-radius: 25%;
-}
-#value:empty:after {
-    display: inline;
-    font-style: italic;
-    content: "no association";
+    font-size: 21px;
+    line-height: 1em;
 }
 #hint {
     margin-left: 5px;
@@ -64,7 +61,7 @@ function applyElements(target) {
     tooltipEl.append(tpl);
 }
 
-export default class MapExit extends WorldMapMarkedEntry {
+export default class WorldMapExit extends WorldMapMarkedEntry {
 
     constructor() {
         super();
@@ -79,7 +76,7 @@ export default class MapExit extends WorldMapMarkedEntry {
         });
         /* context menu */
         this.setDefaultContextMenu(ExitContextMenu);
-        this.addDefaultContextMenuHandler("associate", () => {
+        this.addDefaultContextMenuHandler("bind", () => {
             const state = this.getState();
             const mnu_ctx = this.getDefaultContextMenu();
             const mnu_ext = this.getContextMenu("exitbinding");
@@ -91,7 +88,7 @@ export default class MapExit extends WorldMapMarkedEntry {
             mnu_ext.setValue(state.value);
             mnu_ext.show(mnu_ctx.left, mnu_ctx.top);
         });
-        this.addDefaultContextMenuHandler("deassociate", () => {
+        this.addDefaultContextMenuHandler("unbind", () => {
             const state = this.getState();
             if (state != null) {
                 state.value = "";
@@ -222,6 +219,11 @@ export default class MapExit extends WorldMapMarkedEntry {
         const valueEl = this.shadowRoot.getElementById("value");
         if (valueEl != null) {
             if (value) {
+                if (value == "\u0000") {
+                    this.toggleDefaultContextMenuGroupActive("area", false);
+                } else {
+                    this.toggleDefaultContextMenuGroupActive("area", true);
+                }
                 valueEl.i18nValue = `entrance[${value}]`;
                 const state = this.getState();
                 if (state != null) {
@@ -230,7 +232,8 @@ export default class MapExit extends WorldMapMarkedEntry {
                     this.applyHint();
                 }
             } else {
-                valueEl.innerHTML = "";
+                this.toggleDefaultContextMenuGroupActive("area", false);
+                valueEl.i18nValue = "entrance[]";
                 this.applyHint();
             }
         }
@@ -305,5 +308,5 @@ export default class MapExit extends WorldMapMarkedEntry {
 
 }
 
-customElements.define("gt-worldmap-exit", MapExit);
-UIRegistry.set("worldmap-exit", new UIRegistry(MapExit));
+customElements.define("gt-worldmap-exit", WorldMapExit);
+UIRegistry.set("worldmap-exit", new UIRegistry(WorldMapExit));

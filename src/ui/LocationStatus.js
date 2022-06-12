@@ -1,23 +1,7 @@
-// frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
-
 import WorldSummaryHandler from "../util/handler/WorldSummaryHandler.js";
-
-const TPL = new Template(`
-<div class="state">
-    <span id="locations-done">#</span> done | <span id="locations-available">#</span> avail | <span id="locations-missing">#</span> miss
-</div>
-`);
-
-const STYLE = new GlobalStyle(`
-.state {
-    display: inline;
-    padding: 0 5px;
-    white-space: nowrap;
-}
-`);
+import TPL from "./LocationStatus.js.html" assert {type: "html"};
+import STYLE from "./LocationStatus.js.css" assert {type: "css"};
 
 export default class LocationStatus extends CustomElement {
 

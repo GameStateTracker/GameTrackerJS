@@ -14,8 +14,6 @@ import AccessTextMarkerMixin from "../mixin/AccessTextMarkerMixin.js";
 import AccessListMarkerMixin from "../mixin/AccessListMarkerMixin.js";
 import AreaContextMenu from "../../../../ctxmenu/AreaContextMenu.js";
 import "../../../../../state/world/area/OverworldState.js";
-import Language from "../../../../../util/Language.js";
-import LogicViewer from "../../../../window/LogicViewer.js";
 
 const TPL = new Template(`
 <div id="entrances"></div>
@@ -111,13 +109,6 @@ export default class WorldListArea extends BaseClass {
                 state.hint = "";
             }
         });
-        this.addDefaultContextMenuHandler("show_logic", () => {
-            const state = this.getState();
-            if (state != null) {
-                const title = Language.generateLabel(this.ref);
-                LogicViewer.show(state.props.logicAccess, title);
-            }
-        });
     }
 
     clickHandler(event) {
@@ -176,5 +167,5 @@ export default class WorldListArea extends BaseClass {
 
 }
 
-customElements.define("ootrt-list-area", WorldListArea);
+customElements.define("gt-worldlist-area", WorldListArea);
 UIRegistry.set("worldlist-area", new UIRegistry(WorldListArea));

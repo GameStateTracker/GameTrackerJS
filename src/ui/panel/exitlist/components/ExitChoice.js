@@ -116,11 +116,11 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
                 state.value = event.value;
             }
         });
-        this.addDefaultContextMenuHandler("associate", (event) => {
+        this.addDefaultContextMenuHandler("bind", (event) => {
             const state = this.getState();
             this.showContextMenu("exitbinding", event, this.ref, state.value);
         });
-        this.addDefaultContextMenuHandler("deassociate", () => {
+        this.addDefaultContextMenuHandler("unbind", () => {
             const state = this.getState();
             if (state != null) {
                 state.value = "";

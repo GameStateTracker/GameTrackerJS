@@ -1,75 +1,6 @@
-// frameworks
-import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
 import Dialog from "/emcJS/ui/overlay/window/Dialog.js";
 import LogicUIAbstractElement from "/editors/ui/logic/AbstractElement.js";
-
-// GameTrackerJS
-import SettingsObserver from "/GameTrackerJS/util/observer/SettingsObserver.js";
-import OptionsObserver from "/GameTrackerJS/util/observer/OptionsObserver.js";
-// Track-OOT
 import LogicResource from "/script/resource/LogicResource.js";
-import LogicGlitchedResource from "/script/resource/LogicGlitchedResource.js";
-
-const logicRulesObserver = new OptionsObserver("logic_rules");
-const customLogicObserver = new SettingsObserver("use_custom_logic");
-
-function extractLogic(data, customData, ref) {
-    const res = [];
-    for (const name in data.logic) {
-        if (name == ref || name == `${ref}{child}` || name == `${ref}{adult}`) {
-            if (customData[name] != null) {
-                res.push({logic: customData[name], parent: ""});
-            } else {
-                res.push({logic: data.logic[name], parent: ""});
-            }
-        }
-    }
-    for (const region in data.edges) {
-        for (const name in data.edges[region]) {
-            if (name == ref || name == `${ref}{child}` || name == `${ref}{adult}`) {
-                const key = `${region} -> ${name}`;
-                if (customData[key] != null) {
-                    res.push({logic: customData[key], parent: region});
-                } else {
-                    res.push({logic: data.edges[region][name], parent: region});
-                }
-            }
-        }
-    }
-    return res;
-}
-
-async function getNormalLogic(ref) {
-    const data = LogicResource.get();
-    if (customLogicObserver.value) {
-        const LogicsStorage = new IDBStorage("logics");
-        const customData = await LogicsStorage.getAll();
-        return extractLogic(data, customData, ref);
-    } else {
-        return extractLogic(data, {}, ref);
-    }
-}
-
-async function getGlitchedLogic(ref) {
-    const data = LogicGlitchedResource.get();
-    if (customLogicObserver.value) {
-        const LogicsStorage = new IDBStorage("logics_glitched");
-        const customData = await LogicsStorage.getAll();
-        return extractLogic(data, customData, ref);
-    } else {
-        return extractLogic(data, {}, ref);
-    }
-}
-
-async function getLogic(ref) {
-    if (logicRulesObserver.value == "logic_rules_glitchless") {
-        return getNormalLogic(ref);
-    }
-    if (logicRulesObserver.value == "logic_rules_glitched") {
-        return getGlitchedLogic(ref);
-    }
-    return [];
-}
 
 class LogicViewer {
 
@@ -81,7 +12,7 @@ class LogicViewer {
         d.value = ref;
         const el = document.createElement("div");
         el.style.display = "flex";
-        const result = await getLogic(ref);
+        const result = await this.getLogic(ref);
         for (const {logic, parent} of result) {
             if (logic) {
                 const c = document.createElement("div");
@@ -105,6 +36,28 @@ class LogicViewer {
         }
         d.append(el);
         d.show();
+    }
+
+    async getLogic(ref) {
+        const data = LogicResource.get();
+        return this.extractLogic(ref, data);
+    }
+
+    extractLogic(ref, data = {}) {
+        const res = [];
+        for (const name in data.logic) {
+            if (name == ref) {
+                res.push({logic: data.logic[name], parent: ""});
+            }
+        }
+        for (const region in data.edges) {
+            for (const name in data.edges[region]) {
+                if (name == ref) {
+                    res.push({logic: data.edges[region][name], parent: region});
+                }
+            }
+        }
+        return res;
     }
 
 }

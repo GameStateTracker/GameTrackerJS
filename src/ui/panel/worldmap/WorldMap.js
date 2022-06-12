@@ -70,7 +70,9 @@ const STYLE = new GlobalStyle(`
 }
 `);
 
-const ZOOM_SPD = 2;
+const SMALL_ZOOM_SPD = 1;
+const NORMAL_ZOOM_SPD = 2;
+const LARGE_ZOOM_SPD = 5;
 
 const BaseClass = mix(
     Panel
@@ -108,8 +110,16 @@ export default class WorldMap extends BaseClass {
                 const anchorX = event.layerX - parW / 2;
                 const anchorY = event.layerY - parH / 2;
                 const zoom = viewEl.zoom;
-                const delta = Math.sign(event.deltaY) * ZOOM_SPD;
-                viewEl.setZoom(zoom - delta, anchorX, anchorY);
+                if (zoom > 100) {
+                    const delta = Math.sign(event.deltaY) * LARGE_ZOOM_SPD;
+                    viewEl.setZoom(zoom - delta, anchorX, anchorY);
+                } else if (zoom > 50) {
+                    const delta = Math.sign(event.deltaY) * NORMAL_ZOOM_SPD;
+                    viewEl.setZoom(zoom - delta, anchorX, anchorY);
+                } else {
+                    const delta = Math.sign(event.deltaY) * SMALL_ZOOM_SPD;
+                    viewEl.setZoom(zoom - delta, anchorX, anchorY);
+                }
             }
             // event.stopPropagation();
         }, {capture: true, passive: true});

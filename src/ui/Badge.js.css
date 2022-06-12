@@ -1,0 +1,23 @@
+:host {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 2px;
+    margin-left: 5px;
+    border: 1px solid var(--navigation-background-color, #ffffff);
+    border-radius: 2px;
+    user-select: none;
+}
+emc-icon {
+    width: 24px;
+    height: 24px;
+    margin: 1px;
+}
+emc-icon:not([src]),
+emc-icon[src=""] {
+    display: none;
+}
+#filters {
+    display: contents;
+}

@@ -107,10 +107,12 @@ export default class DefaultAreaState extends BaseClass {
     }
 
     onListEntriesChange(event) {
-        const ev = new Event("listChange");
-        ev.value = event.value;
-        this.dispatchEvent(ev);
-        this.checkVisibility();
+        if (event.value != null) {
+            const ev = new Event("listChange");
+            ev.value = event.value;
+            this.dispatchEvent(ev);
+            this.checkVisibility();
+        }
     }
 
     get reachable() {

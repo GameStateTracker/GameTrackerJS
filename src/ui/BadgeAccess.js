@@ -1,40 +1,9 @@
-// frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
-
 import SettingsObserver from "../util/observer/SettingsObserver.js";
 import Badge from "./Badge.js";
+import TPL from "./BadgeAccess.js.html" assert {type: "html"};
+import STYLE from "./BadgeAccess.js.css" assert {type: "css"};
 
 const accessValuesObserver = new SettingsObserver("show_access_values");
-
-const TPL = new Template(`
-<div id="access-values">
-    <div id="available">0</div>
-    <div id="unopened">0</div>
-</div>
-`);
-
-const STYLE = new GlobalStyle(`
-#access-values {
-    display: flex;
-    flex-direction: column;
-    width: 24px;
-    height: 24px;
-    margin: 1px;
-}
-#access-values div {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 24px;
-    height: 12px;
-    font-size: 0.5em;
-    line-height: 1em;
-    padding: 2px;
-    white-space: pre;
-    word-break: keep-all;
-}
-`);
 
 export default class BadgeAccess extends Badge {
 

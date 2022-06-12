@@ -1,47 +1,13 @@
-// frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
 import "/emcJS/ui/Icon.js";
-
 import FilterResource from "../data/resource/FilterResource.js";
 import SettingsObserver from "../util/observer/SettingsObserver.js";
+import TPL from "./Badge.js.html" assert {type: "html"};
+import STYLE from "./Badge.js.css" assert {type: "css"};
 
 const colorBlindObserver = new SettingsObserver("color_blind_badge_icons");
 const showFiltersObserver = new SettingsObserver("show_filter_badges");
-
-const TPL = new Template(`
-<emc-icon id="access"></emc-icon>
-<emc-icon id="type"></emc-icon>
-<div id="filters"></div>
-`);
-
-const STYLE = new GlobalStyle(`
-:host {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    padding: 2px;
-    margin-left: 5px;
-    border: 1px solid var(--navigation-background-color, #ffffff);
-    border-radius: 2px;
-    user-select: none;
-}
-emc-icon {
-    width: 24px;
-    height: 24px;
-    margin: 1px;
-}
-emc-icon:not([src]),
-emc-icon[src=""] {
-    display: none;
-}
-#filters {
-    display: contents;
-}
-`);
 
 const ACCESS_VALUES = [
     "opened",

@@ -1,68 +1,8 @@
-// frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import ElementManager from "/emcJS/util/html/ElementManager.js";
 import "/emcJS/ui/input/Option.js";
-
-const TPL = new Template(`
-<emc-ctxmenulayer>
-    <slot id="container"></slot>
-</emc-ctxmenulayer>
-<div id="view-choice"></div>
-`);
-
-const STYLE = new GlobalStyle(`
-:host {
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 100%;
-    margin: 0px;
-    background-color: var(--page-background-color, #000000);
-    color: var(--page-text-color, #ffffff);
-    user-select: none;
-}
-#container {
-    display: flex;
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: auto;
-}
-::slotted(*) {
-    display: block;
-    flex: 1;
-}
-#view-choice {
-    padding: 4px;
-    background-color: var(--navigation-background-color, #ffffff);
-}
-#view-choice emc-option {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    background-origin: content-box;
-    border-radius: 20%;
-    border: solid 2px var(--navigation-text-color, #000000);
-    padding: 4px;
-    margin: 0 2px;
-    filter: drop-shadow(black 1px 1px 1px);
-}
-#view-choice emc-option emc-icon {
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
-#view-choice emc-option.active {
-    cursor: default;
-}
-#view-choice emc-option:not(.active) {
-    opacity: 0.5;
-}
-`);
+import TPL from "./ViewChoice.js.html" assert {type: "html"};
+import STYLE from "./ViewChoice.js.css" assert {type: "css"};
 
 const EL_MANAGER = new WeakMap();
 const ON_CLICK = new WeakMap();

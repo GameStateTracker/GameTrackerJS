@@ -41,10 +41,10 @@ export default class FilterContextMenu extends ContextMenu {
                 els.push(el);
             }
         }
-        super.loadItems(els);
+        super.setItems(els);
     }
 
-    loadItems() {
+    setItems() {
         // nothing
     }
 

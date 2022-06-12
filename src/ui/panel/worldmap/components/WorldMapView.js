@@ -9,6 +9,7 @@ import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import ElementManager from "/emcJS/util/html/ElementManager.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
 
+import SettingsObserver from "../../../../util/observer/SettingsObserver.js";
 import AreaStateManager from "../../../../statemanager/world/area/AreaStateManager.js";
 import UIRegistry from "../../../../registry/UIRegistry.js";
 import StateDataEventManagerMixin from "../../../mixin/StateDataEventManagerMixin.js";
@@ -17,6 +18,10 @@ import "../../../button/HintButton.js";
 import "./entries/Location.js";
 import "./entries/Area.js";
 import "./entries/Exit.js";
+import "./connection/Connection.js";
+import "./connection/ConnectionPoint.js";
+
+const showMapConnectionsObserver = new SettingsObserver("show_map_connections");
 
 const TPL = new Template(`
 <slot id="map">
@@ -61,6 +66,17 @@ const STYLE = new GlobalStyle(`
 const EL_MANAGER = new WeakMap();
 
 function elementComposer(key, props) {
+    if (props.category === "connection") {
+        const connectionEl = document.createElement("gt-connection");
+        for (const position of props.coordinates) {
+            const connectionPointEl = document.createElement("gt-connection-point");
+            connectionPointEl.label = props.label;
+            connectionPointEl.left = position.x;
+            connectionPointEl.top = position.y;
+            connectionEl.append(connectionPointEl);
+        }
+        return connectionEl;
+    }
     const uiReg = UIRegistry.get(`worldmap-${props.category}`);
     if (uiReg != null) {
         const markerEl = uiReg.create(props.type, key);
@@ -130,6 +146,10 @@ export default class WorldMapView extends BaseClass {
                 mapEventManager.setActive(false);
             }
         });
+        /* settings */
+        showMapConnectionsObserver.addEventListener("change", () => {
+            this.refreshList();
+        });
 
         /* --- */
         EL_MANAGER.set(this, new ElementManager(this, elementComposer));
@@ -139,6 +159,7 @@ export default class WorldMapView extends BaseClass {
         /* map */
         const mapEl = this.shadowRoot.getElementById("map");
         if (mapEl != null) {
+            mapEl.style.backgroundColor = "";
             mapEl.style.backgroundImage = "";
             mapEl.style.width = "600px";
             mapEl.style.height = "600px";
@@ -165,6 +186,7 @@ export default class WorldMapView extends BaseClass {
         const mapEl = this.shadowRoot.getElementById("map");
         if (mapEl != null) {
             const mapData = state.props.map;
+            mapEl.style.backgroundColor = mapData.color;
             mapEl.style.backgroundImage = `url("/images/maps/${mapData.background}")`;
             mapEl.style.width = `${mapData.width}px`;
             mapEl.style.height = `${mapData.height}px`;
@@ -345,6 +367,20 @@ export default class WorldMapView extends BaseClass {
                         areaWidth: state.props.map.width,
                         areaHeight: state.props.map.height
                     });
+                }
+            }
+            if (showMapConnectionsObserver.value) {
+                const connections = state.props.connections;
+                if (connections != null) {
+                    for (const label in connections) {
+                        const coordinates = connections[label];
+                        elManagerData.push({
+                            key: `connection___${label}`,
+                            label,
+                            category: "connection",
+                            coordinates
+                        });
+                    }
                 }
             }
         }

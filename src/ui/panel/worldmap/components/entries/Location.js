@@ -7,8 +7,6 @@ import UIRegistry from "../../../../../registry/UIRegistry.js";
 import WorldMapMarkedEntry from "../abstract/MarkedEntry.js";
 import LocationContextMenu from "../../../../ctxmenu/LocationContextMenu.js";
 import ItemPickerContextMenu from "../../../../ctxmenu/ItemPickerContextMenu.js";
-import LogicViewer from "../../../../window/LogicViewer.js";
-import Language from "../../../../../util/Language.js";
 
 const TPL = new Template(`
 <emc-labeledicon id="item" halign="center" valign="center"></emc-labeledicon>
@@ -46,7 +44,7 @@ function applyElements(target) {
     textEl.insertAdjacentElement("afterend", itemEl);
 }
 
-export default class MapLocation extends WorldMapMarkedEntry {
+export default class WorldMapLocation extends WorldMapMarkedEntry {
 
     constructor() {
         super();
@@ -81,13 +79,6 @@ export default class MapLocation extends WorldMapMarkedEntry {
             const state = this.getState();
             if (state != null) {
                 state.item = "";
-            }
-        });
-        this.addDefaultContextMenuHandler("show_logic", () => {
-            const state = this.getState();
-            if (state != null) {
-                const title = Language.generateLabel(this.ref);
-                LogicViewer.show(state.props.logicAccess, title);
             }
         });
         /* context menu - item picker */
@@ -191,5 +182,5 @@ export default class MapLocation extends WorldMapMarkedEntry {
 
 }
 
-customElements.define("gt-worldmap-location", MapLocation);
-UIRegistry.set("worldmap-location", new UIRegistry(MapLocation));
+customElements.define("gt-worldmap-location", WorldMapLocation);
+UIRegistry.set("worldmap-location", new UIRegistry(WorldMapLocation));

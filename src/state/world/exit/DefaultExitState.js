@@ -132,9 +132,6 @@ export default class DefaultExitState extends BaseClass {
         });
 
         /* VALUES */
-        const logicAccess = props.logicAccess;
-        this.#access = getLogicAccess(logicAccess);
-
         const exitBindingsObserver = new ObservableStorageObserver(STORAGES.exitBindings, ref);
         this.#value = exitBindingsObserver.value;
         exitBindingsObserver.addEventListener("change", (event) => {
@@ -151,7 +148,9 @@ export default class DefaultExitState extends BaseClass {
         }, 0);
 
         /* LOGIC */
+        const logicAccess = props.logicAccess;
         this.#reachable = getReachable(logicAccess);
+        this.#access = getLogicAccess(this.#reachable);
         Logic.addEventListener("change", () => {
             const reachable = getReachable(logicAccess);
             if (reachable != this.#reachable) {

@@ -18,8 +18,6 @@ import AccessTextMarkerMixin from "../mixin/AccessTextMarkerMixin.js";
 import AccessListMarkerMixin from "../mixin/AccessListMarkerMixin.js";
 import ExitContextMenu from "../../../../ctxmenu/ExitContextMenu.js";
 import ExitBindingContextMenu from "../../../../ctxmenu/ExitBindingContextMenu.js";
-import Language from "../../../../../util/Language.js";
-import LogicViewer from "../../../../window/LogicViewer.js";
 
 const TPL = new Template(`
 <div id="area" class="textarea">
@@ -30,11 +28,6 @@ const TPL = new Template(`
 `);
 
 const STYLE = new GlobalStyle(`
-#value:empty:after {
-    display: inline;
-    font-style: italic;
-    content: "no association";
-}
 #hint {
     margin-left: 5px;
 }
@@ -85,11 +78,14 @@ export default class WorldListExit extends BaseClass {
         });
         /* context menu */
         this.setDefaultContextMenu(ExitContextMenu);
-        this.addDefaultContextMenuHandler("associate", (event) => {
+        this.toggleDefaultContextMenuGroupActive("area", false);
+        this.addDefaultContextMenuHandler("bind", (event) => {
             const state = this.getState();
-            this.showContextMenu("exitbinding", event, this.ref, state.value);
+            if (state != null) {
+                this.showContextMenu("exitbinding", event, this.ref, state.value);
+            }
         });
-        this.addDefaultContextMenuHandler("deassociate", () => {
+        this.addDefaultContextMenuHandler("unbind", () => {
             const state = this.getState();
             if (state != null) {
                 state.value = "";
@@ -147,13 +143,6 @@ export default class WorldListExit extends BaseClass {
                 if (area != null) {
                     area.hint = "";
                 }
-            }
-        });
-        this.addDefaultContextMenuHandler("show_logic", () => {
-            const state = this.getState();
-            if (state != null) {
-                const title = Language.generateLabel(this.ref);
-                LogicViewer.show(state.props.logicAccess, title);
             }
         });
         /* context menu - exit binding */
@@ -215,6 +204,11 @@ export default class WorldListExit extends BaseClass {
         const valueEl = this.shadowRoot.getElementById("value");
         if (valueEl != null) {
             if (value) {
+                if (value == "\u0000") {
+                    this.toggleDefaultContextMenuGroupActive("area", false);
+                } else {
+                    this.toggleDefaultContextMenuGroupActive("area", true);
+                }
                 valueEl.i18nValue = `entrance[${value}]`;
                 const state = this.getState();
                 if (state != null) {
@@ -223,7 +217,8 @@ export default class WorldListExit extends BaseClass {
                     this.applyHint();
                 }
             } else {
-                valueEl.innerHTML = "";
+                this.toggleDefaultContextMenuGroupActive("area", false);
+                valueEl.i18nValue = "entrance[]";
                 this.applyHint();
             }
         }
@@ -248,5 +243,5 @@ export default class WorldListExit extends BaseClass {
 
 }
 
-customElements.define("ootrt-list-exit", WorldListExit);
+customElements.define("gt-worldlist-exit", WorldListExit);
 UIRegistry.set("worldlist-exit", new UIRegistry(WorldListExit));

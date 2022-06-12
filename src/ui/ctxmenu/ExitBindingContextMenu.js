@@ -54,10 +54,10 @@ export default class ExitBindingContextMenu extends BaseClass {
             return false;
         });
         SELECT_EL.set(this, exitSelectEl);
-        super.loadItems([exitSelectEl]);
+        super.setItems([exitSelectEl]);
     }
 
-    loadItems() {
+    setItems() {
         // nothing
     }
 
@@ -90,7 +90,7 @@ export default class ExitBindingContextMenu extends BaseClass {
         const unbindOptionEl = document.createElement("emc-option");
         unbindOptionEl.value = "";
         const unbindOptionText = document.createElement("span");
-        Language.applyLabel(unbindOptionText, "unbind");
+        Language.applyLabel(unbindOptionText, "entrance[]");
         unbindOptionText.style.fontStyle = "italic";
         unbindOptionEl.append(unbindOptionText);
         exitSelectEl.append(unbindOptionEl);
@@ -98,7 +98,7 @@ export default class ExitBindingContextMenu extends BaseClass {
         const emptyOptionEl = document.createElement("emc-option");
         emptyOptionEl.value = "\u0000";
         const emptyOptionText = document.createElement("span");
-        Language.applyLabel(emptyOptionText, "entrance[]");
+        Language.applyLabel(emptyOptionText, "entrance[\u0000]");
         emptyOptionText.style.fontStyle = "italic";
         emptyOptionEl.append(emptyOptionText);
         exitSelectEl.append(emptyOptionEl);
