@@ -98,13 +98,23 @@ class Savestate extends EventTarget {
         return res;
     }
 
-    deserialize({data = {}, meta = {}, ...value} = {}) {
+    deserialize(props = {}) {
+        const {
+            data = {},
+            meta = {},
+            name,
+            version,
+            timestamp,
+            autosave,
+            notes
+        } = props;
+        /* --- */
         this.purge();
-        INFO.name = value.name?.toString() ?? "";
-        INFO.version = value.version ?? SavestateConverter.version;
-        INFO.timestamp = value.timestamp ?? new Date();
-        INFO.autosave = value.autosave ?? false;
-        INFO.notes = value.notes?.toString() ?? "";
+        INFO.name = name?.toString() ?? "";
+        INFO.version = version ?? SavestateConverter.version;
+        INFO.timestamp = timestamp ?? new Date();
+        INFO.autosave = autosave ?? false;
+        INFO.notes = notes?.toString() ?? "";
         for (const key in meta) {
             META.set(key, meta[key]);
         }

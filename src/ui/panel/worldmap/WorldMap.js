@@ -50,7 +50,7 @@ const STYLE = new GlobalStyle(`
     background-color: var(--page-background-color, #ffffff);
     border-style: solid;
     border-width: 2px;
-    border-color: var(--page-border-color, #000000);
+    border-color: var(--page-border-color-inverted, #ffffff);
     transform-origin: bottom left;
     width: 40px;
     height: 40px;

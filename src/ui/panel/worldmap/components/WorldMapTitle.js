@@ -27,7 +27,7 @@ const STYLE = new GlobalStyle(`
     background-color: var(--page-background-color, #000000);
     border-style: solid;
     border-width: 2px;
-    border-color: var(--page-border-color, #ffffff);
+    border-color: var(--page-border-color-inverted, #ffffff);
     user-select: none;
 }
 #text {
