@@ -291,7 +291,10 @@ export default class DefaultExitState extends BaseClass {
             if (entrance.props.unbindable) {
                 return false;
             }
-            const ignoreBindsTo = mixedEntrancePoolObserver.value;
+            const ignoreBindsTo =
+                !this.props.ignoreMixedEntrances &&
+                !entrance.props.ignoreMixedEntrances &&
+                mixedEntrancePoolObserver.value;
             const isActive = entrance.active || this.props.includeInactiveEntrances;
             return isActive && (ignoreBindsTo || this.props.bindsTo.indexOf(entrance.props.type) >= 0);
         }

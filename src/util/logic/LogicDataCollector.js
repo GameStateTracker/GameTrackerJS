@@ -1,5 +1,9 @@
 // frameworks
+import {
+    debounce, debounceCacheData
+} from "/emcJS/util/Debouncer.js";
 import MapLocker from "/emcJS/data/locker/MapLocker.js";
+import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
 
 import Savestate from "../../savestate/Savestate.js";
 import SettingsStorage from "../../storage/SettingsStorage.js";
@@ -12,6 +16,7 @@ const STORAGES = {
     options: Savestate.getStorage("options"),
     filter: Savestate.getStorage("filter")
 };
+const STORAGE_REGISTER = new Map();
 
 const AUGMENT = new Set();
 const CACHE = new Map();
@@ -34,29 +39,11 @@ function renameKeys(src = {}, prefix = "", postfix = "") {
     return res;
 }
 
-function initItemValues() {
-    const itemData = STORAGES.items.getAll();
-    const startItemData = STORAGES.items.getAll();
-    const res = {};
-    for (const [key, value] of Object.entries(itemData)) {
-        const startValue = startItemData[key];
-        if (startValue != null) {
-            res[key] = Math.max(startValue, value);
-        } else {
-            res[key] = value;
-        }
+function addRenameKeys(target = {}, source = {}, prefix = "", postfix = "") {
+    for (const [key, value] of Object.entries(source)) {
+        target[`${prefix}${key}${postfix}`] = value;
     }
-    for (const [key, value] of Object.entries(startItemData)) {
-        if (res[key] == null) {
-            const startValue = itemData[key];
-            if (startValue != null) {
-                res[key] = Math.max(startValue, value);
-            } else {
-                res[key] = value;
-            }
-        }
-    }
-    return res;
+    return target;
 }
 
 function augmentItemValues(newData) {
@@ -93,64 +80,47 @@ class LogicDataCollector extends EventTarget {
         Savestate.addEventListener("load", () => {
             this.#init();
         });
-        STORAGES.items.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(augmentItemValues(event.data), "item[", "]"));
-        });
-        STORAGES.startItems.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(augmentStartItemValues(event.data), "item[", "]"));
-        });
-        STORAGES.locations.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "location[", "]"));
-        });
-        STORAGES.options.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "option[", "]"));
-        });
-        STORAGES.filter.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "filter[", "]"));
-        });
-        SettingsStorage.addEventListener("change", (event) => {
-            this.#changeData(renameKeys(event.data, "setting[", "]"));
-        });
-        /* --- */
-        this.#init();
+        /* STORAGES */
+        this.registerStorage(STORAGES.items, "item[", "]", augmentItemValues);
+        this.registerStorage(STORAGES.startItems, "item[", "]", augmentStartItemValues);
+        this.registerStorage(STORAGES.locations, "location[", "]");
+        this.registerStorage(STORAGES.options, "option[", "]");
+        this.registerStorage(STORAGES.filter, "filter[", "]");
+        this.registerStorage(SettingsStorage, "setting[", "]");
     }
 
-    #init() {
-        const data = {
-            ...renameKeys(initItemValues(), "item[", "]"),
-            ...renameKeys(STORAGES.locations.getAll(), "location[", "]"),
-            ...renameKeys(STORAGES.options.getAll(), "option[", "]"),
-            ...renameKeys(STORAGES.filter.getAll(), "filter[", "]"),
-            ...renameKeys(SettingsStorage.getAll(), "setting[", "]")
-        };
-        // startitems
-        const startItems = STORAGES.startItems.getAll();
-        for (const [key, value] of Object.entries(startItems)) {
-            const renamedKey = `item[${key}]`;
-            if (data[renamedKey] == null || data[renamedKey] < value) {
-                data[renamedKey] = value;
+    #init = debounce(() => {
+        const logicData = {};
+        for (const [storage, {prefix, postfix, precall}] of STORAGE_REGISTER) {
+            const data = storage.getAll();
+            if (typeof precall === "function") {
+                addRenameKeys(logicData, precall(data), prefix, postfix);
+            } else {
+                addRenameKeys(logicData, data, prefix, postfix);
             }
         }
         // ---
         CACHE.clear();
-        for (const [key, value] of Object.entries(data)) {
+        for (const [key, value] of Object.entries(logicData)) {
             CACHE.set(key, value);
         }
-        const augmentedData = execAugment(data);
+        const augmentedData = execAugment(logicData);
         for (const [key, value] of Object.entries(augmentedData)) {
             DATA.set(key, value);
         }
         const ev = new Event("load");
         this.dispatchEvent(ev);
-    }
+    });
 
-    #changeData(newData) {
+    #changeData = debounceCacheData((newData) => {
         const changes = {};
-        for (const [key, value] of Object.entries(newData)) {
-            const oldValue = CACHE.get(key);
-            if (oldValue != value) {
-                changes[key] = value;
-                CACHE.set(key, value);
+        for (const data of newData) {
+            for (const [key, value] of Object.entries(data)) {
+                const oldValue = CACHE.get(key);
+                if (oldValue != value) {
+                    changes[key] = value;
+                    CACHE.set(key, value);
+                }
             }
         }
         if (Object.keys(changes).length > 0) {
@@ -161,10 +131,32 @@ class LogicDataCollector extends EventTarget {
             const ev = new Event("change");
             this.dispatchEvent(ev);
         }
-    }
+    });
 
     get(key) {
         return DATA.get(key);
+    }
+
+    registerStorage(storage, prefix = "", postfix = "", precall = null) {
+        if (!(storage instanceof ObservableStorage)) {
+            throw new TypeError("storage must be ObservableStorage");
+        }
+        if (!STORAGE_REGISTER.has(storage)) {
+            storage.addEventListener("change", (event) => {
+                const data = event.data;
+                if (typeof precall === "function") {
+                    this.#changeData(renameKeys(precall(data), prefix, postfix));
+                } else {
+                    this.#changeData(renameKeys(data, prefix, postfix));
+                }
+            });
+        }
+        STORAGE_REGISTER.set(storage, {
+            prefix,
+            postfix,
+            precall
+        });
+        this.#init();
     }
 
     registerAugment(augment) {
