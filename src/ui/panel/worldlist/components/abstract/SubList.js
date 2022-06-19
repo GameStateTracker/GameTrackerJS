@@ -115,7 +115,9 @@ export default class WorldListSubList extends BaseClass {
             }
         }
         /* --- */
-        EL_MANAGER.set(this, new ElementManager(this, elementComposer));
+        EL_MANAGER.set(this, new ElementManager(this, {
+            composer: elementComposer
+        }));
     }
 
     connectedCallback() {

@@ -143,7 +143,9 @@ export default class WorldList extends BaseClass {
             WorldListState.reset();
         });
         /* --- */
-        EL_MANAGER.set(this, new ElementManager(this, elementComposer));
+        EL_MANAGER.set(this, new ElementManager(this, {
+            composer: elementComposer
+        }));
     }
 
     connectedCallback() {

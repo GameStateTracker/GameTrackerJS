@@ -69,24 +69,29 @@ const EL_MANAGER = new WeakMap();
 
 function elementComposer(key, props) {
     if (props.category === "connection") {
-        const connectionEl = document.createElement("gt-connection");
+        return document.createElement("gt-connection");
+    }
+    const uiReg = UIRegistry.get(`worldmap-${props.category}`);
+    if (uiReg != null) {
+        return uiReg.create(props.type, key);
+    }
+}
+
+function elementMutator(el, key, props) {
+    if (props.category === "connection") {
+        el.innerHTML = "";
         for (const position of props.coordinates) {
             const connectionPointEl = document.createElement("gt-connection-point");
             connectionPointEl.label = props.label;
             connectionPointEl.left = position.x;
             connectionPointEl.top = position.y;
-            connectionEl.append(connectionPointEl);
+            el.append(connectionPointEl);
         }
-        return connectionEl;
-    }
-    const uiReg = UIRegistry.get(`worldmap-${props.category}`);
-    if (uiReg != null) {
-        const markerEl = uiReg.create(props.type, key);
-        markerEl.left = props.x;
-        markerEl.top = props.y;
+    } else {
+        el.left = props.x;
+        el.top = props.y;
         // XXX tooltips should really automatically adjust
-        markerEl.tooltip = calculateTooltipPosition(props.x, props.y, props.areaWidth, props.areaHeight);
-        return markerEl;
+        el.tooltip = calculateTooltipPosition(props.x, props.y, props.areaWidth, props.areaHeight);
     }
 }
 
@@ -166,7 +171,10 @@ export default class WorldMapView extends BaseClass {
         });
 
         /* --- */
-        EL_MANAGER.set(this, new ElementManager(this, elementComposer));
+        EL_MANAGER.set(this, new ElementManager(this, {
+            composer: elementComposer,
+            mutator: elementMutator
+        }));
     }
 
     applyDefaultValues() {

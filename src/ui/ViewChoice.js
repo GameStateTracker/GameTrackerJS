@@ -7,13 +7,16 @@ import STYLE from "./ViewChoice.js.css" assert {type: "css"};
 const EL_MANAGER = new WeakMap();
 const ON_CLICK = new WeakMap();
 
-function composer(key, params) {
+function elementComposer(key, params) {
     const el = document.createElement("emc-option");
     el.value = key;
-    el.style.backgroundImage = `url('${params.icon}')`;
-    el.title = params.title || key;
     el.addEventListener("click", params.onClick);
     return el;
+}
+
+function elementMutator(el, key, params) {
+    el.style.backgroundImage = `url('${params.icon}')`;
+    el.title = params.title || key;
 }
 
 export default class ViewChoice extends CustomElement {
@@ -30,7 +33,10 @@ export default class ViewChoice extends CustomElement {
             }
         });
         const choice = this.shadowRoot.getElementById("view-choice");
-        EL_MANAGER.set(this, new ElementManager(choice, composer));
+        EL_MANAGER.set(this, new ElementManager(choice, {
+            composer: elementComposer,
+            mutator: elementMutator
+        }));
         const observer = new MutationObserver(() => {
             this.connectedCallback();
         });
