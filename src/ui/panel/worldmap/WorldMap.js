@@ -37,7 +37,6 @@ const TPL = new Template(`
 const STYLE = new GlobalStyle(`
 :host {
     display: grid;
-    min-height: 100%;
     width: 400px;
     height: 200px;
     user-select: none;
