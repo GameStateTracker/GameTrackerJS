@@ -57,8 +57,8 @@ const STYLE = new GlobalStyle(`
 :host {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: 100%;
+    width: 300px;
+    height: 300px;
     overflow: hidden;
 }
 #searchbar {

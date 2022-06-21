@@ -1,0 +1,15 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100%;
+    margin: 0px;
+    background-color: var(--page-background-color, #000000);
+    color: var(--page-text-color, #ffffff);
+    user-select: none;
+}
+::slotted(*) {
+    min-width: 100%;
+    min-height: 100%;
+    overflow: auto;
+}

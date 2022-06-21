@@ -15,8 +15,13 @@
     overflow-x: auto;
 }
 ::slotted(*) {
-    display: block;
+    display: flex;
     flex: 1;
+    min-width: 100%;
+    min-height: 100%;
+}
+::slotted(*:not(gt-viewchoice-panel)) {
+    display: none;
 }
 #view-choice {
     padding: 4px;

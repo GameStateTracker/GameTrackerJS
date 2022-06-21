@@ -1,6 +1,7 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import ElementManager from "/emcJS/util/html/ElementManager.js";
 import "/emcJS/ui/input/Option.js";
+import "./ViewChoicePanel.js";
 import TPL from "./ViewChoice.js.html" assert {type: "html"};
 import STYLE from "./ViewChoice.js.css" assert {type: "css"};
 
@@ -44,15 +45,15 @@ export default class ViewChoice extends CustomElement {
     }
 
     connectedCallback() {
-        const all = this.querySelectorAll("[slot]");
+        const all = this.querySelectorAll("gt-viewchoice-panel[slot]");
         const elManager = EL_MANAGER.get(this);
         const onClick = ON_CLICK.get(this);
         const data = [];
         all.forEach((el) => {
             data.push({
-                key: el.getAttribute("slot"),
-                title: el.dataset.title,
-                icon: el.dataset.icon,
+                key: el.slot,
+                title: el.label,
+                icon: el.icon,
                 onClick
             });
         });

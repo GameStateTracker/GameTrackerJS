@@ -23,8 +23,8 @@ const STYLE = new GlobalStyle(`
 }
 :host {
     display: block;
-    min-width: min-content;
-    min-height: min-content;
+    width: min-content;
+    height: min-content;
 }
 #content {
     display: content;

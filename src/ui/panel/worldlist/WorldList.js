@@ -40,7 +40,6 @@ const STYLE = new GlobalStyle(`
 :host {
     display: inline-flex;
     flex-direction: column;
-    min-height: 100%;
     width: 300px;
     height: 300px;
 }
