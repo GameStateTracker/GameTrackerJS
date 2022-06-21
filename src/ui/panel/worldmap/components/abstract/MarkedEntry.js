@@ -13,28 +13,28 @@ const TPL = new Template(`
 
 const STYLE = new GlobalStyle(`
 #text[data-state="opened"] {
-    color: var(--location-status-opened-color, var(--page-text-color, #000000));
+    // color: var(--world-entry-status-opened-color, #777777);
 }
 #text[data-state="available"] {
-    color: var(--location-status-available-color, var(--page-text-color, #000000));
+    color: var(--world-entry-status-available-color, #00ff00);
 }
 #text[data-state="unavailable"] {
-    color: var(--location-status-unavailable-color, var(--page-text-color, #000000));
+    color: var(--world-entry-status-unavailable-color, #ff0000);
 }
 #text[data-state="possible"] {
-    color: var(--location-status-possible-color, var(--page-text-color, #000000));
+    color: var(--world-entry-status-possible-color, #ffff00);
 }
 #marker[data-state="opened"] {
-    background-color: var(--location-status-opened-color, var(--page-text-color, #000000));
+    background-color: var(--world-entry-status-opened-color, #777777);
 }
 #marker[data-state="available"] {
-    background-color: var(--location-status-available-color, var(--page-text-color, #000000));
+    background-color: var(--world-entry-status-available-color, #00ff00);
 }
 #marker[data-state="unavailable"] {
-    background-color: var(--location-status-unavailable-color, var(--page-text-color, #000000));
+    background-color: var(--world-entry-status-unavailable-color, #ff0000);
 }
 #marker[data-state="possible"] {
-    background-color: var(--location-status-possible-color, var(--page-text-color, #000000));
+    background-color: var(--world-entry-status-possible-color, #ffff00);
 }
 `);
 
