@@ -62,16 +62,16 @@ const STYLE = new GlobalStyle(`
     text-overflow: ellipsis;
 }
 :host([access="opened"]) #text {
-    color: var(--location-status-opened-color, var(--page-text-color, #000000));
+    color: var(--world-entry-status-opened-color, #777777);
 }
 :host([access="available"]) #text {
-    color: var(--location-status-available-color, var(--page-text-color, #000000));
+    color: var(--world-entry-status-available-color, #00ff00);
 }
 :host([access="unavailable"]) #text {
-    color: var(--location-status-unavailable-color, var(--page-text-color, #000000));
+    color: var(--world-entry-status-unavailable-color, #ff0000);
 }
 :host([access="possible"]) #text {
-    color: var(--location-status-possible-color, var(--page-text-color, #000000));
+    color: var(--world-entry-status-possible-color, #ffff00);
 }
 #title > .button {
     width: 38px;

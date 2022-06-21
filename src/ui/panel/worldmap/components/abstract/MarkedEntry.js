@@ -13,7 +13,7 @@ const TPL = new Template(`
 
 const STYLE = new GlobalStyle(`
 #text[data-state="opened"] {
-    // color: var(--world-entry-status-opened-color, #777777);
+    color: var(--world-entry-status-opened-color, #777777);
 }
 #text[data-state="available"] {
     color: var(--world-entry-status-available-color, #00ff00);
