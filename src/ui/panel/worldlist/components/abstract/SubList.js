@@ -56,7 +56,6 @@ const STYLE = new GlobalStyle(`
 `);
 
 const sublistCollapsibleObserver = new SettingsObserver("sublist_collapsible");
-const EL_MANAGER = new WeakMap();
 
 function elementComposer(key, props) {
     const uiReg = UIRegistry.get(`worldlist-${props.category}`);
@@ -73,6 +72,8 @@ const BaseClass = mix(
 );
 
 export default class WorldListSubList extends BaseClass {
+
+    #elementManager;
 
     constructor() {
         super();
@@ -115,9 +116,9 @@ export default class WorldListSubList extends BaseClass {
             }
         }
         /* --- */
-        EL_MANAGER.set(this, new ElementManager(this, {
+        this.#elementManager = new ElementManager(this, {
             composer: elementComposer
-        }));
+        });
     }
 
     connectedCallback() {
@@ -157,7 +158,6 @@ export default class WorldListSubList extends BaseClass {
     }
 
     refreshList() {
-        const elManager = EL_MANAGER.get(this);
         const elManagerData = [];
         const state = this.getState();
         if (state != null && state.listContents) {
@@ -175,7 +175,7 @@ export default class WorldListSubList extends BaseClass {
                 }
             }
         }
-        elManager.manage(elManagerData);
+        this.#elementManager.manage(elManagerData);
     }
 
 }

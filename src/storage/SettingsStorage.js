@@ -1,5 +1,5 @@
 // frameworks
-import IDBProxyStorage from "/emcJS/data/storage/observable/ObservableIDBProxyStorage.js";
+import ObservableIDBProxyStorage from "/emcJS/data/storage/observable/ObservableIDBProxyStorage.js";
 
 import SettingsResource from "../data/resource/SettingsResource.js";
 
@@ -23,7 +23,7 @@ for (const [key, value] of Object.entries(SettingsResource.get())) {
     }
 }
 
-class SettingsStorage extends IDBProxyStorage {
+class SettingsStorage extends ObservableIDBProxyStorage {
 
     constructor() {
         super("settings");

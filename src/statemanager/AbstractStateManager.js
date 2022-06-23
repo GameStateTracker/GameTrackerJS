@@ -1,12 +1,15 @@
 import Helper from "/emcJS/util/helper/Helper.js";
 import DataState from "../state/DataState.js";
 
-const PROPDATA = new WeakMap();
-const DEFAULT_STATE = new WeakMap();
-const CLASSES = new WeakMap();
-const INSTANCES = new WeakMap();
-
 export default class AbstractStateManager {
+
+    #propdata;
+
+    #defaultState;
+
+    #classes = new Map();
+
+    #instances = new Map();
 
     constructor(DefaultState, props) {
         if (new.target === AbstractStateManager) {
@@ -16,43 +19,35 @@ export default class AbstractStateManager {
             throw new Error("DefaultState must be an instance of DataState");
         }
         /* --- */
-        DEFAULT_STATE.set(this, DefaultState);
-        PROPDATA.set(this, props);
-        CLASSES.set(this, new Map());
-        INSTANCES.set(this, new Map());
+        this.#defaultState = DefaultState;
+        this.#propdata = props;
     }
 
     register(type, CustomState) {
-        const classes = CLASSES.get(this);
-        classes.set(type, CustomState);
+        this.#classes.set(type, CustomState);
     }
 
     has(ref) {
-        const propdata = PROPDATA.get(this);
-        return propdata[ref] != null;
+        return this.#propdata[ref] != null;
     }
 
     get(ref) {
         if (ref == null || ref === "") {
             return;
         }
-        const instances = INSTANCES.get(this);
-        if (instances.has(ref)) {
-            return instances.get(ref);
+        if (this.#instances.has(ref)) {
+            return this.#instances.get(ref);
         }
-        const propdata = PROPDATA.get(this);
-        const props = Helper.getFromPath(propdata, ref.split("/"));
+        const props = Helper.getFromPath(this.#propdata, ref.split("/"));
         if (props != null) {
-            const classes = CLASSES.get(this);
-            if (classes.has(props.type)) {
-                const CustomState = classes.get(props.type);
+            if (this.#classes.has(props.type)) {
+                const CustomState = this.#classes.get(props.type);
                 const inst = this.createState(CustomState, ref, props);
-                instances.set(ref, inst);
+                this.#instances.set(ref, inst);
                 return inst;
             } else {
-                const DefaultState = DEFAULT_STATE.get(this);
-                const inst = this.createState(DefaultState, ref, props);
-                instances.set(ref, inst);
+                const inst = this.createState(this.#defaultState, ref, props);
+                this.#instances.set(ref, inst);
                 return inst;
             }
         } else {
@@ -65,17 +60,15 @@ export default class AbstractStateManager {
     }
 
     getAll() {
-        const instances = INSTANCES.get(this);
         const res = {};
-        for (const [key, value] of instances) {
+        for (const [key, value] of this.#instances) {
             res[key] = value;
         }
         return res;
     }
 
     [Symbol.iterator]() {
-        const propdata = PROPDATA.get(this);
-        const keys = Object.keys(propdata);
+        const keys = Object.keys(this.#propdata);
         let index = 0;
         return {
             next: () => {

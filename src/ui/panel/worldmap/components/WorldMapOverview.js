@@ -72,12 +72,6 @@ const STYLE = new GlobalStyle(`
 }
 `);
 
-const WIDTH = new WeakMap();
-const HEIGHT = new WeakMap();
-const ZOOM = new WeakMap();
-const OFFSET_X = new WeakMap();
-const OFFSET_Y = new WeakMap();
-
 const BaseClass = mix(
     CustomElement
 ).with(
@@ -86,17 +80,20 @@ const BaseClass = mix(
 
 export default class WorldMapOverview extends BaseClass {
 
+    #width = 0;
+
+    #height = 0;
+
+    #zoom = 100;
+
+    #offsetX = 0;
+
+    #offsetY = 0;
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
-
-        /* VALUES */
-        WIDTH.set(this, 0);
-        HEIGHT.set(this, 0);
-        ZOOM.set(this, 100);
-        OFFSET_X.set(this, 0);
-        OFFSET_Y.set(this, 0);
 
         /* MAP EVENTS */
         const mapEl = this.shadowRoot.getElementById("map");
@@ -126,31 +123,21 @@ export default class WorldMapOverview extends BaseClass {
             }
         });
         window.addEventListener("resize", () => {
-            const width = WIDTH.get(this);
-            const height = HEIGHT.get(this);
-            const zoom = ZOOM.get(this);
-            const x = OFFSET_X.get(this);
-            const y = OFFSET_Y.get(this);
-            this.#calcutlateMask(width, height, x, y, zoom);
+            this.#calcutlateMask(this.#width, this.#height, this.#offsetX, this.#offsetY, this.#zoom);
         });
     }
 
     setTransform(x, y, zoom) {
-        OFFSET_X.set(this, x);
-        OFFSET_Y.set(this, y);
-        ZOOM.set(this, zoom);
-        const width = WIDTH.get(this);
-        const height = HEIGHT.get(this);
-        this.#calcutlateMask(width, height, x, y, zoom);
+        this.#offsetX = x;
+        this.#offsetY = y;
+        this.#zoom = zoom;
+        this.#calcutlateMask(this.#width, this.#height, x, y, zoom);
     }
 
     #moveFocus(x, y) {
         const oWidth = this.clientWidth;
         const oHeight = this.clientHeight;
-        const zoom = ZOOM.get(this);
-        const width = WIDTH.get(this);
-        const height = HEIGHT.get(this);
-        const scale = Math.max(width, height) * zoom / 100;
+        const scale = Math.max(this.#width, this.#height) * this.#zoom / 100;
         /* event */
         const ev = new Event("move");
         ev.x = -(x - oWidth / 2) * (scale / oWidth);
@@ -203,11 +190,11 @@ export default class WorldMapOverview extends BaseClass {
 
     applyDefaultValues() {
         /* VALUES */
-        WIDTH.set(this, 0);
-        HEIGHT.set(this, 0);
-        ZOOM.set(this, 100);
-        OFFSET_X.set(this, 0);
-        OFFSET_Y.set(this, 0);
+        this.#width = 0;
+        this.#height = 0;
+        this.#zoom = 100;
+        this.#offsetX = 0;
+        this.#offsetY = 0;
         /* map */
         const mapEl = this.shadowRoot.getElementById("map");
         if (mapEl != null) {
@@ -226,11 +213,11 @@ export default class WorldMapOverview extends BaseClass {
         const width = mapData.width ?? 0;
         const height = mapData.height ?? 0;
         const zoom = mapData.zoom ?? 100;
-        WIDTH.set(this, width);
-        HEIGHT.set(this, height);
-        ZOOM.set(this, zoom);
-        OFFSET_X.set(this, 0);
-        OFFSET_Y.set(this, 0);
+        this.#width = width;
+        this.#height = height;
+        this.#zoom = zoom;
+        this.#offsetX = 0;
+        this.#offsetY = 0;
         /* map */
         const mapEl = this.shadowRoot.getElementById("map");
         if (mapEl != null) {

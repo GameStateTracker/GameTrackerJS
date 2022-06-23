@@ -17,13 +17,6 @@ const STORAGES = {
     startItems: Savestate.getStorage("startItems")
 };
 
-const DEF_MAX = new WeakMap();
-const DEF_MIN = new WeakMap();
-const MAX = new WeakMap();
-const MIN = new WeakMap();
-const START = new WeakMap();
-const VALUE = new WeakMap();
-
 const BaseClass = mix(
     DataState
 ).with(
@@ -32,76 +25,82 @@ const BaseClass = mix(
 
 export default class DefaultItemState extends BaseClass {
 
+    #defaultMin;
+
+    #defaultMax;
+
+    #min;
+
+    #max;
+
+    #start;
+
+    #value = 0;
+
     constructor(ref, props = {}) {
         super(ref, props);
 
-        /* DEFAULT */
-        DEF_MAX.set(this, parseSafeRange(props.max, 0));
-        DEF_MIN.set(this, parseSafeRange(props.min, 0));
-
-        /* VAR MAX */
-        if (props.varMax != null) {
-            if (typeof props.varMax == "object") {
-                if (props.varMax.option != null && props.varMax.values != null) {
-                    const defMax = DEF_MAX.get(this);
-                    const optionObserver = new OptionsObserver(props.varMax.option);
-                    const maxVal = parseSafeRange(props.varMax.values[optionObserver.value], defMax);
-                    if (maxVal != null) {
-                        MAX.set(this, maxVal);
+        /* VAR MIN */
+        this.#defaultMin = parseSafeRange(props.min, 0);
+        if (props.varMin != null) {
+            if (typeof props.varMin == "object") {
+                if (props.varMin.option != null && props.varMin.values != null) {
+                    const optionObserver = new OptionsObserver(props.varMin.option);
+                    const minVal = parseSafeRange(props.varMin.values[optionObserver.value], this.#defaultMin);
+                    if (minVal != null) {
+                        this.#min = minVal;
                     }
                     optionObserver.addEventListener("change", (event) => {
-                        this.#setMax(props.varMax.values[event.data]);
+                        this.#setMin(props.varMin.values[event.value]);
                     });
                 }
-            } else if (typeof props.varMax == "string") {
-                const defMax = DEF_MAX.get(this);
-                const optionObserver = new OptionsObserver(props.varMax);
-                const maxVal = parseSafeRange(optionObserver.value, defMax);
-                if (maxVal != null) {
-                    MAX.set(this, maxVal);
+            } else if (typeof props.varMin == "string") {
+                const optionObserver = new OptionsObserver(props.varMin);
+                const minVal = parseSafeRange(optionObserver.value, this.#defaultMin);
+                if (minVal != null) {
+                    this.#min = minVal;
                 }
                 optionObserver.addEventListener("change", (event) => {
-                    this.#setMax(event.data ?? 0);
+                    this.#setMin(event.value ?? 0);
                 });
             }
         }
 
-        /* VAR MIN */
-        if (props.varMin != null) {
-            if (typeof props.varMin == "object") {
-                if (props.varMin.option != null && props.varMin.values != null) {
-                    const defMin = DEF_MIN.get(this);
-                    const optionObserver = new OptionsObserver(props.varMin.option);
-                    const minVal = parseSafeRange(props.varMin.values[optionObserver.value], defMin);
-                    if (minVal != null) {
-                        MIN.set(this, minVal);
+        /* VAR MAX */
+        this.#defaultMax = parseSafeRange(props.max, 0);
+        if (props.varMax != null) {
+            if (typeof props.varMax == "object") {
+                if (props.varMax.option != null && props.varMax.values != null) {
+                    const optionObserver = new OptionsObserver(props.varMax.option);
+                    const maxVal = parseSafeRange(props.varMax.values[optionObserver.value], this.#defaultMax);
+                    if (maxVal != null) {
+                        this.#max = maxVal;
                     }
                     optionObserver.addEventListener("change", (event) => {
-                        this.#setMin(props.varMin.values[event.data]);
+                        this.#setMax(props.varMax.values[event.value]);
                     });
                 }
-            } else if (typeof props.varMin == "string") {
-                const defMin = DEF_MIN.get(this);
-                const optionObserver = new OptionsObserver(props.varMin);
-                const minVal = parseSafeRange(optionObserver.value, defMin);
-                if (minVal != null) {
-                    MIN.set(this, minVal);
+            } else if (typeof props.varMax == "string") {
+                const optionObserver = new OptionsObserver(props.varMax);
+                const maxVal = parseSafeRange(optionObserver.value, this.#defaultMax);
+                if (maxVal != null) {
+                    this.#max = maxVal;
                 }
                 optionObserver.addEventListener("change", (event) => {
-                    this.#setMin(event.data ?? 0);
+                    this.#setMax(event.value ?? 0);
                 });
             }
         }
 
         /* VALUES */
         const startItemsObserver = new ObservableStorageObserver(STORAGES.startItems, ref);
-        START.set(this, parseSafeRange(startItemsObserver.value, 0));
+        this.#start = parseSafeRange(startItemsObserver.value, 0)
         startItemsObserver.addEventListener("change", (event) => {
             this.#setStart(event.value ?? 0);
         });
 
         const itemsObserver = new ObservableStorageObserver(STORAGES.items, ref);
-        VALUE.set(this, this.#restrictValue(itemsObserver.value));
+        this.#value = this.#restrictValue(itemsObserver.value);
         itemsObserver.addEventListener("change", (event) => {
             this.value = event.value ?? 0;
         });
@@ -119,80 +118,62 @@ export default class DefaultItemState extends BaseClass {
         return value;
     }
 
-    #setMax(value) {
-        const newMax = parseSafeRange(value, this.defaultMax);
-        const oldMax = MAX.get(this);
-        if (newMax != oldMax) {
-            const oldValue = this.value;
-            MAX.set(this, newMax);
-            // external max
-            const event = new Event("max");
-            event.value = newMax;
-            this.dispatchEvent(event);
-            // external value
-            const newValue = this.value;
-            if (oldValue != newValue) {
-                const event = new Event("value");
-                event.value = newValue;
-                this.dispatchEvent(event);
-            }
-        }
-    }
-
     #setMin(value) {
         const newMin = parseSafeRange(value, 0);
-        const oldMin = MIN.get(this);
+        const oldMin = this.#min;
         if (newMin != oldMin) {
-            const oldValue = this.value;
-            MIN.set(this, newMin);
+            this.#min = newMin;
             // external min
             const event = new Event("min");
             event.value = newMin;
             this.dispatchEvent(event);
-            // external value
-            const newValue = this.value;
-            if (oldValue != newValue) {
-                const event = new Event("value");
-                event.value = newValue;
-                this.dispatchEvent(event);
-            }
+            // set value
+            this.value = this.#value;
+        }
+    }
+
+    #setMax(value) {
+        const newMax = parseSafeRange(value, this.defaultMax);
+        const oldMax = this.#max;
+        if (newMax != oldMax) {
+            this.#max = newMax;
+            // external max
+            const event = new Event("max");
+            event.value = newMax;
+            this.dispatchEvent(event);
+            // set value
+            this.value = this.#value;
         }
     }
 
     #setStart(value) {
         const newStart = parseSafeRange(value, 0);
-        const oldStart = MIN.get(this);
+        const oldStart = this.#start;
         if (newStart != oldStart) {
-            const oldValue = this.value;
-            START.set(this, newStart);
+            this.#start = newStart;
             // external min
             const event = new Event("start");
             event.value = newStart;
             this.dispatchEvent(event);
-            // external value
-            const newValue = this.value;
-            if (oldValue != newValue) {
-                const event = new Event("value");
-                event.value = newValue;
-                this.dispatchEvent(event);
-            }
+            // set value
+            this.value = this.#value;
         }
     }
 
-    get defaultMax() {
-        return DEF_MAX.get(this);
-    }
-
     get defaultMin() {
-        return DEF_MIN.get(this);
+        return this.#defaultMin;
     }
 
-    get max() {
-        return MAX.get(this) ?? DEF_MAX.get(this);
+    get defaultMax() {
+        return this.#defaultMax;
     }
 
     get min() {
-        return Math.max(MIN.get(this) ?? DEF_MIN.get(this), START.get(this) ?? 0);
+        return Math.max(this.#min ?? this.#defaultMin, this.#start ?? 0);
+    }
+
+    get max() {
+        return this.#max ?? this.#defaultMax;
     }
 
     set value(value) {
@@ -200,9 +181,9 @@ export default class DefaultItemState extends BaseClass {
         const rValue = parseSafeRange(value);
         if (rValue != null) {
             const newValue = this.#restrictValue(rValue);
-            const oldValue = this.value;
+            const oldValue = this.#value;
             if (newValue != oldValue) {
-                VALUE.set(this, newValue);
+                this.#value = newValue;
                 STORAGES.items.set(ref, newValue);
                 // external
                 const event = new Event("value");
@@ -213,8 +194,7 @@ export default class DefaultItemState extends BaseClass {
     }
 
     get value() {
-        const value = VALUE.get(this);
-        return this.#restrictValue(value);
+        return this.#value;
     }
 
     isMarked() {

@@ -1,9 +1,9 @@
 // frameworks
-import IDBProxyStorage from "/emcJS/data/storage/observable/ObservableIDBProxyStorage.js";
+import ObservableIDBProxyStorage from "/emcJS/data/storage/observable/ObservableIDBProxyStorage.js";
 
 // TODO sync data to other page instances
 
-class ParameterStorage extends IDBProxyStorage {
+class ParameterStorage extends ObservableIDBProxyStorage {
 
     constructor() {
         super("parameter");

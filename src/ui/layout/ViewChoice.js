@@ -1,17 +1,15 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import ElementManager from "/emcJS/util/html/ElementManager.js";
+import EventMultiTargetManager from "/emcJS/util/event/EventMultiTargetManager.js";
 import "/emcJS/ui/input/Option.js";
 import "./ViewChoicePanel.js";
 import TPL from "./ViewChoice.js.html" assert {type: "html"};
 import STYLE from "./ViewChoice.js.css" assert {type: "css"};
 
-const EL_MANAGER = new WeakMap();
-const ON_CLICK = new WeakMap();
-
-function elementComposer(key, params) {
+function elementComposer(key, params, eventManager) {
     const el = document.createElement("emc-option");
     el.value = key;
-    el.addEventListener("click", params.onClick);
+    eventManager.addTarget(el);
     return el;
 }
 
@@ -20,44 +18,53 @@ function elementMutator(el, key, params) {
     el.title = params.title || key;
 }
 
+function elementCleanup(el, key, eventManager) {
+    eventManager.removeTarget(el);
+}
+
 export default class ViewChoice extends CustomElement {
+
+    #elementManager;
+
+    #eventManager;
 
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* --- */
-        ON_CLICK.set(this, (event) => {
+        const observer = new MutationObserver(() => {
+            this.connectedCallback();
+        });
+        observer.observe(this, {childList: true});
+        /* --- */
+        this.#eventManager = new EventMultiTargetManager();
+        this.#eventManager.set("click", (event) => {
             const el = event.currentTarget;
             if (!el.classList.contains("active")) {
                 this.active = el.value;
             }
         });
+        /* --- */
         const choice = this.shadowRoot.getElementById("view-choice");
-        EL_MANAGER.set(this, new ElementManager(choice, {
+        this.#elementManager = new ElementManager(choice, {
             composer: elementComposer,
-            mutator: elementMutator
-        }));
-        const observer = new MutationObserver(() => {
-            this.connectedCallback();
-        });
-        observer.observe(this, {childList: true});
+            mutator: elementMutator,
+            cleanup: elementCleanup
+        }, this.#eventManager);
     }
 
     connectedCallback() {
         const all = this.querySelectorAll("gt-viewchoice-panel[slot]");
-        const elManager = EL_MANAGER.get(this);
-        const onClick = ON_CLICK.get(this);
         const data = [];
-        all.forEach((el) => {
+        for (const el of all) {
             data.push({
                 key: el.slot,
                 title: el.label,
-                icon: el.icon,
-                onClick
+                icon: el.icon
             });
-        });
-        elManager.manage(data);
+        }
+        this.#elementManager.manage(data);
         // apply value
         const choice = this.shadowRoot.getElementById("view-choice");
         const el = choice.querySelector(`[value="${this.active}"]`);

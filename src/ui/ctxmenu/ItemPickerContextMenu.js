@@ -5,28 +5,25 @@ import "../itempicker/ItemPicker.js";
 
 export default class ItemPickerContextMenu extends ContextMenu {
 
-    #items = "";
+    #itemPickerEl = null;
 
     show(posX, posY, items) {
         super.show(posX, posY);
-        this.#items = items ?? "";
-    }
-
-    afterRenderCallback() {
-        const itemPickerEl = this.querySelector("#item-picker");
-        if (itemPickerEl != null) {
-            if (typeof this.#items == "string") {
-                itemPickerEl.setAttribute("grid", this.#items);
-            } else if (Array.isArray(this.#items)) {
-                itemPickerEl.setAttribute("items", JSON.stringify(this.#items));
+        if (this.#itemPickerEl != null) {
+            if (typeof items == "string") {
+                this.#itemPickerEl.items = "";
+                this.#itemPickerEl.grid = items;
+            } else if (Array.isArray(items)) {
+                this.#itemPickerEl.grid = "";
+                this.#itemPickerEl.items = JSON.stringify(items);
             }
         }
     }
 
     initItems() {
-        const itemPickerEl = document.createElement("gt-itempicker");
-        itemPickerEl.id = "item-picker";
-        itemPickerEl.addEventListener("pick", (event) => {
+        this.#itemPickerEl = document.createElement("gt-itempicker");
+        this.#itemPickerEl.id = "item-picker";
+        this.#itemPickerEl.addEventListener("pick", (event) => {
             const ev = new Event("pick");
             ev.item = event.value;
             this.dispatchEvent(ev);
@@ -34,7 +31,7 @@ export default class ItemPickerContextMenu extends ContextMenu {
             event.preventDefault();
             return false;
         });
-        super.setItems([itemPickerEl]);
+        super.setItems([this.#itemPickerEl]);
     }
 
     setItems() {

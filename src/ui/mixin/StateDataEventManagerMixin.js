@@ -5,89 +5,82 @@ import {
 
 import DataState from "../../state/DataState.js";
 
-const TARGET = new WeakMap();
-const SUBS = new WeakMap();
-
 export default createMixin((superclass) => class StateDataEventManagerMixin extends superclass {
 
-    constructor(...args) {
-        super(...args);
-        SUBS.set(this, new Map());
-        TARGET.set(this, null);
+    #target = null;
+
+    #subs = new Map();
+
+    #getSubs(name) {
+        if (!this.#subs.has(name)) {
+            const res = new Set();
+            this.#subs.set(name, res);
+            return res;
+        }
+        return this.#subs.get(name);
     }
 
-    switchState(newTarget) {
-        const subs = SUBS.get(this);
-        const oldTarget = TARGET.get(this);
-        if (newTarget instanceof DataState) {
-            if (oldTarget != newTarget) {
-                if (oldTarget != null) {
-                    subs.forEach(function(fns, name) {
-                        fns.forEach(function(fn) {
-                            oldTarget.removeEventListener(name, fn);
-                        });
-                    });
+    switchState(target) {
+        if (this.#target != target) {
+            // clean up
+            if (this.#target != null) {
+                for (const [name, fns] of this.#subs) {
+                    for (const fn of fns) {
+                        this.#target.removeEventListener(name, fn);
+                    }
                 }
-                TARGET.set(this, newTarget);
+            }
+            if (target instanceof DataState) {
+                // register new
+                if (this.#target != target) {
+                    this.#target = target;
+                    if (this.isConnected) {
+                        for (const [name, fns] of this.#subs) {
+                            for (const fn of fns) {
+                                this.#target.addEventListener(name, fn);
+                            }
+                        }
+                        this.applyStateValues(target);
+                    }
+                }
+            } else {
+                // remove
+                this.#target = null;
                 if (this.isConnected) {
-                    subs.forEach(function(fns, name) {
-                        fns.forEach(function(fn) {
-                            newTarget.addEventListener(name, fn);
-                        });
-                    });
-                    this.applyStateValues(newTarget);
+                    this.applyDefaultValues();
                 }
-            }
-        } else {
-            if (oldTarget != null) {
-                subs.forEach(function(fns, name) {
-                    fns.forEach(function(fn) {
-                        oldTarget.removeEventListener(name, fn);
-                    });
-                });
-            }
-            TARGET.set(this, null);
-            if (this.isConnected) {
-                this.applyDefaultValues();
             }
         }
     }
 
     getState() {
-        return TARGET.get(this);
+        return this.#target;
     }
 
     registerStateHandler(name, fn) {
         if (Array.isArray(name)) {
-            name.forEach((n) => this.registerStateHandler(n, fn));
-        } else {
-            const subs = SUBS.get(this);
-            const target = TARGET.get(this);
-            if (!subs.has(name)) {
-                subs.set(name, new Set());
+            for (const n of name) {
+                this.registerStateHandler(n, fn)
             }
-            const fns = subs.get(name);
+        } else {
+            const fns = this.#getSubs(name);
             fns.add(fn);
-            if (target != null && this.isConnected) {
-                target.addEventListener(name, fn);
+            if (this.#target != null && this.isConnected) {
+                this.#target.addEventListener(name, fn);
             }
         }
     }
 
     unregisterStateHandler(name, fn) {
         if (Array.isArray(name)) {
-            name.forEach((n) => this.unregisterStateHandler(n, fn));
-        } else {
-            const subs = SUBS.get(this);
-            const target = TARGET.get(this);
-            if (subs.has(name)) {
-                const fns = subs.get(name);
-                if (fns.has(fn)) {
-                    subs.delete(name);
-                }
+            for (const n of name) {
+                this.unregisterStateHandler(n, fn)
             }
-            if (target != null) {
-                target.removeEventListener(name, fn);
+        } else {
+            const fns = this.#getSubs(name);
+            fns.delete(fn);
+            if (this.#target != null) {
+                this.#target.removeEventListener(name, fn);
             }
         }
     }
@@ -96,15 +89,13 @@ export default createMixin((superclass) => class StateDataEventManagerMixin exte
         if (super.connectedCallback) {
             super.connectedCallback();
         }
-        const target = TARGET.get(this);
-        if (target != null) {
-            const subs = SUBS.get(this);
-            subs.forEach(function(fns, name) {
-                fns.forEach(function(fn) {
-                    target.addEventListener(name, fn);
-                });
-            });
-            this.applyStateValues(target);
+        if (this.#target != null) {
+            for (const [name, fns] of this.#subs) {
+                for (const fn of fns) {
+                    this.#target.addEventListener(name, fn);
+                }
+            }
+            this.applyStateValues(this.#target);
         } else {
             this.applyDefaultValues();
         }
@@ -114,14 +105,12 @@ export default createMixin((superclass) => class StateDataEventManagerMixin exte
         if (super.disconnectedCallback) {
             super.disconnectedCallback();
         }
-        const target = TARGET.get(this);
-        if (target != null) {
-            const subs = SUBS.get(this);
-            subs.forEach(function(fns, name) {
-                fns.forEach(function(fn) {
-                    target.removeEventListener(name, fn);
-                });
-            });
+        if (this.#target != null) {
+            for (const [name, fns] of this.#subs) {
+                for (const fn of fns) {
+                    this.#target.removeEventListener(name, fn);
+                }
+            }
         }
     }
 

@@ -116,16 +116,16 @@ label {
 `);
 
 const EXITS = WorldResource.get("exit");
-const CATEGORIES = new WeakMap();
 
 export default class ExitList extends Panel {
+
+    #categories = new Set();
 
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* --- */
-        CATEGORIES.set(this, new Set());
         for (const name in EXITS) {
             const state = WorldStateManagerRegistry.get("exit").get(name);
             this.addEntrance(state);
@@ -213,9 +213,8 @@ export default class ExitList extends Panel {
     }
 
     addCategory(category) {
-        const categories = CATEGORIES.get(this);
-        if (!categories.has(category)) {
-            categories.add(category);
+        if (!this.#categories.has(category)) {
+            this.#categories.add(category);
             const tokenizer = this.shadowRoot.getElementById("tokenizer");
             const el = document.createElement("emc-option");
             el.value = category;

@@ -10,14 +10,6 @@ import FilterStorage from "../../savestate/storage/FilterStorage.js";
 
 const EVENTS = ["load", "change"];
 
-function mapToObj(map) {
-    const res = {};
-    map.forEach((v, k) => {
-        res[k] = v;
-    });
-    return res;
-}
-
 export default class FilterHandler extends EventTarget {
 
     #logics = new Map();
@@ -121,7 +113,7 @@ export default class FilterHandler extends EventTarget {
     }
 
     get filter() {
-        return mapToObj(this.#values);
+        return Object.fromEntries(this.#values);
     }
 
     get value() {

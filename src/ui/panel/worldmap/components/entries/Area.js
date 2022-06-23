@@ -32,7 +32,7 @@ const STYLE = new GlobalStyle(`
     bottom: -2px;
     width: 10px;
     height: 10px;
-    background-color: var(--location-status-available-color, , var(--page-text-color, #000000));
+    background-color: var(--world-entry-status-available-color, #00ff00);
     border: solid 4px black;
     border-radius: 50%;
     content: " ";

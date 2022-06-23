@@ -3,9 +3,9 @@ import OptionsObserver from "../../util/observer/OptionsObserver.js";
 import ItemStateManager from "./ItemStateManager.js";
 import DefaultItemState from "./DefaultItemState.js";
 
-const STARTVALUE = new WeakMap();
-
 export default class StartSettingsState extends DefaultItemState {
+
+    #startValue;
 
     constructor(ref, props) {
         super(ref, props);
@@ -14,10 +14,10 @@ export default class StartSettingsState extends DefaultItemState {
             const optionObserver = new OptionsObserver(props.start_settings);
             if (props.start_values) {
                 const startValue = props.start_values[optionObserver.value] ?? 0;
-                STARTVALUE.set(this, parseInt(startValue));
+                this.#startValue = parseInt(startValue);
             } else {
                 const startValue = optionObserver.value ?? 0;
-                STARTVALUE.set(this, parseInt(startValue));
+                this.#startValue = parseInt(startValue);
             }
             optionObserver.addEventListener("change", (event) => {
                 this.#applyStartValue(parseInt(event.value));
@@ -26,7 +26,6 @@ export default class StartSettingsState extends DefaultItemState {
     }
 
     #applyStartValue(newValue) {
-        const startvalue = STARTVALUE.get(this);
         newValue = parseInt(newValue) || 1;
         const max = this.max;
         if (newValue < 1) {
@@ -35,8 +34,9 @@ export default class StartSettingsState extends DefaultItemState {
         if (newValue > max) {
             newValue = max;
         }
-        if (newValue != startvalue) {
-            STARTVALUE.set(this, newValue);
+        const oldValue = this.#startValue;
+        if (newValue != oldValue) {
+            this.#startValue = newValue;
             // external
             const event = new Event("startvalue");
             event.value = newValue;
@@ -44,13 +44,13 @@ export default class StartSettingsState extends DefaultItemState {
             // update value
             const state = this.value;
             if (!!state && state < newValue) {
-                this.value = newValue;
+                super.value = newValue;
             }
         }
     }
 
     get startvalue() {
-        return STARTVALUE.get(this);
+        return this.#startValue;
     }
 
     set value(value) {

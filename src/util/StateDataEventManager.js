@@ -1,62 +1,75 @@
 import DataState from "../state/DataState.js";
 
-const TARGET = new WeakMap();
-const SUBS = new WeakMap();
-
 export default class StateDataEventManager {
 
-    constructor() {
-        SUBS.set(this, new Map());
-        TARGET.set(this, null);
+    #target = null;
+
+    #subs = new Map();
+
+    #getSubs(name) {
+        if (!this.#subs.has(name)) {
+            const res = new Set();
+            this.#subs.set(name, res);
+            return res;
+        }
+        return this.#subs.get(name);
     }
 
-    switchState(newTarget) {
-        const subs = SUBS.get(this);
-        const oldTarget = TARGET.get(this);
-        if (oldTarget != null) {
-            subs.forEach(function(fn, name) {
-                oldTarget.removeEventListener(name, fn);
-            });
-        }
-        TARGET.set(this, newTarget);
-        if (newTarget instanceof DataState) {
-            subs.forEach(function(fn, name) {
-                newTarget.addEventListener(name, fn);
-            });
+    switchState(target) {
+        if (this.#target != target) {
+            // clean up
+            if (this.#target != null) {
+                for (const [name, fns] of this.#subs) {
+                    for (const fn of fns) {
+                        this.#target.removeEventListener(name, fn);
+                    }
+                }
+            }
+            if (target instanceof DataState) {
+                // register new
+                if (this.#target != target) {
+                    this.#target = target;
+                    for (const [name, fns] of this.#subs) {
+                        for (const fn of fns) {
+                            this.#target.addEventListener(name, fn);
+                        }
+                    }
+                }
+            } else {
+                // remove
+                this.#target = null;
+            }
         }
     }
 
     getState() {
-        return TARGET.get(this);
+        return this.#target;
     }
 
     registerStateHandler(name, fn) {
         if (Array.isArray(name)) {
-            name.forEach((n) => this.registerStateHandler(n, fn));
-        } else {
-            const subs = SUBS.get(this);
-            const target = TARGET.get(this);
-            if (target != null) {
-                if (subs.has(name)) {
-                    target.removeEventListener(name, fn);
-                }
-                target.addEventListener(name, fn);
+            for (const n of name) {
+                this.registerStateHandler(n, fn)
             }
-            subs.set(name, fn);
+        } else {
+            const fns = this.#getSubs(name);
+            fns.add(fn);
+            if (this.#target != null && this.isConnected) {
+                this.#target.addEventListener(name, fn);
+            }
         }
     }
 
     unregisterStateHandler(name, fn) {
         if (Array.isArray(name)) {
-            name.forEach((n) => this.unregisterStateHandler(n, fn));
+            for (const n of name) {
+                this.unregisterStateHandler(n, fn)
+            }
         } else {
-            const subs = SUBS.get(this);
-            const target = TARGET.get(this);
-            if (target != null) {
-                if (subs.has(name)) {
-                    target.removeEventListener(name, fn);
-                    subs.delete(name);
-                }
+            const fns = this.#getSubs(name);
+            fns.delete(fn);
+            if (this.#target != null) {
+                this.#target.removeEventListener(name, fn);
             }
         }
     }

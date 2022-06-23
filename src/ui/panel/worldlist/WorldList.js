@@ -109,8 +109,6 @@ const BaseClass = mix(
     StateDataEventManagerMixin
 );
 
-const EL_MANAGER = new WeakMap();
-
 function elementComposer(key, props) {
     const uiReg = UIRegistry.get(`worldlist-${props.category}`);
     if (uiReg != null) {
@@ -119,6 +117,8 @@ function elementComposer(key, props) {
 }
 
 export default class WorldList extends BaseClass {
+
+    #elementManager;
 
     constructor() {
         super();
@@ -142,9 +142,9 @@ export default class WorldList extends BaseClass {
             WorldListState.reset();
         });
         /* --- */
-        EL_MANAGER.set(this, new ElementManager(this, {
+        this.#elementManager = new ElementManager(this, {
             composer: elementComposer
-        }));
+        });
     }
 
     connectedCallback() {
@@ -239,7 +239,6 @@ export default class WorldList extends BaseClass {
     }
 
     refreshList() {
-        const elManager = EL_MANAGER.get(this);
         const elManagerData = [];
         const state = this.getState();
         if (state != null) {
@@ -256,7 +255,7 @@ export default class WorldList extends BaseClass {
             }
         }
         // this.classList.toggle("empty", !hasElements);
-        elManager.manage(elManagerData);
+        this.#elementManager.manage(elManagerData);
     }
 
 }

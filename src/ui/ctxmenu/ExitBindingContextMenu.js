@@ -25,8 +25,6 @@ const STYLE = new GlobalStyle(`
 }
 `);
 
-const SELECT_EL = new WeakMap();
-
 const BaseClass = mix(
     ContextMenu
 ).with(
@@ -35,26 +33,27 @@ const BaseClass = mix(
 
 export default class ExitBindingContextMenu extends BaseClass {
 
+    #exitSelectEl;
+
     constructor() {
         super();
         STYLE.apply(this.shadowRoot);
     }
 
     initItems() {
-        const exitSelectEl = document.createElement("emc-listselect");
-        exitSelectEl.id = "select";
-        exitSelectEl.addEventListener("change", (event) => {
+        this.#exitSelectEl = document.createElement("emc-listselect");
+        this.#exitSelectEl.id = "select";
+        this.#exitSelectEl.addEventListener("change", (event) => {
             const ev = new Event("change");
             ev.value = event.value;
             this.dispatchEvent(ev);
         });
-        exitSelectEl.addEventListener("click", (event) => {
+        this.#exitSelectEl.addEventListener("click", (event) => {
             event.stopPropagation();
             event.preventDefault();
             return false;
         });
-        SELECT_EL.set(this, exitSelectEl);
-        super.setItems([exitSelectEl]);
+        super.setItems([this.#exitSelectEl]);
     }
 
     setItems() {
@@ -67,15 +66,13 @@ export default class ExitBindingContextMenu extends BaseClass {
     }
 
     close() {
-        const exitSelectEl = SELECT_EL.get(this);
-        exitSelectEl.resetSearch();
+        this.#exitSelectEl.resetSearch();
         super.close();
     }
 
     fillEntranceSelection(access, current = "") {
-        const exitSelectEl = SELECT_EL.get(this);
-        exitSelectEl.innerHTML = "";
-        exitSelectEl.value = current;
+        this.#exitSelectEl.innerHTML = "";
+        this.#exitSelectEl.value = current;
         // retrieve bound
         const bound = new Set();
         for (const [key, value] of STORAGES.exitBindings) {
@@ -93,7 +90,7 @@ export default class ExitBindingContextMenu extends BaseClass {
         Language.applyLabel(unbindOptionText, "entrance[]");
         unbindOptionText.style.fontStyle = "italic";
         unbindOptionEl.append(unbindOptionText);
-        exitSelectEl.append(unbindOptionEl);
+        this.#exitSelectEl.append(unbindOptionEl);
         // add empty
         const emptyOptionEl = document.createElement("emc-option");
         emptyOptionEl.value = "\u0000";
@@ -101,11 +98,11 @@ export default class ExitBindingContextMenu extends BaseClass {
         Language.applyLabel(emptyOptionText, "entrance[\u0000]");
         emptyOptionText.style.fontStyle = "italic";
         emptyOptionEl.append(emptyOptionText);
-        exitSelectEl.append(emptyOptionEl);
+        this.#exitSelectEl.append(emptyOptionEl);
         // set choices and value
         const exit = ExitStateManager.get(access);
         if (exit != null) {
-            exitSelectEl.value = current;
+            this.#exitSelectEl.value = current;
             // add options
             for (const [, entrance] of EntranceStateManager) {
                 setTimeout(() => {
@@ -123,19 +120,18 @@ export default class ExitBindingContextMenu extends BaseClass {
                             const categoryName = Language.generateLabel(`entrance_type[${entrance.props.type}]`);
                             category.append(categoryName);
                             opt.append(category);
-                            exitSelectEl.append(opt);
+                            this.#exitSelectEl.append(opt);
                         }
                     }
                 }, 0);
             }
         } else {
-            exitSelectEl.value = "";
+            this.#exitSelectEl.value = "";
         }
     }
 
     initFocus() {
-        const exitSelectEl = SELECT_EL.get(this);
-        exitSelectEl.focus();
+        this.#exitSelectEl.focus();
     }
 
 }

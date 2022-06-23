@@ -65,8 +65,6 @@ const STYLE = new GlobalStyle(`
 }
 `);
 
-const EL_MANAGER = new WeakMap();
-
 function elementComposer(key, props) {
     if (props.category === "connection") {
         return document.createElement("gt-connection");
@@ -97,9 +95,6 @@ function elementMutator(el, key, props) {
 
 const ZOOM_MIN = 10;
 const ZOOM_MAX = 200;
-const OFFSET_X = new WeakMap();
-const OFFSET_Y = new WeakMap();
-const ZOOM = new WeakMap();
 
 const BaseClass = mix(
     CustomElement
@@ -109,15 +104,18 @@ const BaseClass = mix(
 
 export default class WorldMapView extends BaseClass {
 
+    #elementManager;
+
+    #zoom = 100;
+
+    #offsetX = 0;
+
+    #offsetY = 0;
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
-
-        /* VALUES */
-        OFFSET_X.set(this, 0);
-        OFFSET_Y.set(this, 0);
-        ZOOM.set(this, 1);
 
         /* state handler */
         this.registerStateHandler("listChange", () => {
@@ -141,8 +139,8 @@ export default class WorldMapView extends BaseClass {
         mapEventManager.set("mousemove", (event) => {
             if (mapEl.classList.contains("grabbed")) {
                 if (event.button === 0) {
-                    const vrtX = OFFSET_X.get(this);
-                    const vrtY = OFFSET_Y.get(this);
+                    const vrtX = this.#offsetX;
+                    const vrtY = this.#offsetY;
                     const forceX = event.movementX;
                     const forceY = event.movementY;
                     this.setTranslation(vrtX + forceX, vrtY + forceY);
@@ -171,10 +169,10 @@ export default class WorldMapView extends BaseClass {
         });
 
         /* --- */
-        EL_MANAGER.set(this, new ElementManager(this, {
+        this.#elementManager = new ElementManager(this, {
             composer: elementComposer,
             mutator: elementMutator
-        }));
+        });
     }
 
     applyDefaultValues() {
@@ -186,12 +184,12 @@ export default class WorldMapView extends BaseClass {
             mapEl.style.width = "600px";
             mapEl.style.height = "600px";
             /* value */
+            mapEl.style.setProperty("--zoom", 100);
             mapEl.style.setProperty("--offset-x", 0);
             mapEl.style.setProperty("--offset-y", 0);
-            mapEl.style.setProperty("--zoom", 100);
-            OFFSET_X.set(this, 0);
-            OFFSET_Y.set(this, 0);
-            ZOOM.set(this, 100);
+            this.#zoom = 100;
+            this.#offsetX = 0;
+            this.#offsetY = 0;
             /* event */
             const ev = new Event("transform");
             ev.zoom = 100;
@@ -214,12 +212,12 @@ export default class WorldMapView extends BaseClass {
             mapEl.style.height = `${mapData.height}px`;
             /* value */
             const zoom = Math.min(Math.max(ZOOM_MIN, Math.floor(mapData.zoom ?? 100)), ZOOM_MAX);
+            mapEl.style.setProperty("--zoom", zoom);
             mapEl.style.setProperty("--offset-x", 0);
             mapEl.style.setProperty("--offset-y", 0);
-            mapEl.style.setProperty("--zoom", zoom);
-            OFFSET_X.set(this, 0);
-            OFFSET_Y.set(this, 0);
-            ZOOM.set(this, zoom);
+            this.#zoom = zoom;
+            this.#offsetX = 0;
+            this.#offsetY = 0;
             /* event */
             const ev = new Event("transform");
             ev.zoom = zoom;
@@ -264,34 +262,31 @@ export default class WorldMapView extends BaseClass {
     }
 
     get zoom() {
-        return ZOOM.get(this);
+        return this.#zoom;
     }
 
     get x() {
-        return OFFSET_X.get(this);
+        return this.#offsetX;
     }
 
     get y() {
-        return OFFSET_Y.get(this);
+        return this.#offsetY;
     }
 
     setTranslation(x, y) {
         x = Math.floor(x);
         y = Math.floor(y);
-        const zoom = ZOOM.get(this);
-        const [offsetX, offsetY] = this.#containBoundaries(x, y, zoom);
-        const oldX = OFFSET_X.get(this);
-        const oldY = OFFSET_Y.get(this);
-        if (oldX != offsetX || oldY != offsetY) {
-            OFFSET_X.set(this, offsetX);
-            OFFSET_Y.set(this, offsetY);
+        const [offsetX, offsetY] = this.#containBoundaries(x, y, this.#zoom);
+        if (this.#offsetX != offsetX || this.#offsetY != offsetY) {
+            this.#offsetX = offsetX;
+            this.#offsetY = offsetY;
             /* style */
             const mapEl = this.shadowRoot.getElementById("map");
             mapEl.style.setProperty("--offset-x", offsetX);
             mapEl.style.setProperty("--offset-y", offsetY);
             /* event */
             const ev = new Event("transform");
-            ev.zoom = zoom;
+            ev.zoom = this.#zoom;
             ev.x = offsetX;
             ev.y = offsetY;
             this.dispatchEvent(ev);
@@ -300,12 +295,11 @@ export default class WorldMapView extends BaseClass {
 
     setZoom(zoom/* , anchorX = 0, anchorY = 0 */) {
         zoom = Math.min(Math.max(ZOOM_MIN, Math.floor(zoom)), ZOOM_MAX);
-        const old = ZOOM.get(this);
-        if (old != zoom) {
+        if (this.#zoom != zoom) {
             const mapEl = this.shadowRoot.getElementById("map");
-            ZOOM.set(this, zoom);
-            const x = OFFSET_X.get(this);
-            const y = OFFSET_Y.get(this);
+            this.#zoom = zoom;
+            const x = this.#offsetX;
+            const y = this.#offsetY;
 
             /* calculate anchor focus shift */
             // const scale = 100 / zoom;
@@ -328,8 +322,8 @@ export default class WorldMapView extends BaseClass {
 
             /* recalculate offsets to stay inside boundaries */
             const [offsetX, offsetY] = this.#containBoundaries(x, y, zoom);
-            OFFSET_X.set(this, offsetX);
-            OFFSET_Y.set(this, offsetY);
+            this.#offsetX = offsetX;
+            this.#offsetY = offsetY;
 
             /* style */
             mapEl.style.setProperty("--zoom", zoom);
@@ -372,7 +366,6 @@ export default class WorldMapView extends BaseClass {
     }
 
     refreshList() {
-        const elManager = EL_MANAGER.get(this);
         const elManagerData = [];
         const state = this.getState();
         if (state != null) {
@@ -406,7 +399,7 @@ export default class WorldMapView extends BaseClass {
                 }
             }
         }
-        elManager.manage(elManagerData);
+        this.#elementManager.manage(elManagerData);
     }
 
 }

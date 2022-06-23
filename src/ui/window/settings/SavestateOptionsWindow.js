@@ -9,20 +9,19 @@ import ItemsResource from "../../../data/resource/ItemsResource.js";
 import OptionsStorage from "../../../savestate/storage/OptionsStorage.js";
 import StartItemsStorage from "../../../savestate/storage/StartItemsStorage.js";
 
-const ITEM_STORAGE = new WeakMap();
-
 export default class SavestateOptionsWindow extends AbstractSettingsWindow {
+
+    #itemStorage;
 
     constructor() {
         super("Randomizer options") ;
         /* --- */
         const options = OptionsResource.get();
         SettingsBuilder.build(this, options);
-        const itemStorage = new ObservableDefaultingStorage();
-        ITEM_STORAGE.set(this, itemStorage);
+        this.#itemStorage = new ObservableDefaultingStorage();
         /* --- */
         for (const key of Object.keys(ItemsResource.get())) {
-            itemStorage.setDefault(key, 0);
+            this.#itemStorage.setDefault(key, 0);
         }
         /* --- */
         this.addEventListener("submit", async (event) => {
@@ -31,7 +30,7 @@ export default class SavestateOptionsWindow extends AbstractSettingsWindow {
             const settings = event.data;
             OptionsStorage.setAll(settings);
             /* --- */
-            const items = itemStorage.getAll();
+            const items = this.#itemStorage.getAll();
             StartItemsStorage.setAll(items);
             /* --- */
             await BusyIndicator.unbusy();
@@ -40,16 +39,14 @@ export default class SavestateOptionsWindow extends AbstractSettingsWindow {
 
     show() {
         const items = StartItemsStorage.getAll();
-        const storage = ITEM_STORAGE.get(this);
-        storage.setAll(items);
+        this.#itemStorage.setAll(items);
         /* -- */
         const values = OptionsStorage.getAll();
         super.show(values);
     }
 
     overwriteItems(data) {
-        const storage = ITEM_STORAGE.get(this);
-        storage.deserialize(data);
+        this.#itemStorage.deserialize(data);
     }
 
     static getLabel(label) {
