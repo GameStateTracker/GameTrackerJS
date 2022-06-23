@@ -38,7 +38,7 @@ const STYLE = new GlobalStyle(`
 :host {
     display: grid;
     width: 400px;
-    height: 200px;
+    height: 400px;
     user-select: none;
 }
 .overview-wrapper {
@@ -164,8 +164,9 @@ export default class WorldMap extends BaseClass {
                 }
                 sliderEl.value = viewEl.zoom;
             }
-            // event.stopPropagation();
-        }, {capture: true, passive: true});
+            event.stopPropagation();
+            event.preventDefault();
+        }, {capture: true});
     }
 
     connectedCallback() {
