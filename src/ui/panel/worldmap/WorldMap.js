@@ -16,6 +16,9 @@ import "../../button/HintButton.js";
 import "./components/WorldMapView.js";
 import "./components/WorldMapOverview.js";
 import "./components/WorldMapTitle.js";
+import SettingsObserver from "../../../util/observer/SettingsObserver.js";
+
+const showDetailedMapsObserver = new SettingsObserver("show_detailed_maps");
 
 //TODO save map settings per map
 
@@ -121,7 +124,16 @@ export default class WorldMap extends BaseClass {
         STYLE.apply(this.shadowRoot);
         /* state handler */
         WorldListState.addEventListener("area", (event) => {
-            this.ref = event.value;
+            if (this.detailed || showDetailedMapsObserver.value) {
+                this.ref = event.value;
+            }
+        });
+        showDetailedMapsObserver.addEventListener("change", (event) => {
+            if (this.detailed || event.value) {
+                this.ref = WorldListState.area;
+            } else {
+                this.ref = WorldListState.defaultArea;
+            }
         });
         /* view */
         const viewEl = this.shadowRoot.getElementById("view");
@@ -222,15 +234,24 @@ export default class WorldMap extends BaseClass {
     }
 
     get ref() {
-        return this.getAttribute("ref") || WorldListState.config.default;
+        return this.getAttribute("ref") ?? WorldListState.config.default;
     }
 
-    set ref(val) {
-        this.setAttribute("ref", val);
+    set ref(value) {
+        this.setAttribute("ref", value);
+    }
+
+    get detailed() {
+        const res = this.getAttribute("detailed");
+        return res != null && res !== "false";
+    }
+
+    set detailed(value) {
+        this.setAttribute("detailed", !!value);
     }
 
     static get observedAttributes() {
-        return ["ref"];
+        return ["ref", "detailed"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -245,6 +266,13 @@ export default class WorldMap extends BaseClass {
                         this.switchState(defaultState);
                     }
                 } break;
+                case "detailed": {
+                    if (newValue != null && newValue !== "false" || showDetailedMapsObserver.value) {
+                        this.ref = WorldListState.area;
+                    } else {
+                        this.ref = WorldListState.defaultArea;
+                    }
+                }
             }
         }
     }

@@ -13,6 +13,10 @@ class WorldListState extends EventTarget {
         return CONFIG;
     }
 
+    get defaultArea() {
+        return CONFIG.defaultArea;
+    }
+
     get area() {
         return this.#area;
     }
