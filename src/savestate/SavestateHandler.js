@@ -60,11 +60,11 @@ class SavestateHandler extends EventTarget {
         const initState = LocalStorage.get(PERSISTANCE_NAME);
         if (initState != null) {
             this.dispatchEvent(new Event("beforeload"));
+            this.dispatchEvent(new Event("reset"));
             const state = SavestateConverter.convert(initState);
             Savestate.deserialize(state);
             updateTitle();
             // trigger event
-            this.dispatchEvent(new Event("reset"));
             const ev = new Event("load");
             ev.state = state;
             this.dispatchEvent(ev);
@@ -124,12 +124,12 @@ class SavestateHandler extends EventTarget {
         await BusyIndicator.busy();
         if (await STORAGE.has(name)) {
             this.dispatchEvent(new Event("beforeload"));
+            this.dispatchEvent(new Event("reset"));
             const state = SavestateConverter.convert(await STORAGE.get(name));
             // write state data
             Savestate.deserialize(state);
             this.#cacheData(state, false);
             // trigger event
-            this.dispatchEvent(new Event("reset"));
             const ev = new Event("load");
             ev.state = state;
             this.dispatchEvent(ev);

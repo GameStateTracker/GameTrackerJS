@@ -24,14 +24,14 @@ class Savestate extends EventTarget {
     constructor() {
         super();
         /* --- */
+        this.registerStorage("options", OptionsStorage);
+        this.registerStorage("filter", FilterStorage, "persistedchange");
+        this.registerStorage("startItems", StartItemsStorage);
         this.registerStorage("items", new ObservableDefaultValueStorage(0));
-        this.registerStorage("locations", new ObservableDefaultValueStorage(false));
         this.registerStorage("exitBindings", new ObservableDefaultValueStorage(""));
         this.registerStorage("areaHints", new ObservableDefaultValueStorage(""));
         this.registerStorage("locationItems", new ObservableDefaultValueStorage(""));
-        this.registerStorage("startItems", StartItemsStorage);
-        this.registerStorage("options", OptionsStorage);
-        this.registerStorage("filter", FilterStorage, "persistedchange");
+        this.registerStorage("locations", new ObservableDefaultValueStorage(false));
     }
 
     set name(value) {
