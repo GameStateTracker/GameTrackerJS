@@ -1,4 +1,5 @@
 import WorldResource from "../../data/resource/WorldResource.js";
+import Savestate from "../../savestate/Savestate.js";
 
 const CONFIG = WorldResource.get("config");
 const AREA_PROPS = WorldResource.get("area");
@@ -8,6 +9,15 @@ class WorldListState extends EventTarget {
     #area = CONFIG.defaultArea;
 
     #props = AREA_PROPS[CONFIG.defaultArea];
+
+    constructor() {
+        super();
+
+        /* EVENT */
+        Savestate.addEventListener("load", () => {
+            this.reset();
+        });
+    }
 
     get config() {
         return CONFIG;
