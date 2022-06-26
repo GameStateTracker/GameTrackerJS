@@ -1,27 +1,25 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
+import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
 import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
-
-import Savestate from "../../savestate/Savestate.js";
-import Language from "../../util/Language.js";
 import ExitStateManager from "../../statemanager/world/exit/ExitStateManager.js";
 import EntranceStateManager from "../../statemanager/world/entrance/EntranceStateManager.js";
+import Savestate from "../../savestate/Savestate.js";
+import "../entrance/EntranceSelectList.js";
 
-const STORAGES = {exitBindings: Savestate.getStorage("exitBindings")};
-
-const CTG_TPL = new Template(`
-<span style="color:#00000057;font-style:italic;font-size:0.8em;"></span>
-`);
+const STORAGES = {
+    exitBindings: Savestate.getStorage("exitBindings")
+};
 
 const STYLE = new GlobalStyle(`
 ::slotted(#select) {
-    height: 300px;
-    width: 300px;
+    min-height: 300px;
+    max-height: 50vh;
+    min-width: 300px;
+    max-width: 90vw;
 }
 `);
 
@@ -41,7 +39,7 @@ export default class ExitBindingContextMenu extends BaseClass {
     }
 
     initItems() {
-        this.#exitSelectEl = document.createElement("emc-listselect");
+        this.#exitSelectEl = document.createElement("gt-entrance-select-list");
         this.#exitSelectEl.id = "select";
         this.#exitSelectEl.addEventListener("change", (event) => {
             const ev = new Event("change");
@@ -61,8 +59,10 @@ export default class ExitBindingContextMenu extends BaseClass {
     }
 
     show(posX, posY, access, current) {
-        super.show(posX, posY);
         this.fillEntranceSelection(access, current);
+        setTimeout(() => {
+            super.show(posX, posY);
+        }, 0);
     }
 
     close() {
@@ -70,9 +70,12 @@ export default class ExitBindingContextMenu extends BaseClass {
         super.close();
     }
 
+    initFocus() {
+        this.#exitSelectEl.focus();
+    }
+
     fillEntranceSelection(access, current = "") {
         this.#exitSelectEl.innerHTML = "";
-        this.#exitSelectEl.value = current;
         // retrieve bound
         const bound = new Set();
         for (const [key, value] of STORAGES.exitBindings) {
@@ -84,54 +87,38 @@ export default class ExitBindingContextMenu extends BaseClass {
             }
         }
         // add unbind
-        const unbindOptionEl = document.createElement("emc-option");
-        unbindOptionEl.value = "";
-        const unbindOptionText = document.createElement("span");
-        Language.applyLabel(unbindOptionText, "entrance[]");
-        unbindOptionText.style.fontStyle = "italic";
-        unbindOptionEl.append(unbindOptionText);
-        this.#exitSelectEl.append(unbindOptionEl);
+        const unbindEl = document.createElement("gt-entrance-select-option");
+        unbindEl.ref = "";
+        unbindEl.value = "";
+        unbindEl.style.fontStyle = "italic";
+        this.#exitSelectEl.append(unbindEl);
         // add empty
-        const emptyOptionEl = document.createElement("emc-option");
-        emptyOptionEl.value = "\u0000";
-        const emptyOptionText = document.createElement("span");
-        Language.applyLabel(emptyOptionText, "entrance[\u0000]");
-        emptyOptionText.style.fontStyle = "italic";
-        emptyOptionEl.append(emptyOptionText);
-        this.#exitSelectEl.append(emptyOptionEl);
+        const emptyEl = document.createElement("gt-entrance-select-option");
+        emptyEl.ref = "\u0000";
+        emptyEl.value = "\u0000";
+        emptyEl.style.fontStyle = "italic";
+        this.#exitSelectEl.append(emptyEl);
         // set choices and value
         const exit = ExitStateManager.get(access);
         if (exit != null) {
-            this.#exitSelectEl.value = current;
             // add options
             for (const [, entrance] of EntranceStateManager) {
                 setTimeout(() => {
                     if (access != entrance.ref && (exit.props.ignoreBound || !bound.has(entrance.ref))) {
                         const isBindable = exit.checkBindable(entrance);
                         if (isBindable) {
-                            const opt = document.createElement("emc-option");
-                            opt.value = entrance.ref;
-                            opt.style.flexDirection = "column";
-                            opt.style.alignItems = "flex-start";
-                            opt.style.justifyContent = "center";
-                            const entranceName = Language.generateLabel(`entrance[${entrance.ref}]`);
-                            opt.append(entranceName);
-                            const category = CTG_TPL.generate(0);
-                            const categoryName = Language.generateLabel(`entrance_type[${entrance.props.type}]`);
-                            category.append(categoryName);
-                            opt.append(category);
-                            this.#exitSelectEl.append(opt);
+                            const entranceEl = document.createElement("gt-entrance-select-option");
+                            entranceEl.ref = entrance.ref;
+                            entranceEl.value = entrance.ref;
+                            this.#exitSelectEl.append(entranceEl);
                         }
                     }
                 }, 0);
             }
+            this.#exitSelectEl.value = current;
         } else {
             this.#exitSelectEl.value = "";
         }
-    }
-
-    initFocus() {
-        this.#exitSelectEl.focus();
     }
 
 }

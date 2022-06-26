@@ -8,7 +8,7 @@ import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import "/emcJS/ui/input/Option.js";
 import "/emcJS/ui/i18n/I18nTooltip.js";
 
-import ItemStates from "../../../../../state/item/ItemStateManager.js";
+import ItemStateManager from "../../../../../statemanager/item/ItemStateManager.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
 import "../../../../../state/item/StartSettingsState.js";
 
@@ -135,7 +135,7 @@ export default class ItemElement extends BaseClass {
             switch (name) {
                 case "ref": {
                     // state
-                    const state = ItemStates.get(this.ref);
+                    const state = ItemStateManager.get(this.ref);
                     this.switchState(state);
                     /* text */
                     const tooltipEl = this.shadowRoot.getElementById("tooltip");

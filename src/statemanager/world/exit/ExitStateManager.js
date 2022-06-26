@@ -2,17 +2,9 @@ import WorldStateManagerRegistry from "../../WorldStateManagerRegistry.js";
 import WorldStateManager from "../WorldStateManager.js";
 import DefaultExitState from "../../../state/world/exit/DefaultExitState.js";
 
-class ExitStateManager extends WorldStateManager {
-
-    constructor() {
-        super(DefaultExitState, "exit");
-    }
-
-}
-
-const exitStateManager = new ExitStateManager();
+const ExitStateManager = new WorldStateManager(DefaultExitState, "exit");
 if (!WorldStateManagerRegistry.has("exit")) {
-    WorldStateManagerRegistry.register("exit", exitStateManager);
+    WorldStateManagerRegistry.register("exit", ExitStateManager);
 }
 
-export default exitStateManager;
+export default ExitStateManager;

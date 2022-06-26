@@ -14,7 +14,7 @@ import {
 } from "../../../util/handler/StateListHandler.js";
 import Logic from "../../../util/logic/Logic.js";
 import AccessStateEnum from "../../../enum/AccessStateEnum.js";
-import ItemStateManager from "../../item/ItemStateManager.js";
+import ItemStateManager from "../../../statemanager/item/ItemStateManager.js";
 import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";

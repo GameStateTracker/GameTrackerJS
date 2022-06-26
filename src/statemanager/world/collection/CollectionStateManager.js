@@ -2,17 +2,9 @@ import WorldStateManagerRegistry from "../../WorldStateManagerRegistry.js";
 import WorldStateManager from "../WorldStateManager.js";
 import DefaultCollectionState from "../../../state/world/collection/DefaultCollectionState.js";
 
-class CollectionStateManager extends WorldStateManager {
-
-    constructor() {
-        super(DefaultCollectionState, "collection");
-    }
-
-}
-
-const collectionStateManager = new CollectionStateManager();
+const CollectionStateManager = new WorldStateManager(DefaultCollectionState, "collection");
 if (!WorldStateManagerRegistry.has("collection")) {
-    WorldStateManagerRegistry.register("collection", collectionStateManager);
+    WorldStateManagerRegistry.register("collection", CollectionStateManager);
 }
 
-export default collectionStateManager;
+export default CollectionStateManager;

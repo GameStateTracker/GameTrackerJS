@@ -2,17 +2,9 @@ import WorldStateManagerRegistry from "../../WorldStateManagerRegistry.js";
 import WorldStateManager from "../WorldStateManager.js";
 import DefaultEntranceState from "../../../state/world/entrance/DefaultEntranceState.js";
 
-class EntranceStateManager extends WorldStateManager {
-
-    constructor() {
-        super(DefaultEntranceState, "exit");
-    }
-
-}
-
-const entranceStateManager = new EntranceStateManager();
+const EntranceStateManager = new WorldStateManager(DefaultEntranceState, "exit");
 if (!WorldStateManagerRegistry.has("entrance")) {
-    WorldStateManagerRegistry.register("entrance", entranceStateManager);
+    WorldStateManagerRegistry.register("entrance", EntranceStateManager);
 }
 
-export default entranceStateManager;
+export default EntranceStateManager;

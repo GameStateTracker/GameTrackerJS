@@ -6,7 +6,7 @@ import {
     mix
 } from "/emcJS/util/Mixin.js";
 
-import ItemStates from "../../../state/item/ItemStateManager.js";
+import ItemStates from "../../../statemanager/item/ItemStateManager.js";
 import StateDataEventManagerMixin from "../../mixin/StateDataEventManagerMixin.js";
 
 const TPL = new Template(`

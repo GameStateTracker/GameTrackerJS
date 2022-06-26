@@ -1,7 +1,7 @@
 import Helper from "/emcJS/util/helper/Helper.js";
 import DataState from "../state/DataState.js";
 
-export default class AbstractStateManager {
+export default class SimpleStateManager {
 
     #propdata;
 
@@ -12,9 +12,6 @@ export default class AbstractStateManager {
     #instances = new Map();
 
     constructor(DefaultState, props) {
-        if (new.target === AbstractStateManager) {
-            throw new Error("can not construct abstract class");
-        }
         if (!(DefaultState.prototype instanceof DataState)) {
             throw new Error("DefaultState must be an instance of DataState");
         }

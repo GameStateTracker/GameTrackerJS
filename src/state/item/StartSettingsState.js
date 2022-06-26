@@ -1,6 +1,6 @@
 // GameTrackerJS
 import OptionsObserver from "../../util/observer/OptionsObserver.js";
-import ItemStateManager from "./ItemStateManager.js";
+import ItemStateManager from "../../statemanager/item/ItemStateManager.js";
 import DefaultItemState from "./DefaultItemState.js";
 
 export default class StartSettingsState extends DefaultItemState {

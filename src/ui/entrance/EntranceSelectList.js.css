@@ -1,0 +1,14 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    overflow: hidden;
+}
+
+#container {
+    display: block;
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: var(--page-background-color, #ffffff);
+}
