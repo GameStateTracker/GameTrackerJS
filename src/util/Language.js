@@ -13,10 +13,12 @@ class Language {
         languageObserver.addEventListener("change", (event) => {
             I18n.language = event.value;
         });
+        I18n.language = languageObserver.value;
     }
 
-    async load(code) {
+    async load(code, def = code.split(".")[0]) {
         await I18n.loadTranslations();
+        I18n.default = def;
         I18n.language = code;
     }
 
