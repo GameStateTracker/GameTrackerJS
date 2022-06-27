@@ -15,24 +15,32 @@
     cursor: pointer;
 }
 
-.container:hover {
-    background-color: var(--main-hover-color, #ffffff32);
-}
-
-.name {
+.text {
     display: flex;
     flex-direction: column;
     flex: 1;
     overflow: hidden;
 }
-.name #title {
+.text #title {
     justify-content: flex-start;
 }
-.name #category {
+.text .subtext {
+    display: flex;
     justify-content: flex-start;
+    overflow: hidden;
     font-size: 0.7em;
     font-style: italic;
     height: 1.2em;
+    white-space: nowrap;
+}
+.text .subtext #category {
+    margin-left: 8px;
+    padding-left: 8px;
+    border-left: solid 1px var(--page-text-color, #000000);
+}
+.text .subtext #category:not([i18n-value]),
+.text .subtext #category[i18n-value=""] {
+    display: none;
 }
 
 #tags {

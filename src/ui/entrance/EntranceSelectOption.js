@@ -27,22 +27,39 @@ export default class EntranceSelectOption extends BaseClass {
     }
 
     applyDefaultValues() {
+        const typeEl = this.shadowRoot.getElementById("type");
         const categoryEl = this.shadowRoot.getElementById("category");
         const tagsEl = this.shadowRoot.getElementById("tags");
+        if (this.ref === "") {
+            typeEl.i18nValue = "entrance_type[unbound]";
+        } else if (this.ref === "\u0000") {
+            typeEl.i18nValue = "entrance_type[empty]";
+        } else {
+            typeEl.i18nValue = "";
+        }
         categoryEl.i18nValue = "";
         tagsEl.innerHTML = "";
     }
 
     applyStateValues(state) {
+        const typeEl = this.shadowRoot.getElementById("type");
         const categoryEl = this.shadowRoot.getElementById("category");
         const tagsEl = this.shadowRoot.getElementById("tags");
-        categoryEl.i18nValue = `entrance_type[${state.props.type}]`;
-        // tags
-        tagsEl.innerHTML = "";
+        typeEl.i18nValue = `entrance_type[${state.props.type}]`;
+        // area
         const areaState = AreaStateManager.get(state.props.area);
-        const areaTagConfig = WorldListState.config.areaTags;
+        // area - category
+        const category = areaState?.props.category;
+        if (category) {
+            categoryEl.i18nValue = `area_category[${category}]`;
+        } else {
+            categoryEl.i18nValue = "";
+        }
+        // area - tags
+        tagsEl.innerHTML = "";
         const areaTags = areaState?.props.areaTags;
         if (areaTags) {
+            const areaTagConfig = WorldListState.config.areaTags;
             for (const tag in areaTags) {
                 const areaTagData = areaTagConfig[tag];
                 if (areaTagData != null) {
@@ -90,7 +107,7 @@ export default class EntranceSelectOption extends BaseClass {
                     /* text */
                     const titleEl = this.shadowRoot.getElementById("title");
                     if (titleEl != null) {
-                        titleEl.i18nValue = `entrance[${this.ref}]`;
+                        titleEl.i18nValue = `entrance[${newValue}]`;
                     }
                 } break;
             }

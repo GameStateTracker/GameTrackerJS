@@ -35,7 +35,7 @@ const TPL = new Template(`
             <emc-input-wrapper">
                 <input type="checkbox" id="strict" class="settings-input" checked>
             </emc-input-wrapper>
-            <emc-i18n-label i18n-key="strict_categories" i18n-value="Strict categories"></emc-i18n-label>
+            <emc-i18n-label i18n-key="strict_tags" i18n-value="Strict tags"></emc-i18n-label>
         </label>
     </div>
     <div class="search-group">
@@ -119,7 +119,7 @@ const EXITS = WorldResource.get("exit");
 
 export default class ExitList extends Panel {
 
-    #categories = new Set();
+    #tags = new Set();
 
     constructor() {
         super();
@@ -164,7 +164,7 @@ export default class ExitList extends Panel {
             if (el) {
                 let isVisible = true;
                 if (actCat.size > 0) {
-                    const elCat = new Set(JSON.parse(el.getAttribute("categories") || "[]"));
+                    const elCat = new Set(JSON.parse(el.getAttribute("tags") || "[]"));
                     if (strict.checked) {
                         for (const c of actCat) {
                             if (!elCat.has(c)) {
@@ -213,8 +213,8 @@ export default class ExitList extends Panel {
     }
 
     addCategory(category) {
-        if (!this.#categories.has(category)) {
-            this.#categories.add(category);
+        if (!this.#tags.has(category)) {
+            this.#tags.add(category);
             const tokenizer = this.shadowRoot.getElementById("tokenizer");
             const el = document.createElement("emc-option");
             el.value = category;
@@ -228,8 +228,8 @@ export default class ExitList extends Panel {
         el.ref = state.ref;
         el.setAttribute("access", state.props.logicAccess);
         el.setAttribute("type", state.props.type);
-        el.setAttribute("categories", JSON.stringify(state.props.categories));
-        for (const cat of state.props.categories) {
+        el.setAttribute("tags", JSON.stringify(state.props.tags));
+        for (const cat of state.props.tags) {
             this.addCategory(cat);
         }
         el.addEventListener("change", () => {

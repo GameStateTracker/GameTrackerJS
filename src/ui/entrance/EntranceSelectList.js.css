@@ -5,10 +5,30 @@
     overflow: hidden;
 }
 
-#container {
-    display: block;
+#scroll-container {
     flex: 1;
     overflow-x: hidden;
     overflow-y: auto;
     background-color: var(--page-background-color, #ffffff);
+}
+
+#container {
+    display: block;
+    width: 100%;
+}
+
+#empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+    min-height: 2rem;
+    padding: 5px;
+    margin: 5px 2px;
+    white-space: normal;
+}
+
+::slotted(:hover),
+::slotted(.marked) {
+    background-color: var(--main-hover-color, #ffffff32);
 }

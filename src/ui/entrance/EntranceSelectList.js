@@ -4,6 +4,7 @@ import "/emcJS/ui/input/SearchField.js";
 import "./EntranceSelectOption.js";
 import TPL from "./EntranceSelectList.js.html" assert {type: "html"};
 import STYLE from "./EntranceSelectList.js.css" assert {type: "css"};
+import ListSelectionHelper from "/emcJS/util/helper/ListSelectionHelper.js";
 
 // TODO implement tag filter
 
@@ -14,7 +15,8 @@ export default class EntranceSelectList extends CustomElementDelegating {
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* --- */
-        this.shadowRoot.getElementById("container").addEventListener("slotchange", () => {
+        const containerEl = this.shadowRoot.getElementById("container");
+        containerEl.addEventListener("slotchange", () => {
             const all = this.querySelectorAll(`[value]`);
             for (const el of all) {
                 if (el) {
@@ -39,7 +41,7 @@ export default class EntranceSelectList extends CustomElementDelegating {
                     this.style.height = `${rect.height}px`;
                 }
                 for (const el of all) {
-                    if (el.value === this.value || el.innerText.match(regEx)) {
+                    if (el.value === "" || el.value === this.value || el.innerText.match(regEx)) {
                         el.style.display = "";
                     } else {
                         el.style.display = "none";
@@ -52,6 +54,12 @@ export default class EntranceSelectList extends CustomElementDelegating {
                 this.style.width = "";
                 this.style.height = "";
             }
+        });
+        /* --- */
+        const scrollContainerEl = this.shadowRoot.getElementById("scroll-container");
+        const selectionHelper = new ListSelectionHelper(this, scrollContainerEl, (el) => el.value === this.value);
+        selectionHelper.addEventListener("choose", (event) => {
+            this.#choose(event.value);
         });
     }
 
@@ -115,6 +123,23 @@ export default class EntranceSelectList extends CustomElementDelegating {
                     this.dispatchEvent(event);
                 }
             } break;
+        }
+    }
+
+    #choose(value) {
+        if (!this.readonly) {
+            if (this.multiple) {
+                const arr = this.value;
+                const set = new Set(arr);
+                if (set.has(value)) {
+                    set.delete(value);
+                } else {
+                    set.add(value);
+                }
+                this.value = Array.from(set);
+            } else {
+                this.value = value;
+            }
         }
     }
 

@@ -3,4 +3,8 @@
     <emc-input-search id="search"></emc-input-search>
     <div id="tags"></div>
 </div>
-<slot id="container"></slot>
+<div id="scroll-container">
+    <slot id="container">
+        <div id="empty">no entries</div>
+    </slot>
+</div>
