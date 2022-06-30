@@ -59,8 +59,8 @@ export default class WorldSummaryHandler extends EventTarget {
                     this.#refreshAccess();
                 }
             });
-            eventManager.set("visibility", () => {
-                if (recordState.visble) {
+            eventManager.set("visibility", (event) => {
+                if (event.value) {
                     if (!this.#filteredEntityList.has(recordState)) {
                         this.#filteredEntityList.add(recordState);
                         this.#refreshAccess();
