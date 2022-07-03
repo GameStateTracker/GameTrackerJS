@@ -2,13 +2,13 @@
 import {
     debounce, debounceCacheData
 } from "/emcJS/util/Debouncer.js";
-import MapLocker from "/emcJS/data/locker/MapLocker.js";
 import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
 
 // GameTrackerJS
 import Savestate from "../../savestate/Savestate.js";
 import SettingsStorage from "../../storage/SettingsStorage.js";
 import Logic from "./Logic.js";
+import LogicDataCache from "./LogicDataCache.js";
 
 const STORAGES = {
     items: Savestate.getStorage("items"),
@@ -21,14 +21,15 @@ const STORAGE_REGISTER = new Map();
 
 const AUGMENT = new Set();
 const CACHE = new Map();
-const LOCKED_CACHE = new MapLocker(CACHE);
+const LOGIC_DATA_CACHE = new LogicDataCache(CACHE);
 
 function execAugment(data) {
+    LOGIC_DATA_CACHE.setChanges(data);
     for (const augment of AUGMENT) {
-        const res = augment(LOCKED_CACHE, data) ?? {};
-        data = {...data, ...res};
+        augment(LOGIC_DATA_CACHE);
     }
-    return data;
+    const res = LOGIC_DATA_CACHE.getAugments();
+    return {...data, ...res};
 }
 
 function renameKeys(source = {}, prefix = "", postfix = "") {
