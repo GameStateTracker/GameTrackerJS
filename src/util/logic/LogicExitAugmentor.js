@@ -2,6 +2,13 @@
 import OptionsObserver from "../observer/OptionsObserver.js";
 import ExitStateManager from "../../statemanager/world/exit/ExitStateManager.js";
 import Logic from "./Logic.js";
+import WorldResource from "../../data/resource/WorldResource.js";
+
+const CONFIG = WorldResource.get("config");
+const PREFIX_IN = CONFIG.circular_gateways?.incoming?.prefix ?? "";
+const POSTFIX_IN = CONFIG.circular_gateways?.incoming?.postfix ?? "";
+const PREFIX_OUT = CONFIG.circular_gateways?.outgoing?.prefix ?? "";
+const POSTFIX_OUT = CONFIG.circular_gateways?.outgoing?.postfix ?? "";
 
 const detachedEntrancesObserver = new OptionsObserver("detached_entrances");
 
@@ -75,8 +82,8 @@ export default class LogicExitAugmentor {
 
     static applyBinding(changes, from, to) {
         const [source, target] = from.split(" -> ");
-        const sourceVal = `region[${source}:in]`;
-        const targetVal = `region[${target}:out]`;
+        const sourceVal = `region[${PREFIX_IN}${source}${POSTFIX_IN}]`;
+        const targetVal = `region[${PREFIX_OUT}${target}${POSTFIX_OUT}]`;
         if (source && target) {
             if (!to) {
                 changes.push({source: `${sourceVal}{child}`, target: `${targetVal}{child}`, reroute: to});
