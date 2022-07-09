@@ -96,7 +96,7 @@ export default class LogicExitAugmentor {
                 }
             } else {
                 const [reroute] = to.split(" -> ");
-                const rerouteVal = `region[${reroute}:out]`;
+                const rerouteVal = `region[${GATEWAYS_PREFIX_OUT}${reroute}${GATEWAYS_POSTFIX_OUT}]`;
                 if (reroute) {
                     if (Array.isArray(GATEWAYS_VARIANTS)) {
                         for (const variant of GATEWAYS_VARIANTS) {
