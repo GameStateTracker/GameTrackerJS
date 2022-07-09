@@ -87,7 +87,7 @@ export default class LogicExitAugmentor {
         const targetVal = `region[${GATEWAYS_PREFIX_OUT}${target}${GATEWAYS_POSTFIX_OUT}]`;
         if (source && target) {
             if (!to) {
-                if (Array.isArray(GATEWAYS_VARIANTS)) {
+                if (Array.isArray(GATEWAYS_VARIANTS) && GATEWAYS_VARIANTS.length > 0) {
                     for (const variant of GATEWAYS_VARIANTS) {
                         changes.push({source: `${sourceVal}{${variant}}`, target: `${targetVal}{${variant}}`, reroute: to});
                     }
@@ -98,7 +98,7 @@ export default class LogicExitAugmentor {
                 const [reroute] = to.split(" -> ");
                 const rerouteVal = `region[${GATEWAYS_PREFIX_OUT}${reroute}${GATEWAYS_POSTFIX_OUT}]`;
                 if (reroute) {
-                    if (Array.isArray(GATEWAYS_VARIANTS)) {
+                    if (Array.isArray(GATEWAYS_VARIANTS) && GATEWAYS_VARIANTS.length > 0) {
                         for (const variant of GATEWAYS_VARIANTS) {
                             changes.push({source: `${sourceVal}{${variant}}`, target: `${targetVal}{${variant}}`, reroute: `${rerouteVal}{${variant}}`});
                         }
