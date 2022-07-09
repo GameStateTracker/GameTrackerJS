@@ -5,10 +5,11 @@ import Logic from "./Logic.js";
 import WorldResource from "../../data/resource/WorldResource.js";
 
 const CONFIG = WorldResource.get("config");
-const PREFIX_IN = CONFIG.circular_gateways?.incoming?.prefix ?? "";
-const POSTFIX_IN = CONFIG.circular_gateways?.incoming?.postfix ?? "";
-const PREFIX_OUT = CONFIG.circular_gateways?.outgoing?.prefix ?? "";
-const POSTFIX_OUT = CONFIG.circular_gateways?.outgoing?.postfix ?? "";
+const GATEWAYS_PREFIX_IN = CONFIG.gateways?.incoming?.prefix ?? "";
+const GATEWAYS_POSTFIX_IN = CONFIG.gateways?.incoming?.postfix ?? "";
+const GATEWAYS_PREFIX_OUT = CONFIG.gateways?.outgoing?.prefix ?? "";
+const GATEWAYS_POSTFIX_OUT = CONFIG.gateways?.outgoing?.postfix ?? "";
+const GATEWAYS_VARIANTS = CONFIG.gateways?.variants;
 
 const detachedEntrancesObserver = new OptionsObserver("detached_entrances");
 
@@ -82,18 +83,28 @@ export default class LogicExitAugmentor {
 
     static applyBinding(changes, from, to) {
         const [source, target] = from.split(" -> ");
-        const sourceVal = `region[${PREFIX_IN}${source}${POSTFIX_IN}]`;
-        const targetVal = `region[${PREFIX_OUT}${target}${POSTFIX_OUT}]`;
+        const sourceVal = `region[${GATEWAYS_PREFIX_IN}${source}${GATEWAYS_POSTFIX_IN}]`;
+        const targetVal = `region[${GATEWAYS_PREFIX_OUT}${target}${GATEWAYS_POSTFIX_OUT}]`;
         if (source && target) {
             if (!to) {
-                changes.push({source: `${sourceVal}{child}`, target: `${targetVal}{child}`, reroute: to});
-                changes.push({source: `${sourceVal}{adult}`, target: `${targetVal}{adult}`, reroute: to});
+                if (Array.isArray(GATEWAYS_VARIANTS)) {
+                    for (const variant of GATEWAYS_VARIANTS) {
+                        changes.push({source: `${sourceVal}{${variant}}`, target: `${targetVal}{${variant}}`, reroute: to});
+                    }
+                } else {
+                    changes.push({source: sourceVal, target: targetVal, reroute: to});
+                }
             } else {
                 const [reroute] = to.split(" -> ");
                 const rerouteVal = `region[${reroute}:out]`;
                 if (reroute) {
-                    changes.push({source: `${sourceVal}{child}`, target: `${targetVal}{child}`, reroute: `${rerouteVal}{child}`});
-                    changes.push({source: `${sourceVal}{adult}`, target: `${targetVal}{adult}`, reroute: `${rerouteVal}{adult}`});
+                    if (Array.isArray(GATEWAYS_VARIANTS)) {
+                        for (const variant of GATEWAYS_VARIANTS) {
+                            changes.push({source: `${sourceVal}{${variant}}`, target: `${targetVal}{${variant}}`, reroute: `${rerouteVal}{${variant}}`});
+                        }
+                    } else {
+                        changes.push({source: sourceVal, target: targetVal, reroute: rerouteVal});
+                    }
                 }
             }
         }
