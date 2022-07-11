@@ -2,13 +2,11 @@
 import OptionsObserver from "../observer/OptionsObserver.js";
 import ExitStateManager from "../../statemanager/world/exit/ExitStateManager.js";
 import Logic from "./Logic.js";
-import WorldResource from "../../data/resource/WorldResource.js";
+import WorldResource, {
+    getGatewayIn, getGatewayOut, getRegion
+} from "../../data/resource/WorldResource.js";
 
 const CONFIG = WorldResource.get("config");
-const GATEWAYS_PREFIX_IN = CONFIG.gateways?.incoming?.prefix ?? "";
-const GATEWAYS_POSTFIX_IN = CONFIG.gateways?.incoming?.postfix ?? "";
-const GATEWAYS_PREFIX_OUT = CONFIG.gateways?.outgoing?.prefix ?? "";
-const GATEWAYS_POSTFIX_OUT = CONFIG.gateways?.outgoing?.postfix ?? "";
 const GATEWAYS_VARIANTS = CONFIG.gateways?.variants;
 
 const detachedEntrancesObserver = new OptionsObserver("detached_entrances");
@@ -73,7 +71,7 @@ export default class LogicExitAugmentor {
             LogicExitAugmentor.applyBinding(changes, this.#exit.ref, null);
         }
         if (changes.length) {
-            Logic.setRedirect(changes, "region[root]");
+            Logic.setRedirect(changes, getRegion());
         }
     }
 
@@ -83,8 +81,8 @@ export default class LogicExitAugmentor {
 
     static applyBinding(changes, from, to) {
         const [source, target] = from.split(" -> ");
-        const sourceVal = `region[${GATEWAYS_PREFIX_IN}${source}${GATEWAYS_POSTFIX_IN}]`;
-        const targetVal = `region[${GATEWAYS_PREFIX_OUT}${target}${GATEWAYS_POSTFIX_OUT}]`;
+        const sourceVal = getGatewayIn(source);
+        const targetVal = getGatewayOut(target);
         if (source && target) {
             if (!to) {
                 if (Array.isArray(GATEWAYS_VARIANTS) && GATEWAYS_VARIANTS.length > 0) {
@@ -96,7 +94,7 @@ export default class LogicExitAugmentor {
                 }
             } else {
                 const [reroute] = to.split(" -> ");
-                const rerouteVal = `region[${GATEWAYS_PREFIX_OUT}${reroute}${GATEWAYS_POSTFIX_OUT}]`;
+                const rerouteVal = getGatewayOut(reroute);
                 if (reroute) {
                     if (Array.isArray(GATEWAYS_VARIANTS) && GATEWAYS_VARIANTS.length > 0) {
                         for (const variant of GATEWAYS_VARIANTS) {

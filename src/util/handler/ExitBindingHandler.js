@@ -1,3 +1,6 @@
+import {
+    getRegion
+} from "../../data/resource/WorldResource.js";
 import SavestateHandler from "../../savestate/SavestateHandler.js";
 import ExitStateManager from "../../statemanager/world/exit/ExitStateManager.js";
 import Logic from "../logic/Logic.js";
@@ -14,7 +17,7 @@ function initRedirects() {
         }
     }
     if (initTransalation.length) {
-        Logic.setRedirect(initTransalation, "region[root]");
+        Logic.setRedirect(initTransalation, getRegion());
     }
 }
 

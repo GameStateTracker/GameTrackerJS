@@ -5,6 +5,9 @@ import {
 import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
 
 // GameTrackerJS
+import {
+    getRegion
+} from "../../data/resource/WorldResource.js";
 import Savestate from "../../savestate/Savestate.js";
 import SettingsStorage from "../../storage/SettingsStorage.js";
 import Logic from "./Logic.js";
@@ -112,7 +115,7 @@ class LogicCaller extends EventTarget {
         }
         Logic.reset();
         const augmentedData = execAugment(logicData);
-        Logic.execute(augmentedData, "region[root]");
+        Logic.execute(augmentedData, getRegion());
     });
 
     #changeData = debounceCacheData((newData) => {
@@ -128,7 +131,7 @@ class LogicCaller extends EventTarget {
         }
         if (Object.keys(changes).length > 0) {
             const augmentedData = execAugment(changes);
-            Logic.execute(augmentedData, "region[root]");
+            Logic.execute(augmentedData, getRegion());
         }
     });
 

@@ -1,6 +1,6 @@
 {
   "name": "gametrackerjs",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Framework for GameTrackers",
   "type": "module",
   "repository": {
@@ -10,7 +10,7 @@
   "author": "Denis Peters (ZidArgs)",
   "license": "MIT",
   "peerDependencies": {
-    "emcjs": "git+https://bitbucket.org/zidargs/emcjs.git#0.8.3"
+    "emcjs": "git+https://bitbucket.org/zidargs/emcjs.git#0.8.7"
   },
   "devDependencies": {
     "@babel/core": "^7.16.10",

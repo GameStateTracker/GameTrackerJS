@@ -25,6 +25,12 @@ import DefaultEntranceState from "../entrance/DefaultEntranceState.js";
 import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";
+import WorldResource, {
+    getGatewayIn
+} from "../../../data/resource/WorldResource.js";
+
+const CONFIG = WorldResource.get("config");
+const GATEWAYS_VARIANTS = CONFIG.gateways?.variants;
 
 const mixedEntrancePoolObserver = new OptionsObserver("mixed_entrance_pool");
 
@@ -51,7 +57,16 @@ function getEntranceArea(value) {
 }
 
 function getReachable(logicAccess) {
-    return !!Logic.getValue(`${logicAccess}{child}`) || !!Logic.getValue(`${logicAccess}{adult}`);
+    const accessVal = getGatewayIn(logicAccess);
+    if (Array.isArray(GATEWAYS_VARIANTS) && GATEWAYS_VARIANTS.length > 0) {
+        for (const variant of GATEWAYS_VARIANTS) {
+            if (Logic.getValue(`${accessVal}{${variant}}`)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    return Logic.getValue(accessVal);
 }
 
 function getLogicAccess(reachable) {
