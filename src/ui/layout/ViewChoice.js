@@ -5,6 +5,7 @@ import "/emcJS/ui/input/Option.js";
 import "./ViewChoicePanel.js";
 import TPL from "./ViewChoice.js.html" assert {type: "html"};
 import STYLE from "./ViewChoice.js.css" assert {type: "css"};
+import ChildlistMutationObserverMixin from "/emcJS/ui/mixin/ChildlistMutationObserverMixin.js";
 
 function elementComposer(key, params, eventManager) {
     const el = document.createElement("emc-option");
@@ -22,7 +23,7 @@ function elementCleanup(el, key, eventManager) {
     eventManager.removeTarget(el);
 }
 
-export default class ViewChoice extends CustomElement {
+export default class ViewChoice extends ChildlistMutationObserverMixin(CustomElement) {
 
     #elementManager;
 
@@ -52,6 +53,32 @@ export default class ViewChoice extends CustomElement {
             mutator: elementMutator,
             cleanup: elementCleanup
         }, this.#eventManager);
+    }
+
+    nodeAddedCallback() {
+        const all = this.querySelectorAll("gt-viewchoice-panel[slot]");
+        const data = [];
+        for (const el of all) {
+            data.push({
+                key: el.slot,
+                title: el.label,
+                icon: el.icon
+            });
+        }
+        this.#elementManager.manage(data);
+    }
+
+    nodeRemovedCallback() {
+        const all = this.querySelectorAll("gt-viewchoice-panel[slot]");
+        const data = [];
+        for (const el of all) {
+            data.push({
+                key: el.slot,
+                title: el.label,
+                icon: el.icon
+            });
+        }
+        this.#elementManager.manage(data);
     }
 
     connectedCallback() {
