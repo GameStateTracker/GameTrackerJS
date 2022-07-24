@@ -9,9 +9,6 @@
   },
   "author": "Denis Peters (ZidArgs)",
   "license": "MIT",
-  "peerDependencies": {
-    "emcjs": "git+https://bitbucket.org/zidargs/emcjs.git#0.8.9"
-  },
   "devDependencies": {
     "@babel/core": "^7.16.10",
     "@babel/eslint-parser": "^7.16.5",
