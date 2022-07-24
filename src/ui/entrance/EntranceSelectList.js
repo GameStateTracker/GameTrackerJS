@@ -4,7 +4,7 @@ import "/emcJS/ui/input/SearchField.js";
 import "./EntranceSelectOption.js";
 import TPL from "./EntranceSelectList.js.html" assert {type: "html"};
 import STYLE from "./EntranceSelectList.js.css" assert {type: "css"};
-import ListSelectionHelper from "/emcJS/util/helper/ListSelectionHelper.js";
+import ListSelectionHelper from "/emcJS/util/helper/ui/ListSelectionHelper.js";
 
 // TODO implement tag filter
 

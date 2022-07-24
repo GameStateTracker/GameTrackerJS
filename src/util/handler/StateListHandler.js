@@ -27,7 +27,8 @@ export function getDefaultAccess() {
         reachable: 0,
         total: 0,
         value: AccessStateEnum.OPENED,
-        entrances: 0
+        entrances: 0,
+        locations: new Map()
     };
 }
 
@@ -144,26 +145,30 @@ export default class StateListHandler extends EventTarget {
             reachable: 0,
             total: 0,
             value: AccessStateEnum.OPENED,
-            entrances: 0
+            entrances: 0,
+            locations: new Map()
         };
         for (const recordState of this.#filteredEntityList) {
             if (recordState.category == "area" || recordState.category == "exit") {
                 if (recordState.accessPenetration) {
-                    const {done, unopened, reachable, entrances, total} = recordState.access;
-                    access.done += done;
-                    access.unopened += unopened;
-                    access.reachable += reachable;
-                    access.total += total;
-                    access.entrances += entrances;
+                    Helper.Map.mergeInto(access.locations, recordState.access.locations);
                 }
-            } else if (recordState.category == "location" || recordState.category == "collection") {
-                const {done, unopened, reachable, entrances, total} = recordState.access;
-                access.done += done;
-                access.unopened += unopened;
-                access.reachable += reachable;
-                access.total += total;
-                access.entrances += entrances;
+            } else if (recordState.category == "collection") {
+                Helper.Map.mergeInto(access.locations, recordState.access.locations);
+            } else if (recordState.category == "location") {
+                const ref = recordState.entry.ref;
+                if (!access.locations.has(ref)) {
+                    access.locations.set(ref, recordState.access)
+                }
             }
+        }
+        for (const [, location] of access.locations) {
+            const {done, unopened, reachable, entrances, total} = location;
+            access.done += done;
+            access.unopened += unopened;
+            access.reachable += reachable;
+            access.total += total;
+            access.entrances += entrances;
         }
         if (access.unopened > 0) {
             if (access.reachable > 0) {
