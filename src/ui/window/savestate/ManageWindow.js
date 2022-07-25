@@ -11,7 +11,6 @@ import AbstractSavestateWindow from "./AbstractSavestateWindow.js";
 
 const TPL = new Template(`
 <div id="footer">
-    <input type="hidden" id="statename" placeholder="Please select a state..." readonly />
     <button id="delete" class="button" title="delete state">
         DELETE
     </button>
@@ -40,61 +39,64 @@ export default class ManageWindow extends AbstractSavestateWindow {
         window.append(els.getElementById("footer"));
 
         const lst = this.shadowRoot.getElementById("statelist");
-        const snm = this.shadowRoot.getElementById("statename");
-        lst.addEventListener("change", function(event) {
-            snm.value = event.newValue;
-        });
+        lst.multiple = true;
 
         // DELETE
         const dlt = this.shadowRoot.getElementById("delete");
         dlt.onclick = async () => {
-            const stateName = snm.value;
-            if (!snm.value) {
-                await Dialog.alert("No state selected", "Please select a state to delete!");
+            const stateNames = lst.value;
+            if (!stateNames) {
+                await Dialog.alert("No state(s) selected", "Please select a state to delete!");
                 return;
             }
-            if (!await Dialog.confirm("Warning", `Do you really want to delete "${stateName}"? This can not be undone.`)) {
+            if (!await Dialog.confirm("Warning", `Do you really want to delete "${stateNames.join("\", \"")}"? This can not be undone.`)) {
                 return;
             }
-            await SavestateManager.delete(stateName);
-            Toast.info(`State "${stateName}" deleted.`);
-            snm.value = "";
+            for (const stateName of stateNames) {
+                await SavestateManager.delete(stateName);
+                Toast.info(`State "${stateName}" deleted.`);
+            }
+
             // refresh
             await this.refreshList();
-            lst.value = "";
+            lst.value = [];
         };
 
         // RENAME
         const rnm = this.shadowRoot.getElementById("rename");
         rnm.onclick = async () => {
-            const stateName = snm.value;
-            if (!snm.value) {
+            const stateNames = lst.value;
+            if (!stateNames) {
                 await Dialog.alert("No state selected", "Please select a state to rename!");
                 return;
             }
-            let newName = "";
-            while (!newName) {
-                const name = await Dialog.prompt("New state", `Please enter a new name for "${stateName}"!`, stateName);
-                if (name === false || name === stateName) {
-                    return;
-                }
-                if (name == "") {
-                    await Dialog.alert("Warning", "The name can not be empty.");
-                    continue;
-                }
-                if (await SavestateManager.exists(name)) {
-                    if (!await Dialog.confirm("Warning", `The name "${name}" already exists. Do you want to overwrite it?`)) {
+            const newNames = [];
+            for (const stateName of stateNames) {
+                let newName = "";
+                while (!newName) {
+                    const name = await Dialog.prompt("New state", `Please enter a new name for "${stateName}"!`, stateName);
+                    if (name === false || name === stateName) {
+                        return;
+                    }
+                    if (name == "") {
+                        await Dialog.alert("Warning", "The name can not be empty.");
                         continue;
                     }
+                    if (await SavestateManager.exists(name)) {
+                        if (!await Dialog.confirm("Warning", `The name "${name}" already exists. Do you want to overwrite it?`)) {
+                            continue;
+                        }
+                    }
+                    newName = name;
                 }
-                newName = name;
+                await SavestateManager.rename(stateName, newName);
+                Toast.info(`State "${stateName}" renamed to "${newName}".`);
+                newNames.push(newName);
             }
-            await SavestateManager.rename(stateName, newName);
-            Toast.info(`State "${stateName}" renamed to "${newName}".`);
-            snm.value = "";
+
             // refresh
             await this.refreshList();
-            lst.value = newName;
+            lst.value = newNames;
         };
 
         // IMPORT
@@ -123,7 +125,6 @@ export default class ManageWindow extends AbstractSavestateWindow {
             res.data.name = name;
             await SavestateManager.importSavestate(res.data);
             Toast.info(`State "${name}" imported.`);
-            snm.value = "";
 
             // load
             if (await Dialog.confirm("Load imported state?", "Do you want to load the newly imported state?\nUnsafed changes will be lost!")) {
@@ -133,9 +134,9 @@ export default class ManageWindow extends AbstractSavestateWindow {
                 this.close();
                 return;
             }
+
             // refresh
             await this.refreshList();
-            lst.value = name;
         };
 
         // IMPORT STRING
@@ -171,32 +172,31 @@ export default class ManageWindow extends AbstractSavestateWindow {
             data.name = name;
             await SavestateManager.importSavestate(data);
             Toast.info(`State "${name}" imported.`);
-            snm.value = "";
+
             // refresh
             await this.refreshList();
-            lst.value = name;
         };
 
         // EXPORT
         const exp = this.shadowRoot.getElementById("export");
         exp.onclick = async () => {
-            const stateName = snm.value;
-            if (!snm.value) {
+            const stateNames = lst.value;
+            if (!stateNames) {
                 await Dialog.alert("No state selected", "Please select a state to export!");
                 return;
             }
-            const data = await SavestateManager.exportSavestate(stateName);
-            const date = DateUtil.convert(new Date(data.timestamp || 0), "YMDhms");
-            FileSystem.save(JSON.stringify(data, " ", 4), `track-oot-state.${stateName}.${date}.json`);
+            const exportPromises = [];
+            for (const stateName of stateNames) {
+                exportPromises.push(this.#exportSavestate(stateName));
+            }
+            await Promise.all(exportPromises);
         };
     }
 
-    async show(activeState) {
-        const snm = this.shadowRoot.getElementById("statename");
-        if (activeState != null) {
-            snm.value = activeState;
-        }
-        super.show(activeState);
+    async #exportSavestate(stateName) {
+        const data = await SavestateManager.exportSavestate(stateName);
+        const date = DateUtil.convert(new Date(data.timestamp || 0), "YMDhms");
+        FileSystem.save(JSON.stringify(data, " ", 4), `track-oot-state.${stateName}.${date}.json`);
     }
 
 }

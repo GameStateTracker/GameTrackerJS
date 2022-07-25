@@ -3,6 +3,7 @@ import Template from "/emcJS/util/html/Template.js";
 import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import DateUtil from "/emcJS/util/DateUtil.js";
 import Window from "/emcJS/ui/overlay/window/Window.js";
+import "/emcJS/ui/input/ListSelect.js";
 
 import SavestateManager from "../../../savestate/SavestateManager.js";
 
@@ -11,94 +12,6 @@ const TPL = new Template(`
 `);
 
 const STYLE = new GlobalStyle(`
-:host,
-.footer,
-.button {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-}
-:host {
-    position: absolute !important;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3);
-    align-items: flex-start;
-    justify-content: center;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    z-index: 1000000;
-}
-#window {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 1000px;
-    margin-top: 100px;
-    color: black;
-    background-color: white;
-    border: solid 2px #cccccc;
-    border-radius: 4px;
-    resize: both;
-}
-#header {
-    display: flex;
-    border-bottom: solid 2px #cccccc;
-}
-#title {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    height: 30px;
-    padding: 0 10px;
-    font-weight: bold;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 1em;
-    line-height: 1em;
-}
-#body {
-    display: block;
-    padding: 20px;
-    min-height: 10vh;
-    max-height: 50vh;
-    overflow: auto;
-}
-:focus {
-    box-shadow: 0 0 2px 2px var(--input-focus-color, #06b5ff);
-    outline: none;
-}
-:focus:not(:focus-visible) {
-    box-shadow: none;
-    outline: none;
-}
-#close {
-    display: flex;
-    width: 40px;
-    height: 30px;
-    border: none;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    -webkit-appearance: none;
-    font-size: 1.2em;
-    line-height: 1em;
-}
-#close:hover {
-    color: white;
-    background-color: red;
-}
-#close:focus {
-    box-shadow: inset red 0 0px 3px 4px;
-    outline: none;
-}
-#close:focus:not(:focus-visible) {
-    box-shadow: none;
-    outline: none;
-}
 #footer,
 .button {
     display: flex;
@@ -166,7 +79,7 @@ export default class AbstractSavestateWindow extends Window {
     async show(activeState) {
         const lst = this.shadowRoot.getElementById("statelist");
         await this.refreshList();
-        if (activeState != null) {
+        if (activeState != null && lst.hasValue(activeState)) {
             lst.value = activeState;
         }
         super.show();
