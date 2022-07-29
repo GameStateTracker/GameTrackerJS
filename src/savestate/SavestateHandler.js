@@ -1,10 +1,8 @@
 // frameworks
-import ThreadDataSync from "/emcJS/data/sync/ThreadDataSync.js";
 import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
 import LocalStorage from "/emcJS/data/storage/global/LocalStorage.js";
 import BusyIndicator from "/emcJS/ui/BusyIndicator.js";
 
-import Counter from "../util/Counter.js";
 import Savestate from "./Savestate.js";
 import SavestateConverter from "./SavestateConverter.js";
 
@@ -23,33 +21,6 @@ function updateTitle() {
             document.title = `${TITLE_PREFIX} - ${name}`;
         }
     }
-}
-
-/* SYNC */ {
-    const muted = new Counter();
-    ThreadDataSync.addEventListener("message", (event) => {
-        muted.add();
-        if (event.data.type == "load") {
-            const {state = {}} = event.data;
-            Savestate.deserialize(state);
-        } else if (event.data.type == "change") {
-            const {category = "", data = {}} = event.data;
-            Savestate.set(category, data);
-        }
-        muted.sub();
-    });
-    Savestate.addEventListener("change", (event) => {
-        if (!muted.value) {
-            const {category = "", data = {}} = event;
-            ThreadDataSync.postMessage({type: "change", category, data});
-        }
-    });
-    Savestate.addEventListener("load", (event) => {
-        if (!muted.value) {
-            const {data = {}} = event;
-            ThreadDataSync.postMessage({type: "load", data});
-        }
-    });
 }
 
 class SavestateHandler extends EventTarget {
