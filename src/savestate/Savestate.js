@@ -86,9 +86,12 @@ class Savestate extends EventTarget {
     serialize() {
         const res = {
             ...INFO,
-            meta: Object.fromEntries(META),
+            meta: {},
             data: {}
         };
+        for (const [key, value] of META) {
+            res.meta[key] = value;
+        }
         for (const [category, dataStorage] of ST_DEF) {
             res.data[category] = dataStorage.serialize();
         }
