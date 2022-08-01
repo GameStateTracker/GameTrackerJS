@@ -17,7 +17,7 @@ const SavestateCache = (function() {
                 meta: this._getStorageData(STATE.meta),
                 data: {}
             };
-            for (const [category, storage] in STATE.data) {
+            for (const [category, storage] of STATE.data) {
                 res.data[category] = this._getStorageData(storage);
             }
             return res;
