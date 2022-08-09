@@ -10,6 +10,8 @@ import Badge from "../../../Badge.js";
 import ExitChoiceContextMenu from "../../../ctxmenu/ExitChoiceContextMenu.js";
 import ExitBindingContextMenu from "../../../ctxmenu/ExitBindingContextMenu.js";
 import Language from "../../../../util/Language.js";
+import DefaultAreaState from "../../../../state/world/area/DefaultAreaState.js";
+import WorldListState from "../../../../state/world/WorldListState.js";
 
 // TODO use i18n-label instead of apply label method
 
@@ -124,6 +126,15 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
             const state = this.getState();
             if (state != null) {
                 state.value = "";
+            }
+        });
+        this.addDefaultContextMenuHandler("goto", () => {
+            const state = this.getState();
+            if (state != null) {
+                const area = state.area;
+                if (area instanceof DefaultAreaState) {
+                    WorldListState.area = area.ref;
+                }
             }
         });
 
