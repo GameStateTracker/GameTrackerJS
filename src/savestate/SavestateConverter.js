@@ -2,7 +2,7 @@ const CONVERTER_FN = [];
 let OFFSET = 0;
 const NO_UPDATE = new Set();
 
-class SavestateConverter {
+class SavestateConverter extends EventTarget {
 
     set offset(value) {
         OFFSET = Math.max(parseInt(value) || 0, 0);
@@ -13,7 +13,7 @@ class SavestateConverter {
     }
 
     get version() {
-        return OFFSET + CONVERTER_FN.length;
+        return OFFSET + CONVERTER_FN.length - 1;
     }
 
     convert(state) {
@@ -29,7 +29,7 @@ class SavestateConverter {
         const autosave = state.autosave || new Date();
         const notes = state.notes || "";
         if (version < this.version) {
-            for (let i = version; i < this.version; ++i) {
+            for (let i = version; i <= this.version; ++i) {
                 const fn = CONVERTER_FN[i - OFFSET];
                 if (typeof fn == "function") {
                     const newState = fn(state);
@@ -93,6 +93,9 @@ class SavestateConverter {
         if (muted) {
             NO_UPDATE.add(this.version);
         }
+        const event = new Event("version");
+        event.value = this.version;
+        this.dispatchEvent(event);
     }
 
 }

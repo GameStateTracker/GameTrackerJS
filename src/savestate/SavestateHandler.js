@@ -5,6 +5,9 @@ import BusyIndicator from "/emcJS/ui/BusyIndicator.js";
 
 import Savestate from "./Savestate.js";
 import SavestateConverter from "./SavestateConverter.js";
+import {
+    debounce
+} from "/emcJS/util/Debouncer.js";
 
 const PERSISTANCE_NAME = "savestate";
 const STATE_DIRTY = "state_dirty";
@@ -41,6 +44,9 @@ class SavestateHandler extends EventTarget {
             this.dispatchEvent(ev);
             this.dispatchEvent(new Event("afterload"));
         }
+        SavestateConverter.addEventListener("version", (event) => {
+            this.updateVersion(event.value);
+        });
         /* --- */
         Savestate.addEventListener("change", (event) => {
             const state = Savestate.serialize();
@@ -71,6 +77,22 @@ class SavestateHandler extends EventTarget {
             this.#cacheData(state, true);
         });
     }
+
+    updateVersion = debounce((version) => {
+        if (Savestate.version < version) {
+            const state = Savestate.serialize();
+            this.dispatchEvent(new Event("beforeload"));
+            this.dispatchEvent(new Event("reset"));
+            const newState = SavestateConverter.convert(state);
+            Savestate.deserialize(newState);
+            updateTitle();
+            // trigger event
+            const ev = new Event("load");
+            ev.state = newState;
+            this.dispatchEvent(ev);
+            this.dispatchEvent(new Event("afterload"));
+        }
+    });
 
     #cacheData(data, dirty = true) {
         LocalStorage.set(PERSISTANCE_NAME, data);
