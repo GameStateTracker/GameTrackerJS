@@ -106,7 +106,7 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
             this.hidden = !event.value;
         });
         this.registerStateHandler("value", (event) => {
-            this.value = event.value;
+            this.value = event.value ?? "";
         });
 
         /* context menu */
@@ -176,7 +176,7 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
     applyStateValues(state) {
         super.applyStateValues(state);
         /* value */
-        this.value = state.value;
+        this.value = state.value ?? "";
         /* badge */
         const badge = this.shadowRoot.getElementById("badge");
         if (badge instanceof Badge) {
