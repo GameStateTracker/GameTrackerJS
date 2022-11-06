@@ -5,7 +5,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/gametrackerjs/emcjs.git"
+    "url": "git+ssh://git@bitbucket.org/zidargs/gametrackerjs.git"
   },
   "author": "Denis Peters (ZidArgs)",
   "license": "MIT",
