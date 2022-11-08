@@ -161,17 +161,17 @@ class SavestateHandler extends EventTarget {
      * @param {Object} stateData an Object containing data for savestate, options and filter
      */
     async reset(data = {}) {
+        const newState = SavestateConverter.createEmptyState(data);
         await BusyIndicator.busy();
         this.dispatchEvent(new Event("beforeload"));
         this.dispatchEvent(new Event("reset"));
         // write state data
-        Savestate.deserialize(data);
+        Savestate.deserialize(newState);
         // cache data
-        const state = Savestate.serialize();
-        this.#cacheData(state, false);
+        this.#cacheData(newState, false);
         // trigger event
         const ev = new Event("load");
-        ev.state = state;
+        ev.state = newState;
         this.dispatchEvent(ev);
         this.dispatchEvent(new Event("afterload"));
         await BusyIndicator.unbusy();
