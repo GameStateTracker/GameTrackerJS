@@ -68,6 +68,10 @@ class SavestateHandler extends EventTarget {
             ev.value = event.value;
             this.dispatchEvent(ev);
         });
+        Savestate.addEventListener("meta", () => {
+            const state = Savestate.serialize();
+            this.#cacheData(state);
+        });
         Savestate.addEventListener("options", () => {
             const state = Savestate.serialize();
             this.#cacheData(state, true);
@@ -94,13 +98,24 @@ class SavestateHandler extends EventTarget {
         }
     });
 
-    #cacheData(data, dirty = true) {
+    #cacheData(data, setDirtyFlag = false) {
         LocalStorage.set(PERSISTANCE_NAME, data);
-        LocalStorage.set(STATE_DIRTY, !!dirty);
-        const ev = new Event("dirty");
-        ev.value = !!dirty;
-        this.dispatchEvent(ev);
-        updateTitle();
+        if (setDirtyFlag) {
+            this.#updateDirtyFlag(true);
+        } else {
+            updateTitle();
+        }
+    }
+
+    #updateDirtyFlag(value = true) {
+        const isDirty = LocalStorage.get(STATE_DIRTY);
+        if (isDirty != value) {
+            LocalStorage.set(STATE_DIRTY, value);
+            const ev = new Event("dirty");
+            ev.value = value;
+            this.dispatchEvent(ev);
+            updateTitle();
+        }
     }
 
     async save(name = Savestate.name) {
@@ -109,8 +124,8 @@ class SavestateHandler extends EventTarget {
         state.timestamp = new Date();
         state.autosave = false;
         await STORAGE.set(name, state);
-        // write state data
-        this.#cacheData(state, false);
+        // undirty
+        this.#updateDirtyFlag(false);
     }
 
     async load(name) {
@@ -122,6 +137,8 @@ class SavestateHandler extends EventTarget {
             // write state data
             Savestate.deserialize(state);
             this.#cacheData(state, false);
+            // undirty
+            this.#updateDirtyFlag(false);
             // trigger event
             const ev = new Event("load");
             ev.state = state;
