@@ -13,24 +13,37 @@ for (const [key, value] of Object.entries(FilterResource.get())) {
     }
 }
 
+let INSTANCE = null;
+
 class FilterStorage extends ObservableStorage {
 
     constructor() {
+        if (INSTANCE != null) {
+            return INSTANCE;
+        }
         super();
+        INSTANCE = this;
+        // ---
         this.addEventListener("change", (event) => {
             const data = {};
             const changes = {};
             for (const key in event.data) {
                 if (PERSISTED.has(key)) {
                     data[key] = event.data[key];
+                    changes[key] = event.changes[key];
                 }
             }
-            if (Object.keys(changes).length) {
+            if (Object.keys(data).length) {
                 const ev = new Event("persistedchange");
                 ev.data = data;
+                ev.changes = changes;
                 this.dispatchEvent(ev);
             }
         });
+    }
+
+    clone() {
+        return this;
     }
 
     set(key, value) {

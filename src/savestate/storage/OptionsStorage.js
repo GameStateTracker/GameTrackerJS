@@ -21,7 +21,21 @@ for (const [key, value] of Object.entries(OptionsResource.get())) {
     }
 }
 
+let INSTANCE = null;
+
 class OptionsStorage extends ObservableStorage {
+
+    constructor() {
+        if (INSTANCE != null) {
+            return INSTANCE;
+        }
+        super();
+        INSTANCE = this;
+    }
+
+    clone() {
+        return this;
+    }
 
     set(key, value) {
         if (DEFAULTS.has(key)) {

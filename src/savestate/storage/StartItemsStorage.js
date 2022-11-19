@@ -12,7 +12,21 @@ for (const [key, value] of Object.entries(ItemsResource.get())) {
     MAX.set(key, parseSafeRange(value.max, 0));
 }
 
+let INSTANCE = null;
+
 class StartItemsStorage extends ObservableStorage {
+
+    constructor() {
+        if (INSTANCE != null) {
+            return INSTANCE;
+        }
+        super();
+        INSTANCE = this;
+    }
+
+    clone() {
+        return this;
+    }
 
     set(key, value) {
         const parsedValue = parseSafeRange(value);
