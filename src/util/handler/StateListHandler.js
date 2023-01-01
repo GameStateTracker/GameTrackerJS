@@ -2,6 +2,9 @@
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
+import {
+    immute
+} from "/emcJS/data/Immutable.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import Helper from "/emcJS/util/helper/Helper.js";
 
@@ -139,19 +142,14 @@ export default class StateListHandler extends EventTarget {
     }
 
     #refreshAccess = debounce(() => {
-        const access = {
-            done: 0,
-            unopened: 0,
-            reachable: 0,
-            total: 0,
-            value: AccessStateEnum.OPENED,
-            entrances: 0,
-            locations: new Map()
-        };
+        const access = getDefaultAccess();
         for (const recordState of this.#filteredEntityList) {
             if (recordState.category == "area" || recordState.category == "exit") {
                 if (recordState.accessPenetration) {
                     Helper.Map.mergeInto(access.locations, recordState.access.locations);
+                }
+                if (recordState.category == "exit" && recordState.entry.reachable && recordState.entry.area == null) {
+                    access.entrances += 1;
                 }
             } else if (recordState.category == "collection") {
                 Helper.Map.mergeInto(access.locations, recordState.access.locations);
@@ -181,7 +179,7 @@ export default class StateListHandler extends EventTarget {
                 access.value = AccessStateEnum.UNAVAILABLE;
             }
         }
-        this.#setAccess(access);
+        this.#setAccess(immute(access));
     });
 
     setAllEntries(value = true) {

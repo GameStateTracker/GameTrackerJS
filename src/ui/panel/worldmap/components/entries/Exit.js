@@ -16,8 +16,10 @@ import ExitBindingContextMenu from "../../../../ctxmenu/ExitBindingContextMenu.j
 
 const TPL = new Template(`
 <div id="area" class="textarea">
-    <div id="entrances"></div>
     <emc-i18n-label id="value"></emc-i18n-label>
+    <div id="entrances">
+        <img src="images/icons/entrance.svg" />
+    </div>
     <div id="hint"></div>
 </div>
 `);
@@ -33,6 +35,28 @@ const STYLE = new GlobalStyle(`
     font-size: 21px;
     line-height: 1em;
 }
+#marker[data-canenter="true"]:after {
+    position: absolute;
+    left: -2px;
+    top: -2px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--world-entry-status-available-color, #00ff00);
+    border: solid 4px black;
+    border-radius: 0%;
+    content: " ";
+}
+#marker[data-entrances="true"]:after {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--world-entry-status-available-color, #00ff00);
+    border: solid 4px black;
+    border-radius: 50%;
+    content: " ";
+}
 #hint {
     margin-left: 5px;
 }
@@ -44,10 +68,11 @@ const STYLE = new GlobalStyle(`
     height: 25px;
 }
 #entrances {
+    display: none;
     margin-right: 5px;
 }
-#entrances:empty {
-    display: none;
+#entrances.active {
+    display: block;
 }
 #entrances img {
     width: 25px;
@@ -73,6 +98,17 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
         });
         this.registerStateHandler("hint", (event) => {
             this.applyHint(event.value);
+        });
+        this.registerStateHandler("reachable", (event) => {
+            /* can enter */
+            const canenterEl = this.shadowRoot.getElementById("canenter");
+            if (canenterEl != null) {
+                if (event.value) {
+                    canenterEl.classList.add("active");
+                } else {
+                    canenterEl.classList.remove("active");
+                }
+            }
         });
         /* context menu */
         this.setDefaultContextMenu(ExitContextMenu);
@@ -179,12 +215,26 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
 
     applyDefaultValues() {
         super.applyDefaultValues("images/icons/entrance.svg");
+        /* can enter */
+        const canenterEl = this.shadowRoot.getElementById("canenter");
+        if (canenterEl != null) {
+            canenterEl.classList.remove("active");
+        }
         /* value */
         this.applyValue();
     }
 
     applyStateValues(state) {
         super.applyStateValues(state, "images/icons/entrance.svg");
+        /* can enter */
+        const canenterEl = this.shadowRoot.getElementById("canenter");
+        if (canenterEl != null) {
+            if (state.reachable) {
+                canenterEl.classList.add("active");
+            } else {
+                canenterEl.classList.remove("active");
+            }
+        }
         /* value */
         this.applyValue(state.value);
     }
@@ -194,24 +244,25 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
         /* entrances */
         const entrancesEl = this.shadowRoot.getElementById("entrances");
         if (entrancesEl != null) {
-            entrancesEl.innerHTML = "";
             if (data.entrances) {
-                const el_icon = document.createElement("img");
-                el_icon.src = `images/icons/entrance.svg`;
-                entrancesEl.append(el_icon);
+                entrancesEl.classList.add("active");
+            } else {
+                entrancesEl.classList.remove("active");
             }
         }
         /* value */
         const markerEl = this.shadowRoot.getElementById("marker");
-        if (data.reachable > 0) {
-            const state = this.getState();
-            if (state?.area != null) {
-                markerEl.innerHTML = data.reachable;
+        if (markerEl != null) {
+            if (data.reachable > 0) {
+                const state = this.getState();
+                if (state?.area != null) {
+                    markerEl.innerHTML = data.reachable;
+                } else {
+                    markerEl.innerHTML = "?";
+                }
             } else {
-                markerEl.innerHTML = "?";
+                markerEl.innerHTML = "";
             }
-        } else {
-            markerEl.innerHTML = "";
         }
     }
 

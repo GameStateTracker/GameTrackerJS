@@ -2,6 +2,9 @@
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
+import {
+    immute
+} from "/emcJS/data/Immutable.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import Helper from "/emcJS/util/helper/Helper.js";
 
@@ -113,7 +116,7 @@ export default class WorldSummaryHandler extends EventTarget {
                 access.value = AccessStateEnum.UNAVAILABLE;
             }
         }
-        this.#setAccess(access);
+        this.#setAccess(immute(access));
     }
 
     get access() {

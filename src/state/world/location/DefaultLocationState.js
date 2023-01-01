@@ -5,6 +5,9 @@ import {
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
+import {
+    immute
+} from "/emcJS/data/Immutable.js";
 import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
 import Helper from "/emcJS/util/helper/Helper.js";
 
@@ -43,7 +46,7 @@ function getLogicAccess(checked, reachable) {
         res.unopened = 1;
         res.value = AccessStateEnum.UNAVAILABLE;
     }
-    return res;
+    return immute(res);
 }
 
 const BaseClass = mix(

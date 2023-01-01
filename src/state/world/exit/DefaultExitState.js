@@ -5,6 +5,9 @@ import {
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
+import {
+    immute
+} from "/emcJS/data/Immutable.js";
 import Helper from "/emcJS/util/helper/Helper.js";
 import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
 
@@ -79,12 +82,11 @@ function getLogicAccess(reachable) {
         entrances: 0
     };
     if (reachable) {
-        res.entrances = 1;
         res.value = AccessStateEnum.AVAILABLE;
     } else {
         res.value = AccessStateEnum.UNAVAILABLE;
     }
-    return res;
+    return immute(res);
 }
 
 const BaseClass = mix(
@@ -171,18 +173,7 @@ export default class DefaultExitState extends BaseClass {
             if (reachable != this.#reachable) {
                 this.#reachable = reachable;
                 /* access */
-                const access = getLogicAccess(reachable);
-                if (!Helper.isEqual(access, this.#access)) {
-                    this.#access = access;
-                    if (this.#area == null) {
-                        // external
-                        const ev = new Event("access");
-                        ev.value = access;
-                        this.dispatchEvent(ev);
-                        // logic data
-                        this.setLogicData("$IS_DONE", access.value == AccessStateEnum.OPENED);
-                    }
-                }
+                this.refreshAccess();
                 // external
                 const ev = new Event("reachable");
                 ev.value = reachable;
@@ -212,17 +203,17 @@ export default class DefaultExitState extends BaseClass {
     });
 
     refreshAccess() {
-        const access = getLogicAccess(this.value, this.reachable);
+        const access = getLogicAccess(this.reachable);
         if (!Helper.isEqual(access, this.#access)) {
             this.#access = access;
-            // external
             if (this.#area == null) {
+                // external
                 const ev = new Event("access");
                 ev.value = access;
                 this.dispatchEvent(ev);
+                // logic data
+                this.setLogicData("$IS_DONE", access.value == AccessStateEnum.OPENED);
             }
-            // logic data
-            this.setLogicData("$IS_DONE", access.value == AccessStateEnum.OPENED);
         }
     }
 

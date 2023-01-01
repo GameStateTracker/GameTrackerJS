@@ -11,7 +11,9 @@ import AreaContextMenu from "../../../../ctxmenu/AreaContextMenu.js";
 import "../../../../../state/world/area/OverworldState.js";
 
 const TPL = new Template(`
-<div id="entrances"></div>
+<div id="entrances">
+    <img src="images/icons/entrance.svg" />
+</div>
 <div id="hint"></div>
 `);
 
@@ -48,10 +50,11 @@ const STYLE = new GlobalStyle(`
     height: 25px;
 }
 #entrances {
+    display: none;
     margin-right: 5px;
 }
-#entrances:empty {
-    display: none;
+#entrances.active {
+    display: block;
 }
 #entrances img {
     width: 25px;
@@ -62,12 +65,12 @@ const STYLE = new GlobalStyle(`
 function applyElements(target) {
     const textEl = target.getElementById("text");
     const tpl = TPL.generate();
-    /* entrances */
-    const entrancesEl = tpl.getElementById("entrances");
-    textEl.insertAdjacentElement("beforebegin", entrancesEl);
     /* hint */
     const hintEl = tpl.getElementById("hint");
     textEl.insertAdjacentElement("afterend", hintEl);
+    /* entrances */
+    const entrancesEl = tpl.getElementById("entrances");
+    textEl.insertAdjacentElement("afterend", entrancesEl);
 }
 
 export default class WorldMapArea extends WorldMapMarkedEntry {
@@ -141,21 +144,24 @@ export default class WorldMapArea extends WorldMapMarkedEntry {
 
     applyAccess(value = "unavailable", data = {}) {
         super.applyAccess(value, data);
-        const markerEl = this.shadowRoot.getElementById("marker");
-        const entrancesEl = this.shadowRoot.getElementById("entrances");
         /* entrances */
-        entrancesEl.innerHTML = "";
-        if (data.entrances) {
-            const el_icon = document.createElement("img");
-            el_icon.src = `images/icons/entrance.svg`;
-            entrancesEl.append(el_icon);
+        const entrancesEl = this.shadowRoot.getElementById("entrances");
+        if (entrancesEl != null) {
+            if (data.entrances) {
+                entrancesEl.classList.add("active");
+            } else {
+                entrancesEl.classList.remove("active");
+            }
         }
-        markerEl.dataset["entrances"] = !!data.entrances;
-        /* value */
-        if (data.reachable > 0) {
-            markerEl.innerHTML = data.reachable;
-        } else {
-            markerEl.innerHTML = "";
+        const markerEl = this.shadowRoot.getElementById("marker");
+        if (markerEl != null) {
+            markerEl.dataset["entrances"] = !!data.entrances;
+            /* value */
+            if (data.reachable > 0) {
+                markerEl.innerHTML = data.reachable;
+            } else {
+                markerEl.innerHTML = "";
+            }
         }
     }
 

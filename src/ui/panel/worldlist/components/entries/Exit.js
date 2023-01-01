@@ -20,9 +20,14 @@ import ExitContextMenu from "../../../../ctxmenu/ExitContextMenu.js";
 import ExitBindingContextMenu from "../../../../ctxmenu/ExitBindingContextMenu.js";
 
 const TPL = new Template(`
+<div id="canenter">
+    <img src="images/icons/entrance.svg" />
+</div>
 <div id="area" class="textarea">
-    <div id="entrances"></div>
     <emc-i18n-label id="value"></emc-i18n-label>
+    <div id="entrances">
+        <img src="images/icons/entrance.svg" />
+    </div>
     <div id="hint"></div>
 </div>
 `);
@@ -38,12 +43,16 @@ const STYLE = new GlobalStyle(`
     width: 25px;
     height: 25px;
 }
+#canenter,
 #entrances {
+    display: none;
     margin-right: 5px;
 }
-#entrances:empty {
-    display: none;
+#canenter.active,
+#entrances.active {
+    display: block;
 }
+#canenter img,
 #entrances img {
     width: 25px;
     height: 25px;
@@ -51,9 +60,15 @@ const STYLE = new GlobalStyle(`
 `);
 
 function applyElements(target) {
+    const textEl = target.getElementById("text");
     const headerEl = target.getElementById("header");
     const tpl = TPL.generate();
-    headerEl.append(tpl);
+    /* can enter */
+    const canenterEl = tpl.getElementById("canenter");
+    textEl.insertAdjacentElement("beforebegin", canenterEl);
+    /* area */
+    const areaEl = tpl.getElementById("area");
+    headerEl.append(areaEl);
 }
 
 const BaseClass = mix(
@@ -75,6 +90,17 @@ export default class WorldListExit extends BaseClass {
         });
         this.registerStateHandler("hint", (event) => {
             this.applyHint(event.value);
+        });
+        this.registerStateHandler("reachable", (event) => {
+            /* can enter */
+            const canenterEl = this.shadowRoot.getElementById("canenter");
+            if (canenterEl != null) {
+                if (event.value) {
+                    canenterEl.classList.add("active");
+                } else {
+                    canenterEl.classList.remove("active");
+                }
+            }
         });
         /* context menu */
         this.setDefaultContextMenu(ExitContextMenu);
@@ -173,12 +199,26 @@ export default class WorldListExit extends BaseClass {
 
     applyDefaultValues() {
         super.applyDefaultValues("images/icons/entrance.svg");
+        /* can enter */
+        const canenterEl = this.shadowRoot.getElementById("canenter");
+        if (canenterEl != null) {
+            canenterEl.classList.remove("active");
+        }
         /* value */
         this.applyValue();
     }
 
     applyStateValues(state) {
         super.applyStateValues(state, "images/icons/entrance.svg");
+        /* can enter */
+        const canenterEl = this.shadowRoot.getElementById("canenter");
+        if (canenterEl != null) {
+            if (state.reachable) {
+                canenterEl.classList.add("active");
+            } else {
+                canenterEl.classList.remove("active");
+            }
+        }
         /* value */
         this.applyValue(state.value);
     }
@@ -188,11 +228,10 @@ export default class WorldListExit extends BaseClass {
         /* entrances */
         const entrancesEl = this.shadowRoot.getElementById("entrances");
         if (entrancesEl != null) {
-            entrancesEl.innerHTML = "";
             if (data.entrances) {
-                const el_icon = document.createElement("img");
-                el_icon.src = `images/icons/entrance.svg`;
-                entrancesEl.append(el_icon);
+                entrancesEl.classList.add("active");
+            } else {
+                entrancesEl.classList.remove("active");
             }
         }
         /* collapsed */
