@@ -38,7 +38,7 @@ const STYLE = new GlobalStyle(`
     font-size: 21px;
     line-height: 1em;
 }
-#marker[data-canenter="true"]:after {
+#marker[data-canenter="true"]:before {
     position: absolute;
     left: -2px;
     top: -2px;
@@ -128,17 +128,11 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
         });
         /* context menu */
         this.setDefaultContextMenu(ExitContextMenu);
-        this.addDefaultContextMenuHandler("bind", () => {
+        this.addDefaultContextMenuHandler("bind", (event) => {
             const state = this.getState();
-            const mnu_ctx = this.getDefaultContextMenu();
-            const mnu_ext = this.getContextMenu("exitbinding");
             if (state != null) {
-                mnu_ext.fillEntranceSelection(this.ref, state.value);
-            } else {
-                mnu_ext.fillEntranceSelection("", "");
+                this.showContextMenu("exitbinding", event, this.ref, state.value);
             }
-            mnu_ext.setValue(state.value);
-            mnu_ext.show(mnu_ctx.left, mnu_ctx.top);
         });
         this.addDefaultContextMenuHandler("unbind", () => {
             const state = this.getState();
