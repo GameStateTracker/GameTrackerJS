@@ -15,6 +15,9 @@ import ExitContextMenu from "../../../../ctxmenu/ExitContextMenu.js";
 import ExitBindingContextMenu from "../../../../ctxmenu/ExitBindingContextMenu.js";
 
 const TPL = new Template(`
+<div id="canenter">
+    <img src="images/icons/entrance.svg" />
+</div>
 <div id="area" class="textarea">
     <emc-i18n-label id="value"></emc-i18n-label>
     <div id="entrances">
@@ -67,13 +70,16 @@ const STYLE = new GlobalStyle(`
     width: 25px;
     height: 25px;
 }
+#canenter,
 #entrances {
     display: none;
     margin-right: 5px;
 }
+#canenter.active,
 #entrances.active {
     display: block;
 }
+#canenter img,
 #entrances img {
     width: 25px;
     height: 25px;
@@ -81,9 +87,15 @@ const STYLE = new GlobalStyle(`
 `);
 
 function applyElements(target) {
+    const textEl = target.getElementById("text");
     const tooltipEl = target.getElementById("tooltip");
     const tpl = TPL.generate();
-    tooltipEl.append(tpl);
+    /* can enter */
+    const canenterEl = tpl.getElementById("canenter");
+    textEl.insertAdjacentElement("beforebegin", canenterEl);
+    /* area */
+    const areaEl = tpl.getElementById("area");
+    tooltipEl.append(areaEl);
 }
 
 export default class WorldMapExit extends WorldMapMarkedEntry {
@@ -101,6 +113,7 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
         });
         this.registerStateHandler("reachable", (event) => {
             /* can enter */
+            const markerEl = this.shadowRoot.getElementById("marker");
             const canenterEl = this.shadowRoot.getElementById("canenter");
             if (canenterEl != null) {
                 if (event.value) {
@@ -108,6 +121,9 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
                 } else {
                     canenterEl.classList.remove("active");
                 }
+            }
+            if (markerEl != null) {
+                markerEl.dataset["canenter"] = !!event.value;
             }
         });
         /* context menu */
@@ -216,9 +232,13 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
     applyDefaultValues() {
         super.applyDefaultValues("images/icons/entrance.svg");
         /* can enter */
+        const markerEl = this.shadowRoot.getElementById("marker");
         const canenterEl = this.shadowRoot.getElementById("canenter");
         if (canenterEl != null) {
             canenterEl.classList.remove("active");
+        }
+        if (markerEl != null) {
+            markerEl.dataset["canenter"] = false;
         }
         /* value */
         this.applyValue();
@@ -227,6 +247,7 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
     applyStateValues(state) {
         super.applyStateValues(state, "images/icons/entrance.svg");
         /* can enter */
+        const markerEl = this.shadowRoot.getElementById("marker");
         const canenterEl = this.shadowRoot.getElementById("canenter");
         if (canenterEl != null) {
             if (state.reachable) {
@@ -234,6 +255,9 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
             } else {
                 canenterEl.classList.remove("active");
             }
+        }
+        if (markerEl != null) {
+            markerEl.dataset["canenter"] = !!state.reachable;
         }
         /* value */
         this.applyValue(state.value);
@@ -250,11 +274,12 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
                 entrancesEl.classList.remove("active");
             }
         }
-        /* value */
         const markerEl = this.shadowRoot.getElementById("marker");
         if (markerEl != null) {
-            if (data.reachable > 0) {
-                const state = this.getState();
+            markerEl.dataset["entrances"] = !!data.entrances;
+            /* value */
+            const state = this.getState();
+            if (state?.reachable) {
                 if (state?.area != null) {
                     markerEl.innerHTML = data.reachable;
                 } else {
