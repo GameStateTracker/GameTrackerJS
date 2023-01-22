@@ -114,18 +114,23 @@ class SavestateHandler extends EventTarget {
             const ev = new Event("dirty");
             ev.value = value;
             this.dispatchEvent(ev);
-            updateTitle();
         }
+        updateTitle();
     }
 
     async save(name = Savestate.name) {
+        const updateCache = Savestate.name != name;
         Savestate.name = name;
         const state = Savestate.serialize();
         state.timestamp = new Date();
         state.autosave = false;
         await STORAGE.set(name, state);
         // undirty
-        this.#updateDirtyFlag(false);
+        if (updateCache) {
+            this.#cacheData(state, false);
+        } else {
+            this.#updateDirtyFlag(false);
+        }
     }
 
     async load(name) {

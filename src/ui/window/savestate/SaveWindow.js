@@ -1,5 +1,6 @@
 // frameworks
 import Template from "/emcJS/util/html/Template.js";
+import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import Dialog from "/emcJS/ui/overlay/window/Dialog.js";
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
 
@@ -19,11 +20,18 @@ const TPL = new Template(`
 </div>
 `);
 
+const STYLE = new GlobalStyle(`
+emc-option.autosave {
+    display: none;
+}
+`);
+
 export default class SaveWindow extends AbstractSavestateWindow {
 
     constructor() {
         super("Save State as...");
         const els = TPL.generate();
+        STYLE.apply(this.shadowRoot);
         /* --- */
         const window = this.shadowRoot.getElementById("window");
         window.append(els.getElementById("footer"));

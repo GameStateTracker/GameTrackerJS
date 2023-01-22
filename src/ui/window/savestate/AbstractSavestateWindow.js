@@ -8,7 +8,7 @@ import "/emcJS/ui/input/ListSelect.js";
 import SavestateManager from "../../../savestate/SavestateManager.js";
 
 const TPL = new Template(`
-<emc-listselect id="statelist"></emc-listselect>
+<emc-listselect id="statelist" sort></emc-listselect>
 `);
 
 const STYLE = new GlobalStyle(`
@@ -104,6 +104,7 @@ function createOption(key, state) {
         const ato = document.createElement("span");
         ato.className = "auto";
         ato.innerHTML = "[auto]";
+        opt.className = "autosave";
         opt.append(ato);
     }
     // name
