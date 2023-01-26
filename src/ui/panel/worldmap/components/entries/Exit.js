@@ -38,7 +38,7 @@ const STYLE = new GlobalStyle(`
     font-size: 21px;
     line-height: 1em;
 }
-#marker[data-canenter="true"]:before {
+#marker[data-canenter="true"]::before {
     position: absolute;
     left: -2px;
     top: -2px;
@@ -49,7 +49,7 @@ const STYLE = new GlobalStyle(`
     border-radius: 0%;
     content: " ";
 }
-#marker[data-entrances="true"]:after {
+#marker[data-entrances="true"]::after {
     position: absolute;
     right: -2px;
     bottom: -2px;

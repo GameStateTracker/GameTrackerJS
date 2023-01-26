@@ -28,7 +28,7 @@ const STYLE = new GlobalStyle(`
     font-size: 21px;
     line-height: 1em;
 }
-#marker[data-entrances="true"]:after {
+#marker[data-entrances="true"]::after {
     position: absolute;
     right: -2px;
     bottom: -2px;

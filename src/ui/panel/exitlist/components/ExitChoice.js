@@ -65,7 +65,7 @@ const STYLE = new GlobalStyle(`
     flex-grow: 0;
     flex-shrink: 0;
 }
-#value:empty:after {
+#value:empty::after {
     display: inline;
     font-style: italic;
     content: "no association";

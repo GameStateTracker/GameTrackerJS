@@ -27,7 +27,7 @@ const STYLE = new GlobalStyle(`
         inset 0 0 0px 2px var(--page-background-color, #ffffff),
         inset 0 0 1px 3px var(--page-text-color, #000000);
 }
-:host(:not(:empty)) #header.collapsible > #title:before {
+:host(:not(:empty)) #header.collapsible > #title::before {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,7 +39,7 @@ const STYLE = new GlobalStyle(`
     text-align: center;
     content: "+"
 }
-:host(:not(:empty)) #header.collapsible.expanded > #title:before {
+:host(:not(:empty)) #header.collapsible.expanded > #title::before {
     content:"-"
 }
 #header.collapsible + #list {
