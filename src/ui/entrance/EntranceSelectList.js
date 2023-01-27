@@ -64,10 +64,6 @@ export default class EntranceSelectList extends CustomElementDelegating {
     }
 
     connectedCallback() {
-        if (!this.hasAttribute("tabindex")) {
-            this.setAttribute("tabindex", 0);
-        }
-        /* --- */
         const all = this.querySelectorAll(`[value]`);
         if (!this.value && all.length > 0) {
             this.value = all[0].value;
