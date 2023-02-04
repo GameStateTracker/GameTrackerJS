@@ -6,7 +6,9 @@ import {
     immute
 } from "/emcJS/data/Immutable.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import Helper from "/emcJS/util/helper/Helper.js";
+import {
+    isEqual
+} from "/emcJS/util/helper/Comparator.js";
 
 import LocationStateManager from "../../statemanager/world/location/LocationStateManager.js";
 import AccessStateEnum from "../../enum/AccessStateEnum.js";
@@ -80,7 +82,7 @@ export default class WorldSummaryHandler extends EventTarget {
 
     #setAccess(value) {
         if (value != null) {
-            if (!Helper.isEqual(this.#access, value)) {
+            if (!isEqual(this.#access, value)) {
                 this.#access = value;
                 // external
                 const event = new Event("access");

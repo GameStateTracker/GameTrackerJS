@@ -6,7 +6,12 @@ import {
     immute
 } from "/emcJS/data/Immutable.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import Helper from "/emcJS/util/helper/Helper.js";
+import {
+    isEqual
+} from "/emcJS/util/helper/Comparator.js";
+import {
+    mergeMapsInto
+} from "/emcJS/util/helper/collection/MergeMaps.js";
 
 import AccessStateEnum from "../../enum/AccessStateEnum.js";
 import OptionsObserver from "../observer/OptionsObserver.js";
@@ -131,7 +136,7 @@ export default class StateListHandler extends EventTarget {
 
     #setAccess(value) {
         if (value != null) {
-            if (!Helper.isEqual(this.#access, value)) {
+            if (!isEqual(this.#access, value)) {
                 this.#access = value;
                 // external
                 const event = new Event("access");
@@ -146,13 +151,13 @@ export default class StateListHandler extends EventTarget {
         for (const recordState of this.#filteredEntityList) {
             if (recordState.category == "area" || recordState.category == "exit") {
                 if (recordState.accessPenetration) {
-                    Helper.Map.mergeInto(access.locations, recordState.access.locations);
+                    mergeMapsInto(access.locations, recordState.access.locations);
                 }
                 if (recordState.category == "exit" && recordState.entry.reachable && recordState.entry.area == null) {
                     access.entrances += 1;
                 }
             } else if (recordState.category == "collection") {
-                Helper.Map.mergeInto(access.locations, recordState.access.locations);
+                mergeMapsInto(access.locations, recordState.access.locations);
             } else if (recordState.category == "location") {
                 const ref = recordState.entry.ref;
                 if (!access.locations.has(ref)) {

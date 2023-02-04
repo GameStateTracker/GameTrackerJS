@@ -1,4 +1,6 @@
-import Helper from "/emcJS/util/helper/Helper.js";
+import {
+    getFromObjectByPath
+} from "/emcJS/util/helper/collection/ObjectContent.js";
 import DataState from "../state/DataState.js";
 
 export default class SimpleStateManager {
@@ -35,7 +37,7 @@ export default class SimpleStateManager {
         if (this.#instances.has(ref)) {
             return this.#instances.get(ref);
         }
-        const props = Helper.getFromPath(this.#propdata, ref.split("/"));
+        const props = getFromObjectByPath(this.#propdata, ref.split("/"));
         if (props != null) {
             if (this.#classes.has(props.type)) {
                 const CustomState = this.#classes.get(props.type);

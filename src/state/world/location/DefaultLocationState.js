@@ -9,7 +9,9 @@ import {
     immute
 } from "/emcJS/data/Immutable.js";
 import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
-import Helper from "/emcJS/util/helper/Helper.js";
+import {
+    isEqual
+} from "/emcJS/util/helper/Comparator.js";
 
 import Savestate from "../../../savestate/Savestate.js";
 import {
@@ -135,7 +137,7 @@ export default class DefaultLocationState extends BaseClass {
 
     refreshAccess() {
         const access = getLogicAccess(this.value, this.reachable);
-        if (!Helper.isEqual(access, this.#access)) {
+        if (!isEqual(access, this.#access)) {
             this.#access = access;
             // external
             const ev = new Event("access");

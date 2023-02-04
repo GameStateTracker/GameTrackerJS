@@ -1,7 +1,9 @@
 // frameworks
 import FileLoader from "/emcJS/util/file/FileLoader.js";
 import DateUtil from "/emcJS/util/DateUtil.js";
-import Helper from "/emcJS/util/helper/Helper.js";
+import {
+    deepClone
+} from "/emcJS/util/helper/DeepClone.js";
 import DeviceData from "/emcJS/data/DeviceData.js";
 
 async function getData() {
@@ -42,23 +44,23 @@ console.groupEnd("BROWSER DATA");
 class VersionData extends EventTarget {
 
     get isDev() {
-        return Helper.deepClone(APP_DATA.dev);
+        return deepClone(APP_DATA.dev);
     }
 
     get version() {
-        return Helper.deepClone(APP_DATA.version);
+        return deepClone(APP_DATA.version);
     }
 
     get date() {
-        return Helper.deepClone(APP_DATA.date);
+        return deepClone(APP_DATA.date);
     }
 
     get versionString() {
-        return Helper.deepClone(APP_DATA.versionString);
+        return deepClone(APP_DATA.versionString);
     }
 
     get browserData() {
-        return Helper.deepClone(DeviceData);
+        return deepClone(DeviceData);
     }
 
 }
