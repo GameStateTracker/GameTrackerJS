@@ -82,8 +82,10 @@ class SettingsStorage extends ObservableIDBProxyStorage {
     overwrite(data = {}) {
         const res = {};
         for (const [key] of DEFAULTS) {
-            const newValue = data[key];
-            res[key] = newValue;
+            if (key in data) {
+                const newValue = data[key];
+                res[key] = newValue;
+            }
         }
         super.overwrite(res);
     }

@@ -71,8 +71,8 @@ class StartItemsStorage extends ObservableStorage {
     deserialize(data = {}) {
         const res = {};
         for (const [key] of MAX) {
-            const newValue = data[key];
-            if (newValue != null) {
+            if (key in data) {
+                const newValue = data[key];
                 res[key] = newValue;
             }
         }
