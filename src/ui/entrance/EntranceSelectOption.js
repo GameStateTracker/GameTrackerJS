@@ -57,13 +57,13 @@ export default class EntranceSelectOption extends BaseClass {
         }
         // area - tags
         tagsEl.innerHTML = "";
-        const areaTags = areaState?.props.areaTags;
-        if (areaTags) {
-            const areaTagConfig = WorldListState.config.areaTags;
-            for (const tag in areaTags) {
+        const areaContentHints = areaState?.props.areaContentHints;
+        if (Array.isArray(areaContentHints) && areaContentHints.length) {
+            const areaTagConfig = WorldListState.config.areaContentHints;
+            for (const tag in areaContentHints) {
                 const areaTagData = areaTagConfig[tag];
                 if (areaTagData != null) {
-                    const value = areaTags[tag];
+                    const value = areaContentHints[tag];
                     const tagEl = document.createElement("emc-labeledicon");
                     tagEl.src = areaTagData.icon;
                     if (areaTagData.counting) {
