@@ -118,7 +118,7 @@ export default class EntranceSelectOption extends BaseClass {
         return `entrance[${this.ref}]`;
     }
 
-    get innerText() {
+    get comparatorText() {
         return this.shadowRoot.textContent;
     }
 
