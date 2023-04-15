@@ -44,40 +44,40 @@ class WorldStateManagerRegistry {
         return emptyState;
     }
 
-    get(name) {
-        if (typeof name != "string") {
-            throw new TypeError(`category parameter must be of type "string" but was "${typeof name}"`);
+    get(category) {
+        if (typeof category != "string") {
+            throw new TypeError(`category parameter must be of type "string" but was "${typeof category}"`);
         }
-        if (!name || name == "\u0000") {
+        if (!category || category == "\u0000") {
             return emptyStateManager;
         }
-        const stateManager = STATE_MANAGERS.get(name);
+        const stateManager = STATE_MANAGERS.get(category);
         if (stateManager != null) {
             return stateManager;
         } else {
-            console.warn(`StateManager for category "${name}" not initialized before usage`);
+            console.warn(`StateManager for category "${category}" not initialized before usage`);
             return emptyStateManager;
         }
     }
 
-    has(name) {
-        return STATE_MANAGERS.has(name);
+    has(category) {
+        return STATE_MANAGERS.has(category);
     }
 
-    register(name, manager) {
-        if (typeof name != "string") {
-            throw new TypeError(`category parameter must be of type "string" but was "${typeof name}"`);
+    register(category, manager) {
+        if (typeof category != "string") {
+            throw new TypeError(`category parameter must be of type "string" but was "${typeof category}"`);
         }
-        if (!name) {
+        if (!category) {
             throw new Error("category parameter must not be empty");
         }
-        if (!VALID_NAME.test(name)) {
+        if (!VALID_NAME.test(category)) {
             throw new Error("category parameter can only include the following characters [a-zA-Z0-9_./-]");
         }
         if (!(manager instanceof WorldStateManager)) {
             throw new TypeError(`manager parameter must be an instance of WorldStateManager`);
         }
-        STATE_MANAGERS.set(name, manager);
+        STATE_MANAGERS.set(category, manager);
     }
 
 }

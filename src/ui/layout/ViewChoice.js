@@ -7,20 +7,24 @@ import TPL from "./ViewChoice.js.html" assert {type: "html"};
 import STYLE from "./ViewChoice.js.css" assert {type: "css"};
 import ChildlistMutationObserverMixin from "/emcJS/ui/mixin/ChildlistMutationObserverMixin.js";
 
-function elementComposer(key, params, eventManager) {
-    const el = document.createElement("emc-option");
-    el.value = key;
-    eventManager.addTarget(el);
-    return el;
-}
+class ChoiceEntryElementManager extends ElementManager {
 
-function elementMutator(el, key, params) {
-    el.style.backgroundImage = `url('${params.icon}')`;
-    el.title = params.title || key;
-}
+    composer(key, params, eventManager) {
+        const el = document.createElement("emc-option");
+        el.value = key;
+        eventManager.addTarget(el);
+        return el;
+    }
 
-function elementCleanup(el, key, eventManager) {
-    eventManager.removeTarget(el);
+    mutator(el, key, params) {
+        el.style.backgroundImage = `url('${params.icon}')`;
+        el.title = params.title || key;
+    }
+
+    cleanup(el, key, eventManager) {
+        eventManager.removeTarget(el);
+    }
+
 }
 
 export default class ViewChoice extends ChildlistMutationObserverMixin(CustomElement) {
@@ -48,11 +52,7 @@ export default class ViewChoice extends ChildlistMutationObserverMixin(CustomEle
         });
         /* --- */
         const choice = this.shadowRoot.getElementById("view-choice");
-        this.#elementManager = new ElementManager(choice, {
-            composer: elementComposer,
-            mutator: elementMutator,
-            cleanup: elementCleanup
-        }, this.#eventManager);
+        this.#elementManager = new ChoiceEntryElementManager(choice, this.#eventManager);
     }
 
     nodeAddedCallback() {

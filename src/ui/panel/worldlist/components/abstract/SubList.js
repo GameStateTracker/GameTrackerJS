@@ -57,11 +57,15 @@ const STYLE = new GlobalStyle(`
 
 const sublistCollapsibleObserver = new SettingsObserver("sublist_collapsible");
 
-function elementComposer(key, props) {
-    const uiReg = UIRegistry.get(`worldlist-${props.category}`);
-    if (uiReg != null) {
-        return uiReg.create(props.type, key);
+class ListEntryElementManager extends ElementManager {
+
+    composer(key, params) {
+        const uiReg = UIRegistry.get(`worldlist-${params.category}`);
+        if (uiReg != null) {
+            return uiReg.create(params.type, key);
+        }
     }
+
 }
 
 const BaseClass = mix(
@@ -116,9 +120,7 @@ export default class WorldListSubList extends BaseClass {
             }
         }
         /* --- */
-        this.#elementManager = new ElementManager(this, {
-            composer: elementComposer
-        });
+        this.#elementManager = new ListEntryElementManager(this);
     }
 
     connectedCallback() {

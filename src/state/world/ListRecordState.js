@@ -59,11 +59,11 @@ export default class ListRecordState extends BaseClass {
     }
 
     get x() {
-        return this.props.x
+        return this.props.pos?.x
     }
 
     get y() {
-        return this.props.y
+        return this.props.pos?.y
     }
 
     get category() {

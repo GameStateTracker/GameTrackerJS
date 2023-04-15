@@ -65,32 +65,39 @@ const STYLE = new GlobalStyle(`
 }
 `);
 
-function elementComposer(key, props) {
-    if (props.category === "connection") {
-        return document.createElement("gt-connection");
-    }
-    const uiReg = UIRegistry.get(`worldmap-${props.category}`);
-    if (uiReg != null) {
-        return uiReg.create(props.type, key);
-    }
-}
+class MapMarkerElementManager extends ElementManager {
 
-function elementMutator(el, key, props) {
-    if (props.category === "connection") {
-        el.innerHTML = "";
-        for (const position of props.coordinates) {
-            const connectionPointEl = document.createElement("gt-connection-point");
-            connectionPointEl.label = props.label;
-            connectionPointEl.left = position.x;
-            connectionPointEl.top = position.y;
-            el.append(connectionPointEl);
+    composer(key, params) {
+        if (params.category === "connection") {
+            return document.createElement("gt-connection");
         }
-    } else {
-        el.left = props.x;
-        el.top = props.y;
-        // XXX tooltips should really automatically adjust
-        el.tooltip = calculateTooltipPosition(props.x, props.y, props.areaWidth, props.areaHeight);
+        const uiReg = UIRegistry.get(`worldmap-${params.category}`);
+        if (uiReg != null) {
+            return uiReg.create(params.type, key);
+        }
     }
+
+    mutator(el, key, params) {
+        if (params.category === "connection") {
+            el.innerHTML = "";
+            for (const position of params.coordinates) {
+                const {x, y} = position;
+                if (!isNaN(x) && !isNaN(y)) {
+                    const connectionPointEl = document.createElement("gt-connection-point");
+                    connectionPointEl.label = params.label;
+                    connectionPointEl.left = position.x;
+                    connectionPointEl.top = position.y;
+                    el.append(connectionPointEl);
+                }
+            }
+        } else {
+            el.left = params.x;
+            el.top = params.y;
+            // XXX tooltips should really automatically adjust
+            el.tooltip = calculateTooltipPosition(params.x, params.y, params.areaWidth, params.areaHeight);
+        }
+    }
+
 }
 
 const ZOOM_MIN = 10;
@@ -169,10 +176,7 @@ export default class WorldMapView extends BaseClass {
         });
 
         /* --- */
-        this.#elementManager = new ElementManager(this, {
-            composer: elementComposer,
-            mutator: elementMutator
-        });
+        this.#elementManager = new MapMarkerElementManager(this);
     }
 
     applyDefaultValues() {
@@ -207,7 +211,7 @@ export default class WorldMapView extends BaseClass {
         if (mapEl != null) {
             const mapData = state.props.map;
             mapEl.style.backgroundColor = mapData.color;
-            mapEl.style.backgroundImage = `url("/images/maps/${mapData.background}")`;
+            mapEl.style.backgroundImage = `url("${mapData.background}")`;
             mapEl.style.width = `${mapData.width}px`;
             mapEl.style.height = `${mapData.height}px`;
             /* value */
@@ -372,16 +376,18 @@ export default class WorldMapView extends BaseClass {
             const list = state.getList();
             if (list != null && list.length > 0) {
                 for (const record of list) {
-                    const loc = record.entry;
-                    elManagerData.push({
-                        key: loc.ref,
-                        category: record.category,
-                        type: loc.props.type,
-                        x: record.x,
-                        y: record.y,
-                        areaWidth: state.props.map.width,
-                        areaHeight: state.props.map.height
-                    });
+                    if (!isNaN(record.x) && !isNaN(record.y)) {
+                        const loc = record.entry;
+                        elManagerData.push({
+                            key: loc.ref,
+                            category: record.category,
+                            type: loc.props.type,
+                            x: record.x,
+                            y: record.y,
+                            areaWidth: state.props.map.width,
+                            areaHeight: state.props.map.height
+                        });
+                    }
                 }
             }
             if (showMapConnectionsObserver.value) {
