@@ -81,7 +81,7 @@ class MapMarkerElementManager extends ElementManager {
         if (params.category === "connection") {
             el.innerHTML = "";
             for (const position of params.coordinates) {
-                const {x, y} = position;
+                const {x, y} = position ?? {};
                 if (!isNaN(x) && !isNaN(y)) {
                     const connectionPointEl = document.createElement("gt-connection-point");
                     connectionPointEl.label = params.label;
@@ -393,13 +393,15 @@ export default class WorldMapView extends BaseClass {
             if (showMapConnectionsObserver.value) {
                 const connections = state.props.connections;
                 if (connections != null) {
-                    for (const label in connections) {
-                        const coordinates = connections[label];
+                    for (const connection of connections) {
                         elManagerData.push({
-                            key: `connection___${label}`,
-                            label,
+                            key: `connection___${connection.label}`,
+                            label: connection.label,
                             category: "connection",
-                            coordinates
+                            coordinates: [
+                                connection.posA,
+                                connection.posB
+                            ]
                         });
                     }
                 }
