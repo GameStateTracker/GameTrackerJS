@@ -1,0 +1,64 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    width: 100%;
+    padding: 3px;
+    user-select: none;
+}
+:host([hidden]:not([hidden="false"])) {
+    display: none;
+}
+#header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    cursor: pointer;
+}
+#header:hover,
+:host(.ctx-marked) #header {
+    background-color: var(--main-hover-color, #ffffff32);
+}
+.textarea {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1;
+    width: 100%;
+    min-height: 35px;
+    padding: 2px;
+    word-break: break-word;
+}
+.textarea:empty,
+.textarea.hidden {
+    display: none;
+}
+.textarea + .textarea {
+    margin-top: 5px;
+}
+#text {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1;
+    color: var(--page-text-color, #000000);
+}
+:host([access="opened"]) #text {
+    color: var(--world-entry-status-opened-color, #777777);
+}
+:host([access="available"]) #text {
+    color: var(--world-entry-status-available-color, #00ff00);
+}
+:host([access="unavailable"]) #text {
+    color: var(--world-entry-status-unavailable-color, #ff0000);
+}
+:host([access="possible"]) #text {
+    color: var(--world-entry-status-possible-color, #ffff00);
+}
+#item {
+    width: 32px;
+    height: 32px;
+    margin-left: 5px;
+    font-size: 0.7em;
+}
