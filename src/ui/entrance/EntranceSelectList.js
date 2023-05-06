@@ -1,5 +1,8 @@
 import CustomElementDelegating from "/emcJS/ui/element/CustomElementDelegating.js";
 import SearchAnd from "/emcJS/util/search/SearchAnd.js";
+import {
+    getInnerText
+} from "/emcJS/util/helper/ui/ExtractText.js";
 import "/emcJS/ui/input/SearchField.js";
 import "./EntranceSelectOption.js";
 import TPL from "./EntranceSelectList.js.html" assert {type: "html"};
@@ -41,7 +44,7 @@ export default class EntranceSelectList extends CustomElementDelegating {
                     this.style.height = `${rect.height}px`;
                 }
                 for (const el of all) {
-                    if (el.value === "" || el.value === this.value || el.innerText.match(regEx)) {
+                    if (el.value === "" || el.value === this.value || getInnerText(el).match(regEx)) {
                         el.style.display = "";
                     } else {
                         el.style.display = "none";
