@@ -91,6 +91,12 @@ export default class LocationListLocation extends BaseClass {
             event.preventDefault();
             return false;
         });
+        headerEl.addEventListener("click", (event) => {
+            this.clickHandler(event);
+            event.stopPropagation();
+            event.preventDefault();
+            return false;
+        });
     }
 
     get hidden() {
