@@ -9,7 +9,7 @@ import {
     getInnerText
 } from "/emcJS/util/helper/ui/ExtractText.js";
 import i18n from "/emcJS/util/I18n.js";
-import CharacterSearch from "/emcJS/util/search/CharacterSearch.js";
+import SearchAnd from "/emcJS/util/search/SearchAnd.js";
 import UIRegistry from "../../../registry/UIRegistry.js";
 import WorldResource from "../../../data/resource/WorldResource.js";
 import "/emcJS/ui/input/SearchField.js";
@@ -48,7 +48,7 @@ export default class LocationList extends Panel {
         searchEl.addEventListener("change", (event) => {
             const all = this.querySelectorAll("gt-locationlist-location");
             if (event.value) {
-                const regEx = new CharacterSearch(event.value);
+                const regEx = new SearchAnd(event.value);
                 for (const el of all) {
                     const value = el.dataset.filtervalue ?? getInnerText(el);
                     if (value.match(regEx)) {

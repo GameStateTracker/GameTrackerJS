@@ -59,10 +59,10 @@ export default class ExitBindingContextMenu extends BaseClass {
     }
 
     show(posX, posY, access, current) {
-        this.fillEntranceSelection(access, current);
-        setTimeout(() => {
-            super.show(posX, posY);
-        }, 0);
+        super.show(posX, posY, access, current);
+        this.fillEntranceSelection(access, current).then(() => {
+            super.show(posX, posY, access, current);
+        });
     }
 
     close() {
@@ -74,7 +74,7 @@ export default class ExitBindingContextMenu extends BaseClass {
         this.#exitSelectEl.focus();
     }
 
-    fillEntranceSelection(access, current = "") {
+    async fillEntranceSelection(access, current = "") {
         this.#exitSelectEl.innerHTML = "";
         // retrieve bound
         const bound = new Set();
@@ -102,23 +102,32 @@ export default class ExitBindingContextMenu extends BaseClass {
         const exit = ExitStateManager.get(access);
         if (exit != null) {
             // add options
+            const allPromEntrances = [];
             for (const [, entrance] of EntranceStateManager) {
-                setTimeout(() => {
-                    if (access != entrance.ref && (exit.props.ignoreBound || !bound.has(entrance.ref))) {
-                        const isBindable = exit.checkBindable(entrance);
-                        if (isBindable) {
-                            const entranceEl = document.createElement("gt-entrance-select-option");
-                            entranceEl.ref = entrance.ref;
-                            entranceEl.value = entrance.ref;
-                            this.#exitSelectEl.append(entranceEl);
-                        }
-                    }
-                }, 0);
+                allPromEntrances.push(this.#addEntrance(access, entrance, exit, bound));
             }
             this.#exitSelectEl.value = current;
+            await allPromEntrances;
         } else {
             this.#exitSelectEl.value = "";
         }
+    }
+
+    #addEntrance(access, entrance, exit, bound) {
+        return new Promise((resolve) => {
+            if (access != entrance.ref && (exit.props.ignoreBound || !bound.has(entrance.ref))) {
+                const isBindable = exit.checkBindable(entrance);
+                if (isBindable) {
+                    const entranceEl = document.createElement("gt-entrance-select-option");
+                    entranceEl.ref = entrance.ref;
+                    entranceEl.value = entrance.ref;
+                    this.#exitSelectEl.append(entranceEl);
+                }
+            }
+            setTimeout(() => {
+                resolve();
+            }, 0);
+        });
     }
 
 }
