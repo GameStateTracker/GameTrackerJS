@@ -58,7 +58,7 @@ export default class EntranceSelectOption extends BaseClass {
         // area - tags
         tagsEl.innerHTML = "";
         const areaContentHints = areaState?.props.areaContentHints;
-        if (Array.isArray(areaContentHints) && areaContentHints.length) {
+        if (areaContentHints) {
             const areaTagConfig = WorldListState.config.areaContentHints;
             for (const tag in areaContentHints) {
                 const areaTagData = areaTagConfig[tag];
