@@ -5,23 +5,11 @@ import {
     mix
 } from "/emcJS/util/Mixin.js";
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
-import "/emcJS/ui/LabeledIcon.js";
 
-import StateDataEventManagerMixin from "../../../mixin/StateDataEventManagerMixin.js";
-import UIRegistry from "../../../../registry/UIRegistry.js";
-import LocationContextMenu from "../../../ctxmenu/LocationContextMenu.js";
-import ItemPickerContextMenu from "../../../ctxmenu/ItemPickerContextMenu.js";
-import WorldStateManagerRegistry from "../../../../statemanager/WorldStateManagerRegistry.js";
-import TPL from "./LocationListLocation.js.html" assert {type: "html"};
-import STYLE from "./LocationListLocation.js.css" assert {type: "css"};
-
-function resolveIcon(icon) {
-    if (Array.isArray(icon)) {
-        return icon[0];
-    } else {
-        return icon;
-    }
-}
+import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
+import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
+import TPL from "./LocationListEntry.js.html" assert {type: "html"};
+import STYLE from "./LocationListEntry.js.css" assert {type: "css"};
 
 const BaseClass = mix(
     CustomElement
@@ -30,15 +18,12 @@ const BaseClass = mix(
     ContextMenuManagerMixin
 );
 
-export default class LocationListLocation extends BaseClass {
+export default class LocationListEntry extends BaseClass {
 
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
-        /* badge */
-        const badgeEl = this.shadowRoot.getElementById("badge");
-        badgeEl.hideValues = true;
         /* state handler */
         this.registerStateHandler("visibility", (event) => {
             this.hidden = !event.value;
@@ -47,41 +32,6 @@ export default class LocationListLocation extends BaseClass {
             const access = event.value;
             const accessValue = access.value;
             this.applyAccess(("" + accessValue).toLowerCase(), access);
-        });
-        this.registerStateHandler("item", () => {
-            const state = this.getState();
-            this.applyItem(state?.itemData);
-        });
-        /* context menu */
-        this.setDefaultContextMenu(LocationContextMenu);
-        this.addDefaultContextMenuHandler("check", () => {
-            const state = this.getState();
-            if (state != null) {
-                state.value = true;
-            }
-        });
-        this.addDefaultContextMenuHandler("uncheck", () => {
-            const state = this.getState();
-            if (state != null) {
-                state.value = false;
-            }
-        });
-        this.addDefaultContextMenuHandler("associate", (event) => {
-            this.showContextMenu("itempicker", event, "pickable");
-        });
-        this.addDefaultContextMenuHandler("disassociate", () => {
-            const state = this.getState();
-            if (state != null) {
-                state.item = "";
-            }
-        });
-        /* context menu - item picker */
-        this.setContextMenu("itempicker", ItemPickerContextMenu);
-        this.addContextMenuHandler("itempicker", "pick", (event) => {
-            const state = this.getState();
-            if (state != null) {
-                state.item = event.item;
-            }
         });
         /* mouse events */
         const headerEl = this.shadowRoot.getElementById("header");
@@ -113,18 +63,11 @@ export default class LocationListLocation extends BaseClass {
         return cat ? `${cat}[${ref}]` : ref;
     }
 
-    get category() {
-        return "location";
-    }
-
     clickHandler(/* event */) {
-        const state = this.getState();
-        if (state != null) {
-            state.value = !state.value;
-        }
+        // nothing
     }
 
-    applyDefaultValues() {
+    applyDefaultValues(defaultIcon) {
         /* access */
         this.applyAccess();
         /* visible */
@@ -132,14 +75,12 @@ export default class LocationListLocation extends BaseClass {
         /* badge */
         const badgeEl = this.shadowRoot.getElementById("badge");
         if (badgeEl != null) {
-            badgeEl.typeIcon = "images/icons/location.svg";
+            badgeEl.typeIcon = defaultIcon;
             badgeEl.setFilterData();
         }
-        /* item */
-        this.applyItem();
     }
 
-    applyStateValues(state) {
+    applyStateValues(state, defaultIcon) {
         /* access */
         const access = this.getStateAccess(state);
         const accessValue = access.value;
@@ -149,27 +90,8 @@ export default class LocationListLocation extends BaseClass {
         /* badge */
         const badgeEl = this.shadowRoot.getElementById("badge");
         if (badgeEl != null) {
-            badgeEl.typeIcon = state.props.icon ?? "images/icons/location.svg";
+            badgeEl.typeIcon = state.props.icon ?? defaultIcon;
             badgeEl.setFilterData(state.props.filter);
-        }
-        /* item */
-        this.applyItem(state.itemData);
-    }
-
-    applyItem(itemData) {
-        const itemEl = this.shadowRoot.getElementById("item");
-        if (itemEl != null) {
-            if (itemData != null) {
-                itemEl.src = resolveIcon(itemData?.icon) ?? "/images/items/unknown.png";
-                itemEl.text = itemData?.label ?? "";
-                itemEl.valign = itemData?.valign ?? "center";
-                itemEl.halign = itemData?.halign ?? "center";
-            } else {
-                itemEl.src = "";
-                itemEl.text = "";
-                itemEl.valign = "center";
-                itemEl.halign = "center";
-            }
         }
     }
 
@@ -252,7 +174,8 @@ export default class LocationListLocation extends BaseClass {
         return false;
     }
 
-}
+    get category() {
+        return "";
+    }
 
-customElements.define("gt-locationlist-location", LocationListLocation);
-UIRegistry.set("locationlist-location", new UIRegistry(LocationListLocation));
+}

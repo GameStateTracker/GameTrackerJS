@@ -13,7 +13,7 @@ import SearchAnd from "/emcJS/util/search/SearchAnd.js";
 import UIRegistry from "../../../registry/UIRegistry.js";
 import WorldResource from "../../../data/resource/WorldResource.js";
 import "/emcJS/ui/input/SearchField.js";
-import "./components/LocationListLocation.js";
+import "./components/entries/LocationListLocation.js";
 import "../../../statemanager/world/location/LocationStateManager.js";
 import TPL from "./LocationList.js.html" assert {type: "html"};
 import STYLE from "./LocationList.js.css" assert {type: "css"};
@@ -46,7 +46,7 @@ export default class LocationList extends Panel {
         /* search */
         const searchEl = this.shadowRoot.getElementById("search");
         searchEl.addEventListener("change", (event) => {
-            const all = this.querySelectorAll("gt-locationlist-location");
+            const all = this.querySelectorAll("[ref]");
             if (event.value) {
                 const regEx = new SearchAnd(event.value);
                 for (const el of all) {

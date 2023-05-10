@@ -56,9 +56,3 @@
 :host([access="possible"]) #text {
     color: var(--world-entry-status-possible-color, #ffff00);
 }
-#item {
-    width: 32px;
-    height: 32px;
-    margin-left: 5px;
-    font-size: 0.7em;
-}
