@@ -48,7 +48,7 @@ const STYLE = new GlobalStyle(`
         saturate(var(--shallow-item-saturate, 0.5))
         brightness(var(--shallow-item-brightness, 0.4));
 }
-#slot.alwaysActive ::slotted([value]),
+::slotted([value].alwaysActive),
 ::slotted([value]:not([value="0"])) {
     filter:
         contrast(var(--solid-item-contrast, 1))
@@ -133,21 +133,14 @@ export default class ProgressiveItem extends ItemElement {
 
     applyDefaultValues() {
         super.applyDefaultValues();
-        const slotEl = this.shadowRoot.getElementById("slot");
         // choices
         this.#fillItemChoices();
-        // always active
-        slotEl.classList.remove("alwaysActive");
     }
 
     applyStateValues(state) {
         super.applyStateValues(state);
-        const data = state.props;
-        const slotEl = this.shadowRoot.getElementById("slot");
         // choices
         this.#fillItemChoices();
-        // always active
-        slotEl.classList.toggle("alwaysActive", !!data.alwaysActive);
     }
 
     refreshValue() {
@@ -171,6 +164,8 @@ export default class ProgressiveItem extends ItemElement {
                 if (value == this.value) {
                     opt.classList.add("active");
                 }
+                // always active
+                opt.classList.toggle("alwaysActive", !!state.props.alwaysActive ?? false);
                 this.append(opt);
             }
         } else {
