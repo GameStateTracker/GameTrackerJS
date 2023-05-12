@@ -15,7 +15,7 @@ function resolveIcon(icon) {
 }
 
 function applyElements(target) {
-    const textEl = target.getElementById("ref");
+    const textEl = target.getElementById("text");
     const tpl = TPL.generate();
     const itemEl = tpl.getElementById("item");
     textEl.insertAdjacentElement("afterend", itemEl);
