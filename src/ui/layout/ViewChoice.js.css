@@ -1,7 +1,7 @@
 :host {
     display: flex;
-    flex-direction: column;
-    width: 100vw;
+    flex-direction: row-reverse;
+    width: 100dvw;
     height: 100%;
     margin: 0px;
     background-color: var(--page-background-color, #000000);
@@ -24,8 +24,12 @@
     display: none;
 }
 #view-choice {
-    padding: 4px;
-    background-color: var(--navigation-background-color, #ffffff);
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+    background-color: var(--navigation-back-color, #ffffff);
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 #view-choice emc-option {
     display: inline-block;
@@ -38,7 +42,7 @@
     border-radius: 20%;
     border: solid 2px var(--navigation-text-color, #000000);
     padding: 4px;
-    margin: 0 2px;
+    margin: 2px;
     filter: drop-shadow(black 1px 1px 1px);
 }
 #view-choice emc-option emc-icon {
@@ -51,4 +55,14 @@
 }
 #view-choice emc-option:not(.active) {
     opacity: 0.5;
+}
+@media (orientation: portrait) {
+    :host {
+        flex-direction: column;
+    }
+    #view-choice {
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
 }

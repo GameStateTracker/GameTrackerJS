@@ -89,7 +89,7 @@ const STYLE = new GlobalStyle(`
 }
 #search,
 #tokenizer {
-    max-width: calc(100vw - 10px);
+    max-width: calc(100dvw - 10px);
     padding: 5px;
     flex: 0 0 0%;
 }

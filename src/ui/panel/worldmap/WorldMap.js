@@ -101,7 +101,7 @@ const STYLE = new GlobalStyle(`
     height: 38px;
     padding: 4px;
     margin-left: 8px;
-    border: solid 2px var(--navigation-background-color, #ffffff);
+    border: solid 2px var(--navigation-back-color, #ffffff);
     border-radius: 10px;
 }
 `);

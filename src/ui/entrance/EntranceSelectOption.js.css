@@ -50,7 +50,7 @@
     flex-shrink: 0;
     padding: 2px;
     margin-left: 5px;
-    border: 1px solid var(--navigation-background-color, #ffffff);
+    border: 1px solid var(--navigation-back-color, #ffffff);
     border-radius: 2px;
     user-select: none;
 }
