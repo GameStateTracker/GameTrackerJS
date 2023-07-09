@@ -200,7 +200,7 @@ export default class WorldList extends BaseClass {
     }
 
     get ref() {
-        return this.getAttribute("ref") || WorldListState.config.default;
+        return this.getAttribute("ref") || WorldListState.config.defaultArea;
     }
 
     set ref(val) {
@@ -224,7 +224,12 @@ export default class WorldList extends BaseClass {
             switch (name) {
                 case "ref": {
                     const state = AreaStateManager.get(this.ref);
-                    this.switchState(state);
+                    if (state?.hasMap) {
+                        this.switchState(state);
+                    } else {
+                        const defaultState = AreaStateManager.get(WorldListState.config.defaultArea);
+                        this.switchState(defaultState);
+                    }
                     /* back button */
                     const backEl = this.shadowRoot.getElementById("back");
                     if (backEl != null) {

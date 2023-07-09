@@ -183,7 +183,7 @@ export default class WorldMapView extends BaseClass {
         /* map */
         const mapEl = this.shadowRoot.getElementById("map");
         if (mapEl != null) {
-            mapEl.style.backgroundColor = "";
+            mapEl.style.backgroundColor = "#000000";
             mapEl.style.backgroundImage = "";
             mapEl.style.width = "600px";
             mapEl.style.height = "600px";

@@ -234,7 +234,7 @@ export default class WorldMap extends BaseClass {
     }
 
     get ref() {
-        return this.getAttribute("ref") ?? WorldListState.config.default;
+        return this.getAttribute("ref") ?? WorldListState.config.defaultArea;
     }
 
     set ref(value) {
