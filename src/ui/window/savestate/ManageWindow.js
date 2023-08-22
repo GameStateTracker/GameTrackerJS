@@ -1,6 +1,6 @@
 // frameworks
 import Template from "/emcJS/util/html/Template.js";
-import DateUtil from "/emcJS/util/DateUtil.js";
+import DateUtil from "/emcJS/util/date/DateUtil.js";
 import FileSystem from "/emcJS/util/file/FileSystem.js";
 import Dialog from "/emcJS/ui/overlay/window/Dialog.js";
 import Toast from "/emcJS/ui/overlay/message/Toast.js";

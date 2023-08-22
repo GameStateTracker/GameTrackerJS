@@ -1,7 +1,7 @@
 // frameworks
 import Template from "/emcJS/util/html/Template.js";
 import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
-import DateUtil from "/emcJS/util/DateUtil.js";
+import DateUtil from "/emcJS/util/date/DateUtil.js";
 import Window from "/emcJS/ui/overlay/window/Window.js";
 import "/emcJS/ui/input/ListSelect.js";
 

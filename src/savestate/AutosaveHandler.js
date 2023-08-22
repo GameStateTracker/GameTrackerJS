@@ -3,7 +3,7 @@ import {
     debounce
 } from "/emcJS/util/Debouncer.js";
 import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
-import DateUtil from "/emcJS/util/DateUtil.js";
+import DateUtil from "/emcJS/util/date/DateUtil.js";
 
 import VersionData from "../data/VersionData.js";
 import Savestate from "./Savestate.js";

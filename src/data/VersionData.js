@@ -1,6 +1,6 @@
 // frameworks
 import FileLoader from "/emcJS/util/file/FileLoader.js";
-import DateUtil from "/emcJS/util/DateUtil.js";
+import DateUtil from "/emcJS/util/date/DateUtil.js";
 import {
     deepClone
 } from "/emcJS/util/helper/DeepClone.js";
