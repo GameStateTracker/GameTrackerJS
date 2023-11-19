@@ -1,0 +1,28 @@
+{
+    "defaultArea": {
+        "__type__": "String",
+        "optional": false,
+        "default": ""
+    },
+    "defaultAreaList": {
+        "__type__": "String",
+        "optional": false,
+        "default": ""
+    },
+    "areaContentHints": {
+        "__type__": "NamedList",
+        "optional": false,
+        "children": {
+            "__type__": "AreaContentHint",
+            "optional": true
+        }
+    },
+    "region": {
+        "__type__": "RegionsConfig",
+        "optional": false
+    },
+    "gateways": {
+        "__type__": "GatewaysConfig",
+        "optional": false
+    }
+}

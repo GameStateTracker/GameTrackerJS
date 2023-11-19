@@ -1,0 +1,92 @@
+{
+    "type": {
+        "__type__": "String",
+        "optional": false,
+        "default": ""
+    },
+    "target": {
+        "__type__": "Link",
+        "optional": false,
+        "linkedType": "Exit"
+    },
+    "logicAccess": {
+        "__type__": "String",
+        "optional": false,
+        "default": ""
+    },
+    "area": {
+        "__type__": "Link",
+        "optional": false,
+        "linkedType": "Area"
+    },
+    "visible": {
+        "__type__": "Logic",
+        "optional": false,
+        "default": true
+    },
+    "visibleRootOnly": {
+        "__type__": "Boolean",
+        "optional": false,
+        "default": false
+    },
+    "filter": {
+        "__type__": "NamedList",
+        "optional": false,
+        "children": {
+            "__type__": "Logic",
+            "optional": true,
+            "default": true
+        }
+    },
+    "icon": {
+        "__type__": "Image",
+        "optional": false,
+        "default": ""
+    },
+    "bindsTo": {
+        "__type__": "List",
+        "optional": false,
+        "children": {
+            "type": "String",
+            "optional": true
+        }
+    },
+    "unbindable": {
+        "__type__": "Boolean",
+        "optional": false,
+        "default": false
+    },
+    "ignoreBound": {
+        "__type__": "Boolean",
+        "optional": false,
+        "default": false
+    },
+    "entranceActive": {
+        "__type__": "Logic",
+        "optional": true,
+        "default": true
+    },
+    "includeInactiveEntrances": {
+        "__type__": "Boolean",
+        "optional": false,
+        "default": false
+    },
+    "isBiDir": {
+        "__type__": "Boolean",
+        "optional": false,
+        "default": false
+    },
+    "ignoreMixedEntrances": {
+        "__type__": "Boolean",
+        "optional": false,
+        "default": false
+    },
+    "tags": {
+        "__type__": "List",
+        "optional": false,
+        "children": {
+            "type": "String",
+            "optional": true
+        }
+    }
+}

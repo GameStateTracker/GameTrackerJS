@@ -1,0 +1,33 @@
+{
+    "ref": {
+        "__type__": "VariableType",
+        "optional": false,
+        "types": [
+            {
+                "__type__": "Link",
+                "linkedType": "Area"
+            },
+            {
+                "__type__": "Link",
+                "linkedType": "Collection"
+            },
+            {
+                "__type__": "Link",
+                "linkedType": "Exit"
+            },
+            {
+                "__type__": "Link",
+                "linkedType": "Location"
+            }
+        ]
+    },
+    "pos": {
+        "__type__": "Coordinates",
+        "optional": false
+    },
+    "visible": {
+        "__type__": "Logic",
+        "optional": false,
+        "default": true
+    }
+}

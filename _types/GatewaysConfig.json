@@ -1,0 +1,30 @@
+{
+    "incomingPrefix": {
+        "__type__": "String",
+        "optional": false,
+        "default": ""
+    },
+    "incomingPostfix": {
+        "__type__": "String",
+        "optional": false,
+        "default": ":in"
+    },
+    "outgoingPrefix": {
+        "__type__": "String",
+        "optional": false,
+        "default": ""
+    },
+    "outgoingPostfix": {
+        "__type__": "String",
+        "optional": false,
+        "default": ":out"
+    },
+    "variants": {
+        "__type__": "List",
+        "optional": false,
+        "children": {
+            "type": "String",
+            "optional": true
+        }
+    }
+}

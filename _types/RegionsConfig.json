@@ -1,0 +1,17 @@
+{
+    "root": {
+        "__type__": "String",
+        "optional": false,
+        "default": "root"
+    },
+    "prefix": {
+        "__type__": "String",
+        "optional": false,
+        "default": "region["
+    },
+    "postfix": {
+        "__type__": "String",
+        "optional": false,
+        "default": "]"
+    }
+}

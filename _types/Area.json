@@ -1,0 +1,87 @@
+{
+    "type": {
+        "__type__": "String",
+        "optional": false,
+        "default": ""
+    },
+    "category": {
+        "__type__": "String",
+        "optional": false,
+        "default": ""
+    },
+    "visible": {
+        "__type__": "Logic",
+        "optional": false,
+        "default": true
+    },
+    "visibleRootOnly": {
+        "__type__": "Boolean",
+        "optional": false,
+        "default": false
+    },
+    "filter": {
+        "__type__": "NamedList",
+        "optional": false,
+        "children": {
+            "__type__": "Logic",
+            "optional": true,
+            "default": true
+        }
+    },
+    "listContents": {
+        "__type__": "Logic",
+        "optional": false,
+        "default": false
+    },
+    "accessPenetration": {
+        "__type__": "Logic",
+        "optional": false,
+        "default": false
+    },
+    "icon": {
+        "__type__": "Image",
+        "optional": false,
+        "default": ""
+    },
+    "map": {
+        "__type__": "MapConfig",
+        "optional": false
+    },
+    "connections": {
+        "__type__": "List",
+        "optional": true,
+        "children": {
+            "type": "Connection",
+            "optional": true
+        }
+    },
+    "lists": {
+        "__type__": "NamedList",
+        "optional": false,
+        "children": {
+            "__type__": "List",
+            "optional": true,
+            "children": {
+                "type": "MarkerListEntry",
+                "optional": true
+            }
+        }
+    },
+    "areaContentHints": {
+        "__type__": "NamedList",
+        "optional": false,
+        "children": {
+            "__type__": "Number",
+            "optional": true,
+            "default": 0
+        }
+    },
+    "tags": {
+        "__type__": "List",
+        "optional": false,
+        "children": {
+            "type": "String",
+            "optional": true
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "config": {
+        "__type__": "WorldConfig",
+        "optional": false
+    },
+    "locations": {
+        "__type__": "NamedList",
+        "optional": false,
+        "children": {
+            "__type__": "Location",
+            "optional": true
+        }
+    },
+    "collections": {
+        "__type__": "NamedList",
+        "optional": false,
+        "children": {
+            "__type__": "Collection",
+            "optional": true
+        }
+    },
+    "areas": {
+        "__type__": "NamedList",
+        "optional": false,
+        "children": {
+            "__type__": "Area",
+            "optional": true
+        }
+    },
+    "exits": {
+        "__type__": "NamedList",
+        "optional": false,
+        "children": {
+            "__type__": "Exit",
+            "optional": true
+        }
+    }
+}
