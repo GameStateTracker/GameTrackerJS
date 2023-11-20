@@ -1,16 +1,16 @@
 {
     "label": {
-        "__type__": "String",
+        "@type": "String",
         "optional": false,
         "default": "",
         "pattern": ".+"
     },
     "posA": {
-        "__type__": "Coordinates",
+        "@type": "Coordinates",
         "optional": false
     },
     "posB": {
-        "__type__": "Coordinates",
+        "@type": "Coordinates",
         "optional": false
     }
 }

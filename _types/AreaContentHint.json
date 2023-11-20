@@ -1,11 +1,11 @@
 {
     "icon": {
-        "__type__": "Image",
+        "@type": "Image",
         "optional": false,
         "default": ""
     },
     "counting": {
-        "__type__": "Boolean",
+        "@type": "Boolean",
         "optional": false,
         "default": false
     }

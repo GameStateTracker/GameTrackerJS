@@ -1,37 +1,37 @@
 {
     "config": {
-        "__type__": "WorldConfig",
+        "@type": "WorldConfig",
         "optional": false
     },
     "locations": {
-        "__type__": "NamedList",
+        "@type": "AssociativeList",
         "optional": false,
         "children": {
-            "__type__": "Location",
+            "@type": "Location",
             "optional": true
         }
     },
     "collections": {
-        "__type__": "NamedList",
+        "@type": "AssociativeList",
         "optional": false,
         "children": {
-            "__type__": "Collection",
+            "@type": "Collection",
             "optional": true
         }
     },
     "areas": {
-        "__type__": "NamedList",
+        "@type": "AssociativeList",
         "optional": false,
         "children": {
-            "__type__": "Area",
+            "@type": "Area",
             "optional": true
         }
     },
     "exits": {
-        "__type__": "NamedList",
+        "@type": "AssociativeList",
         "optional": false,
         "children": {
-            "__type__": "Exit",
+            "@type": "Exit",
             "optional": true
         }
     }

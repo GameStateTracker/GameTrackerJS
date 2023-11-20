@@ -1,13 +1,13 @@
 {
     "map": {
-        "__type__": "MapConfig",
+        "@type": "MapConfig",
         "optional": false
     },
     "list": {
-        "__type__": "List",
+        "@type": "List",
         "optional": false,
         "children": {
-            "type": "MarkerListEntry",
+            "@type": "MarkerListEntry",
             "optional": true
         }
     }

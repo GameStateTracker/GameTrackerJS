@@ -1,33 +1,33 @@
 {
     "active": {
-        "__type__": "Boolean",
+        "@type": "Boolean",
         "optional": false,
         "default": false
     },
     "backgroundColor": {
-        "__type__": "Color",
+        "@type": "Color",
         "optional": false,
         "default": "#000000"
     },
     "backgroundImage": {
-        "__type__": "Image",
+        "@type": "Image",
         "optional": false,
         "default": ""
     },
     "width": {
-        "__type__": "Number",
+        "@type": "Number",
         "optional": false,
         "default": 1920,
         "decimalPlaces": 0
     },
     "height": {
-        "__type__": "Number",
+        "@type": "Number",
         "optional": false,
         "default": 1080,
         "decimalPlaces": 0
     },
     "zoom": {
-        "__type__": "Number",
+        "@type": "Number",
         "optional": false,
         "default": 50,
         "decimalPlaces": 0

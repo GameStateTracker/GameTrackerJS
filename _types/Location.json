@@ -1,43 +1,43 @@
 {
     "type": {
-        "__type__": "String",
+        "@type": "String",
         "optional": false,
         "default": ""
     },
     "logicAccess": {
-        "__type__": "String",
+        "@type": "String",
         "optional": false,
         "default": ""
     },
     "visible": {
-        "__type__": "Logic",
+        "@type": "Logic",
         "optional": false,
         "default": true
     },
     "visibleRootOnly": {
-        "__type__": "Boolean",
+        "@type": "Boolean",
         "optional": false,
         "default": false
     },
     "filter": {
-        "__type__": "NamedList",
+        "@type": "AssociativeList",
         "optional": false,
         "children": {
-            "__type__": "Logic",
+            "@type": "Logic",
             "optional": true,
             "default": true
         }
     },
     "icon": {
-        "__type__": "Image",
+        "@type": "Image",
         "optional": false,
         "default": ""
     },
     "tags": {
-        "__type__": "List",
+        "@type": "List",
         "optional": false,
         "children": {
-            "type": "String",
+            "@type": "String",
             "optional": true
         }
     }

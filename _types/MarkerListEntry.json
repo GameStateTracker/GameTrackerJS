@@ -1,32 +1,20 @@
 {
     "ref": {
-        "__type__": "VariableType",
+        "@type": "Relation",
         "optional": false,
         "types": [
-            {
-                "__type__": "Link",
-                "linkedType": "Area"
-            },
-            {
-                "__type__": "Link",
-                "linkedType": "Collection"
-            },
-            {
-                "__type__": "Link",
-                "linkedType": "Exit"
-            },
-            {
-                "__type__": "Link",
-                "linkedType": "Location"
-            }
+            "Area",
+            "Collection",
+            "Exit",
+            "Location"
         ]
     },
     "pos": {
-        "__type__": "Coordinates",
+        "@type": "Coordinates",
         "optional": false
     },
     "visible": {
-        "__type__": "Logic",
+        "@type": "Logic",
         "optional": false,
         "default": true
     }

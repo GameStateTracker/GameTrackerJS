@@ -1,29 +1,29 @@
 {
     "incomingPrefix": {
-        "__type__": "String",
+        "@type": "String",
         "optional": false,
         "default": ""
     },
     "incomingPostfix": {
-        "__type__": "String",
+        "@type": "String",
         "optional": false,
         "default": ":in"
     },
     "outgoingPrefix": {
-        "__type__": "String",
+        "@type": "String",
         "optional": false,
         "default": ""
     },
     "outgoingPostfix": {
-        "__type__": "String",
+        "@type": "String",
         "optional": false,
         "default": ":out"
     },
     "variants": {
-        "__type__": "List",
+        "@type": "List",
         "optional": false,
         "children": {
-            "type": "String",
+            "@type": "String",
             "optional": true
         }
     }

@@ -1,12 +1,12 @@
 {
     "x": {
-        "__type__": "Number",
+        "@type": "Number",
         "optional": false,
         "default": -1,
         "decimalPlaces": 0
     },
     "y": {
-        "__type__": "Number",
+        "@type": "Number",
         "optional": false,
         "default": -1,
         "decimalPlaces": 0
