@@ -60,14 +60,14 @@ export default class WorldListStateButton extends BaseClass {
         if (oldValue != newValue) {
             switch (name) {
                 case "ref": {
-                    const state = WorldStateManagerRegistry.get(this.category).get(this.ref);
+                    const state = WorldStateManagerRegistry.get(this.type).get(this.ref);
                     this.switchState(state);
                 } break;
             }
         }
     }
 
-    get category() {
+    get type() {
         return "";
     }
 

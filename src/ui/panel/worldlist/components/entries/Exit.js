@@ -276,8 +276,8 @@ export default class WorldListExit extends BaseClass {
         }
     }
 
-    get category() {
-        return "exit";
+    get type() {
+        return "Exit";
     }
 
 }

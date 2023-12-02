@@ -102,8 +102,8 @@ export default class LocationListLocation extends LocationListEntry {
         }
     }
 
-    get category() {
-        return "location";
+    get type() {
+        return "Location";
     }
 
 }

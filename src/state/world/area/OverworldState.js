@@ -78,7 +78,7 @@ export default class OverworldState extends DataState {
     /* list */
     generateList() {
         const ref = this.ref;
-        const list = this.props.list;
+        const list = this.props.lists["_"];
         const listHandler = new StateListHandler(ref, list);
         return listHandler;
     }

@@ -53,9 +53,9 @@ function getEntranceArea(value) {
         console.error(`exit "${value}" not found`);
         return null;
     }
-    const area = AreaStateManager.get(entrance.props.area);
+    const area = AreaStateManager.get(entrance.props.area?.name);
     if (area == null) {
-        console.error(`area "${entrance.props.area}" not found for exit "${value}"`);
+        console.error(`area "${entrance.props.area?.name}" not found for exit "${value}"`);
         return null;
     }
     return area;

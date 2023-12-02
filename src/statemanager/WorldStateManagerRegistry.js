@@ -42,40 +42,43 @@ class WorldStateManagerRegistry {
         return emptyState;
     }
 
-    get(category) {
-        if (typeof category != "string") {
-            throw new TypeError(`category parameter must be of type "string" but was "${typeof category}"`);
-        }
-        if (!category || category == "\u0000") {
+    get(type) {
+        if (!type || type === "\u0000") {
             return emptyStateManager;
         }
-        const stateManager = STATE_MANAGERS.get(category);
+        if (typeof type != "string") {
+            throw new TypeError("type parameter must be a string");
+        }
+        if (!VALID_NAME.test(type)) {
+            throw new Error("type parameter can only include the following characters [a-zA-Z0-9_./-]");
+        }
+        const stateManager = STATE_MANAGERS.get(type);
         if (stateManager != null) {
             return stateManager;
         } else {
-            console.warn(`StateManager for category "${category}" not initialized before usage`);
+            console.warn(`StateManager for type "${type}" not initialized before usage`);
             return emptyStateManager;
         }
     }
 
-    has(category) {
-        return STATE_MANAGERS.has(category);
+    has(type) {
+        return STATE_MANAGERS.has(type);
     }
 
-    register(category, manager) {
-        if (typeof category != "string") {
-            throw new TypeError(`category parameter must be of type "string" but was "${typeof category}"`);
+    register(type, manager) {
+        if (typeof type != "string") {
+            throw new TypeError("type parameter must be a string");
         }
-        if (!category) {
-            throw new Error("category parameter must not be empty");
+        if (!type) {
+            throw new Error("type parameter must not be empty");
         }
-        if (!VALID_NAME.test(category)) {
-            throw new Error("category parameter can only include the following characters [a-zA-Z0-9_./-]");
+        if (!VALID_NAME.test(type)) {
+            throw new Error("type parameter can only include the following characters [a-zA-Z0-9_./-]");
         }
         if (!(manager instanceof WorldStateManager)) {
-            throw new TypeError(`manager parameter must be an instance of WorldStateManager`);
+            throw new TypeError("manager parameter must be an instance of WorldStateManager");
         }
-        STATE_MANAGERS.set(category, manager);
+        STATE_MANAGERS.set(type, manager);
     }
 
 }

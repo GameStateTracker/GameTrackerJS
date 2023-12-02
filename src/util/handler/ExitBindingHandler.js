@@ -34,8 +34,8 @@ SavestateHandler.addEventListener("afterload", () => {
         DONE_ENTRANCES.add(ref);
         MISSING_ENTRANCES.delete(ref);
         // reverse exits
-        if (!DONE_ENTRANCES.has(exit.props.target)) {
-            MISSING_ENTRANCES.add(exit.props.target);
+        if (!DONE_ENTRANCES.has(exit.props.target?.name)) {
+            MISSING_ENTRANCES.add(exit.props.target?.name);
         }
     }
 

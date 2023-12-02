@@ -372,8 +372,8 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
         return `exit[${super.textRef}]`;
     }
 
-    get category() {
-        return "exit";
+    get type() {
+        return "Exit";
     }
 
 }

@@ -149,16 +149,16 @@ export default class StateListHandler extends EventTarget {
     #refreshAccess = debounce(() => {
         const access = getDefaultAccess();
         for (const recordState of this.#filteredEntityList) {
-            if (recordState.category == "area" || recordState.category == "exit") {
+            if (recordState.type == "Area" || recordState.type == "Exit") {
                 if (recordState.accessPenetration) {
                     mergeMapsInto(access.locations, recordState.access.locations);
                 }
-                if (recordState.category == "exit" && recordState.entry.reachable && recordState.entry.area == null) {
+                if (recordState.type == "Exit" && recordState.entry.reachable && recordState.entry.area == null) {
                     access.entrances += 1;
                 }
-            } else if (recordState.category == "collection") {
+            } else if (recordState.type == "Collection") {
                 mergeMapsInto(access.locations, recordState.access.locations);
-            } else if (recordState.category == "location") {
+            } else if (recordState.type == "Location") {
                 const ref = recordState.entry.ref;
                 if (!access.locations.has(ref)) {
                     access.locations.set(ref, recordState.access)
@@ -189,13 +189,13 @@ export default class StateListHandler extends EventTarget {
 
     setAllEntries(value = true) {
         for (const recordState of this.#filteredEntityList) {
-            if (recordState.category == "area" || recordState.category == "exit") {
+            if (recordState.type == "Area" || recordState.type == "Exit") {
                 if (recordState.accessPenetration) {
                     recordState.entry.setAllEntries(value);
                 }
-            } else if (recordState.category == "collection") {
+            } else if (recordState.type == "Collection") {
                 recordState.entry.setAllEntries(value);
-            } else if (recordState.category == "location") {
+            } else if (recordState.type == "Location") {
                 recordState.entry.value = value;
             }
         }

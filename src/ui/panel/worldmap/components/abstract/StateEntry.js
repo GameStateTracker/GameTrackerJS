@@ -84,7 +84,7 @@ export default class WorldMapStateEntry extends BaseClass {
         }
         /* --- */
         if (this.ref) {
-            const state = WorldStateManagerRegistry.get(this.category).get(this.ref);
+            const state = WorldStateManagerRegistry.get(this.type).get(this.ref);
             this.switchState(state);
             /* text */
             const textEl = this.shadowRoot.getElementById("text");
@@ -143,7 +143,7 @@ export default class WorldMapStateEntry extends BaseClass {
         if (oldValue != newValue) {
             switch (name) {
                 case "ref": {
-                    const state = WorldStateManagerRegistry.get(this.category).get(this.ref);
+                    const state = WorldStateManagerRegistry.get(this.type).get(this.ref);
                     this.switchState(state);
                     /* text */
                     const textEl = this.shadowRoot.getElementById("text");
@@ -159,7 +159,7 @@ export default class WorldMapStateEntry extends BaseClass {
         return this.ref;
     }
 
-    get category() {
+    get type() {
         return "\u0000";
     }
 

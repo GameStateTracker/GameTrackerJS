@@ -39,8 +39,8 @@ export default class WorldListCollection extends WorldListSubList {
         }
     }
 
-    get category() {
-        return "collection";
+    get type() {
+        return "Collection";
     }
 
 }

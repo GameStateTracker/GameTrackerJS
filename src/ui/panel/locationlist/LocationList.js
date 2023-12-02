@@ -18,7 +18,7 @@ import "../../../statemanager/world/location/LocationStateManager.js";
 import TPL from "./LocationList.js.html" assert {type: "html"};
 import STYLE from "./LocationList.js.css" assert {type: "css"};
 
-const LOCATIONS = WorldResource.get("location");
+const LOCATIONS = WorldResource.get("locations");
 
 class ListEntryElementManager extends ElementManager {
 

@@ -106,9 +106,9 @@ const STYLE = new GlobalStyle(`
 class ListEntryElementManager extends ElementManager {
 
     composer(key, params) {
-        const uiReg = UIRegistry.get(`worldlist-${params.category}`);
+        const uiReg = UIRegistry.get(`worldlist-${params.type.toLowerCase()}`);
         if (uiReg != null) {
-            return uiReg.create(params.type, key);
+            return uiReg.create(params.subtype, key);
         }
     }
 
@@ -119,6 +119,8 @@ const BaseClass = mix(
 ).with(
     StateDataEventManagerMixin
 );
+
+// TODO add area list name buttons (see TOoTR worldlist TypeButton)
 
 export default class WorldList extends BaseClass {
 
@@ -224,12 +226,7 @@ export default class WorldList extends BaseClass {
             switch (name) {
                 case "ref": {
                     const state = AreaStateManager.get(this.ref);
-                    if (state?.hasMap) {
-                        this.switchState(state);
-                    } else {
-                        const defaultState = AreaStateManager.get(WorldListState.config.defaultArea);
-                        this.switchState(defaultState);
-                    }
+                    this.switchState(state);
                     /* back button */
                     const backEl = this.shadowRoot.getElementById("back");
                     if (backEl != null) {
@@ -255,8 +252,8 @@ export default class WorldList extends BaseClass {
                     const loc = record.entry;
                     elManagerData.push({
                         key: loc.ref,
-                        category: record.category,
-                        type: loc.props.type
+                        type: record.type,
+                        subtype: loc.props.type
                     });
                 }
             }

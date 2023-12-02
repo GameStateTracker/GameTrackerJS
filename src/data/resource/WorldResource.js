@@ -15,10 +15,10 @@ export function getRegion(value) {
     return `${REGION_PREFIX}${region}${REGION_POSTFIX}`;
 }
 
-const GATEWAYS_PREFIX_IN = CONFIG.gateways?.incoming?.prefix ?? "";
-const GATEWAYS_POSTFIX_IN = CONFIG.gateways?.incoming?.postfix ?? "";
-const GATEWAYS_PREFIX_OUT = CONFIG.gateways?.outgoing?.prefix ?? "";
-const GATEWAYS_POSTFIX_OUT = CONFIG.gateways?.outgoing?.postfix ?? "";
+const GATEWAYS_PREFIX_IN = CONFIG.gateways?.incomingPrefix ?? "";
+const GATEWAYS_POSTFIX_IN = CONFIG.gateways?.incomingPostfix ?? "";
+const GATEWAYS_PREFIX_OUT = CONFIG.gateways?.outgoingPrefix ?? "";
+const GATEWAYS_POSTFIX_OUT = CONFIG.gateways?.outgoingPostfix ?? "";
 
 export function getGatewayIn(value) {
     const region = value ?? REGION_ROOT;

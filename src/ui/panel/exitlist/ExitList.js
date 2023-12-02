@@ -115,7 +115,7 @@ label {
 }
 `);
 
-const EXITS = WorldResource.get("exit");
+const EXITS = WorldResource.get("exits");
 
 export default class ExitList extends Panel {
 
@@ -127,7 +127,7 @@ export default class ExitList extends Panel {
         STYLE.apply(this.shadowRoot);
         /* --- */
         for (const name in EXITS) {
-            const state = WorldStateManagerRegistry.get("exit").get(name);
+            const state = WorldStateManagerRegistry.get("Exit").get(name);
             this.addEntrance(state);
         }
         /* --- */

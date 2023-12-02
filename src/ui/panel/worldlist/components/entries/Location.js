@@ -127,8 +127,8 @@ export default class WorldListLocation extends BaseClass {
         }
     }
 
-    get category() {
-        return "location";
+    get type() {
+        return "Location";
     }
 
 }

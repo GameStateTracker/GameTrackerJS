@@ -163,8 +163,8 @@ export default class WorldListArea extends BaseClass {
         }
     }
 
-    get category() {
-        return "area";
+    get type() {
+        return "Area";
     }
 
 }

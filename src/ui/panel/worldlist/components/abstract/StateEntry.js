@@ -34,7 +34,7 @@ export default class WorldListStateEntry extends BaseClass {
         }
         /* --- */
         if (this.ref) {
-            const state = WorldStateManagerRegistry.get(this.category).get(this.ref);
+            const state = WorldStateManagerRegistry.get(this.type).get(this.ref);
             this.switchState(state);
             /* text */
             const textEl = this.shadowRoot.getElementById("text");
@@ -92,7 +92,7 @@ export default class WorldListStateEntry extends BaseClass {
         if (oldValue != newValue) {
             switch (name) {
                 case "ref": {
-                    const state = WorldStateManagerRegistry.get(this.category).get(this.ref);
+                    const state = WorldStateManagerRegistry.get(this.type).get(this.ref);
                     this.switchState(state);
                     /* text */
                     const textEl = this.shadowRoot.getElementById("text");
@@ -106,7 +106,7 @@ export default class WorldListStateEntry extends BaseClass {
 
     get textRef() {
         const ref = this.ref;
-        const cat = this.category;
+        const cat = this.type.toLowerCase();
         return cat ? `${cat}[${ref}]` : ref;
     }
 

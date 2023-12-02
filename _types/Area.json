@@ -23,9 +23,13 @@
         "@type": "AssociativeList",
         "optional": false,
         "children": {
-            "@type": "Logic",
+            "@type": "AssociativeList",
             "optional": true,
-            "default": true
+            "children": {
+                "@type": "Logic",
+                "optional": true,
+                "default": true
+            }
         }
     },
     "listContents": {

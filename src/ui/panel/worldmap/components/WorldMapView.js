@@ -68,17 +68,17 @@ const STYLE = new GlobalStyle(`
 class MapMarkerElementManager extends ElementManager {
 
     composer(key, params) {
-        if (params.category === "connection") {
+        if (params.type === "connection") {
             return document.createElement("gt-connection");
         }
-        const uiReg = UIRegistry.get(`worldmap-${params.category}`);
+        const uiReg = UIRegistry.get(`worldmap-${params.type.toLowerCase()}`);
         if (uiReg != null) {
-            return uiReg.create(params.type, key);
+            return uiReg.create(params.subtype, key);
         }
     }
 
     mutator(el, key, params) {
-        if (params.category === "connection") {
+        if (params.type === "connection") {
             el.innerHTML = "";
             for (const position of params.coordinates) {
                 const {x, y} = position ?? {};
@@ -210,8 +210,8 @@ export default class WorldMapView extends BaseClass {
         const mapEl = this.shadowRoot.getElementById("map");
         if (mapEl != null) {
             const mapData = state.props.map;
-            mapEl.style.backgroundColor = mapData.color;
-            mapEl.style.backgroundImage = `url("${mapData.background}")`;
+            mapEl.style.backgroundColor = mapData.backgroundColor;
+            mapEl.style.backgroundImage = `url("${mapData.backgroundImage}")`;
             mapEl.style.width = `${mapData.width}px`;
             mapEl.style.height = `${mapData.height}px`;
             /* value */
@@ -380,8 +380,8 @@ export default class WorldMapView extends BaseClass {
                         const loc = record.entry;
                         elManagerData.push({
                             key: loc.ref,
-                            category: record.category,
-                            type: loc.props.type,
+                            type: record.type,
+                            subtype: loc.props.type,
                             x: record.x,
                             y: record.y,
                             areaWidth: state.props.map.width,
@@ -397,7 +397,7 @@ export default class WorldMapView extends BaseClass {
                         elManagerData.push({
                             key: `connection___${connection.label}`,
                             label: connection.label,
-                            category: "connection",
+                            type: "connection",
                             coordinates: [
                                 connection.posA,
                                 connection.posB

@@ -22,9 +22,9 @@ export default class ListRecordState extends BaseClass {
 
     constructor(ref, props = {}) {
         super(ref, props);
-        this.#entry = WorldStateManagerRegistry.get(props.category)?.get(props.id);
+        this.#entry = WorldStateManagerRegistry.get(props.ref?.type)?.get(props.ref?.name);
         if (this.#entry == null) {
-            throw new Error(`list record could not resolve "${props.id}" from "${props.category}"`);
+            throw new Error(`list record could not resolve "${props.ref?.name}" from "${props.ref?.type}"`);
         }
 
         /* EVENTS */
@@ -59,15 +59,15 @@ export default class ListRecordState extends BaseClass {
     }
 
     get x() {
-        return this.props.pos?.x
+        return this.props.pos?.x;
     }
 
     get y() {
-        return this.props.pos?.y
+        return this.props.pos?.y;
     }
 
-    get category() {
-        return this.props.category
+    get type() {
+        return this.props.ref?.type ?? "";
     }
 
     get entry() {
@@ -79,7 +79,7 @@ export default class ListRecordState extends BaseClass {
     }
 
     get access() {
-        if (this.props.category == "area" || this.props.category == "exit") {
+        if (this.props.type == "Area" || this.props.type == "Exit") {
             if (this.accessPenetration) {
                 return this.#entry.access;
             }

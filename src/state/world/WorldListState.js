@@ -2,7 +2,7 @@ import WorldResource from "../../data/resource/WorldResource.js";
 import Savestate from "../../savestate/Savestate.js";
 
 const CONFIG = WorldResource.get("config");
-const AREA_PROPS = WorldResource.get("area");
+const AREA_PROPS = WorldResource.get("areas");
 
 class WorldListState extends EventTarget {
 
