@@ -44,7 +44,7 @@ export default class EntranceSelectList extends CustomElementDelegating {
                     this.style.height = `${rect.height}px`;
                 }
                 for (const el of all) {
-                    if (el.value === "" || el.value === this.value || getInnerText(el).match(regEx)) {
+                    if (el.value === "" || el.value === this.value || regEx.test(getInnerText(el))) {
                         el.style.display = "";
                     } else {
                         el.style.display = "none";

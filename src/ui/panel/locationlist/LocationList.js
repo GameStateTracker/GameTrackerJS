@@ -51,7 +51,7 @@ export default class LocationList extends Panel {
                 const regEx = new SearchAnd(event.value);
                 for (const el of all) {
                     const value = el.dataset.filtervalue ?? getInnerText(el);
-                    if (value.match(regEx)) {
+                    if (regEx.test(value)) {
                         el.style.display = "";
                     } else {
                         el.style.display = "none";

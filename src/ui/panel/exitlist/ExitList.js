@@ -189,8 +189,8 @@ export default class ExitList extends Panel {
                             const regEx = new SearchAnd(search.value);
                             const transAccess = Language.translate(`exit[${el.getAttribute("access")}]`);
                             const transValue = Language.translate(`entrance[${el.getAttribute("value")}]`);
-                            const transAccessRes = mode != "value" && transAccess.match(regEx);
-                            const transValueRes = mode != "access" && transValue.match(regEx);
+                            const transAccessRes = mode != "value" && regEx.test(transAccess);
+                            const transValueRes = mode != "access" && regEx.test(transValue);
                             el.classList.toggle("markname", transAccessRes);
                             el.classList.toggle("markvalue", transValueRes);
                             if (transAccessRes || transValueRes) {
