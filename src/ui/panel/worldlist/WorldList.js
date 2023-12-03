@@ -258,7 +258,6 @@ export default class WorldList extends BaseClass {
                 }
             }
         }
-        // this.classList.toggle("empty", !hasElements);
         this.#elementManager.manage(elManagerData);
     }
 

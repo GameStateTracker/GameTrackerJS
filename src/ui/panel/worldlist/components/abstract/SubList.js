@@ -60,9 +60,9 @@ const sublistCollapsibleObserver = new SettingsObserver("sublist_collapsible");
 class ListEntryElementManager extends ElementManager {
 
     composer(key, params) {
-        const uiReg = UIRegistry.get(`worldlist-${params.category}`);
+        const uiReg = UIRegistry.get(`worldlist-${params.type.toLowerCase()}`);
         if (uiReg != null) {
-            return uiReg.create(params.type, key);
+            return uiReg.create(params.subtype, key);
         }
     }
 
@@ -170,8 +170,8 @@ export default class WorldListSubList extends BaseClass {
                     if (!loc.props.visibleRootOnly) {
                         elManagerData.push({
                             key: loc.ref,
-                            category: record.category,
-                            type: loc.props.type
+                            type: record.type,
+                            subtype: loc.props.type
                         });
                     }
                 }
