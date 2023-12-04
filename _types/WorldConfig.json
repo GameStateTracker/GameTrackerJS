@@ -4,11 +4,6 @@
         "optional": false,
         "default": ""
     },
-    "defaultAreaList": {
-        "@type": "String",
-        "optional": false,
-        "default": ""
-    },
     "areaContentHints": {
         "@type": "AssociativeList",
         "optional": false,
