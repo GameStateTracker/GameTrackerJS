@@ -6,9 +6,9 @@ const AREA_PROPS = WorldResource.get("areas");
 
 class WorldListState extends EventTarget {
 
-    #area = CONFIG.defaultArea;
+    #area = this.defaultArea;
 
-    #props = AREA_PROPS[CONFIG.defaultArea];
+    #props = AREA_PROPS[this.#area];
 
     constructor() {
         super();
@@ -24,7 +24,7 @@ class WorldListState extends EventTarget {
     }
 
     get defaultArea() {
-        return CONFIG.defaultArea;
+        return CONFIG.defaultArea?.name ?? "";
     }
 
     get area() {
@@ -33,7 +33,7 @@ class WorldListState extends EventTarget {
 
     set area(value) {
         if (typeof value != "string" || !value) {
-            value = CONFIG.defaultArea;
+            value = this.defaultArea;
         }
         if (this.#area != value) {
             this.#area = value;
@@ -46,7 +46,7 @@ class WorldListState extends EventTarget {
     }
 
     get isDefault() {
-        return this.#area == CONFIG.defaultArea;
+        return this.#area == this.defaultArea;
     }
 
     get hasMap() {
@@ -55,11 +55,11 @@ class WorldListState extends EventTarget {
 
     reset() {
         if (!this.isDefault) {
-            this.#area = CONFIG.defaultArea;
-            this.#props = AREA_PROPS[CONFIG.defaultArea];
+            this.#area = this.defaultArea;
+            this.#props = AREA_PROPS[this.defaultArea];
             // external
             const ev = new Event("area");
-            ev.value = CONFIG.defaultArea;
+            ev.value = this.#area;
             this.dispatchEvent(ev);
         }
     }

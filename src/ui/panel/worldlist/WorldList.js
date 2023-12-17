@@ -202,7 +202,7 @@ export default class WorldList extends BaseClass {
     }
 
     get ref() {
-        return this.getAttribute("ref") || WorldListState.config.defaultArea;
+        return this.getAttribute("ref") || WorldListState.defaultArea;
     }
 
     set ref(val) {

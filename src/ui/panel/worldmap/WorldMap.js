@@ -234,7 +234,7 @@ export default class WorldMap extends BaseClass {
     }
 
     get ref() {
-        return this.getAttribute("ref") ?? WorldListState.config.defaultArea;
+        return this.getAttribute("ref") ?? WorldListState.defaultArea;
     }
 
     set ref(value) {
@@ -262,7 +262,7 @@ export default class WorldMap extends BaseClass {
                     if (state?.hasMap) {
                         this.switchState(state);
                     } else {
-                        const defaultState = AreaStateManager.get(WorldListState.config.defaultArea);
+                        const defaultState = AreaStateManager.get(WorldListState.defaultArea);
                         this.switchState(defaultState);
                     }
                 } break;

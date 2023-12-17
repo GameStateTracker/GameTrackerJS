@@ -1,8 +1,10 @@
 {
     "defaultArea": {
-        "@type": "String",
+        "@type": "Relation",
         "optional": false,
-        "default": ""
+        "types": [
+            "Area"
+        ]
     },
     "areaContentHints": {
         "@type": "AssociativeList",
