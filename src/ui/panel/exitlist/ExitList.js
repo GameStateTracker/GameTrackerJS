@@ -16,7 +16,7 @@ import "./components/ExitChoice.js";
 const TPL = new Template(`
 <div id="searchbar">
     <div class="search-group">
-        <emc-input-search id="search"></emc-input-search>
+        <emc-searchinput id="search"></emc-searchinput>
         <emc-searchselect id="search-mode">
             <emc-option value="both">
                 <emc-i18n-label i18n-key="search_mode_both" i18n-value="Exit and bound entrance"></emc-i18n-label>
