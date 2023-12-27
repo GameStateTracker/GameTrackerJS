@@ -1,6 +1,6 @@
 // frameworks
 import SettingsBuilder from "/emcJS/util/SettingsBuilder.js";
-import BusyIndicator from "/emcJS/ui/BusyIndicator.js";
+import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 
 import AbstractSettingsWindow from "./AbstractSettingsWindow.js";
 import SettingsResource from "../../../data/resource/SettingsResource.js";
@@ -18,6 +18,8 @@ applySettingsChoices(SettingsStorage.getAll());
 
 export default class AppSettingsWindow extends AbstractSettingsWindow {
 
+    #busyIndicatorManager = new BusyIndicatorManager("main");
+
     constructor() {
         super("App settings") ;
         /* --- */
@@ -25,11 +27,11 @@ export default class AppSettingsWindow extends AbstractSettingsWindow {
         SettingsBuilder.build(this, options);
         /* --- */
         this.addEventListener("submit", async (event) => {
-            await BusyIndicator.busy();
+            await this.#busyIndicatorManager.busy();
             const settings = event.data;
             SettingsStorage.setAll(settings);
             applySettingsChoices(settings);
-            await BusyIndicator.unbusy();
+            await this.#busyIndicatorManager.unbusy();
         });
     }
 

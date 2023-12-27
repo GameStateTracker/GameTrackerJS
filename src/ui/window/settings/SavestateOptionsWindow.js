@@ -1,7 +1,7 @@
 // frameworks
 import ObservableDefaultingStorage from "/emcJS/data/storage/observable/ObservableDefaultingStorage.js";
 import SettingsBuilder from "/emcJS/util/SettingsBuilder.js";
-import BusyIndicator from "/emcJS/ui/BusyIndicator.js";
+import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 
 import AbstractSettingsWindow from "./AbstractSettingsWindow.js";
 import OptionsResource from "../../../data/resource/OptionsResource.js";
@@ -10,6 +10,8 @@ import OptionsStorage from "../../../savestate/storage/OptionsStorage.js";
 import StartItemsStorage from "../../../savestate/storage/StartItemsStorage.js";
 
 export default class SavestateOptionsWindow extends AbstractSettingsWindow {
+
+    #busyIndicatorManager = new BusyIndicatorManager("main");
 
     #itemStorage;
 
@@ -25,7 +27,7 @@ export default class SavestateOptionsWindow extends AbstractSettingsWindow {
         }
         /* --- */
         this.addEventListener("submit", async (event) => {
-            await BusyIndicator.busy();
+            await this.#busyIndicatorManager.busy();
             /* --- */
             const settings = event.data;
             OptionsStorage.setAll(settings);
@@ -33,7 +35,7 @@ export default class SavestateOptionsWindow extends AbstractSettingsWindow {
             const items = this.#itemStorage.getAll();
             StartItemsStorage.setAll(items);
             /* --- */
-            await BusyIndicator.unbusy();
+            await this.#busyIndicatorManager.unbusy();
         });
     }
 

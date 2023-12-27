@@ -1,7 +1,7 @@
 // frameworks
 import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
 import LocalStorage from "/emcJS/data/storage/global/LocalStorage.js";
-import BusyIndicator from "/emcJS/ui/BusyIndicator.js";
+import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 
 import Savestate from "./Savestate.js";
 import SavestateConverter from "./SavestateConverter.js";
@@ -27,6 +27,8 @@ function updateTitle() {
 }
 
 class SavestateHandler extends EventTarget {
+
+    #busyIndicatorManager = new BusyIndicatorManager("main");
 
     constructor() {
         super();
@@ -134,7 +136,7 @@ class SavestateHandler extends EventTarget {
     }
 
     async load(name) {
-        await BusyIndicator.busy();
+        await this.#busyIndicatorManager.busy();
         if (await STORAGE.has(name)) {
             this.dispatchEvent(new Event("beforeload"));
             this.dispatchEvent(new Event("reset"));
@@ -150,7 +152,7 @@ class SavestateHandler extends EventTarget {
             this.dispatchEvent(ev);
             this.dispatchEvent(new Event("afterload"));
         }
-        await BusyIndicator.unbusy();
+        await this.#busyIndicatorManager.unbusy();
     }
 
     getName() {
@@ -167,7 +169,7 @@ class SavestateHandler extends EventTarget {
      */
     async reset(data = {}) {
         const newState = SavestateConverter.createEmptyState(data);
-        await BusyIndicator.busy();
+        await this.#busyIndicatorManager.busy();
         this.dispatchEvent(new Event("beforeload"));
         this.dispatchEvent(new Event("reset"));
         // write state data
@@ -179,7 +181,7 @@ class SavestateHandler extends EventTarget {
         ev.state = newState;
         this.dispatchEvent(ev);
         this.dispatchEvent(new Event("afterload"));
-        await BusyIndicator.unbusy();
+        await this.#busyIndicatorManager.unbusy();
     }
 
     /**
@@ -187,7 +189,7 @@ class SavestateHandler extends EventTarget {
      * @param {Object} stateData an Object containing data for savestate, options and filter
      */
     async overwrite(data = {}) {
-        await BusyIndicator.busy();
+        await this.#busyIndicatorManager.busy();
         this.dispatchEvent(new Event("beforeload"));
         // write state data
         Savestate.overwrite(data);
@@ -199,7 +201,7 @@ class SavestateHandler extends EventTarget {
         ev.state = state;
         this.dispatchEvent(ev);
         this.dispatchEvent(new Event("afterload"));
-        await BusyIndicator.unbusy();
+        await this.#busyIndicatorManager.unbusy();
     }
 
     /* DATA */
