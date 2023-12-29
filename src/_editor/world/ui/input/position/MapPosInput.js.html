@@ -1,0 +1,20 @@
+<div class="wrapper">
+    <div class="map-wrapper">
+        <slot id="map" class="none">
+        </slot>
+        <div id="no-map">
+            no active/valid map configuration
+        </div>
+    </div>
+</div>
+<div class="position-input-wrapper">
+    <label class="position-label">
+        X
+        <input type="number" id="pos-x" name="x" class="position-input" min="0" max="0" step="1">
+    </label>
+    <label class="position-label">
+        Y
+        <input type="number" id="pos-y" name="y" class="position-input" min="0" max="0" step="1">
+    </label>
+    <button id="remove">remove</button>
+</div>

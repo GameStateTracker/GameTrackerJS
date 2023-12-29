@@ -1,0 +1,14 @@
+#content {
+    justify-content: center;
+}
+#input {
+    display: none;
+    width: 100%;
+    font-size: inherit;
+}
+:host([editable]:not([editable="false"])) #value {
+    display: none;
+}
+:host([editable]:not([editable="false"])) #input {
+    display: flex;
+}

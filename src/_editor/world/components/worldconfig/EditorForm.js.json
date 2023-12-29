@@ -1,0 +1,70 @@
+[
+    {
+        "type": "RelationSelect",
+        "name": "defaultArea",
+        "label": "Default Area",
+        "types": [
+            "Area"
+        ],
+        "placeholder": "Select area...",
+        "sorted": true
+    },
+    {
+        "type": "AreaHintList",
+        "id": "area-hints",
+        "name": "areaContentHints",
+        "label": "Area Content Hint Counting"
+    },
+    {
+        "type": "Fieldset",
+        "label": "Region",
+        "children": [
+            {
+                "type": "StringInput",
+                "name": "region.root",
+                "label": "Root"
+            },
+            {
+                "type": "StringInput",
+                "name": "region.prefix",
+                "label": "Prefix"
+            },
+            {
+                "type": "StringInput",
+                "name": "region.postfix",
+                "label": "Postfix"
+            }
+        ]
+    },
+    {
+        "type": "Fieldset",
+        "label": "Gateways",
+        "children": [
+            {
+                "type": "StringInput",
+                "name": "gateways.incomingPrefix",
+                "label": "Incoming Prefix"
+            },
+            {
+                "type": "StringInput",
+                "name": "gateways.incomingPostfix",
+                "label": "Incoming Postfix"
+            },
+            {
+                "type": "StringInput",
+                "name": "gateways.outgoingPrefix",
+                "label": "Outgoing Prefix"
+            },
+            {
+                "type": "StringInput",
+                "name": "gateways.outgoingPostfix",
+                "label": "Outgoing Postfix"
+            },
+            {
+                "type": "ListInput",
+                "name": "gateways.variants",
+                "label": "Variants"
+            }
+        ]
+    }
+]

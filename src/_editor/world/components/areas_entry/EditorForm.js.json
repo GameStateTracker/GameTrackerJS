@@ -1,0 +1,143 @@
+[
+    {
+        "type": "SearchSelect",
+        "name": "type",
+        "label": "Type",
+        "optiongroup": "worldEditor_areaTypes"
+    },
+    {
+        "type": "StringInput",
+        "name": "category",
+        "label": "Category"
+    },
+    {
+        "type": "BoolOrLogicInput",
+        "id": "visible-input",
+        "name": "visible",
+        "label": "Visible"
+    },
+    {
+        "type": "SwitchInput",
+        "name": "visibleRootOnly",
+        "label": "Visible on root only (dont show if in sub tree)"
+    },
+    {
+        "type": "FilterInput",
+        "id": "filter-input",
+        "name": "filter",
+        "label": "Filter (hide if an active filter value resolves to false)",
+        "value": {}
+    },
+    {
+        "type": "SwitchInput",
+        "name": "listContents",
+        "label": "Show the content as group (render as sub tree)"
+    },
+    {
+        "type": "SwitchInput",
+        "name": "accessPenetration",
+        "label": "Add this areas access count to its parent access count"
+    },
+    {
+        "type": "ImageSelect",
+        "name": "icon",
+        "label": "Icon",
+        "optiongroup": "worldEditor_areaIcons"
+    },
+    {
+        "type": "Fieldset",
+        "label": "Map settings",
+        "children": [
+            {
+                "type": "SwitchInput",
+                "name": "map.active",
+                "label": "Map active"
+            },
+            {
+                "type": "ColorInput",
+                "name": "map.backgroundColor",
+                "label": "Background Color",
+                "visible": {
+                    "type": "value",
+                    "content": "map.active"
+                }
+            },
+            {
+                "type": "ImageSelect",
+                "id": "mapselect",
+                "name": "map.backgroundImage",
+                "label": "Background Image",
+                "optiongroup": "worldEditor_areaMapImages",
+                "visible": {
+                    "type": "value",
+                    "content": "map.active"
+                }
+            },
+            {
+                "type": "NumberInput",
+                "id": "mapwidth",
+                "name": "map.width",
+                "label": "Width",
+                "readonly": true,
+                "visible": {
+                    "type": "value",
+                    "content": "map.active"
+                }
+            },
+            {
+                "type": "NumberInput",
+                "id": "mapheight",
+                "name": "map.height",
+                "label": "Height",
+                "readonly": true,
+                "visible": {
+                    "type": "value",
+                    "content": "map.active"
+                }
+            },
+            {
+                "type": "RangeInput",
+                "name": "map.zoom",
+                "label": "Default Zoom",
+                "min": 10,
+                "max": 200,
+                "scratched": true,
+                "visible": {
+                    "type": "value",
+                    "content": "map.active"
+                }
+            }
+        ]
+    },
+    {
+        "type": "ConnectionListInput",
+        "id": "connection-list",
+        "name": "connections",
+        "label": "Connections",
+        "value": [],
+        "visible": {
+            "type": "value",
+            "content": "map.active"
+        }
+    },
+    {
+        "type": "MultiMarkerListInput",
+        "id": "marker-list",
+        "name": "lists",
+        "label": "Lists",
+        "value": {}
+    },
+    {
+        "type": "OptionAmountListInput",
+        "name": "areaContentHints",
+        "label": "Area Content Hints (Icons)",
+        "optiongroup": "worldEditor_areaContentHints"
+    },
+    {
+        "type": "TokenSelect",
+        "name": "tags",
+        "label": "Tags",
+        "multiple": true,
+        "tokengroup": "worldEditor_tags"
+    }
+]

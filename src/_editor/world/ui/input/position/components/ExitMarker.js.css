@@ -1,0 +1,5 @@
+:host {
+    --size: 48px;
+    --rotation: 0deg;
+    --border-radius: 50% 50% 5% 5%;
+}

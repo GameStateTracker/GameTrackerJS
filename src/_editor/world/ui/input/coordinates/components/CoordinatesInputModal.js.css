@@ -1,0 +1,21 @@
+#modal {
+    max-width: calc(100vw - 20px);
+    margin-top: 10px;
+}
+#footer {
+    display: flex;
+}
+#content {
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-height: calc(100vh - 102px);
+    height: 100vh;
+}
+#submit,
+#cancel {
+    margin: 2px;
+}
+#input {
+    height: 100%;
+    width: 100%;
+}

@@ -1,0 +1,51 @@
+:host {
+    display: grid;
+    flex: 1;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 5px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    background-color: #111;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: 
+    "structure detail detail";
+    grid-column-gap: 5px;
+    grid-row-gap: 5px;
+}
+#structure-panel {
+    grid-area: structure;
+}
+#detail-panel {
+    grid-area: detail;
+}
+#detail-panel > :not(.active) {
+    display: none;
+}
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2em;
+    padding: 0px 10px;
+    margin: 5px;
+    appearance: none;
+    color: var(--button-text-color, #000000);
+    background-color: var(--button-back-color, #cccccc);
+    border: solid var(--form-border-width, 2px) var(--form-border-color, #000000);
+    border-radius: var(--form-border-radius, 6px);
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 1em;
+    cursor: pointer;
+}
+.button:hover {
+    color: var(--button-hover-text-color, #ffffff);
+    background-color: var(--button-hover-back-color, #000000);
+}
+.button:focus {
+    box-shadow: none;
+    outline: none;
+}

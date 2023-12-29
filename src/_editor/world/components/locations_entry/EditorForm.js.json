@@ -1,0 +1,46 @@
+[
+    {
+        "type": "SearchSelect",
+        "name": "type",
+        "label": "Type",
+        "value": "chest",
+        "optiongroup": "worldEditor_locationTypes"
+    },
+    {
+        "type": "StringInput",
+        "name": "logicAccess",
+        "label": "Access Name"
+    },
+    {
+        "type": "BoolOrLogicInput",
+        "id": "visible-input",
+        "name": "visible",
+        "label": "Visible",
+        "value": true
+    },
+    {
+        "type": "SwitchInput",
+        "name": "visibleRootOnly",
+        "label": "Visible on root only (dont show if in sub tree)"
+    },
+    {
+        "type": "FilterInput",
+        "id": "filter-input",
+        "name": "filter",
+        "label": "Filter (hide if an active filter value resolves to false)",
+        "value": {}
+    },
+    {
+        "type": "ImageSelect",
+        "name": "icon",
+        "label": "Icon",
+        "optiongroup": "worldEditor_locationIcons"
+    },
+    {
+        "type": "TokenSelect",
+        "name": "tags",
+        "label": "Tags",
+        "multiple": true,
+        "tokengroup": "worldEditor_tags"
+    }
+]

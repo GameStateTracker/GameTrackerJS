@@ -1,0 +1,74 @@
+[
+    {
+        "type": "Fieldset",
+        "label": "Map settings",
+        "children": [
+            {
+                "type": "SwitchInput",
+                "name": "map.active",
+                "label": "Map active"
+            },
+            {
+                "type": "ColorInput",
+                "name": "map.backgroundColor",
+                "label": "Background Color",
+                "visible": {
+                    "type": "value",
+                    "content": "map.active"
+                }
+            },
+            {
+                "type": "ImageSelect",
+                "id": "mapselect",
+                "name": "map.backgroundImage",
+                "label": "Background Image",
+                "optiongroup": "worldEditor_areaMapImages",
+                "visible": {
+                    "type": "value",
+                    "content": "map.active"
+                }
+            },
+            {
+                "type": "NumberInput",
+                "id": "mapwidth",
+                "name": "map.width",
+                "label": "Width",
+                "readonly": true,
+                "visible": {
+                    "type": "value",
+                    "content": "map.active"
+                }
+            },
+            {
+                "type": "NumberInput",
+                "id": "mapheight",
+                "name": "map.height",
+                "label": "Height",
+                "readonly": true,
+                "visible": {
+                    "type": "value",
+                    "content": "map.active"
+                }
+            },
+            {
+                "type": "RangeInput",
+                "name": "map.zoom",
+                "label": "Default Zoom",
+                "min": 10,
+                "max": 200,
+                "scratched": true,
+                "visible": {
+                    "type": "value",
+                    "content": "map.active"
+                }
+            }
+        ]
+    },
+    {
+        "type": "MarkerListInput",
+        "id": "marker-list",
+        "name": "list",
+        "label": "List",
+        "value": []
+    }
+]
