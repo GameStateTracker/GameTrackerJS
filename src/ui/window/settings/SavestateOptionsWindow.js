@@ -11,8 +11,6 @@ import StartItemsStorage from "../../../savestate/storage/StartItemsStorage.js";
 
 export default class SavestateOptionsWindow extends AbstractSettingsWindow {
 
-    #busyIndicatorManager = new BusyIndicatorManager("main");
-
     #itemStorage;
 
     constructor() {
@@ -27,7 +25,7 @@ export default class SavestateOptionsWindow extends AbstractSettingsWindow {
         }
         /* --- */
         this.addEventListener("submit", async (event) => {
-            await this.#busyIndicatorManager.busy();
+            await BusyIndicatorManager.busy();
             /* --- */
             const settings = event.data;
             OptionsStorage.setAll(settings);
@@ -35,7 +33,7 @@ export default class SavestateOptionsWindow extends AbstractSettingsWindow {
             const items = this.#itemStorage.getAll();
             StartItemsStorage.setAll(items);
             /* --- */
-            await this.#busyIndicatorManager.unbusy();
+            await BusyIndicatorManager.unbusy();
         });
     }
 

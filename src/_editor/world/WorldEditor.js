@@ -1,4 +1,5 @@
 import OptionGroupRegistry from "/emcJS/data/registry/form/OptionGroupRegistry.js";
+import TokenRegistry from "/emcJS/data/registry/form/TokenRegistry.js";
 import LogicOperatorRegistry from "/emcJS/data/registry/LogicOperatorRegistry.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import TypeValidator from "/emcJS/util/type/TypeValidator.js";
@@ -21,12 +22,11 @@ import "./util/ExtendedFormFieldsLoader.js";
 import "./ui/tree/StructureEditorTree.js";
 import TPL from "./WorldEditor.js.html" assert {type: "html"};
 import STYLE from "./WorldEditor.js.css" assert {type: "css"};
+import {
+    deepClone
+} from "/emcJS/util/helper/DeepClone.js";
 
 class WorldEditor extends CustomElement {
-
-    #busyIndicatorManagerMain = new BusyIndicatorManager("main");
-
-    #busyIndicatorManagerForm = new BusyIndicatorManager("form");
 
     #activeDetailEditor;
 
@@ -43,6 +43,8 @@ class WorldEditor extends CustomElement {
     #structureEditorTreeEl;
 
     #optionGroupRegistry = new OptionGroupRegistry("worldEditor_areaContentHints");
+
+    #tagsTokenRegistry = new TokenRegistry("worldEditor_tags");
 
     constructor() {
         super();
@@ -91,20 +93,37 @@ class WorldEditor extends CustomElement {
         LogicOperatorRegistry.setOperator("special", "$IS_DONE", {
             type: "value"
         });
-        /* --- */
-        const detailPanelEl = this.shadowRoot.getElementById("detail-panel");
-        this.#busyIndicatorManagerForm.setTarget(detailPanelEl);
     }
 
     async setWorldData(data) {
-        await this.#busyIndicatorManagerMain.busy();
+        await BusyIndicatorManager.busy();
         TypeValidator.validate("World", data, {throwErrors: true});
         DataManager.loadData(data);
         this.reloadDetailEditor();
         /* --- */
         const options = Object.keys(data.config.areaContentHints);
         this.#optionGroupRegistry.setAll(options);
-        await this.#busyIndicatorManagerMain.unbusy();
+        /* --- */
+        this.#tagsTokenRegistry.clear();
+        const extractedTags = new Set();
+        for (const entry of Object.values(data.locations)) {
+            for (const tag of entry.tags) {
+                extractedTags.add(tag);
+            }
+        }
+        for (const entry of Object.values(data.areas)) {
+            for (const tag of entry.tags) {
+                extractedTags.add(tag);
+            }
+        }
+        for (const entry of Object.values(data.exits)) {
+            for (const tag of entry.tags) {
+                extractedTags.add(tag);
+            }
+        }
+        this.#tagsTokenRegistry.setAll(extractedTags);
+        /* --- */
+        await BusyIndicatorManager.unbusy();
     }
 
     getWorldData() {
@@ -113,16 +132,8 @@ class WorldEditor extends CustomElement {
         return data;
     }
 
-    async reset() {
-        await this.#busyIndicatorManagerMain.busy();
-        DataManager.reset();
-        scope.reset();
-        this.switchDetailEditor();
-        await this.#busyIndicatorManagerMain.unbusy();
-    }
-
     async switchDetailEditor(detailEditorEl) {
-        await this.#busyIndicatorManagerForm.busy();
+        await BusyIndicatorManager.busy();
         if (this.#activeDetailEditor != null) {
             this.#activeDetailEditor.resetScroll();
             this.#activeDetailEditor.classList.remove("active");
@@ -135,77 +146,111 @@ class WorldEditor extends CustomElement {
             detailEditorEl.classList.add("active");
             this.#activeDetailEditor = detailEditorEl;
         }
-        await this.#busyIndicatorManagerForm.unbusy();
+        await BusyIndicatorManager.unbusy();
     }
 
     async reloadDetailEditor() {
-        await this.#busyIndicatorManagerForm.busy();
+        await BusyIndicatorManager.busy();
         if (this.#activeDetailEditor != null) {
             const data = DataManager.readEntity(scope.entityType, scope.entityName);
             this.#activeDetailEditor.setData(data);
         }
-        await this.#busyIndicatorManagerForm.unbusy();
+        await BusyIndicatorManager.unbusy();
     }
 
-    async setFilterConfig(data) {
-        await this.#busyIndicatorManagerMain.busy();
-        scope.filterConfig = data;
-        if (this.#activeDetailEditor != null) {
-            this.#activeDetailEditor.setFilterConfig(data);
+    async reset() {
+        await BusyIndicatorManager.busy();
+        // ---
+        DataManager.reset();
+        scope.reset();
+        // ---
+        LogicOperatorRegistry.clearGroup("settings");
+        LogicOperatorRegistry.clearGroup("options");
+        LogicOperatorRegistry.clearGroup("items");
+        LogicOperatorRegistry.clearGroup("filter");
+        // ---
+        this.#tagsTokenRegistry.clear();
+        // ---
+        this.switchDetailEditor();
+        // ---
+        await BusyIndicatorManager.unbusy();
+    }
+
+    async setSettings(data) {
+        await BusyIndicatorManager.busy();
+        // ---
+        for (const name in data) {
+            const entry = data[name];
+            if (Array.isArray(entry.values)) {
+                LogicOperatorRegistry.setOperator("settings", `setting[${name}]`, {
+                    type: "state",
+                    options: deepClone(entry.values),
+                    value: entry.default ?? entry.values[0]
+                });
+            } else {
+                LogicOperatorRegistry.setOperator("settings", `setting[${name}]`, {
+                    type: "value"
+                });
+            }
         }
-        // TODO add filter to LogicOperatorRegistry
-        await this.#busyIndicatorManagerMain.unbusy();
+        // ---
+        await BusyIndicatorManager.unbusy();
+    }
+
+    async setOptions(data) {
+        await BusyIndicatorManager.busy();
+        // ---
+        for (const name in data) {
+            const entry = data[name];
+            if (Array.isArray(entry.values)) {
+                LogicOperatorRegistry.setOperator("options", `option[${name}]`, {
+                    type: "state",
+                    options: deepClone(entry.values),
+                    value: entry.default ?? entry.values[0]
+                });
+            } else {
+                LogicOperatorRegistry.setOperator("options", `option[${name}]`, {
+                    type: "value"
+                });
+            }
+        }
+        // ---
+        await BusyIndicatorManager.unbusy();
     }
 
     async setItems(data) {
-        await this.#busyIndicatorManagerMain.busy();
-        LogicOperatorRegistry.clearGroup("items");
+        await BusyIndicatorManager.busy();
+        // ---
         for (const name in data) {
             LogicOperatorRegistry.setOperator("items", `item[${name}]`, {
                 type: "value"
             });
         }
-        await this.#busyIndicatorManagerMain.unbusy();
+        // ---
+        await BusyIndicatorManager.unbusy();
     }
 
-    async setOptions(data) {
-        await this.#busyIndicatorManagerMain.busy();
-        LogicOperatorRegistry.clearGroup("options");
+    async setFilterConfig(data) {
+        await BusyIndicatorManager.busy();
+        // ---
+        const filterConfig = {};
         for (const name in data) {
             const entry = data[name];
-            if (entry.values) {
-                LogicOperatorRegistry.setOperator("options", `option[${name}]`, {
-                    type: "state",
-                    options: entry.values,
-                    value: Object.keys(entry.values)[0]
-                });
-            } else {
-                LogicOperatorRegistry.setOperator("options", `option[${name}]`, {
-                    type: "value"
-                });
-            }
+            const values = entry.values;
+            filterConfig[name] = values;
+            // ---
+            LogicOperatorRegistry.setOperator("filter", `filter[${name}]`, {
+                type: "state",
+                options: deepClone(entry.values),
+                value: entry.default ?? entry.values[0]
+            });
         }
-        await this.#busyIndicatorManagerMain.unbusy();
-    }
-
-    async setSettings(data) {
-        await this.#busyIndicatorManagerMain.busy();
-        LogicOperatorRegistry.clearGroup("settings");
-        for (const name in data) {
-            const entry = data[name];
-            if (entry.values) {
-                LogicOperatorRegistry.setOperator("settings", `setting[${name}]`, {
-                    type: "state",
-                    options: entry.values,
-                    value: Object.keys(entry.values)[0]
-                });
-            } else {
-                LogicOperatorRegistry.setOperator("settings", `setting[${name}]`, {
-                    type: "value"
-                });
-            }
+        scope.filterConfig = filterConfig;
+        if (this.#activeDetailEditor != null) {
+            this.#activeDetailEditor.setFilterConfig(filterConfig);
         }
-        await this.#busyIndicatorManagerMain.unbusy();
+        // ---
+        await BusyIndicatorManager.unbusy();
     }
 
 }

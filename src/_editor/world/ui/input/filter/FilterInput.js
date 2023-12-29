@@ -1,4 +1,5 @@
 import CustomFormElementDelegating from "/emcJS/ui/element/CustomFormElementDelegating.js";
+import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {
     deepClone
 } from "/emcJS/util/helper/DeepClone.js";
@@ -94,7 +95,8 @@ export default class FilterInput extends CustomFormElementDelegating {
         }
     }
 
-    addOperatorGroup(...groupList) {
+    async addOperatorGroup(...groupList) {
+        await BusyIndicatorManager.busy();
         let changes = false;
         for (const group of groupList) {
             if (!(typeof group === "string") || group === "") {
@@ -112,9 +114,11 @@ export default class FilterInput extends CustomFormElementDelegating {
                 logicEl.addOperatorGroup(...groupList);
             }
         }
+        await BusyIndicatorManager.unbusy();
     }
 
-    removeOperatorGroup(...groupList) {
+    async removeOperatorGroup(...groupList) {
+        await BusyIndicatorManager.busy();
         let changes = false;
         for (const group of groupList) {
             if (!(typeof group === "string") || group === "") {
@@ -132,9 +136,11 @@ export default class FilterInput extends CustomFormElementDelegating {
                 logicEl.removeOperatorGroup(...groupList);
             }
         }
+        await BusyIndicatorManager.unbusy();
     }
 
-    loadFilterConfig(config) {
+    async loadFilterConfig(config) {
+        await BusyIndicatorManager.busy();
         this.#filterConfig = [];
         for (const category in config) {
             for (const key of config[category]) {
@@ -145,6 +151,7 @@ export default class FilterInput extends CustomFormElementDelegating {
             }
             this.#applyValue();
         }
+        await BusyIndicatorManager.unbusy();
     }
 
     set value(value) {

@@ -42,7 +42,7 @@
         "type": "ImageSelect",
         "name": "icon",
         "label": "Icon",
-        "optiongroup": "worldEditor_areaIcons"
+        "optiongroup": "worldEditor_icons"
     },
     {
         "type": "Fieldset",

@@ -51,7 +51,7 @@
         "type": "ImageSelect",
         "name": "icon",
         "label": "Icon",
-        "optiongroup": "worldEditor_exitIcons"
+        "optiongroup": "worldEditor_icons"
     },
     {
         "type": "ListSelect",

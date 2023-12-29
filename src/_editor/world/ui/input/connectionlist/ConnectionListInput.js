@@ -1,4 +1,5 @@
 import CustomFormElementDelegating from "/emcJS/ui/element/CustomFormElementDelegating.js";
+import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {
     isEqual
 } from "/emcJS/util/helper/Comparator.js";
@@ -228,7 +229,8 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
         this.#dataManager.setSource(data);
     }
 
-    #updateCoordinateCells = debounce(() => {
+    #updateCoordinateCells = debounce(async () => {
+        await BusyIndicatorManager.busy();
         const coordinatesColumCellsA = this.#gridEl.getAllCellsForColumn("posA");
         for (const coordinatesCell of coordinatesColumCellsA) {
             const rowData = coordinatesCell.rowData;
@@ -247,6 +249,7 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
             coordinatesCell.loadConnections(this.#value ?? []);
             coordinatesCell.loadEntries(this.#entries);
         }
+        await BusyIndicatorManager.unbusy();
     });
 
     loadMapData(mapData) {

@@ -18,8 +18,6 @@ applySettingsChoices(SettingsStorage.getAll());
 
 export default class AppSettingsWindow extends AbstractSettingsWindow {
 
-    #busyIndicatorManager = new BusyIndicatorManager("main");
-
     constructor() {
         super("App settings") ;
         /* --- */
@@ -27,11 +25,11 @@ export default class AppSettingsWindow extends AbstractSettingsWindow {
         SettingsBuilder.build(this, options);
         /* --- */
         this.addEventListener("submit", async (event) => {
-            await this.#busyIndicatorManager.busy();
+            await BusyIndicatorManager.busy();
             const settings = event.data;
             SettingsStorage.setAll(settings);
             applySettingsChoices(settings);
-            await this.#busyIndicatorManager.unbusy();
+            await BusyIndicatorManager.unbusy();
         });
     }
 

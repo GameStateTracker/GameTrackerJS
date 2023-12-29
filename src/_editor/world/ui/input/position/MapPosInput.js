@@ -1,4 +1,5 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
+import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
@@ -139,7 +140,8 @@ export default class MapPosInput extends CustomElement {
         }
     }
 
-    loadMapData(mapData) {
+    async loadMapData(mapData) {
+        await BusyIndicatorManager.busy();
         if (mapData != null && mapData.active && mapData.backgroundImage) {
             const {backgroundColor, backgroundImage, width, height} = mapData;
             this.#mapElement.style.backgroundColor = backgroundColor;
@@ -158,9 +160,11 @@ export default class MapPosInput extends CustomElement {
             this.#posYInputElement.max = 0;
             this.#mapElement.classList.add("none");
         }
+        await BusyIndicatorManager.unbusy();
     }
 
-    loadConnections(connections) {
+    async loadConnections(connections) {
+        await BusyIndicatorManager.busy();
         this.#connectionMarkerList = [];
         for (const entry of connections ?? []) {
             const {label, posA, posB} = entry;
@@ -172,9 +176,11 @@ export default class MapPosInput extends CustomElement {
             }
         }
         this.#rerender();
+        await BusyIndicatorManager.unbusy();
     }
 
-    loadEntries(entries) {
+    async loadEntries(entries) {
+        await BusyIndicatorManager.busy();
         this.#entryMarkerList = [];
         for (const entry of entries ?? []) {
             const {pos = {}, ref = {}} = entry ?? {};
@@ -184,6 +190,7 @@ export default class MapPosInput extends CustomElement {
             }
         }
         this.#rerender();
+        await BusyIndicatorManager.unbusy();
     }
 
     #createMarker(type, name, x, y, label) {
@@ -226,7 +233,8 @@ export default class MapPosInput extends CustomElement {
         }
     }
 
-    #rerender = debounce(() => {
+    #rerender = debounce(async () => {
+        await BusyIndicatorManager.busy();
         this.innerHTML = "";
         for (const el of this.#connectionMarkerList) {
             this.append(el);
@@ -238,6 +246,7 @@ export default class MapPosInput extends CustomElement {
         if (this.#currentMarkerEl) {
             this.#currentMarkerEl.classList.add("active");
         }
+        await BusyIndicatorManager.unbusy();
     });
 
 }

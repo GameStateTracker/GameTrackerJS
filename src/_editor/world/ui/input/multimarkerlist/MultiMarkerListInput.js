@@ -17,6 +17,7 @@ import "/emcJS/ui/form/button/Button.js";
 import "/emcJS/ui/grid/DataGrid.js";
 import TPL from "./MultiMarkerListInput.js.html" assert {type: "html"};
 import STYLE from "./MultiMarkerListInput.js.css" assert {type: "css"};
+import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 
 const RELATION_TYPES = [
     "Area",
@@ -308,7 +309,8 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         return `${entry.name}\n[${entry.type}]`
     }
 
-    #updateCoordinateCells = debounce(() => {
+    #updateCoordinateCells = debounce(async () => {
+        await BusyIndicatorManager.busy();
         const coordinatesColumCells = this.#gridEl.getAllCellsForColumn("pos");
         for (const coordinatesCell of coordinatesColumCells) {
             const rowData = coordinatesCell.rowData;
@@ -318,6 +320,7 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
             coordinatesCell.loadConnections(this.#connections);
             coordinatesCell.loadEntries(this.value[this.#activeList] ?? []);
         }
+        await BusyIndicatorManager.unbusy();
     });
 
     loadMapData(mapData) {
@@ -330,7 +333,8 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         this.#updateCoordinateCells();
     }
 
-    #reloadListSelection() {
+    async #reloadListSelection() {
+        await BusyIndicatorManager.busy();
         this.#listSelectionEl.innerHTML = "";
         for (const key in this.#value) {
             const optionEl = document.createElement("option");
@@ -341,6 +345,7 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         if (!(this.#activeList in this.#value)) {
             this.#listSelectionEl.value = Object.keys(this.#value)[0] ?? "";
         }
+        await BusyIndicatorManager.unbusy();
     }
 
 }

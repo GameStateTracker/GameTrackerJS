@@ -34,7 +34,7 @@
         "type": "ImageSelect",
         "name": "icon",
         "label": "Icon",
-        "optiongroup": "worldEditor_locationIcons"
+        "optiongroup": "worldEditor_icons"
     },
     {
         "type": "TokenSelect",

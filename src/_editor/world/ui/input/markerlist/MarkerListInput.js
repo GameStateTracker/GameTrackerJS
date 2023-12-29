@@ -1,4 +1,5 @@
 import CustomFormElementDelegating from "/emcJS/ui/element/CustomFormElementDelegating.js";
+import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {
     isEqual
 } from "/emcJS/util/helper/Comparator.js";
@@ -244,7 +245,8 @@ export default class MarkerListInput extends CustomFormElementDelegating {
         return `${entry.name}\n[${entry.type}]`
     }
 
-    #updateCoordinateCells = debounce(() => {
+    #updateCoordinateCells = debounce(async () => {
+        await BusyIndicatorManager.busy();
         const coordinatesColumCells = this.#gridEl.getAllCellsForColumn("pos");
         for (const coordinatesCell of coordinatesColumCells) {
             const rowData = coordinatesCell.rowData;
@@ -254,6 +256,7 @@ export default class MarkerListInput extends CustomFormElementDelegating {
             coordinatesCell.loadConnections(this.#connections);
             coordinatesCell.loadEntries(this.#value ?? []);
         }
+        await BusyIndicatorManager.unbusy();
     });
 
     loadMapData(mapData) {

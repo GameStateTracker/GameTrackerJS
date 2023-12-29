@@ -28,8 +28,6 @@ function updateTitle() {
 
 class SavestateHandler extends EventTarget {
 
-    #busyIndicatorManager = new BusyIndicatorManager("main");
-
     constructor() {
         super();
         /* --- */
@@ -136,7 +134,7 @@ class SavestateHandler extends EventTarget {
     }
 
     async load(name) {
-        await this.#busyIndicatorManager.busy();
+        await BusyIndicatorManager.busy();
         if (await STORAGE.has(name)) {
             this.dispatchEvent(new Event("beforeload"));
             this.dispatchEvent(new Event("reset"));
@@ -152,7 +150,7 @@ class SavestateHandler extends EventTarget {
             this.dispatchEvent(ev);
             this.dispatchEvent(new Event("afterload"));
         }
-        await this.#busyIndicatorManager.unbusy();
+        await BusyIndicatorManager.unbusy();
     }
 
     getName() {
@@ -169,7 +167,7 @@ class SavestateHandler extends EventTarget {
      */
     async reset(data = {}) {
         const newState = SavestateConverter.createEmptyState(data);
-        await this.#busyIndicatorManager.busy();
+        await BusyIndicatorManager.busy();
         this.dispatchEvent(new Event("beforeload"));
         this.dispatchEvent(new Event("reset"));
         // write state data
@@ -181,7 +179,7 @@ class SavestateHandler extends EventTarget {
         ev.state = newState;
         this.dispatchEvent(ev);
         this.dispatchEvent(new Event("afterload"));
-        await this.#busyIndicatorManager.unbusy();
+        await BusyIndicatorManager.unbusy();
     }
 
     /**
@@ -189,7 +187,7 @@ class SavestateHandler extends EventTarget {
      * @param {Object} stateData an Object containing data for savestate, options and filter
      */
     async overwrite(data = {}) {
-        await this.#busyIndicatorManager.busy();
+        await BusyIndicatorManager.busy();
         this.dispatchEvent(new Event("beforeload"));
         // write state data
         Savestate.overwrite(data);
@@ -201,7 +199,7 @@ class SavestateHandler extends EventTarget {
         ev.state = state;
         this.dispatchEvent(ev);
         this.dispatchEvent(new Event("afterload"));
-        await this.#busyIndicatorManager.unbusy();
+        await BusyIndicatorManager.unbusy();
     }
 
     /* DATA */
