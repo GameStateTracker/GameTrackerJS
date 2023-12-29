@@ -41,6 +41,10 @@ export default class AreaHintListInput extends AbstractFormInput {
         this.#inputEl.focus(options);
     }
 
+    get defaultValue() {
+        return this.getJSONAttribute("value") ?? {};
+    }
+
     set value(value) {
         this.#inputEl.value = value ?? this.defaultValue;
         super.value = value;

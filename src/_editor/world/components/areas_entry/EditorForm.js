@@ -128,7 +128,7 @@ export default class EditorForm_Areas_Entry extends CustomElement {
     #updateMapData = debounce((data) => {
         this.#connectionListEl.loadMapData(data.map);
         let allEntities = [];
-        for (const list of Object.values(data.lists)) {
+        for (const list of Object.values(data.lists ?? {})) {
             allEntities = [...allEntities, ...list];
         }
         this.#connectionListEl.loadEntries(allEntities);
