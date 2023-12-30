@@ -16,6 +16,9 @@ import {
 import AccessStateEnum from "../../enum/AccessStateEnum.js";
 import OptionsObserver from "../observer/OptionsObserver.js";
 import ListRecordState from "../../state/world/ListRecordState.js";
+import {
+    getDefaultAccess
+} from "../helper/ListAccessHelper.js";
 
 const detachedEntrancesObserver = new OptionsObserver("detached_entrances");
 
@@ -26,18 +29,6 @@ function sortByRef(rec0, rec1) {
         return -1;
     }
     return 1;
-}
-
-export function getDefaultAccess() {
-    return {
-        done: 0,
-        unopened: 0,
-        reachable: 0,
-        total: 0,
-        value: AccessStateEnum.OPENED,
-        entrances: 0,
-        locations: new Map()
-    };
 }
 
 export default class StateListHandler extends EventTarget {

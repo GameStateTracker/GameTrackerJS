@@ -14,15 +14,15 @@ import {
 } from "/emcJS/util/helper/Comparator.js";
 
 import Savestate from "../../../savestate/Savestate.js";
-import {
-    getDefaultAccess
-} from "../../../util/handler/StateListHandler.js";
 import Logic from "../../../util/logic/Logic.js";
 import AccessStateEnum from "../../../enum/AccessStateEnum.js";
 import ItemStateManager from "../../../statemanager/item/ItemStateManager.js";
 import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";
+import {
+    getDefaultAccess
+} from "../../../util/helper/ListAccessHelper.js";
 
 const STORAGES = {
     locations: Savestate.getStorage("locations"),

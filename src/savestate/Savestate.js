@@ -26,7 +26,7 @@ class Savestate extends AppState {
         this.registerStorage("items", new ObservableDefaultValueStorage(0));
         this.registerStorage("exitBindings", new ObservableDefaultValueStorage(""));
         this.registerStorage("areaHints", new ObservableDefaultValueStorage(""));
-        this.registerStorage("areaActiveLists", new ObservableDefaultValueStorage(""));
+        this.registerStorage("areaActiveLists", new ObservableDefaultValueStorage());
         this.registerStorage("locationItems", new ObservableDefaultValueStorage(""));
         this.registerStorage("locations", new ObservableDefaultValueStorage(false));
     }

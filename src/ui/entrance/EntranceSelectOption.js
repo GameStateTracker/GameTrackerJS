@@ -47,7 +47,7 @@ export default class EntranceSelectOption extends BaseClass {
         const tagsEl = this.shadowRoot.getElementById("tags");
         typeEl.i18nValue = `entrance_type[${state.props.type}]`;
         // area
-        const areaState = AreaStateManager.get(state.props.area);
+        const areaState = AreaStateManager.get(state.props.area.name);
         // area - category
         const category = areaState?.props.category;
         if (category) {

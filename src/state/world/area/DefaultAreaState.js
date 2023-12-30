@@ -8,9 +8,8 @@ import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObs
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import Savestate from "../../../savestate/Savestate.js";
 // import OptionsStorage from "../../../savestate/storage/OptionsStorage.js";
-import StateListHandler, {
-    getDefaultAccess
-} from "../../../util/handler/StateListHandler.js";
+import StateListHandler from "../../../util/handler/StateListHandler.js";
+import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 import Logic from "../../../util/logic/Logic.js";
 import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
@@ -18,60 +17,16 @@ import StateFilterMixin from "../../mixins/StateFilterMixin.js";
 import StateAccessPenetrationMixin from "../../mixins/StateAccessPenetrationMixin.js";
 import StateListContentsMixin from "../../mixins/StateListContentsMixin.js";
 import AccessStateEnum from "../../../enum/AccessStateEnum.js";
-import SettingsStorage from "../../../storage/SettingsStorage.js";
+import {
+    getDefaultAccess, getMultiListAccess
+} from "../../../util/helper/ListAccessHelper.js";
+
+const unknownArealistNeedAllObserver = new SettingsObserver("unknown_arealist_need_all");
 
 const STORAGES = {
     areaHints: Savestate.getStorage("areaHints"),
     areaActiveLists: Savestate.getStorage("areaActiveLists")
 };
-
-function getAccessNeutralAll(accessData) {
-    if (accessData.some((access) => access.value === AccessStateEnum.UNAVAILABLE)) {
-        return AccessStateEnum.UNAVAILABLE;
-    }
-    if (accessData.some((access) => access.value === AccessStateEnum.POSSIBLE)) {
-        return AccessStateEnum.POSSIBLE;
-    }
-    if (accessData.some((access) => access.value === AccessStateEnum.AVAILABLE)) {
-        return AccessStateEnum.AVAILABLE;
-    }
-    return AccessStateEnum.OPENED;
-}
-
-function getAccessNeutralOne(accessData) {
-    if (accessData.some((access) => access.value === AccessStateEnum.AVAILABLE)) {
-        return AccessStateEnum.AVAILABLE;
-    }
-    if (accessData.some((access) => access.value === AccessStateEnum.POSSIBLE)) {
-        return AccessStateEnum.POSSIBLE;
-    }
-    if (accessData.some((access) => access.value === AccessStateEnum.UNAVAILABLE)) {
-        return AccessStateEnum.UNAVAILABLE;
-    }
-    return AccessStateEnum.OPENED;
-}
-
-function getAccessNeutral(accessData) {
-    if (SettingsStorage.get("unknown_arealist_need_all")) {
-        return {
-            done: Math.min(...accessData.map((access) => access.done)),
-            unopened: Math.min(...accessData.map((access) => access.unopened)),
-            reachable: Math.min(...accessData.map((access) => access.reachable)),
-            total: Math.min(...accessData.map((access) => access.total)),
-            entrances: accessData.all((access) => access.entrances),
-            value: getAccessNeutralAll(accessData)
-        };
-    } else {
-        return {
-            done: Math.max(...accessData.map((access) => access.done)),
-            unopened: Math.max(...accessData.map((access) => access.unopened)),
-            reachable: Math.max(...accessData.map((access) => access.reachable)),
-            total: Math.max(...accessData.map((access) => access.total)),
-            entrances: accessData.some((access) => access.entrances),
-            value: getAccessNeutralOne(accessData)
-        };
-    }
-}
 
 const BaseClass = mix(
     DataState
@@ -86,7 +41,7 @@ export default class DefaultAreaState extends BaseClass {
 
     #hint = "";
 
-    #activeList = "";
+    #activeList = null;
 
     #listHandler = new Map();
 
@@ -161,7 +116,7 @@ export default class DefaultAreaState extends BaseClass {
     });
 
     onAccessChange() {
-        const access = this.#activeListHandler?.access ?? getDefaultAccess();
+        const access = this.access ?? getDefaultAccess();
         const ev = new Event("access");
         ev.ref = this.ref;
         ev.value = access;
@@ -180,6 +135,15 @@ export default class DefaultAreaState extends BaseClass {
 
     set activeList(value) {
         const ref = this.ref;
+        // ---
+        if (!this.#listHandler.has(value)) {
+            if (this.#listHandler.size === 1) {
+                value = this.#listHandler.keys().next().value;
+            } else {
+                value = null;
+            }
+        }
+        // ---
         if (value != this.#activeList) {
             this.#activeList = value;
             this.#activeListHandler = this.#listHandler.get(this.#activeList);
@@ -223,17 +187,23 @@ export default class DefaultAreaState extends BaseClass {
         return this.#hint;
     }
 
-    // TODO add this to world config
-    // get listContents() {
-    //     return !OptionsStorage.get("mixed_entrance_pool") && (this.props.listContents ?? false);
-    // }
+    get listContents() {
+        return /* !OptionsStorage.get("mixed_entrance_pool") && */ this.props.listContents ?? false;
+    }
 
     get defaultAccess() {
         return getDefaultAccess();
     }
 
     get access() {
-        return this.#activeListHandler?.access ?? this.defaultAccess;
+        if (this.#activeListHandler != null) {
+            return this.#activeListHandler.access;
+        }
+        if (this.#listHandler.size === 1) {
+            const handler = this.#listHandler.values().next();
+            return handler.access;
+        }
+        return this.getMinMaxAccess();
     }
 
     get listVisible() {
@@ -260,7 +230,7 @@ export default class DefaultAreaState extends BaseClass {
         if (this.#listHandler.size === 1) {
             this.#activeList = this.#listHandler.keys().next().value;
         }
-        if (this.#activeList) {
+        if (this.#activeList != null) {
             this.#activeListHandler = this.#listHandler.get(this.#activeList);
             this.#listHandlerEventManager.switchTarget(this.#activeListHandler);
         } else {
@@ -285,7 +255,8 @@ export default class DefaultAreaState extends BaseClass {
             const accessData = Array.from(this.#listHandler.values()).map((listHandler) => {
                 return listHandler.access;
             });
-            return getAccessNeutral(accessData);
+            const needAll = unknownArealistNeedAllObserver.value;
+            return getMultiListAccess(accessData, needAll);
         }
         return this.#listHandler.get(name)?.access ?? getDefaultAccess();
     }
@@ -308,17 +279,8 @@ export default class DefaultAreaState extends BaseClass {
             const accessData = Array.from(this.#listHandler.values()).map((listHandler) => {
                 return listHandler.access;
             });
-            return {
-                done_min: Math.min(...accessData.map((access) => access.done)),
-                done_max: Math.max(...accessData.map((access) => access.done)),
-                unopened_min: Math.min(...accessData.map((access) => access.unopened)),
-                unopened_max: Math.max(...accessData.map((access) => access.unopened)),
-                reachable_min: Math.min(...accessData.map((access) => access.reachable)),
-                reachable_max: Math.max(...accessData.map((access) => access.reachable)),
-                total_min: Math.min(...accessData.map((access) => access.total)),
-                total_max: Math.max(...accessData.map((access) => access.total)),
-                value: AccessStateEnum.OPENED
-            };
+            const needAll = unknownArealistNeedAllObserver.value;
+            return getMultiListAccess(accessData, needAll);
         }
     }
 

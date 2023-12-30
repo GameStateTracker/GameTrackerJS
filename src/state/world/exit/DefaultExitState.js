@@ -18,9 +18,6 @@ import OptionsObserver from "../../../util/observer/OptionsObserver.js";
 import StateDataEventManager from "../../../util/StateDataEventManager.js";
 import AccessStateEnum from "../../../enum/AccessStateEnum.js";
 import Logic from "../../../util/logic/Logic.js";
-import {
-    getDefaultAccess
-} from "../../../util/handler/StateListHandler.js";
 import AreaStateManager from "../../../statemanager/world/area/AreaStateManager.js";
 import EntranceStateManager from "../../../statemanager/world/entrance/EntranceStateManager.js";
 import {
@@ -33,6 +30,9 @@ import StateFilterMixin from "../../mixins/StateFilterMixin.js";
 import WorldResource, {
     getGatewayIn
 } from "../../../data/resource/WorldResource.js";
+import {
+    getDefaultAccess
+} from "../../../util/helper/ListAccessHelper.js";
 
 const CONFIG = WorldResource.get("config");
 const GATEWAYS_VARIANTS = CONFIG.gateways?.variants;
