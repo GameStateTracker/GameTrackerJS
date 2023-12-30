@@ -66,6 +66,7 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         });
         /* --- */
         this.#relationSelectModal.types = RELATION_TYPES;
+        this.#relationSelectModal.sorted = true;
         /* --- */
         this.#listSelectionEl = this.shadowRoot.getElementById("list-selection");
         this.#listSelectionEl.addEventListener("change", () => {

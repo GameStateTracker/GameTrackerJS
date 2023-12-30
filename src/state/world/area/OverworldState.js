@@ -5,15 +5,10 @@ import AreaStateManager from "../../../statemanager/world/area/AreaStateManager.
 import WorldSummaryHandler from "../../../util/handler/WorldSummaryHandler.js";
 import DataState from "../../DataState.js";
 import StateListHandler from "../../../util/handler/StateListHandler.js";
-import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 import {
     getDefaultAccess,
-    getMultiListAccess,
     getSummaryDefaultAccess
 } from "../../../util/helper/ListAccessHelper.js";
-import AccessStateEnum from "../../../enum/AccessStateEnum.js";
-
-const unknownArealistNeedAllObserver = new SettingsObserver("unknown_arealist_need_all");
 
 const STORAGES = {
     areaActiveLists: Savestate.getStorage("areaActiveLists")
@@ -48,14 +43,15 @@ export default class OverworldState extends DataState {
         this.generateLists();
 
         /* OVERWORLD HANDLER */
-        this.#overworldHandler = this.generateOverworldList();
+        this.#overworldHandler = new WorldSummaryHandler();
         this.#overworldHandler.addEventListener("access", () => {
             this.onAccessChange();
         });
+        this.onAccessChange();
     }
 
     onAccessChange() {
-        const access = this.access ?? getDefaultAccess();
+        const access = this.access;
         const ev = new Event("access");
         ev.ref = this.ref;
         ev.value = access;
@@ -161,46 +157,22 @@ export default class OverworldState extends DataState {
         return this.#activeListHandler?.getList() ?? [];
     }
 
+    getListHandler(name) {
+        if (name == null) {
+            return this.#overworldHandler;
+        }
+        return this.#listHandler.get(name);
+    }
+
     setAllEntries(value = true) {
         this.#activeListHandler?.setAllEntries(value);
     }
 
     getAccess(name) {
-        if (!name || name == "") {
-            const accessData = Array.from(this.#listHandler.values()).map((listHandler) => {
-                return listHandler.access;
-            });
-            const needAll = unknownArealistNeedAllObserver.value;
-            return getMultiListAccess(accessData, needAll);
+        if (name == null) {
+            return this.#overworldHandler?.access ?? getDefaultAccess();
         }
         return this.#listHandler.get(name)?.access ?? getDefaultAccess();
-    }
-
-    getMinMaxAccess() {
-        if (this.#activeListHandler != null) {
-            const {done, unopened, reachable, total} = this.#activeListHandler.access;
-            return {
-                done_min: done,
-                done_max: done,
-                unopened_min: unopened,
-                unopened_max: unopened,
-                reachable_min: reachable,
-                reachable_max: reachable,
-                total_min: total,
-                total_max: total,
-                value: AccessStateEnum.OPENED
-            };
-        } else {
-            const accessData = Array.from(this.#listHandler.values()).map((listHandler) => {
-                return listHandler.access;
-            });
-            const needAll = unknownArealistNeedAllObserver.value;
-            return getMultiListAccess(accessData, needAll);
-        }
-    }
-
-    generateOverworldList() {
-        return new WorldSummaryHandler();
     }
 
 }

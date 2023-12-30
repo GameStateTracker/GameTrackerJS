@@ -9,15 +9,13 @@ import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import {
     isEqual
 } from "/emcJS/util/helper/Comparator.js";
-import SettingsObserver from "../observer/SettingsObserver.js";
 import LocationStateManager from "../../statemanager/world/location/LocationStateManager.js";
 import ListRecordState from "../../state/world/ListRecordState.js";
 import AreaStateManager from "../../statemanager/world/area/AreaStateManager.js";
 import {
     getListSummaryAccess, getSummaryDefaultAccess
 } from "../helper/ListAccessHelper.js";
-
-const unknownArealistNeedAllObserver = new SettingsObserver("unknown_arealist_need_all");
+import AccessStateEnum from "../../enum/AccessStateEnum.js";
 
 let instance = null;
 
@@ -30,6 +28,8 @@ export default class WorldSummaryHandler extends EventTarget {
     #remainingLocationsSet = new Set();
 
     #multiListAreaSet = new Set();
+
+    #allLocations = new Set();
 
     constructor() {
         if (instance != null) {
@@ -56,6 +56,7 @@ export default class WorldSummaryHandler extends EventTarget {
                     const usedList = list.filter((r) => r.ref?.type === "Location").map((r) => r.ref?.name);
                     for (const entry of usedList) {
                         usedLocations.add(entry);
+                        this.#allLocations.add(entry);
                     }
                 }
             }
@@ -69,8 +70,10 @@ export default class WorldSummaryHandler extends EventTarget {
                         "type": "Location",
                         "name": key
                     },
-                    "x": 0,
-                    "y": 0,
+                    "pos": {
+                        "x": 0,
+                        "y": 0
+                    },
                     "visible": true
                 };
                 const recordState = new ListRecordState(`summary-${idx++}`, record);
@@ -95,6 +98,7 @@ export default class WorldSummaryHandler extends EventTarget {
                         this.#refreshAccess();
                     }
                 });
+                this.#allLocations.add(key);
             }
         }
         /* --- */
@@ -113,9 +117,7 @@ export default class WorldSummaryHandler extends EventTarget {
         }
     }
 
-    #refreshAccess() {
-        const needAll = unknownArealistNeedAllObserver.value;
-
+    #refreshAccess = debounce(() => {
         const remainingLocationsData = Array.from(this.#remainingLocationsSet.values()).map((state) => {
             return state.access;
         });
@@ -127,10 +129,24 @@ export default class WorldSummaryHandler extends EventTarget {
         const access = getListSummaryAccess([
             ...remainingLocationsData,
             ...multiListAreaData
-        ], needAll);
+        ], false);
+
+        if (access.unopened_max > 0) {
+            if (access.reachable_max > 0) {
+                if (access.unopened_max === access.reachable_max) {
+                    access.value = AccessStateEnum.AVAILABLE;
+                } else {
+                    access.value = AccessStateEnum.POSSIBLE;
+                }
+            } else {
+                access.value = AccessStateEnum.UNAVAILABLE;
+            }
+        } else {
+            access.value = AccessStateEnum.OPENED;
+        }
 
         this.#setAccess(immute(access));
-    }
+    });
 
     get access() {
         return this.#access;

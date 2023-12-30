@@ -3,7 +3,8 @@
         "type": "SearchSelect",
         "name": "type",
         "label": "Type",
-        "optiongroup": "worldEditor_areaTypes"
+        "optiongroup": "worldEditor_areaTypes",
+        "sorted": true
     },
     {
         "type": "StringInput",
@@ -138,6 +139,7 @@
         "name": "tags",
         "label": "Tags",
         "multiple": true,
-        "tokengroup": "worldEditor_tags"
+        "tokengroup": "worldEditor_tags",
+        "sorted": true
     }
 ]

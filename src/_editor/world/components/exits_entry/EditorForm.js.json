@@ -3,7 +3,8 @@
         "type": "SearchSelect",
         "name": "type",
         "label": "Type",
-        "optiongroup": "worldEditor_exitTypes"
+        "optiongroup": "worldEditor_exitTypes",
+        "sorted": true
     },
     {
         "type": "RelationSelect",
@@ -12,7 +13,8 @@
         "types": [
             "Exit"
         ],
-        "placeholder": "Select exit..."
+        "placeholder": "Select exit...",
+        "sorted": true
     },
     {
         "type": "StringInput",
@@ -26,7 +28,8 @@
         "types": [
             "Area"
         ],
-        "placeholder": "Select area..."
+        "placeholder": "Select area...",
+        "sorted": true
     },
     {
         "type": "BoolOrLogicInput",
@@ -57,7 +60,8 @@
         "type": "ListSelect",
         "name": "bindsTo",
         "label": "Binds to types",
-        "optiongroup": "worldEditor_exitTypes"
+        "optiongroup": "worldEditor_exitTypes",
+        "sorted": true
     },
     {
         "type": "SwitchInput",
@@ -97,6 +101,7 @@
         "name": "tags",
         "label": "Tags",
         "multiple": true,
-        "tokengroup": "worldEditor_tags"
+        "tokengroup": "worldEditor_tags",
+        "sorted": true
     }
 ]

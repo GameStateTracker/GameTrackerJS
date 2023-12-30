@@ -4,7 +4,8 @@
         "name": "type",
         "label": "Type",
         "value": "chest",
-        "optiongroup": "worldEditor_locationTypes"
+        "optiongroup": "worldEditor_locationTypes",
+        "sorted": true
     },
     {
         "type": "StringInput",
@@ -41,6 +42,7 @@
         "name": "tags",
         "label": "Tags",
         "multiple": true,
-        "tokengroup": "worldEditor_tags"
+        "tokengroup": "worldEditor_tags",
+        "sorted": true
     }
 ]

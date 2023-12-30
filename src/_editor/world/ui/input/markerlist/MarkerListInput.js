@@ -57,6 +57,7 @@ export default class MarkerListInput extends CustomFormElementDelegating {
         });
         /* --- */
         this.#relationSelectModal.types = RELATION_TYPES;
+        this.#relationSelectModal.sorted = true;
         /* --- */
         this.#gridEl = this.shadowRoot.getElementById("grid");
         this.#gridEl.addEventListener("action::delete", (event) => {

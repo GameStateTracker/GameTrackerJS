@@ -9,6 +9,7 @@ import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import Savestate from "../../../savestate/Savestate.js";
 // import OptionsStorage from "../../../savestate/storage/OptionsStorage.js";
 import StateListHandler from "../../../util/handler/StateListHandler.js";
+import MultiStateListHandler from "../../../util/handler/MultiStateListHandler.js";
 import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 import Logic from "../../../util/logic/Logic.js";
 import DataState from "../../DataState.js";
@@ -44,6 +45,8 @@ export default class DefaultAreaState extends BaseClass {
     #activeList = null;
 
     #listHandler = new Map();
+
+    #multiListHandler = new MultiStateListHandler();
 
     #activeListHandler = null;
 
@@ -81,6 +84,11 @@ export default class DefaultAreaState extends BaseClass {
             }
         });
 
+        /* UNKNOWN LIST BEHAVIOR CHANGE */
+        unknownArealistNeedAllObserver.addEventListener("change", () => {
+            this.onAccessChange();
+        });
+
         /* LIST HANDLER */
         this.#listHandlerEventManager.set("visibility", () => {
             this.checkVisibility();
@@ -116,7 +124,7 @@ export default class DefaultAreaState extends BaseClass {
     });
 
     onAccessChange() {
-        const access = this.access ?? getDefaultAccess();
+        const access = this.access;
         const ev = new Event("access");
         ev.ref = this.ref;
         ev.value = access;
@@ -147,7 +155,7 @@ export default class DefaultAreaState extends BaseClass {
         if (value != this.#activeList) {
             this.#activeList = value;
             this.#activeListHandler = this.#listHandler.get(this.#activeList);
-            this.#listHandlerEventManager.switchTarget(this.#activeListHandler);
+            this.#listHandlerEventManager.switchTarget(this.#activeListHandler ?? this.#multiListHandler);
             // ---
             this.checkVisibility();
             this.onAccessChange();
@@ -197,13 +205,13 @@ export default class DefaultAreaState extends BaseClass {
 
     get access() {
         if (this.#activeListHandler != null) {
-            return this.#activeListHandler.access;
+            return this.#activeListHandler.access ?? this.defaultAccess;
         }
         if (this.#listHandler.size === 1) {
             const handler = this.#listHandler.values().next();
-            return handler.access;
+            return handler.access ?? this.defaultAccess;
         }
-        return this.getMinMaxAccess();
+        return this.getMinMaxAccess() ?? this.defaultAccess;
     }
 
     get listVisible() {
@@ -226,17 +234,14 @@ export default class DefaultAreaState extends BaseClass {
         for (const [name, list] of Object.entries(lists)) {
             const listHandler = new StateListHandler(`${ref}/${name}`, list);
             this.#listHandler.set(name, listHandler);
+            this.#multiListHandler.register(listHandler);
         }
         if (this.#listHandler.size === 1) {
-            this.#activeList = this.#listHandler.keys().next().value;
+            const [key, value] = this.#listHandler.entries().next().value;
+            this.#activeList = key;
+            this.#activeListHandler = value;
         }
-        if (this.#activeList != null) {
-            this.#activeListHandler = this.#listHandler.get(this.#activeList);
-            this.#listHandlerEventManager.switchTarget(this.#activeListHandler);
-        } else {
-            this.#activeListHandler = null;
-            this.#listHandlerEventManager.switchTarget();
-        }
+        this.#listHandlerEventManager.switchTarget(this.#activeListHandler ?? this.#multiListHandler);
         this.checkVisibility();
         this.onAccessChange();
         this.onListEntriesChange();
@@ -246,12 +251,16 @@ export default class DefaultAreaState extends BaseClass {
         return this.#activeListHandler?.getList() ?? [];
     }
 
+    getListHandler(name) {
+        return this.#listHandler.get(name);
+    }
+
     setAllEntries(value = true) {
         this.#activeListHandler?.setAllEntries(value);
     }
 
     getAccess(name) {
-        if (!name || name == "") {
+        if (name == null) {
             const accessData = Array.from(this.#listHandler.values()).map((listHandler) => {
                 return listHandler.access;
             });

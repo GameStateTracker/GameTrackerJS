@@ -22,6 +22,8 @@ export function getSummaryDefaultAccess() {
         reachable_max: 0,
         total_min: 0,
         total_max: 0,
+        entrances_min: 0,
+        entrances_max: 0,
         value: AccessStateEnum.OPENED
     };
 }
@@ -77,14 +79,16 @@ export function getListAccess(accessData, needAll = false) {
 export function getMultiListAccess(accessData, needAll = false) {
     const value = needAll ? getListAccessValueAll(accessData) : getListAccessValueOne(accessData);
     return {
-        done_min: Math.min(...accessData.map((access) => access.done)),
-        done_max: Math.max(...accessData.map((access) => access.done)),
-        unopened_min: Math.min(...accessData.map((access) => access.unopened)),
-        unopened_max: Math.max(...accessData.map((access) => access.unopened)),
-        reachable_min: Math.min(...accessData.map((access) => access.reachable)),
-        reachable_max: Math.max(...accessData.map((access) => access.reachable)),
-        total_min: Math.min(...accessData.map((access) => access.total)),
-        total_max: Math.max(...accessData.map((access) => access.total)),
+        done_min: Math.min(...accessData.map((access) => access.done_min ?? access.done ?? 0)),
+        done_max: Math.max(...accessData.map((access) => access.done_max ?? access.done ?? 0)),
+        unopened_min: Math.min(...accessData.map((access) => access.unopened_min ?? access.unopened ?? 0)),
+        unopened_max: Math.max(...accessData.map((access) => access.unopened_max ?? access.unopened ?? 0)),
+        reachable_min: Math.min(...accessData.map((access) => access.reachable_min ?? access.reachable ?? 0)),
+        reachable_max: Math.max(...accessData.map((access) => access.reachable_max ?? access.reachable ?? 0)),
+        total_min: Math.min(...accessData.map((access) => access.total_min ?? access.total ?? 0)),
+        total_max: Math.max(...accessData.map((access) => access.total_max ?? access.total ?? 0)),
+        entrances_min: Math.min(...accessData.map((access) => access.entrances_min ?? access.entrances ?? 0)),
+        entrances_max:  Math.max(...accessData.map((access) => access.entrances_max ?? access.entrances ?? 0)),
         value
     };
 }
@@ -100,6 +104,8 @@ export function getListSummaryAccess(accessData, needAll = false) {
         reachable_max: 0,
         total_min: 0,
         total_max: 0,
+        entrances_min: 0,
+        entrances_max: 0,
         value
     };
 
@@ -112,6 +118,8 @@ export function getListSummaryAccess(accessData, needAll = false) {
         result.reachable_max += access.reachable_max ?? access.reachable ?? 0;
         result.total_min += access.total_min ?? access.total ?? 0;
         result.total_max += access.total_max ?? access.total ?? 0;
+        result.entrances_min += access.entrances_min ?? access.entrances ?? 0;
+        result.entrances_max += access.entrances_max ?? access.entrances ?? 0;
     }
 
     return result;

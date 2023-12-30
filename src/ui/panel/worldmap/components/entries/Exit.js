@@ -273,14 +273,14 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
             markerEl.dataset["entrances"] = !!data.entrances;
             /* value */
             const state = this.getState();
-            if (state?.reachable) {
-                if (state?.area != null) {
+            if (state?.area != null) {
+                if (data.reachable) {
                     markerEl.innerHTML = data.reachable;
                 } else {
-                    markerEl.innerHTML = "?";
+                    markerEl.innerHTML = "";
                 }
             } else {
-                markerEl.innerHTML = "";
+                markerEl.innerHTML = "?";
             }
         }
     }
