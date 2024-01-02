@@ -1,7 +1,7 @@
 // frameworks
 import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
 
-import "../itempicker/ItemPicker.js";
+import "../itemgrid/picker/ItemPicker.js";
 
 export default class ItemPickerContextMenu extends ContextMenu {
 

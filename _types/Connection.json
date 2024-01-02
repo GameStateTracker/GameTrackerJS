@@ -1,16 +1,21 @@
 {
-    "label": {
-        "@type": "String",
-        "optional": false,
-        "default": "",
-        "pattern": ".+"
+    "parameters": {
+        "allowExtension": false
     },
-    "posA": {
-        "@type": "Coordinates",
-        "optional": false
-    },
-    "posB": {
-        "@type": "Coordinates",
-        "optional": false
+    "definition": {
+        "label": {
+            "@type": "String",
+            "optional": false,
+            "default": "",
+            "pattern": ".+"
+        },
+        "posA": {
+            "@type": "Coordinates",
+            "optional": false
+        },
+        "posB": {
+            "@type": "Coordinates",
+            "optional": false
+        }
     }
 }

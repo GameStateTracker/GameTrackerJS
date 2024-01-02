@@ -1,0 +1,32 @@
+:host {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+:host {
+    display: block;
+    width: min-content;
+    height: min-content;
+}
+#content {
+    display: content;
+}
+.item-row {
+    display: flex;
+}
+.item {
+    display: flex;
+    padding: 2px;
+}
+.text,
+.icon,
+.empty {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    padding: 2px;
+}
+.icon {
+    background-position: center;
+    background-repeat: no-repeat;
+}

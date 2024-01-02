@@ -1,14 +1,19 @@
 {
-    "x": {
-        "@type": "Number",
-        "optional": false,
-        "default": -1,
-        "decimalPlaces": 0
+    "parameters": {
+        "allowExtension": false
     },
-    "y": {
-        "@type": "Number",
-        "optional": false,
-        "default": -1,
-        "decimalPlaces": 0
+    "definition": {
+        "x": {
+            "@type": "Number",
+            "optional": false,
+            "default": -1,
+            "decimalPlaces": 0
+        },
+        "y": {
+            "@type": "Number",
+            "optional": false,
+            "default": -1,
+            "decimalPlaces": 0
+        }
     }
 }

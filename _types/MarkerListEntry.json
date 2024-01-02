@@ -1,21 +1,26 @@
 {
-    "ref": {
-        "@type": "Relation",
-        "optional": false,
-        "types": [
-            "Area",
-            "Collection",
-            "Exit",
-            "Location"
-        ]
+    "parameters": {
+        "allowExtension": false
     },
-    "pos": {
-        "@type": "Coordinates",
-        "optional": false
-    },
-    "visible": {
-        "@type": "Logic",
-        "optional": false,
-        "default": true
+    "definition": {
+        "ref": {
+            "@type": "Relation",
+            "optional": false,
+            "types": [
+                "Area",
+                "Collection",
+                "Exit",
+                "Location"
+            ]
+        },
+        "pos": {
+            "@type": "Coordinates",
+            "optional": false
+        },
+        "visible": {
+            "@type": "Logic",
+            "optional": false,
+            "default": true
+        }
     }
 }

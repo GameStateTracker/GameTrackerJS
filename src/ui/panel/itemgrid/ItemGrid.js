@@ -44,12 +44,27 @@ const STYLE = new GlobalStyle(`
     height: 40px;
     padding: 2px;
 }
+.icon {
+    background-position: center;
+    background-repeat: no-repeat;
+}
 `);
 
 function createItem(value, data) {
     const el = UIRegistry.get("itemgrid-item").create(data.type, value);
     el.className = "item";
     return el;
+}
+
+function createPopout(element, data) {
+    const {value, icon/* , counting = true, countBlacklist = [], content = [] */} = element;
+    if (data != null) {
+        return createItem(value, data);
+    } else if (icon != null) {
+        return createIcon(icon)
+    } else {
+        return createEmpty();
+    }
 }
 
 function createText(value) {
@@ -62,7 +77,7 @@ function createText(value) {
 function createIcon(value) {
     const el = document.createElement("DIV");
     el.className = "icon";
-    el.dataset.icon = value;
+    el.style.backgroundImage = `url(${value})`;
     return el;
 }
 
@@ -100,6 +115,9 @@ export default class ItemGrid extends Panel {
                 if (element.type == "item") {
                     const data = items[element.value];
                     cnt.append(createItem(element.value, data));
+                } else if (element.type == "popout") {
+                    const data = items[element.value];
+                    cnt.append(createPopout(element, data));
                 } else if (element.type == "text") {
                     cnt.append(createText(element.value));
                 } else if (element.type == "icon") {

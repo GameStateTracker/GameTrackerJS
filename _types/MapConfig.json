@@ -1,35 +1,40 @@
 {
-    "active": {
-        "@type": "Boolean",
-        "optional": false,
-        "default": false
+    "parameters": {
+        "allowExtension": false
     },
-    "backgroundColor": {
-        "@type": "Color",
-        "optional": false,
-        "default": "#000000"
-    },
-    "backgroundImage": {
-        "@type": "Image",
-        "optional": false,
-        "default": ""
-    },
-    "width": {
-        "@type": "Number",
-        "optional": false,
-        "default": 1920,
-        "decimalPlaces": 0
-    },
-    "height": {
-        "@type": "Number",
-        "optional": false,
-        "default": 1080,
-        "decimalPlaces": 0
-    },
-    "zoom": {
-        "@type": "Number",
-        "optional": false,
-        "default": 50,
-        "decimalPlaces": 0
+    "definition": {
+        "active": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        },
+        "backgroundColor": {
+            "@type": "Color",
+            "optional": false,
+            "default": "#000000"
+        },
+        "backgroundImage": {
+            "@type": "Image",
+            "optional": false,
+            "default": ""
+        },
+        "width": {
+            "@type": "Number",
+            "optional": false,
+            "default": 1920,
+            "decimalPlaces": 0
+        },
+        "height": {
+            "@type": "Number",
+            "optional": false,
+            "default": 1080,
+            "decimalPlaces": 0
+        },
+        "zoom": {
+            "@type": "Number",
+            "optional": false,
+            "default": 50,
+            "decimalPlaces": 0
+        }
     }
 }

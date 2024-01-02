@@ -1,17 +1,22 @@
 {
-    "root": {
-        "@type": "String",
-        "optional": false,
-        "default": "root"
+    "parameters": {
+        "allowExtension": false
     },
-    "prefix": {
-        "@type": "String",
-        "optional": false,
-        "default": "region["
-    },
-    "postfix": {
-        "@type": "String",
-        "optional": false,
-        "default": "]"
+    "definition": {
+        "root": {
+            "@type": "String",
+            "optional": false,
+            "default": "root"
+        },
+        "prefix": {
+            "@type": "String",
+            "optional": false,
+            "default": "region["
+        },
+        "postfix": {
+            "@type": "String",
+            "optional": false,
+            "default": "]"
+        }
     }
 }

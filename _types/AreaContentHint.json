@@ -1,12 +1,17 @@
 {
-    "icon": {
-        "@type": "Image",
-        "optional": false,
-        "default": ""
+    "parameters": {
+        "allowExtension": false
     },
-    "counting": {
-        "@type": "Boolean",
-        "optional": false,
-        "default": false
+    "definition": {
+        "icon": {
+            "@type": "Image",
+            "optional": false,
+            "default": ""
+        },
+        "counting": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        }
     }
 }

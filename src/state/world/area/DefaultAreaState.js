@@ -56,6 +56,8 @@ export default class DefaultAreaState extends BaseClass {
 
     #reachable = false;
 
+    #areaActiveListsObserver;
+
     constructor(ref, props) {
         super(ref, props);
 
@@ -65,9 +67,9 @@ export default class DefaultAreaState extends BaseClass {
         areaHintsObserver.addEventListener("change", (event) => {
             this.hint = event.value;
         });
-        const areaActiveListsObserver = new ObservableStorageObserver(STORAGES.areaActiveLists, ref);
-        this.#activeList = areaActiveListsObserver.value;
-        areaActiveListsObserver.addEventListener("change", (event) => {
+        this.#areaActiveListsObserver = new ObservableStorageObserver(STORAGES.areaActiveLists, ref);
+        this.#activeList = this.#areaActiveListsObserver.value;
+        this.#areaActiveListsObserver.addEventListener("change", (event) => {
             this.activeList = event.value;
         });
 
@@ -156,6 +158,7 @@ export default class DefaultAreaState extends BaseClass {
             this.#activeList = value;
             this.#activeListHandler = this.#listHandler.get(this.#activeList);
             this.#listHandlerEventManager.switchTarget(this.#activeListHandler ?? this.#multiListHandler);
+            this.#areaActiveListsObserver.value = value;
             // ---
             this.checkVisibility();
             this.onAccessChange();
@@ -235,6 +238,9 @@ export default class DefaultAreaState extends BaseClass {
             const listHandler = new StateListHandler(`${ref}/${name}`, list);
             this.#listHandler.set(name, listHandler);
             this.#multiListHandler.register(listHandler);
+            if (this.#activeList === name) {
+                this.#activeListHandler = listHandler;
+            }
         }
         if (this.#listHandler.size === 1) {
             const [key, value] = this.#listHandler.entries().next().value;

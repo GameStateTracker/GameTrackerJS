@@ -1,38 +1,43 @@
 {
-    "config": {
-        "@type": "WorldConfig",
-        "optional": false
+    "parameters": {
+        "allowExtension": false
     },
-    "locations": {
-        "@type": "AssociativeList",
-        "optional": false,
-        "children": {
-            "@type": "Location",
-            "optional": true
-        }
-    },
-    "collections": {
-        "@type": "AssociativeList",
-        "optional": false,
-        "children": {
-            "@type": "Collection",
-            "optional": true
-        }
-    },
-    "areas": {
-        "@type": "AssociativeList",
-        "optional": false,
-        "children": {
-            "@type": "Area",
-            "optional": true
-        }
-    },
-    "exits": {
-        "@type": "AssociativeList",
-        "optional": false,
-        "children": {
-            "@type": "Exit",
-            "optional": true
+    "definition": {
+        "config": {
+            "@type": "WorldConfig",
+            "optional": false
+        },
+        "locations": {
+            "@type": "AssociativeList",
+            "optional": false,
+            "children": {
+                "@type": "Location",
+                "optional": true
+            }
+        },
+        "collections": {
+            "@type": "AssociativeList",
+            "optional": false,
+            "children": {
+                "@type": "Collection",
+                "optional": true
+            }
+        },
+        "areas": {
+            "@type": "AssociativeList",
+            "optional": false,
+            "children": {
+                "@type": "Area",
+                "optional": true
+            }
+        },
+        "exits": {
+            "@type": "AssociativeList",
+            "optional": false,
+            "children": {
+                "@type": "Exit",
+                "optional": true
+            }
         }
     }
 }

@@ -1,25 +1,30 @@
 {
-    "defaultArea": {
-        "@type": "Relation",
-        "optional": false,
-        "types": [
-            "Area"
-        ]
+    "parameters": {
+        "allowExtension": false
     },
-    "areaContentHints": {
-        "@type": "AssociativeList",
-        "optional": false,
-        "children": {
-            "@type": "AreaContentHint",
-            "optional": true
+    "definition": {
+        "defaultArea": {
+            "@type": "Relation",
+            "optional": false,
+            "types": [
+                "Area"
+            ]
+        },
+        "areaContentHints": {
+            "@type": "AssociativeList",
+            "optional": false,
+            "children": {
+                "@type": "AreaContentHint",
+                "optional": true
+            }
+        },
+        "region": {
+            "@type": "RegionsConfig",
+            "optional": false
+        },
+        "gateways": {
+            "@type": "GatewaysConfig",
+            "optional": false
         }
-    },
-    "region": {
-        "@type": "RegionsConfig",
-        "optional": false
-    },
-    "gateways": {
-        "@type": "GatewaysConfig",
-        "optional": false
     }
 }

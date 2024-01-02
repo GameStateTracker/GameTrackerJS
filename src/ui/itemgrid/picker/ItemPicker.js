@@ -3,7 +3,7 @@ import Template from "/emcJS/util/html/Template.js";
 import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import Panel from "/emcJS/ui/layout/Panel.js";
 
-import GridsResource from "../../data/resource/GridsResource.js";
+import GridsResource from "../../../data/resource/GridsResource.js";
 import "./components/Item.js";
 
 const TPL = new Template(`

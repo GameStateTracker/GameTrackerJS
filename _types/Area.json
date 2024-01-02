@@ -1,91 +1,96 @@
 {
-    "type": {
-        "@type": "String",
-        "optional": false,
-        "default": ""
+    "parameters": {
+        "allowExtension": false
     },
-    "category": {
-        "@type": "String",
-        "optional": false,
-        "default": ""
-    },
-    "visible": {
-        "@type": "Logic",
-        "optional": false,
-        "default": true
-    },
-    "visibleRootOnly": {
-        "@type": "Boolean",
-        "optional": false,
-        "default": false
-    },
-    "filter": {
-        "@type": "AssociativeList",
-        "optional": false,
-        "children": {
+    "definition": {
+        "type": {
+            "@type": "String",
+            "optional": false,
+            "default": ""
+        },
+        "category": {
+            "@type": "String",
+            "optional": false,
+            "default": ""
+        },
+        "visible": {
+            "@type": "Logic",
+            "optional": false,
+            "default": true
+        },
+        "visibleRootOnly": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        },
+        "filter": {
             "@type": "AssociativeList",
-            "optional": true,
+            "optional": false,
             "children": {
-                "@type": "Logic",
+                "@type": "AssociativeList",
                 "optional": true,
-                "default": true
+                "children": {
+                    "@type": "Logic",
+                    "optional": true,
+                    "default": true
+                }
             }
-        }
-    },
-    "listContents": {
-        "@type": "Logic",
-        "optional": false,
-        "default": false
-    },
-    "accessPenetration": {
-        "@type": "Logic",
-        "optional": false,
-        "default": false
-    },
-    "icon": {
-        "@type": "Image",
-        "optional": false,
-        "default": ""
-    },
-    "map": {
-        "@type": "MapConfig",
-        "optional": false
-    },
-    "connections": {
-        "@type": "List",
-        "optional": true,
-        "children": {
-            "@type": "Connection",
-            "optional": true
-        }
-    },
-    "lists": {
-        "@type": "AssociativeList",
-        "optional": false,
-        "children": {
+        },
+        "listContents": {
+            "@type": "Logic",
+            "optional": false,
+            "default": false
+        },
+        "accessPenetration": {
+            "@type": "Logic",
+            "optional": false,
+            "default": false
+        },
+        "icon": {
+            "@type": "Image",
+            "optional": false,
+            "default": ""
+        },
+        "map": {
+            "@type": "MapConfig",
+            "optional": false
+        },
+        "connections": {
             "@type": "List",
             "optional": true,
             "children": {
-                "@type": "MarkerListEntry",
+                "@type": "Connection",
                 "optional": true
             }
-        }
-    },
-    "areaContentHints": {
-        "@type": "AssociativeList",
-        "optional": false,
-        "children": {
-            "@type": "Number",
-            "optional": true,
-            "default": 0
-        }
-    },
-    "tags": {
-        "@type": "List",
-        "optional": false,
-        "children": {
-            "@type": "String",
-            "optional": true
+        },
+        "lists": {
+            "@type": "AssociativeList",
+            "optional": false,
+            "children": {
+                "@type": "List",
+                "optional": true,
+                "children": {
+                    "@type": "MarkerListEntry",
+                    "optional": true
+                }
+            }
+        },
+        "areaContentHints": {
+            "@type": "AssociativeList",
+            "optional": false,
+            "children": {
+                "@type": "Number",
+                "optional": true,
+                "default": 0
+            }
+        },
+        "tags": {
+            "@type": "List",
+            "optional": false,
+            "children": {
+                "@type": "String",
+                "optional": true
+            }
         }
     }
 }

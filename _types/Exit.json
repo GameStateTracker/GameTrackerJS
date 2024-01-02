@@ -1,100 +1,105 @@
 {
-    "type": {
-        "@type": "String",
-        "optional": false,
-        "default": ""
+    "parameters": {
+        "allowExtension": false
     },
-    "target": {
-        "@type": "Relation",
-        "optional": false,
-        "types": [
-            "Exit"
-        ]
-    },
-    "logicAccess": {
-        "@type": "String",
-        "optional": false,
-        "default": ""
-    },
-    "area": {
-        "@type": "Relation",
-        "optional": false,
-        "types": [
-            "Area"
-        ]
-    },
-    "visible": {
-        "@type": "Logic",
-        "optional": false,
-        "default": true
-    },
-    "visibleRootOnly": {
-        "@type": "Boolean",
-        "optional": false,
-        "default": false
-    },
-    "filter": {
-        "@type": "AssociativeList",
-        "optional": false,
-        "children": {
+    "definition": {
+        "type": {
+            "@type": "String",
+            "optional": false,
+            "default": ""
+        },
+        "target": {
+            "@type": "Relation",
+            "optional": false,
+            "types": [
+                "Exit"
+            ]
+        },
+        "logicAccess": {
+            "@type": "String",
+            "optional": false,
+            "default": ""
+        },
+        "area": {
+            "@type": "Relation",
+            "optional": false,
+            "types": [
+                "Area"
+            ]
+        },
+        "visible": {
+            "@type": "Logic",
+            "optional": false,
+            "default": true
+        },
+        "visibleRootOnly": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        },
+        "filter": {
             "@type": "AssociativeList",
-            "optional": true,
+            "optional": false,
             "children": {
-                "@type": "Logic",
+                "@type": "AssociativeList",
                 "optional": true,
-                "default": true
+                "children": {
+                    "@type": "Logic",
+                    "optional": true,
+                    "default": true
+                }
             }
-        }
-    },
-    "icon": {
-        "@type": "Image",
-        "optional": false,
-        "default": ""
-    },
-    "bindsTo": {
-        "@type": "List",
-        "optional": false,
-        "children": {
-            "@type": "String",
-            "optional": true
-        }
-    },
-    "unbindable": {
-        "@type": "Boolean",
-        "optional": false,
-        "default": false
-    },
-    "ignoreBound": {
-        "@type": "Boolean",
-        "optional": false,
-        "default": false
-    },
-    "entranceActive": {
-        "@type": "Logic",
-        "optional": true,
-        "default": true
-    },
-    "includeInactiveEntrances": {
-        "@type": "Boolean",
-        "optional": false,
-        "default": false
-    },
-    "isBiDir": {
-        "@type": "Boolean",
-        "optional": false,
-        "default": false
-    },
-    "ignoreMixedEntrances": {
-        "@type": "Boolean",
-        "optional": false,
-        "default": false
-    },
-    "tags": {
-        "@type": "List",
-        "optional": false,
-        "children": {
-            "@type": "String",
-            "optional": true
+        },
+        "icon": {
+            "@type": "Image",
+            "optional": false,
+            "default": ""
+        },
+        "bindsTo": {
+            "@type": "List",
+            "optional": false,
+            "children": {
+                "@type": "String",
+                "optional": true
+            }
+        },
+        "unbindable": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        },
+        "ignoreBound": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        },
+        "entranceActive": {
+            "@type": "Logic",
+            "optional": true,
+            "default": true
+        },
+        "includeInactiveEntrances": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        },
+        "isBiDir": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        },
+        "ignoreMixedEntrances": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        },
+        "tags": {
+            "@type": "List",
+            "optional": false,
+            "children": {
+                "@type": "String",
+                "optional": true
+            }
         }
     }
 }
