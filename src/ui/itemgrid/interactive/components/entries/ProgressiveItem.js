@@ -71,7 +71,6 @@ export default class ProgressiveItem extends ItemElement {
         } else {
             const opt = document.createElement("emc-option");
             opt.value = 0;
-            opt.style.backgroundImage = `url("/images/items/unknown.png")`;
             opt.classList.add("active");
             this.append(opt);
         }
@@ -80,7 +79,9 @@ export default class ProgressiveItem extends ItemElement {
     #createOption(value, icon, data, maxValue) {
         const optionEl = document.createElement("emc-option");
         optionEl.value = value;
-        optionEl.style.backgroundImage = `url("${icon}")`;
+        if (icon != null) {
+            optionEl.style.backgroundImage = `url('${icon}')`;
+        }
         if (data.counting) {
             if (Array.isArray(data.counting)) {
                 optionEl.innerHTML = data.counting[value];
@@ -111,10 +112,10 @@ export default class ProgressiveItem extends ItemElement {
 
     #resolveIcon(icon, value = 0) {
         if (icon == null) {
-            return "/images/items/unknown.png";
+            return null;
         }
         if (typeof icon == "object") {
-            return icon[value] ?? icon[0] ?? "/images/items/unknown.png";
+            return icon[value] ?? icon[0];
         }
         return icon;
     }

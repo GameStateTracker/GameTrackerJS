@@ -5,9 +5,11 @@ import ItemsResource from "../../../data/resource/ItemsResource.js";
 import UIRegistry from "../../../registry/UIRegistry.js";
 import "./components/entries/Item.js";
 import "./components/entries/ProgressiveItem.js";
-import "./components/entries/Popout.js";
+import "./components/entries/ItemMirror.js";
+import "./components/entries/ItemMirrorCollection.js";
 import TPL from "./ItemGridInteractive.js.html" assert {type: "html"};
 import STYLE from "./ItemGridInteractive.js.css" assert {type: "css"};
+import ItemStateManager from "../../../statemanager/item/ItemStateManager.js";
 
 export default class ItemGridInteractive extends CustomElement {
 
@@ -29,27 +31,61 @@ export default class ItemGridInteractive extends CustomElement {
             for (const element of row) {
                 const cellEl = document.createElement("td");
                 switch (element.type) {
-                    case "popout": {
-                        const data = items[element.value];
-                        const popoutEl = ItemGridInteractive.#createPopout(this, element, data);
-                        if (popoutEl != null) {
-                            cellEl.append(popoutEl);
+                    case "collection": {
+                        const mirrorCollectionEl = ItemGridInteractive.createItemMirrorCollection(this, element);
+                        if (mirrorCollectionEl != null) {
+                            cellEl.append(mirrorCollectionEl);
                         } else {
-                            cellEl.className = "empty";
+                            const errorEl = document.createElement("DIV");
+                            errorEl.className = "error";
+                            cellEl.append(errorEl);
+                        }
+                    } break;
+                    case "mirror": {
+                        const mirrorEl = ItemGridInteractive.createItemMirror(element);
+                        if (mirrorEl != null) {
+                            cellEl.append(mirrorEl);
+                        } else {
+                            const errorEl = document.createElement("DIV");
+                            errorEl.className = "error";
+                            cellEl.append(errorEl);
                         }
                     } break;
                     case "item": {
                         const data = items[element.value];
-                        cellEl.append(ItemGridInteractive.#createItem(element.value, data));
+                        const itemEl = ItemGridInteractive.createItem(element.value, data);
+                        if (itemEl != null) {
+                            cellEl.append(itemEl);
+                        } else {
+                            const errorEl = document.createElement("DIV");
+                            errorEl.className = "error";
+                            cellEl.append(errorEl);
+                        }
                     } break;
                     case "icon": {
-                        cellEl.append(ItemGridInteractive.#createIcon(element.value));
+                        const iconEl = ItemGridInteractive.createIcon(element.value);
+                        if (iconEl != null) {
+                            cellEl.append(iconEl);
+                        } else {
+                            const errorEl = document.createElement("DIV");
+                            errorEl.className = "error";
+                            cellEl.append(errorEl);
+                        }
                     } break;
                     case "text": {
-                        cellEl.append(ItemGridInteractive.#createText(element.value));
+                        const textEl = ItemGridInteractive.createText(element.value);
+                        if (textEl != null) {
+                            cellEl.append(textEl);
+                        } else {
+                            const errorEl = document.createElement("DIV");
+                            errorEl.className = "error";
+                            cellEl.append(errorEl);
+                        }
                     } break;
                     case "empty": {
-                        cellEl.className = "empty";
+                        const emptyEl = document.createElement("DIV");
+                        emptyEl.className = "empty";
+                        cellEl.append(emptyEl);
                     } break;
                 }
                 rowEl.append(cellEl);
@@ -58,53 +94,72 @@ export default class ItemGridInteractive extends CustomElement {
         }
     }
 
-    static #createItem(value, data) {
+    static createItem(value, data) {
         const el = UIRegistry.get("itemgrid-item").create(data.type, value);
         el.className = "item";
         return el;
     }
 
-    static #createPopout(target, element, data) {
-        const el = ItemGridInteractive.#createPopoutElement(element, data);
-        if (el != null) {
-            const {contentGrid} = element;
-            if (Array.isArray(contentGrid)) {
-                const ctxMnu = ItemGridInteractive.createItemGridContextMenu(contentGrid);
-                const catcherEl = CtxMenuLayer.findNextLayer(target);
-                catcherEl.append(ctxMnu);
-                // ---
-                el.addEventListener("click", (event) => {
-                    event.stopPropagation();
-                    const rect = el.getBoundingClientRect();
-                    ctxMnu.show(rect.x, rect.y);
-                });
-                el.addEventListener("contextmenu", (event) => {
-                    event.stopPropagation();
-                    const rect = el.getBoundingClientRect();
-                    ctxMnu.show(rect.x, rect.y);
-                });
-            }
-        }
+    static createItemMirror(element) {
+        const {value, icon, halign, valign, tooltip} = element;
+        const el = document.createElement("gt-itemgrid-itemmirror");
+        el.ref = value;
+        el.icon = icon;
+        el.valign = valign;
+        el.halign = halign;
+        el.tooltip = tooltip;
         return el;
     }
 
-    static #createPopoutElement(element, data) {
-        const {value, icon} = element;
-        if (data != null) {
-            return this.#createItem(value, data);
-        } else if (icon != null) {
-            return this.#createIcon(icon);
+    static createItemMirrorCollection(target, element) {
+        const {value, icon, halign, valign, tooltip, contentGrid = [[]], counting = false, countBlacklist = []} = element;
+        const el = document.createElement("gt-itemgrid-itemmirror-collection");
+        el.ref = value;
+        el.icon = icon;
+        el.valign = valign;
+        el.halign = halign;
+        el.tooltip = tooltip;
+
+        if (Array.isArray(contentGrid)) {
+            const ctxMnu = ItemGridInteractive.createItemGridContextMenu(contentGrid);
+            const catcherEl = CtxMenuLayer.findNextLayer(target);
+            catcherEl.append(ctxMnu);
+            // ---
+            el.addEventListener("click", (event) => {
+                event.stopPropagation();
+                const rect = el.getBoundingClientRect();
+                ctxMnu.show(rect.x, rect.y);
+            });
+            el.addEventListener("contextmenu", (event) => {
+                event.stopPropagation();
+                const rect = el.getBoundingClientRect();
+                ctxMnu.show(rect.x, rect.y);
+            });
+            // ---
+            if (counting) {
+                for (const rows of contentGrid) {
+                    for (const entry of rows) {
+                        if (entry.type != "item" || countBlacklist.includes(entry.value)) {
+                            continue;
+                        }
+                        const state = ItemStateManager.get(entry.value);
+                        el.addState(state);
+                    }
+                }
+            }
         }
+
+        return el;
     }
 
-    static #createText(value) {
+    static createText(value) {
         const el = document.createElement("DIV");
         el.className = "text";
         el.innerText = value;
         return el;
     }
 
-    static #createIcon(value) {
+    static createIcon(value) {
         const el = document.createElement("DIV");
         el.className = "icon";
         el.style.backgroundImage = `url(${value})`;

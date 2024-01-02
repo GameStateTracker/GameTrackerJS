@@ -18,10 +18,14 @@ const BaseClass = mix(
 
 export default class ItemElement extends BaseClass {
 
+    #tooltipEl;
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
+        /* --- */
+        this.#tooltipEl = this.shadowRoot.getElementById("tooltip");
         /* --- */
         this.registerStateHandler("value", (event) => {
             this.value = event.value;
@@ -53,44 +57,68 @@ export default class ItemElement extends BaseClass {
         this.valign = state.props.valign ?? "center";
     }
 
+    set ref(val) {
+        if (val != null) {
+            this.setAttribute("ref", val);
+        } else {
+            this.removeAttribute("ref");
+        }
+    }
+
     get ref() {
         return this.getAttribute("ref");
     }
 
-    set ref(val) {
-        this.setAttribute("ref", val);
+    set value(val) {
+        if (val != null) {
+            this.setAttribute("value", val);
+        } else {
+            this.removeAttribute("value");
+        }
     }
 
     get value() {
         return this.getAttribute("value");
     }
 
-    set value(val) {
-        this.setAttribute("value", val);
+    set readonly(val) {
+        this.setAttribute("readonly", val);
     }
 
     get readonly() {
         return this.getAttribute("readonly");
     }
 
-    set readonly(val) {
-        this.setAttribute("readonly", val);
+    set halign(val) {
+        if (val === "center" || val === "start" || val === "end") {
+            this.setAttribute("halign", val);
+        } else {
+            this.removeAttribute("halign");
+        }
     }
 
     get halign() {
         return this.getAttribute("halign");
     }
 
-    set halign(val) {
-        this.setAttribute("halign", val);
+    set valign(val) {
+        if (val === "center" || val === "start" || val === "end") {
+            this.setAttribute("valign", val);
+        } else {
+            this.removeAttribute("valign");
+        }
     }
 
     get valign() {
         return this.getAttribute("halign");
     }
 
-    set valign(val) {
-        this.setAttribute("valign", val);
+    set noValue(val) {
+        this.setBooleanAttribute("novalue", val);
+    }
+
+    get noValue() {
+        return this.getBooleanAttribute("novalue");
     }
 
     static get observedAttributes() {
@@ -105,10 +133,7 @@ export default class ItemElement extends BaseClass {
                     const state = ItemStateManager.get(this.ref);
                     this.switchState(state);
                     /* text */
-                    const tooltipEl = this.shadowRoot.getElementById("tooltip");
-                    if (tooltipEl != null) {
-                        tooltipEl.i18nTooltip = this.textRef;
-                    }
+                    this.#tooltipEl.i18nTooltip = this.textRef;
                 } break;
                 case "value": {
                     this.refreshValue();

@@ -5,6 +5,10 @@ import STYLE from "./Item.js.css" assert {type: "css"};
 
 export default class Item extends ItemElement {
 
+    #valueEl;
+
+    #iconEl;
+
     constructor() {
         super();
         this.#applyElements();
@@ -13,6 +17,9 @@ export default class Item extends ItemElement {
         this.registerStateHandler("max", () => {
             this.refreshValue();
         });
+        /* --- */
+        this.#valueEl = this.shadowRoot.getElementById("value");
+        this.#iconEl = this.shadowRoot.getElementById("icon");
     }
 
     #applyElements() {
@@ -54,37 +61,39 @@ export default class Item extends ItemElement {
         const value = this.value;
         const maxValue = state?.max;
         const data = state?.props ?? {};
-        const valueEl = this.shadowRoot.getElementById("value");
         if (data.counting) {
             if (Array.isArray(data.counting)) {
-                valueEl.innerHTML = data.counting[value];
+                this.#valueEl.innerHTML = data.counting[value];
             } else if (typeof data.counting == "string") {
-                valueEl.innerHTML = data.counting;
+                this.#valueEl.innerHTML = data.counting;
             } else if (data.showMax && maxValue != null) {
-                valueEl.innerHTML = `${value} / ${maxValue}`;
+                this.#valueEl.innerHTML = `${value} / ${maxValue}`;
             } else {
-                valueEl.innerHTML = value;
+                this.#valueEl.innerHTML = value;
             }
-            valueEl.classList.toggle("mark", state?.isMarked() ?? false);
+            this.#valueEl.classList.toggle("mark", state?.isMarked() ?? false);
         } else if (data.label) {
             if (Array.isArray(data.label)) {
-                valueEl.innerHTML = data.label[value];
+                this.#valueEl.innerHTML = data.label[value];
             } else {
-                valueEl.innerHTML = data.label;
+                this.#valueEl.innerHTML = data.label;
             }
         }
         // image
-        const iconEl = this.shadowRoot.getElementById("icon");
         const icon = this.#resolveIcon(data.icon, value);
-        iconEl.style.backgroundImage = `url("${icon}")`;
+        if (icon != null) {
+            this.#iconEl.style.backgroundImage = `url('${icon}')`;
+        } else {
+            this.#iconEl.style.backgroundImage = "";
+        }
     }
 
     #resolveIcon(icon, value = 0) {
         if (icon == null) {
-            return "/images/items/unknown.png";
+            return null;
         }
         if (typeof icon == "object") {
-            return icon[value] ?? icon[0] ?? "/images/items/unknown.png";
+            return icon[value] ?? icon[0];
         }
         return icon;
     }

@@ -64,9 +64,11 @@ export default createMixin((superclass) => class StateDataEventManagerMixin exte
             }
         } else {
             const fns = this.#getSubs(name);
-            fns.add(fn);
-            if (this.#target != null && this.isConnected) {
-                this.#target.addEventListener(name, fn);
+            if (!fns.has(fn)) {
+                fns.add(fn);
+                if (this.#target != null && this.isConnected) {
+                    this.#target.addEventListener(name, fn);
+                }
             }
         }
     }
@@ -78,9 +80,11 @@ export default createMixin((superclass) => class StateDataEventManagerMixin exte
             }
         } else {
             const fns = this.#getSubs(name);
-            fns.delete(fn);
-            if (this.#target != null) {
-                this.#target.removeEventListener(name, fn);
+            if (fns.has(fn)) {
+                fns.delete(fn);
+                if (this.#target != null) {
+                    this.#target.removeEventListener(name, fn);
+                }
             }
         }
     }

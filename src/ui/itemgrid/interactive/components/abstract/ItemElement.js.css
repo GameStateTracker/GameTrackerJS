@@ -21,3 +21,8 @@
 :host([valign="end"]) ::slotted([value]) {
     align-items: flex-end;
 }
+:host([novalue]:not([novalue="false"])) #value,
+:host([novalue]:not([novalue="false"])) ::slotted([value]) {
+    color: transparent !important;
+    text-shadow: none !important;
+}
