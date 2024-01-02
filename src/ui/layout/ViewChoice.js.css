@@ -51,10 +51,11 @@
     pointer-events: none;
 }
 #view-choice emc-option.active {
+    box-shadow: var(--navigation-marker-color, #ffffff) 0px 0px 2px 2px, var(--navigation-marker-color, #ffffff) 0px 0px 3px 2px inset;
     cursor: default;
 }
 #view-choice emc-option:not(.active) {
-    opacity: 0.5;
+    opacity: 0.7;
 }
 @media (orientation: portrait) {
     :host {
