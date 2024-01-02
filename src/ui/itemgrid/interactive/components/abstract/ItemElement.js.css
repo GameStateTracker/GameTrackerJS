@@ -1,0 +1,23 @@
+:host {
+    display: inline-flex;
+    width: calc(var(--item-size, 40) * 1px);
+    height: calc(var(--item-size, 40) * 1px);
+    cursor: pointer;
+    user-select: none;
+}
+:host([halign="start"]) #value,
+:host([halign="start"]) ::slotted([value]) {
+    justify-content: flex-start;
+}
+:host([halign="end"]) #value,
+:host([halign="end"]) ::slotted([value]) {
+    justify-content: flex-end;
+}
+:host([valign="start"]) #value,
+:host([valign="start"]) ::slotted([value]) {
+    align-items: flex-start;
+}
+:host([valign="end"]) #value,
+:host([valign="end"]) ::slotted([value]) {
+    align-items: flex-end;
+}

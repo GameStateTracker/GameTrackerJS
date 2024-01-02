@@ -1,40 +1,30 @@
-import UIRegistry from "../../../../../registry/UIRegistry.js";
+import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
 import ItemElement from "../abstract/ItemElement.js";
 import "./Item.js";
 import TPL from "./Popout.js.html" assert {type: "html"};
 import STYLE from "./Popout.js.css" assert {type: "css"};
 
-function resolveIcon(icon, value = 0) {
-    if (icon == null) {
-        return "/images/items/unknown.png";
-    }
-    if (typeof icon == "object") {
-        return icon[value] ?? icon[0] ?? "/images/items/unknown.png";
-    }
-    return icon;
-}
-
-function applyElements(target) {
-    const tooltipEl = target.getElementById("tooltip");
-    const tpl = TPL.generate();
-    /* icon */
-    const iconEl = tpl.getElementById("icon");
-    tooltipEl.append(iconEl);
-    /* slot */
-    const slotEl = tpl.getElementById("slot");
-    target.append(slotEl);
-}
-
-export default class Popout extends ItemElement {
+export default class Popout extends ContextMenuManagerMixin(ItemElement) {
 
     constructor() {
         super();
-        applyElements(this.shadowRoot);
+        this.#applyElements();
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.registerStateHandler("max", () => {
             this.refreshValue();
         });
+    }
+
+    #applyElements() {
+        const tooltipEl = this.shadowRoot.getElementById("tooltip");
+        const tpl = TPL.generate();
+        /* icon */
+        const iconEl = tpl.getElementById("icon");
+        tooltipEl.append(iconEl);
+        /* slot */
+        const slotEl = tpl.getElementById("slot");
+        this.shadowRoot.append(slotEl);
     }
 
     applyDefaultValues() {
@@ -55,11 +45,11 @@ export default class Popout extends ItemElement {
         const iconEl = this.shadowRoot.getElementById("icon");
         const valueEl = this.shadowRoot.getElementById("value");
         // icon
-        const icon = resolveIcon(data.icon, this.value);
-        iconEl.style.backgroundImage = `url("${icon}")`;
+        if (typeof data.icon === "string") {
+            const icon = this.#resolveIcon(data.icon, this.value);
+            iconEl.style.backgroundImage = `url("${icon}")`;
+        }
         // always active
-        iconEl.classList.toggle("alwaysActive", !!data.alwaysActive);
-        // always counting
         valueEl.classList.toggle("alwaysActive", !data.counting || !!data.alwaysCounting);
     }
 
@@ -89,12 +79,20 @@ export default class Popout extends ItemElement {
         }
         // image
         const iconEl = this.shadowRoot.getElementById("icon");
-        const icon = resolveIcon(data.icon, value);
+        const icon = this.#resolveIcon(data.icon, value);
         iconEl.style.backgroundImage = `url("${icon}")`;
+    }
+
+    #resolveIcon(icon, value = 0) {
+        if (icon == null) {
+            return "/images/items/unknown.png";
+        }
+        if (typeof icon == "object") {
+            return icon[value] ?? icon[0] ?? "/images/items/unknown.png";
+        }
+        return icon;
     }
 
 }
 
 customElements.define("gt-itemgrid-popout", Popout);
-UIRegistry.get("itemgrid-item")
-    .register("popout", Popout);

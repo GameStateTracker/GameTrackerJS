@@ -1,47 +1,14 @@
-// frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import "/emcJS/ui/input/Option.js";
-import "/emcJS/ui/i18n/I18nTooltip.js";
-
 import ItemStateManager from "../../../../../statemanager/item/ItemStateManager.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
+import "/emcJS/ui/input/Option.js";
+import "/emcJS/ui/i18n/I18nTooltip.js";
 import "../../../../../state/item/StartSettingsState.js";
-
-const TPL = new Template(`
-<emc-i18n-tooltip id="tooltip">
-</emc-i18n-tooltip>
-`);
-
-const STYLE = new GlobalStyle(`
-:host {
-    display: inline-flex;
-    width: calc(var(--item-size, 40) * 1px);
-    height: calc(var(--item-size, 40) * 1px);
-    cursor: pointer;
-    user-select: none;
-}
-:host([halign="start"]) #value,
-:host([halign="start"]) ::slotted([value]) {
-    justify-content: flex-start;
-}
-:host([halign="end"]) #value,
-:host([halign="end"]) ::slotted([value]) {
-    justify-content: flex-end;
-}
-:host([valign="start"]) #value,
-:host([valign="start"]) ::slotted([value]) {
-    align-items: flex-start;
-}
-:host([valign="end"]) #value,
-:host([valign="end"]) ::slotted([value]) {
-    align-items: flex-end;
-}
-`);
+import TPL from "./ItemElement.js.html" assert {type: "html"};
+import STYLE from "./ItemElement.js.css" assert {type: "css"};
 
 const BaseClass = mix(
     CustomElement

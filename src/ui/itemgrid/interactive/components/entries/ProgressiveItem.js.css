@@ -1,0 +1,47 @@
+#slot {
+    width: 100%;
+    height: 100%;
+}
+::slotted(:not([value])),
+::slotted([value]:not(.active)) {
+    display: none !important;
+}
+::slotted([value]) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 2px;
+    color: white;
+    font-size: 0.8em;
+    text-shadow: -1px 0 1px black, 0 1px 1px black, 1px 0 1px black, 0 -1px 1px black;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-origin: border-box;
+    flex-grow: 0;
+    flex-shrink: 0;
+    min-height: 0;
+    white-space: normal;
+    line-height: 0.7em;
+    font-weight: bold;
+    word-break: normal;
+    filter:
+        contrast(var(--shallow-item-contrast, 0.8))
+        saturate(var(--shallow-item-saturate, 0.5))
+        brightness(var(--shallow-item-brightness, 0.4));
+}
+::slotted([value].alwaysActive),
+::slotted([value]:not([value="0"])) {
+    filter:
+        contrast(var(--solid-item-contrast, 1))
+        saturate(var(--solid-item-saturate, 1))
+        brightness(var(--solid-item-brightness, 1));
+}
+::slotted([value]:hover) {
+    background-size: 100%;
+}
+::slotted([value].mark) {
+    color: #54ff54;
+}
