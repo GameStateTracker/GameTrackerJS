@@ -60,7 +60,7 @@
                 "label": "Background Color",
                 "visible": {
                     "type": "value",
-                    "content": "map.active"
+                    "ref": "map.active"
                 }
             },
             {
@@ -71,7 +71,7 @@
                 "optiongroup": "worldEditor_areaMapImages",
                 "visible": {
                     "type": "value",
-                    "content": "map.active"
+                    "ref": "map.active"
                 }
             },
             {
@@ -82,7 +82,7 @@
                 "readonly": true,
                 "visible": {
                     "type": "value",
-                    "content": "map.active"
+                    "ref": "map.active"
                 }
             },
             {
@@ -93,7 +93,7 @@
                 "readonly": true,
                 "visible": {
                     "type": "value",
-                    "content": "map.active"
+                    "ref": "map.active"
                 }
             },
             {
@@ -105,7 +105,7 @@
                 "scratched": true,
                 "visible": {
                     "type": "value",
-                    "content": "map.active"
+                    "ref": "map.active"
                 }
             }
         ]
@@ -118,7 +118,7 @@
         "value": [],
         "visible": {
             "type": "value",
-            "content": "map.active"
+            "ref": "map.active"
         }
     },
     {

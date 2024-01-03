@@ -73,7 +73,7 @@ export default class ItemGridInteractive extends CustomElement {
                         }
                     } break;
                     case "text": {
-                        const textEl = ItemGridInteractive.createText(element.value);
+                        const textEl = ItemGridInteractive.createText(element);
                         if (textEl != null) {
                             cellEl.append(textEl);
                         } else {
@@ -87,7 +87,11 @@ export default class ItemGridInteractive extends CustomElement {
                         emptyEl.className = "empty";
                         cellEl.append(emptyEl);
                     } break;
+                    default: {
+                        continue;
+                    }
                 }
+
                 rowEl.append(cellEl);
             }
             this.#contentEl.append(rowEl);
@@ -102,18 +106,23 @@ export default class ItemGridInteractive extends CustomElement {
 
     static createItemMirror(element) {
         const {value, icon, halign, valign, tooltip} = element;
+
         const el = document.createElement("gt-itemgrid-itemmirror");
+
         el.ref = value;
         el.icon = icon;
         el.valign = valign;
         el.halign = halign;
         el.tooltip = tooltip;
+
         return el;
     }
 
     static createItemMirrorCollection(target, element) {
         const {value, icon, halign, valign, tooltip, contentGrid = [[]], counting = false, countBlacklist = []} = element;
+
         const el = document.createElement("gt-itemgrid-itemmirror-collection");
+
         el.ref = value;
         el.icon = icon;
         el.valign = valign;
@@ -152,10 +161,32 @@ export default class ItemGridInteractive extends CustomElement {
         return el;
     }
 
-    static createText(value) {
+    static createText(element) {
+        const {value, halign, valign, width, height} = element;
+
         const el = document.createElement("DIV");
+
         el.className = "text";
         el.innerText = value;
+
+        if (halign === "start") {
+            el.style.justifyContent = "flex-start";
+        } else if (halign === "end") {
+            el.style.justifyContent = "flex-end";
+        }
+        if (valign === "start") {
+            el.style.alignItems = "flex-start";
+        } else if (valign === "end") {
+            el.style.alignItems = "flex-end";
+        }
+
+        if (typeof width === "number" && !isNaN(width)) {
+            el.style.width = `${width}px`;
+        }
+        if (typeof height === "number" && !isNaN(height)) {
+            el.style.height = `${height}px`;
+        }
+
         return el;
     }
 

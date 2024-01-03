@@ -7,11 +7,12 @@
     <emc-button id="addList" text="Add list" icon="+"></emc-button>
 </div>
 <emc-grid-datagrid id="grid" stretched="relation">
-    <emc-grid-column name="relation" caption="Entry name" type="relation"></emc-grid-column>
+    <emc-grid-column name="sort" caption="" type="button-sorter"></emc-grid-column>
+    <emc-grid-column name="relation" caption="Entity" type="relation"></emc-grid-column>
     <emc-grid-column name="pos" caption="Position" type="coordinates" width="300" editable action="pos"></emc-grid-column>
     <emc-grid-column name="visible" caption="Visible" type="boolorlogic" width="300" editable action="visible"></emc-grid-column>
     <emc-grid-column name="delete" caption="" type="button" width="100" text="Delete" action="delete"></emc-grid-column>
 </emc-grid-datagrid>
 <emc-form-row class="footer" align="end">
-    <emc-button id="add" text="Add entry" icon="+"></emc-button>
+    <emc-button id="add" text="Add entity" icon="+"></emc-button>
 </emc-form-row>

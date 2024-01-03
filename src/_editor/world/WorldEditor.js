@@ -32,11 +32,19 @@ class WorldEditor extends CustomElement {
 
     #formEl_WorldConfig;
 
+    #formEl_Locations;
+
     #formEl_LocationsEntry;
+
+    #formEl_Collections;
 
     #formEl_CollectionsEntry;
 
+    #formEl_Areas;
+
     #formEl_AreasEntry;
+
+    #formEl_Exits;
 
     #formEl_ExitsEntry;
 
@@ -52,9 +60,13 @@ class WorldEditor extends CustomElement {
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.#formEl_WorldConfig = this.shadowRoot.getElementById("form-world-config");
+        this.#formEl_Locations = this.shadowRoot.getElementById("form-locations");
         this.#formEl_LocationsEntry = this.shadowRoot.getElementById("form-locations-entry");
+        this.#formEl_Collections = this.shadowRoot.getElementById("form-collections");
         this.#formEl_CollectionsEntry = this.shadowRoot.getElementById("form-collections-entry");
+        this.#formEl_Areas = this.shadowRoot.getElementById("form-areas");
         this.#formEl_AreasEntry = this.shadowRoot.getElementById("form-areas-entry");
+        this.#formEl_Exits = this.shadowRoot.getElementById("form-exits");
         this.#formEl_ExitsEntry = this.shadowRoot.getElementById("form-exits-entry");
         /* --- */
         this.#structureEditorTreeEl = this.shadowRoot.getElementById("structure-editor-tree");
@@ -64,13 +76,13 @@ class WorldEditor extends CustomElement {
         this.#structureEditorTreeEl.refresh();
         /* --- */
         new Controller_WorldConfig(this, this.#structureEditorTreeEl, this.#formEl_WorldConfig);
-        new Controller_Locations(this, this.#structureEditorTreeEl);
+        new Controller_Locations(this, this.#structureEditorTreeEl, this.#formEl_Locations);
         new Controller_Locations_Entry(this, this.#structureEditorTreeEl, this.#formEl_LocationsEntry);
-        new Controller_Collections(this, this.#structureEditorTreeEl);
+        new Controller_Collections(this, this.#structureEditorTreeEl, this.#formEl_Collections);
         new Controller_Collections_Entry(this, this.#structureEditorTreeEl, this.#formEl_CollectionsEntry);
-        new Controller_Areas(this, this.#structureEditorTreeEl);
+        new Controller_Areas(this, this.#structureEditorTreeEl, this.#formEl_Areas);
         new Controller_Areas_Entry(this, this.#structureEditorTreeEl, this.#formEl_AreasEntry);
-        new Controller_Exits(this, this.#structureEditorTreeEl);
+        new Controller_Exits(this, this.#structureEditorTreeEl, this.#formEl_Exits);
         new Controller_Exits_Entry(this, this.#structureEditorTreeEl, this.#formEl_ExitsEntry);
         /* --- */
         DataManager.addEventListener("change", (event) => {

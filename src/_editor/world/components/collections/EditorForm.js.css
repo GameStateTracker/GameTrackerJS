@@ -1,0 +1,23 @@
+:host {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    box-sizing: border-box;
+    user-select: none;
+}
+#form-container {
+    height: 100%;
+}
+#detail-form {
+    display: flex;
+    flex: 1;
+    padding: 10px;
+}
+#type-grid {
+    width: 100%;
+}
+h1 {
+    font-size: 1.5em;
+    margin: 10px;
+}

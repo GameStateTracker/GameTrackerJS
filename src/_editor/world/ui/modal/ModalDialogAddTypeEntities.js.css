@@ -1,0 +1,73 @@
+#footer {
+    display: flex;
+}
+#submit,
+#cancel {
+    margin: 2px;
+}
+#input {
+    width: 100%;
+}
+#add-continuous-label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 10px;
+    color: var(--input-text-color, #000000);
+}
+#add-continuous-button {
+    appearance: none;
+    flex-grow: 0;
+    width: 4em;
+    height: 2em;
+    padding: 2px;
+    margin: 0px;
+    margin-right: 10px;
+    color: var(--input-text-color, #000000);
+    background-color: var(--switch-unchecked-back-color, #ffd68a);
+    border: solid var(--form-border-width, 2px) var(--form-border-color, #000000);
+    border-radius: var(--form-border-radius, 6px);
+    font-size: 1em;
+    cursor: pointer;
+}
+#add-continuous-button:checked {
+    background-color: var(--switch-checked-back-color, #9ee1ec);
+}
+#add-continuous-button:indeterminate {
+    background-color: var(--switch-indeterminate-back-color, #ffffff);
+}
+#add-continuous-button:focus {
+    box-shadow: 0 0 2px 3px var(--input-focus-color, #06b5ff);
+    outline: none;
+}
+:host(:invalid) #add-continuous-button {
+    background-color: var(--input-invalid-back-color, #ffebeb);
+    border-color: var(--input-invalid-border-color, #ff4444);
+}
+:host(:invalid) #add-continuous-button:focus {
+    box-shadow: 0 0 2px 3px var(--input-invalid-focus-color, #ff2500);
+}
+#add-continuous-button::after {
+    display: block;
+    width: calc(2em - (2 * var(--form-border-width, 2px)));
+    height: calc(2em - (4 * var(--form-border-width, 2px)));
+    background-color: var(--button-back-color, #cccccc);
+    border: solid var(--form-border-width, 2px) var(--form-border-color, #000000);
+    border-radius: calc(var(--form-border-radius, 6px) / 2);
+    box-sizing: border-box;
+    content: "";
+}
+#add-continuous-button:hover::after {
+    background-color: var(--button-hover-back-color, #000000);
+}
+#add-continuous-button:checked::after {
+    margin-left: auto;
+}
+#add-continuous-button:indeterminate::after {
+    margin-left: auto;
+    margin-right: auto;
+}
+#add-continuous-button:disabled::after {
+    background-color: var(--input-disabled-back-color, #999999);
+}

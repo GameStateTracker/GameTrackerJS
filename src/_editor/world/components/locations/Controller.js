@@ -1,7 +1,7 @@
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import DataManager from "../../data/DataManager.js";
 import ComponentController from "../../util/ComponentController.js";
-// import "./EditorForm.js";
+import "./EditorForm.js";
 import "./TreeNode.js";
 
 export default class Controller_Locations extends ComponentController {
@@ -25,6 +25,15 @@ export default class Controller_Locations extends ComponentController {
             DataManager.writeEntity("Location", newName, {});
             treeEl.selectItemByPathRef(["locations", newName]);
         });
+        /* --- */
+        if (editorEl != null) {
+            editorEl.addEventListener("edit", (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                const {entityName} = event.data;
+                treeEl.selectItemByPathRef(["locations", entityName]);
+            });
+        }
     }
 
     get type() {

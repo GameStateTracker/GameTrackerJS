@@ -9,9 +9,13 @@ import {
 import {
     deepClone
 } from "/emcJS/util/helper/DeepClone.js";
+import {
+    deleteAtIndexImmuted,
+    moveInArrayImmuted
+} from "/emcJS/util/helper/collection/ArrayMutations.js";
 import SimpleDataProvider from "/emcJS/util/grid/provider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
-import ModalDialogRelationSelect from "/emcJS/ui/modal/input/ModalDialogRelationSelect.js";
+import ModalDialogAddTypeEntities from "../../modal/ModalDialogAddTypeEntities.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/form/button/Button.js";
 import "/emcJS/ui/grid/DataGrid.js";
@@ -41,7 +45,7 @@ export default class MarkerListInput extends CustomFormElementDelegating {
 
     #connections = [];
 
-    #relationSelectModal = new ModalDialogRelationSelect();
+    #relationSelectModal = new ModalDialogAddTypeEntities();
 
     constructor() {
         super();
@@ -69,11 +73,7 @@ export default class MarkerListInput extends CustomFormElementDelegating {
                 return rowName === this.#generateRowName(entry.ref);
             });
             if (index >= 0) {
-                const newValue = [
-                    ...currentValue.slice(0, index),
-                    ...currentValue.slice(index + 1)
-                ];
-                this.value = newValue;
+                this.value = deleteAtIndexImmuted(currentValue, index);
             }
         });
         this.#gridEl.addEventListener("edit::pos", debounce((event) => {
@@ -107,41 +107,70 @@ export default class MarkerListInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("rows-updated", () => {
             this.#updateCoordinateCells();
         });
+        this.#gridEl.addEventListener("move-row-up", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            const {rowName} = event.data;
+            const currentValue = this.value ?? [];
+            const index = currentValue.findIndex((entry) => {
+                return rowName === this.#generateRowName(entry.ref);
+            });
+            if (index > 0) {
+                this.value = moveInArrayImmuted(currentValue, index, index - 1);
+            }
+        });
+        this.#gridEl.addEventListener("move-row-down", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            const {rowName} = event.data;
+            const currentValue = this.value ?? [];
+            const index = currentValue.findIndex((entry) => {
+                return rowName === this.#generateRowName(entry.ref);
+            });
+            if (index + 1 < currentValue.length) {
+                this.value = moveInArrayImmuted(currentValue, index, index + 1);
+            }
+        });
         /* --- */
         this.#addEl = this.shadowRoot.getElementById("add");
         this.#addEl.addEventListener("click", async () => {
-            let entityEntry = null;
-            let rowName = null;
-            const currentValue = this.value ?? [];
-            while (rowName == null) {
-                entityEntry = await this.#relationSelectModal.show();
-                if (entityEntry == null || entityEntry === false) {
-                    return;
+            let continous = true;
+            while (continous) {
+                let entityEntry = null;
+                let rowName = null;
+                const currentValue = this.value ?? [];
+                while (rowName == null) {
+                    const result = await this.#relationSelectModal.show();
+                    if (result == null || result === false) {
+                        return;
+                    }
+                    entityEntry = result[0];
+                    continous = result[1];
+                    if (entityEntry.type == null || entityEntry.type === "" || entityEntry.name == null || entityEntry.name === "") {
+                        await ModalDialog.alert("Empty entry selected", "You selected the empty entry, which can not be added. Please select another one!");
+                        continue;
+                    }
+                    rowName = this.#generateRowName(entityEntry);
+                    const index = currentValue.findIndex((entry) => {
+                        return rowName === this.#generateRowName(entry.ref);
+                    });
+                    if (index >= 0) {
+                        await ModalDialog.alert("Entry already exists", `The entry "${rowName}" was already added to this list. Please select another one!`);
+                        rowName = null;
+                    }
                 }
-                if (entityEntry.type == null || entityEntry.type === "" || entityEntry.name == null || entityEntry.name === "") {
-                    await ModalDialog.alert("Empty entry selected", "You selected the empty entry, which can not be added. Please select another one!");
-                    continue;
-                }
-                rowName = this.#generateRowName(entityEntry);
-                const index = currentValue.findIndex((entry) => {
-                    return rowName === this.#generateRowName(entry.ref);
-                });
-                if (index >= 0) {
-                    await ModalDialog.alert("Entry already exists", `The entry "${rowName}" was already added to this list. Please select another one!`);
-                    rowName = null;
-                }
+                this.value = [
+                    ...currentValue,
+                    {
+                        ref: entityEntry,
+                        pos: {
+                            x: 0,
+                            y: 0
+                        },
+                        visible: true
+                    }
+                ];
             }
-            this.value = [
-                ...currentValue,
-                {
-                    ref: entityEntry,
-                    pos: {
-                        x: 0,
-                        y: 0
-                    },
-                    visible: true
-                }
-            ];
         });
         /* --- */
         this.#dataManager = new SimpleDataProvider(this.#gridEl);
