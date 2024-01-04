@@ -98,10 +98,10 @@ export default class DefaultLocationState extends BaseClass {
             this.#itemData = itemData?.props;
         }
 
+        /* LOGIC */
         this.#reachable = !!Logic.getValue(props.logicAccess);
         this.#access = getLogicAccess(this.value, this.reachable);
-
-        /* LOGIC */
+        this.setLogicData("$IS_DONE", this.#access.value === AccessStateEnum.OPENED);
         Logic.addEventListener("change", () => {
             const reachable = !!Logic.getValue(props.logicAccess);
             if (reachable != this.#reachable) {
@@ -144,7 +144,7 @@ export default class DefaultLocationState extends BaseClass {
             ev.value = access;
             this.dispatchEvent(ev);
             // logic data
-            this.setLogicData("$IS_DONE", access.value == AccessStateEnum.OPENED);
+            this.setLogicData("$IS_DONE", access.value === AccessStateEnum.OPENED);
         }
     }
 
