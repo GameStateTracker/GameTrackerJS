@@ -65,7 +65,7 @@ export default class ProgressiveItem extends ItemElement {
                     opt.classList.add("active");
                 }
                 // always active
-                opt.classList.toggle("alwaysActive", !!state.props.alwaysActive ?? false);
+                opt.classList.toggle("alwaysActive", !!state.props.alwaysActive);
                 this.append(opt);
             }
         } else {

@@ -53,6 +53,8 @@ export default class Item extends ItemElement {
             iconEl.style.backgroundImage = `url("${icon}")`;
         }
         // always active
+        iconEl.classList.toggle("alwaysActive", !!data.alwaysActive);
+        // always counting
         valueEl.classList.toggle("alwaysActive", !data.counting || !!data.alwaysCounting);
     }
 
