@@ -1,4 +1,3 @@
-// frameworks
 import Template from "/emcJS/util/html/Template.js";
 import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import {
@@ -7,7 +6,7 @@ import {
 import ElementManager from "/emcJS/util/html/ElementManager.js";
 import Panel from "/emcJS/ui/layout/Panel.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
-
+import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 import WorldListState from "../../../state/world/WorldListState.js";
 import AreaStateManager from "../../../statemanager/world/area/AreaStateManager.js";
 import UIRegistry from "../../../registry/UIRegistry.js";
@@ -19,6 +18,9 @@ import "./components/entries/Collection.js";
 import "./components/entries/Location.js";
 import "./components/entries/Area.js";
 import "./components/entries/Exit.js";
+import {
+    debounce
+} from "/emcJS/util/Debouncer.js";
 
 const TPL = new Template(`
 <div id="title">
@@ -103,6 +105,8 @@ const STYLE = new GlobalStyle(`
 }
 `);
 
+const worldListSortedObserver = new SettingsObserver("sort_worldlist_by_access");
+
 class ListEntryElementManager extends ElementManager {
 
     composer(key, params) {
@@ -138,6 +142,9 @@ export default class WorldList extends BaseClass {
             const access = event.value;
             const accessValue = access.value;
             this.applyAccess(("" + accessValue).toLowerCase(), access);
+            if (worldListSortedObserver.value) {
+                this.#sort();
+            }
         });
         this.registerStateHandler("listChange", () => {
             this.refreshList();
@@ -148,8 +155,20 @@ export default class WorldList extends BaseClass {
             WorldListState.reset();
         });
         /* --- */
+        worldListSortedObserver.addEventListener("change", () => {
+            if (worldListSortedObserver.value) {
+                this.#elementManager.registerSortFunction(WorldListState.isDefault ? null : this.#sortFunction);
+            } else {
+                this.#elementManager.registerSortFunction(null);
+            }
+        });
+        /* --- */
         this.#elementManager = new ListEntryElementManager(this);
     }
+
+    #sort = debounce(() => {
+        this.#elementManager.sort();
+    }, 1000);
 
     connectedCallback() {
         super.connectedCallback();
@@ -231,6 +250,9 @@ export default class WorldList extends BaseClass {
                     const backEl = this.shadowRoot.getElementById("back");
                     if (backEl != null) {
                         backEl.classList.toggle("hidden", WorldListState.isDefault);
+                        if (worldListSortedObserver.value) {
+                            this.#elementManager.registerSortFunction(WorldListState.isDefault ? null : this.#sortFunction);
+                        }
                     }
                     /* scroll */
                     const bodyEl = this.shadowRoot.getElementById("body");
@@ -247,18 +269,37 @@ export default class WorldList extends BaseClass {
         const state = this.getState();
         if (state != null) {
             const list = state.getList();
+            let definedOrder = 0;
             if (list != null && list.length > 0) {
                 for (const record of list) {
                     const loc = record.entry;
                     elManagerData.push({
                         key: loc.ref,
                         type: record.type,
-                        subtype: loc.props.type
+                        subtype: loc.props.type,
+                        order: definedOrder++,
+                        record
                     });
                 }
             }
         }
         this.#elementManager.manage(elManagerData);
+    }
+
+    #sortFunction(data0, data1) {
+        if (data0.record.access.value.orderValue < data1.record.access.value.orderValue) {
+            return -1;
+        }
+        if (data0.record.access.value.orderValue > data1.record.access.value.orderValue) {
+            return 1;
+        }
+        if (data0.definedOrder < data1.definedOrder) {
+            return -1;
+        }
+        if (data0.definedOrder > data1.definedOrder) {
+            return 1;
+        }
+        return 0;
     }
 
 }

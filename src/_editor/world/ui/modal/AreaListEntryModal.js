@@ -28,6 +28,7 @@ class SelectionEntryElementManager extends ElementManager {
 
 }
 
+// TODO try to use new sorter in ElementManager
 export default class AreaListEntryModal extends Modal {
 
     #locationCollapsibleEl;

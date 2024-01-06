@@ -3,12 +3,26 @@ import Enum from "/emcJS/data/Enum.js";
 
 export default class AccessStateEnum extends Enum {
 
-    static UNAVAILABLE = new this("unavailable");
+    #orderValue;
 
-    static POSSIBLE = new this("possible");
+    constructor(value, orderValue) {
+        if (orderValue != null && typeof orderValue !== "number") {
+            throw new TypeError("orderValue must be null or a number");
+        }
+        super(value);
+        this.#orderValue = orderValue;
+    }
 
-    static AVAILABLE = new this("available");
+    get orderValue() {
+        return this.#orderValue;
+    }
 
-    static OPENED = new this("opened");
+    static AVAILABLE = new this("available", 0);
+
+    static POSSIBLE = new this("possible", 1);
+
+    static UNAVAILABLE = new this("unavailable", 2);
+
+    static OPENED = new this("opened", 4);
 
 }

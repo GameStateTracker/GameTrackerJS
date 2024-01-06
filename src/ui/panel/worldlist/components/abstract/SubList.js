@@ -1,13 +1,14 @@
-// frameworks
 import Template from "/emcJS/util/html/Template.js";
 import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import {
+    debounce
+} from "/emcJS/util/Debouncer.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
 import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
 import ElementManager from "/emcJS/util/html/ElementManager.js";
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
-
 import SettingsObserver from "../../../../../util/observer/SettingsObserver.js";
 import UIRegistry from "../../../../../registry/UIRegistry.js";
 import WorldListStateEntry from "./StateEntry.js";
@@ -55,6 +56,7 @@ const STYLE = new GlobalStyle(`
 }
 `);
 
+const worldListSortedObserver = new SettingsObserver("sort_worldlist_by_access");
 const sublistCollapsibleObserver = new SettingsObserver("sublist_collapsible");
 
 class ListEntryElementManager extends ElementManager {
@@ -84,6 +86,11 @@ export default class WorldListSubList extends BaseClass {
         TPL.apply(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* state handler */
+        this.registerStateHandler("access", () => {
+            if (worldListSortedObserver.value) {
+                this.#sort();
+            }
+        });
         this.registerStateHandler("listChange", () => {
             this.refreshList();
         });
@@ -120,8 +127,20 @@ export default class WorldListSubList extends BaseClass {
             }
         }
         /* --- */
+        worldListSortedObserver.addEventListener("change", () => {
+            if (worldListSortedObserver.value) {
+                this.#elementManager.registerSortFunction(this.#sortFunction);
+            } else {
+                this.#elementManager.registerSortFunction(null);
+            }
+        });
+        /* --- */
         this.#elementManager = new ListEntryElementManager(this);
     }
+
+    #sort = debounce(() => {
+        this.#elementManager.sort();
+    }, 1000);
 
     connectedCallback() {
         super.connectedCallback();
@@ -164,6 +183,7 @@ export default class WorldListSubList extends BaseClass {
         const state = this.getState();
         if (state != null && state.listContents) {
             const list = state.getList();
+            let definedOrder = 0;
             if (list != null && list.length > 0) {
                 for (const record of list) {
                     const loc = record.entry;
@@ -171,13 +191,31 @@ export default class WorldListSubList extends BaseClass {
                         elManagerData.push({
                             key: loc.ref,
                             type: record.type,
-                            subtype: loc.props.type
+                            subtype: loc.props.type,
+                            order: definedOrder++,
+                            record
                         });
                     }
                 }
             }
         }
         this.#elementManager.manage(elManagerData);
+    }
+
+    #sortFunction(data0, data1) {
+        if (data0.record.access.value.orderValue < data1.record.access.value.orderValue) {
+            return -1;
+        }
+        if (data0.record.access.value.orderValue > data1.record.access.value.orderValue) {
+            return 1;
+        }
+        if (data0.definedOrder < data1.definedOrder) {
+            return -1;
+        }
+        if (data0.definedOrder > data1.definedOrder) {
+            return 1;
+        }
+        return 0;
     }
 
 }

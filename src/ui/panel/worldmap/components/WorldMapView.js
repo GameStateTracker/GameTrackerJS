@@ -135,7 +135,6 @@ export default class WorldMapView extends BaseClass {
         mapEl.addEventListener("mousedown", (event) => {
             if (event.target === mapEl || event.target.tagName === "GT-CONNECTION-POINT") {
                 if (!this.fixed && event.button === 0) {
-                    console.log("map position\n\"x\": %d, \"y\": %d", event.offsetX, event.offsetY);
                     mapEl.classList.add("grabbed");
                     mapEventManager.setActive(true);
                 }
