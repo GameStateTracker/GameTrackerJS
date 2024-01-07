@@ -155,6 +155,11 @@ export default class WorldList extends BaseClass {
             WorldListState.reset();
         });
         /* --- */
+        this.#elementManager = new ListEntryElementManager(this);
+        /* --- */
+        if (worldListSortedObserver.value) {
+            this.#elementManager.registerSortFunction(this.#sortFunction);
+        }
         worldListSortedObserver.addEventListener("change", () => {
             if (worldListSortedObserver.value) {
                 this.#elementManager.registerSortFunction(WorldListState.isDefault ? null : this.#sortFunction);
@@ -162,8 +167,6 @@ export default class WorldList extends BaseClass {
                 this.#elementManager.registerSortFunction(null);
             }
         });
-        /* --- */
-        this.#elementManager = new ListEntryElementManager(this);
     }
 
     #sort = debounce(() => {
@@ -278,7 +281,7 @@ export default class WorldList extends BaseClass {
                         type: record.type,
                         subtype: loc.props.type,
                         order: definedOrder++,
-                        record
+                        state: record
                     });
                 }
             }
@@ -286,11 +289,13 @@ export default class WorldList extends BaseClass {
         this.#elementManager.manage(elManagerData);
     }
 
-    #sortFunction(data0, data1) {
-        if (data0.record.access.value.orderValue < data1.record.access.value.orderValue) {
+    #sortFunction(entry0, entry1) {
+        const {data: data0} = entry0;
+        const {data: data1} = entry1;
+        if (data0.state.access.value.orderValue < data1.state.access.value.orderValue) {
             return -1;
         }
-        if (data0.record.access.value.orderValue > data1.record.access.value.orderValue) {
+        if (data0.state.access.value.orderValue > data1.state.access.value.orderValue) {
             return 1;
         }
         if (data0.definedOrder < data1.definedOrder) {

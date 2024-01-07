@@ -127,6 +127,11 @@ export default class WorldListSubList extends BaseClass {
             }
         }
         /* --- */
+        this.#elementManager = new ListEntryElementManager(this);
+        /* --- */
+        if (worldListSortedObserver.value) {
+            this.#elementManager.registerSortFunction(this.#sortFunction);
+        }
         worldListSortedObserver.addEventListener("change", () => {
             if (worldListSortedObserver.value) {
                 this.#elementManager.registerSortFunction(this.#sortFunction);
@@ -134,8 +139,6 @@ export default class WorldListSubList extends BaseClass {
                 this.#elementManager.registerSortFunction(null);
             }
         });
-        /* --- */
-        this.#elementManager = new ListEntryElementManager(this);
     }
 
     #sort = debounce(() => {
@@ -202,7 +205,9 @@ export default class WorldListSubList extends BaseClass {
         this.#elementManager.manage(elManagerData);
     }
 
-    #sortFunction(data0, data1) {
+    #sortFunction(entry0, entry1) {
+        const {data: data0} = entry0;
+        const {data: data1} = entry1;
         if (data0.record.access.value.orderValue < data1.record.access.value.orderValue) {
             return -1;
         }

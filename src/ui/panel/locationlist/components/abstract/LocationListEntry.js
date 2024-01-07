@@ -20,10 +20,14 @@ const BaseClass = mix(
 
 export default class LocationListEntry extends BaseClass {
 
+    #textEl;
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
+        /* --- */
+        this.#textEl = this.shadowRoot.getElementById("text");
         /* state handler */
         this.registerStateHandler("visibility", (event) => {
             this.hidden = !event.value;
@@ -104,10 +108,7 @@ export default class LocationListEntry extends BaseClass {
             const state = WorldStateManagerRegistry.get(this.type).get(this.ref);
             this.switchState(state);
             /* text */
-            const textEl = this.shadowRoot.getElementById("text");
-            if (textEl != null) {
-                textEl.i18nValue = this.textRef;
-            }
+            this.#textEl.i18nValue = this.textRef;
         }
     }
 
@@ -176,6 +177,10 @@ export default class LocationListEntry extends BaseClass {
 
     get type() {
         return "";
+    }
+
+    get comparatorText() {
+        return this.#textEl.innerText;
     }
 
 }
