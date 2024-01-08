@@ -14,9 +14,9 @@ const TPL = new Template(`
 
 const STYLE = new GlobalStyle(`
 :host {
-    width: 32px;
-    height: 32px;
-    transform: translate(-16px, -16px);
+    --size: 32px;
+    --rotation: 0deg;
+    --border-radius: 50%;
 }
 #marker {
     border-radius: 50%;

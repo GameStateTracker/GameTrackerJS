@@ -1,4 +1,5 @@
 :host {
+    --scale: 100;
     --size: 0px;
     --rotation: 0deg;
     --border-radius: 0px;
@@ -6,7 +7,7 @@
     display: inline-flex;
     width: var(--size, 0px);
     height: var(--size, 0px);
-    transform: translate(calc(var(--size, 0px) * -0.5), calc(var(--size, 0px) * -0.5)) rotate(var(--rotation, 0deg));
+    transform: translate(calc(var(--size, 0px) * -0.5), calc(var(--size, 0px) * -0.5)) rotate(var(--rotation, 0deg)) scale(calc(var(--scale, 100) / 100));
     user-select: none;
 }
 #marker {

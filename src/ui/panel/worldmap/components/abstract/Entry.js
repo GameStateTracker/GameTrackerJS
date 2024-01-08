@@ -14,8 +14,15 @@ const TPL = new Template(`
 
 const STYLE = new GlobalStyle(`
 :host {
+    --scale: 100;
+    --size: 0px;
+    --rotation: 0deg;
+    --border-radius: 0px;
     position: absolute;
     display: inline-flex;
+    width: var(--size, 0px);
+    height: var(--size, 0px);
+    transform: translate(calc(var(--size, 0px) * -0.5), calc(var(--size, 0px) * -0.5)) rotate(var(--rotation, 0deg)) scale(calc(var(--scale, 100) / 100));
     user-select: none;
 }
 :host(:hover) {
@@ -33,6 +40,9 @@ const STYLE = new GlobalStyle(`
     background-color: var(--page-text-color, #000000);
     font-weight: bold;
     cursor: pointer;
+    border-radius: var(--border-radius, 0px);
+    font-size: calc(var(--size, 0px) * 0.7);
+    line-height: 1em;
 }
 #marker:hover,
 :host(.ctx-marked) #marker {

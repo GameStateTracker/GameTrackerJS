@@ -3,6 +3,7 @@ import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
+import "/emcJS/ui/form/element/input/range/RangeInput.js";
 import "./components/AreaMarker.js";
 import "./components/ConnectionMarker.js";
 import "./components/ExitMarker.js";
@@ -20,11 +21,15 @@ export default class MapPosInput extends CustomElement {
 
     #yValue;
 
-    #mapElement;
+    #scaleValue;
 
-    #posXInputElement;
+    #mapEl;
 
-    #posYInputElement;
+    #posXInputEl;
+
+    #posYInputEl;
+
+    #posScaleInputEl;
 
     #entryMarkerList = [];
 
@@ -43,19 +48,20 @@ export default class MapPosInput extends CustomElement {
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* --- */
-        this.#mapElement = this.shadowRoot.getElementById("map");
-        this.#posXInputElement = this.shadowRoot.getElementById("pos-x");
-        this.#posYInputElement = this.shadowRoot.getElementById("pos-y");
-        this.#mapElement.addEventListener("click", (event) => {
+        this.#mapEl = this.shadowRoot.getElementById("map");
+        this.#posXInputEl = this.shadowRoot.getElementById("pos-x");
+        this.#posYInputEl = this.shadowRoot.getElementById("pos-y");
+        this.#posScaleInputEl = this.shadowRoot.getElementById("pos-scale");
+        this.#mapEl.addEventListener("click", (event) => {
             const {offsetX, offsetY} = event;
-            this.#posXInputElement.value = offsetX;
-            this.#posYInputElement.value = offsetY;
+            this.#posXInputEl.value = offsetX;
+            this.#posYInputEl.value = offsetY;
             this.#xValue = offsetX;
             this.#yValue = offsetY;
             this.#handleCurrentMarker();
         });
-        this.#posXInputElement.addEventListener("input", () => {
-            const value = this.#posXInputElement.value;
+        this.#posXInputEl.addEventListener("input", () => {
+            const value = this.#posXInputEl.value;
             const xValue = parseInt(value);
             if (!isNaN(xValue)) {
                 this.#xValue = xValue;
@@ -64,8 +70,8 @@ export default class MapPosInput extends CustomElement {
             }
             this.#handleCurrentMarker();
         });
-        this.#posYInputElement.addEventListener("input", () => {
-            const value = this.#posYInputElement.value;
+        this.#posYInputEl.addEventListener("input", () => {
+            const value = this.#posYInputEl.value;
             const yValue = parseInt(value);
             if (!isNaN(yValue)) {
                 this.#yValue = yValue;
@@ -74,10 +80,20 @@ export default class MapPosInput extends CustomElement {
             }
             this.#handleCurrentMarker();
         });
+        this.#posScaleInputEl.addEventListener("input", () => {
+            const value = this.#posScaleInputEl.value;
+            const scaleValue = parseInt(value);
+            if (!isNaN(scaleValue)) {
+                this.#scaleValue = scaleValue;
+            } else {
+                this.#scaleValue = 100;
+            }
+            this.#handleCurrentMarker();
+        });
         const removeButtonEl = this.shadowRoot.getElementById("remove");
         removeButtonEl.addEventListener("click", () => {
-            this.#posXInputElement.value = "";
-            this.#posYInputElement.value = "";
+            this.#posXInputEl.value = "";
+            this.#posYInputEl.value = "";
             this.#xValue = null;
             this.#yValue = null;
             this.#handleCurrentMarker();
@@ -89,22 +105,30 @@ export default class MapPosInput extends CustomElement {
     });
 
     set value(value) {
-        const {x = 0, y = 0} = value ?? {};
+        const {x = 0, y = 0, scale = 100} = value ?? {};
         const xValue = parseInt(x);
         const yValue = parseInt(y);
+        const scaleValue = parseInt(scale);
         if (!isNaN(xValue)) {
-            this.#posXInputElement.value = x;
+            this.#posXInputEl.value = x;
             this.#xValue = xValue;
         } else {
-            this.#posXInputElement.value = "";
+            this.#posXInputEl.value = "";
             this.#xValue = null;
         }
         if (!isNaN(yValue)) {
-            this.#posYInputElement.value = y;
+            this.#posYInputEl.value = y;
             this.#yValue = yValue;
         } else {
-            this.#posYInputElement.value = "";
+            this.#posYInputEl.value = "";
             this.#yValue = null;
+        }
+        if (!isNaN(scaleValue)) {
+            this.#posScaleInputEl.value = scaleValue;
+            this.#scaleValue = scaleValue;
+        } else {
+            this.#posScaleInputEl.value = "100";
+            this.#scaleValue = 100;
         }
         this.#handleCurrentMarker();
     }
@@ -113,18 +137,23 @@ export default class MapPosInput extends CustomElement {
         if (this.#xValue != null && this.#yValue != null) {
             return {
                 x: this.#xValue,
-                y: this.#yValue
+                y: this.#yValue,
+                scale: this.#scaleValue
             };
         } else if (this.#xValue != null) {
             return {
-                x: this.#xValue
+                x: this.#xValue,
+                scale: this.#scaleValue
             };
         } else if (this.#yValue != null) {
             return {
-                y: this.#yValue
+                y: this.#yValue,
+                scale: this.#scaleValue
             };
         }
-        return {};
+        return {
+            scale: this.#scaleValue
+        };
     }
 
     setCurrentMarker(currentType, currentName, currentLabel) {
@@ -144,21 +173,21 @@ export default class MapPosInput extends CustomElement {
         await BusyIndicatorManager.busy();
         if (mapData != null && mapData.active && mapData.backgroundImage) {
             const {backgroundColor, backgroundImage, width, height} = mapData;
-            this.#mapElement.style.backgroundColor = backgroundColor;
-            this.#mapElement.style.backgroundImage = `url("${backgroundImage}")`;
-            this.#mapElement.style.width = `${width}px`;
-            this.#mapElement.style.height = `${height}px`;
-            this.#posXInputElement.max = width;
-            this.#posYInputElement.max = height;
-            this.#mapElement.classList.remove("none");
+            this.#mapEl.style.backgroundColor = backgroundColor;
+            this.#mapEl.style.backgroundImage = `url("${backgroundImage}")`;
+            this.#mapEl.style.width = `${width}px`;
+            this.#mapEl.style.height = `${height}px`;
+            this.#posXInputEl.max = width;
+            this.#posYInputEl.max = height;
+            this.#mapEl.classList.remove("none");
         } else {
-            this.#mapElement.style.backgroundColor = "";
-            this.#mapElement.style.backgroundImage = "";
-            this.#mapElement.style.width = "0px";
-            this.#mapElement.style.height = "0px";
-            this.#posXInputElement.max = 0;
-            this.#posYInputElement.max = 0;
-            this.#mapElement.classList.add("none");
+            this.#mapEl.style.backgroundColor = "";
+            this.#mapEl.style.backgroundImage = "";
+            this.#mapEl.style.width = "0px";
+            this.#mapEl.style.height = "0px";
+            this.#posXInputEl.max = 0;
+            this.#posYInputEl.max = 0;
+            this.#mapEl.classList.add("none");
         }
         await BusyIndicatorManager.unbusy();
     }
@@ -169,10 +198,10 @@ export default class MapPosInput extends CustomElement {
         for (const entry of connections ?? []) {
             const {label, posA, posB} = entry;
             if (posA != null) {
-                this.#connectionMarkerList.push(this.#createMarker("connection", `${label}_posA`, posA.x, posA.y, label));
+                this.#connectionMarkerList.push(this.#createMarker("connection", `${label}_posA`, posA.x, posA.y, posA.scale, label));
             }
             if (posB != null) {
-                this.#connectionMarkerList.push(this.#createMarker("connection", `${label}_posB`, posB.x, posB.y, label));
+                this.#connectionMarkerList.push(this.#createMarker("connection", `${label}_posB`, posB.x, posB.y, posB.scale, label));
             }
         }
         this.#rerender();
@@ -186,19 +215,20 @@ export default class MapPosInput extends CustomElement {
             const {pos = {}, ref = {}} = entry ?? {};
             const {type = null, name = null} = ref ?? {};
             if (type != null && pos != null) {
-                this.#entryMarkerList.push(this.#createMarker(type, name, pos.x, pos.y));
+                this.#entryMarkerList.push(this.#createMarker(type, name, pos.x, pos.y, pos.scale));
             }
         }
         this.#rerender();
         await BusyIndicatorManager.unbusy();
     }
 
-    #createMarker(type, name, x, y, label) {
+    #createMarker(type, name, x, y, scale, label) {
         if (!isNaN(x) && !isNaN(y)) {
             type = type.toLowerCase();
             const el = document.createElement(`gt-edt-world-editor-input-position-marker-${type}`);
             el.x = x;
             el.y = y;
+            el.scale = scale;
             el.dataset.ref = `${type}__${name}`;
             if (label != null) {
                 el.label = label;
@@ -214,15 +244,18 @@ export default class MapPosInput extends CustomElement {
     #handleCurrentMarker() {
         if (this.#xValue != null && this.#yValue != null) {
             if (this.#currentMarkerEl) {
-                if (this.#currentMarkerEl.x != this.#xValue || this.#currentMarkerEl.y != this.#yValue) {
+                if (this.#currentMarkerEl.x != this.#xValue || this.#currentMarkerEl.y != this.#yValue || this.#currentMarkerEl.scale != this.#scaleValue) {
                     this.#currentMarkerEl.x = this.#xValue;
                     this.#currentMarkerEl.y = this.#yValue;
+                    this.#currentMarkerEl.scale = this.#scaleValue;
+                    this.append(this.#currentMarkerEl);
                     this.#onChange();
                 }
             } else {
-                this.#currentMarkerEl = this.#createMarker(this.#currentMarkerType, this.#currentMarkerName, this.#xValue, this.#yValue, this.#currentMarkerLabel);
+                this.#currentMarkerEl = this.#createMarker(this.#currentMarkerType, this.#currentMarkerName, this.#xValue, this.#yValue, this.#scaleValue, this.#currentMarkerLabel);
                 if (this.#currentMarkerEl) {
                     this.#currentMarkerEl.classList.add("active");
+                    this.append(this.#currentMarkerEl);
                     this.#onChange();
                 }
             }

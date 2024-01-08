@@ -34,6 +34,8 @@
             "@type": "Number",
             "optional": false,
             "default": 50,
+            "max": 200,
+            "min": 10,
             "decimalPlaces": 0
         }
     }

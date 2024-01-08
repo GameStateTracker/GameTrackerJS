@@ -104,27 +104,29 @@ export default class CoordinatesInput extends CustomFormElementDelegating {
     }
 
     #applyValue(value) {
-        const {x, y} = this.#convertValue(value);
-        if (x == null || y == null) {
+        const {x, y, scale = 100} = this.#convertValue(value);
+        if (x == -1 || y == -1) {
             this.#textEl.innerText = "unset";
         } else {
-            this.#textEl.innerText = `[${x}, ${y}]`;
+            this.#textEl.innerText = `[${x}, ${y}] {${scale}}`;
         }
     }
 
     #convertValue(value) {
         if (typeof value !== "object") {
-            return {x: null, y: null};
+            return {x: -1, y: -1, scale: 100};
         }
-        const {x, y} = value;
+        const {x, y, scale = 100} = value;
         if (x == null || y == null) {
-            return {x: null, y: null};
+            return {x: -1, y: -1, scale: 100};
         }
         const xValue = parseInt(x) || 0;
         const yValue = parseInt(y) || 0;
+        const scaleValue = parseInt(scale) || 0;
         return {
             x: xValue,
-            y: yValue
+            y: yValue,
+            scale: scaleValue
         };
     }
 

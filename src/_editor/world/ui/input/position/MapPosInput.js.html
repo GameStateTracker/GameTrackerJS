@@ -10,11 +10,15 @@
 <div class="position-input-wrapper">
     <label class="position-label">
         X
-        <input type="number" id="pos-x" name="x" class="position-input" min="0" max="0" step="1">
+        <input type="number" id="pos-x" name="x" class="input position-input" min="0" max="0" step="1">
     </label>
     <label class="position-label">
         Y
-        <input type="number" id="pos-y" name="y" class="position-input" min="0" max="0" step="1">
+        <input type="number" id="pos-y" name="y" class="input position-input" min="0" max="0" step="1">
+    </label>
+    <label class="position-label">
+        Scale
+        <emc-input-range id="pos-scale" name="scale" class="input" min="25" max="200" value="100" scatched></emc-input-range>
     </label>
     <button id="remove">remove</button>
 </div>

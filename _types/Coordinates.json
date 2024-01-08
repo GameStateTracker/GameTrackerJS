@@ -14,6 +14,14 @@
             "optional": false,
             "default": -1,
             "decimalPlaces": 0
+        },
+        "scale": {
+            "@type": "Number",
+            "optional": false,
+            "default": 100,
+            "max": 200,
+            "min": 25,
+            "decimalPlaces": 0
         }
     }
 }

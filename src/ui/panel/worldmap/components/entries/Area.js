@@ -19,14 +19,9 @@ const TPL = new Template(`
 
 const STYLE = new GlobalStyle(`
 :host {
-    width: 48px;
-    height: 48px;
-    transform: translate(-24px, -24px);
-}
-#marker {
-    border-radius: 25%;
-    font-size: 21px;
-    line-height: 1em;
+    --size: 48px;
+    --rotation: 0deg;
+    --border-radius: 25%;
 }
 #marker[data-entrances="true"]::after {
     position: absolute;

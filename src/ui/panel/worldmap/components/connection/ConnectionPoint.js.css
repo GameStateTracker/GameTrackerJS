@@ -1,11 +1,15 @@
 :host {
+    --scale: 100;
+    --size: 48px;
+    --rotation: 45deg;
+    --border-radius: 25%;
     position: absolute;
     display: inline-flex;
-    width: 48px;
-    height: 48px;
+    width: var(--size, 0px);
+    height: var(--size, 0px);
+    transform: translate(calc(var(--size, 0px) * -0.5), calc(var(--size, 0px) * -0.5)) rotate(var(--rotation, 0deg)) scale(calc(var(--scale, 100) / 100));
     user-select: none;
     pointer-events: all;
-    transform: translate(-24px, -24px) rotate(45deg);
 }
 :host(:hover) {
     z-index: 1000;
@@ -20,10 +24,10 @@
     color: var(--world-connection-text-color,  #000000);
     background-color: var(--world-connection-background-color, #ffffff);
     border: solid 4px black;
-    border-radius: 25%;
-    font-size: 30px;
-    line-height: 1em;
     font-weight: bold;
+    border-radius: var(--border-radius, 0px);
+    font-size: calc(var(--size, 0px) * 0.7);
+    line-height: 1em;
 }
 #label {
     transform: rotate(-45deg);

@@ -74,7 +74,12 @@
     justify-content: center;
 }
 .position-label {
-    margin: 5px;
+    display: flex;
+    align-items: center;
+    margin: 5px 10px;
+}
+.input {
+    margin-left: 5px;
 }
 .position-input {
     height: 2em;
@@ -97,6 +102,9 @@
 .position-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+.scale-input {
+    margin-left: 5px;
 }
 #remove {
     display: flex;

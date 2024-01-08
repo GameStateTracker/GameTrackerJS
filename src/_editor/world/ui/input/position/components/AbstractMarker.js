@@ -27,6 +27,14 @@ export default class AbstractMarker extends CustomElement {
         return this.getAttribute("y");
     }
 
+    set scale(val) {
+        this.setAttribute("scale", val);
+    }
+
+    get scale() {
+        return this.getAttribute("scale");
+    }
+
     set label(val) {
         this.setAttribute("label", val);
     }
@@ -36,7 +44,7 @@ export default class AbstractMarker extends CustomElement {
     }
 
     static get observedAttributes() {
-        return ["x", "y", "label"];
+        return ["x", "y", "scale", "label"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -49,6 +57,11 @@ export default class AbstractMarker extends CustomElement {
             case "y": {
                 if (oldValue != newValue) {
                     this.style.top = `${newValue}px`;
+                }
+            } break;
+            case "scale": {
+                if (oldValue != newValue) {
+                    this.style.setProperty("--scale", newValue);
                 }
             } break;
             case "label": {

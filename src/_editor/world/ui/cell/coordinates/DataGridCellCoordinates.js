@@ -91,12 +91,12 @@ export default class DataGridCellCoordinates extends DataGridCell {
     onValueChange(value) {
         value = this.#convertValue(value);
         if (value == null) {
-            this.#valueEl.innerText = "";
+            this.#valueEl.innerText = "[unset] {100}";
             this.#inputEl.value = null;
         } else {
-            const {x, y} = value;
-            this.#valueEl.innerText = `[${x}, ${y}]`;
-            this.#inputEl.value = {x, y};
+            const {x, y, scale} = value;
+            this.#valueEl.innerText = `[${x}, ${y}] {${scale}}`;
+            this.#inputEl.value = {x, y, scale};
         }
     }
 
@@ -119,12 +119,14 @@ export default class DataGridCellCoordinates extends DataGridCell {
         if (value == null || typeof value !== "object") {
             return null;
         }
-        const {x = 0, y = 0} = value;
+        const {x = 0, y = 0, scale = 100} = value;
         const xValue = parseInt(x) || 0;
         const yValue = parseInt(y) || 0;
+        const scaleValue = parseInt(scale) || 0;
         return {
             x: xValue,
-            y: yValue
+            y: yValue,
+            scale: scaleValue
         };
     }
 

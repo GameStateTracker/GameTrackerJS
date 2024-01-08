@@ -29,14 +29,14 @@ const TPL = new Template(`
 
 const STYLE = new GlobalStyle(`
 :host {
-    width: 48px;
-    height: 48px;
-    transform: translate(-24px, -24px);
+    width: calc(48px * var(--scale, 100) / 100);
+    height: calc(48px * var(--scale, 100) / 100);
+    transform: translate(calc(-24px * var(--scale, 100) / 100), calc(-24px * var(--scale, 100) / 100));
 }
 #marker {
-    border-radius: 25%;
-    font-size: 21px;
-    line-height: 1em;
+    --size: 48px;
+    --rotation: 0deg;
+    --border-radius: 50% 50% 5% 5%;
 }
 #marker[data-canenter="true"]::before {
     position: absolute;
