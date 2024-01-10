@@ -41,7 +41,7 @@ const STYLE = new GlobalStyle(`
     font-weight: bold;
     cursor: pointer;
     border-radius: var(--border-radius, 0px);
-    font-size: calc(var(--size, 0px) * 0.6);
+    font-size: calc(var(--size, 0px) * 0.4);
     line-height: 1em;
 }
 #marker:hover,

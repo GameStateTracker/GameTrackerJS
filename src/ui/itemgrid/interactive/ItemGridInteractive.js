@@ -7,9 +7,12 @@ import "./components/entries/Item.js";
 import "./components/entries/ProgressiveItem.js";
 import "./components/entries/ItemMirror.js";
 import "./components/entries/ItemMirrorCollection.js";
+import "./components/entries/Conditional.js";
 import TPL from "./ItemGridInteractive.js.html" assert {type: "html"};
 import STYLE from "./ItemGridInteractive.js.css" assert {type: "css"};
 import ItemStateManager from "../../../statemanager/item/ItemStateManager.js";
+
+const ITEMS = ItemsResource.get();
 
 export default class ItemGridInteractive extends CustomElement {
 
@@ -27,69 +30,16 @@ export default class ItemGridInteractive extends CustomElement {
         this.#contentEl.innerHTML = "";
         for (const row of config) {
             const rowEl = document.createElement("tr");
-            const items = ItemsResource.get();
             for (const element of row) {
                 const cellEl = document.createElement("td");
-                switch (element.type) {
-                    case "collection": {
-                        const mirrorCollectionEl = ItemGridInteractive.createItemMirrorCollection(this, element);
-                        if (mirrorCollectionEl != null) {
-                            cellEl.append(mirrorCollectionEl);
-                        } else {
-                            const errorEl = document.createElement("DIV");
-                            errorEl.className = "error";
-                            cellEl.append(errorEl);
-                        }
-                    } break;
-                    case "mirror": {
-                        const mirrorEl = ItemGridInteractive.createItemMirror(element);
-                        if (mirrorEl != null) {
-                            cellEl.append(mirrorEl);
-                        } else {
-                            const errorEl = document.createElement("DIV");
-                            errorEl.className = "error";
-                            cellEl.append(errorEl);
-                        }
-                    } break;
-                    case "item": {
-                        const data = items[element.value];
-                        const itemEl = ItemGridInteractive.createItem(element.value, data);
-                        if (itemEl != null) {
-                            cellEl.append(itemEl);
-                        } else {
-                            const errorEl = document.createElement("DIV");
-                            errorEl.className = "error";
-                            cellEl.append(errorEl);
-                        }
-                    } break;
-                    case "icon": {
-                        const iconEl = ItemGridInteractive.createIcon(element.value);
-                        if (iconEl != null) {
-                            cellEl.append(iconEl);
-                        } else {
-                            const errorEl = document.createElement("DIV");
-                            errorEl.className = "error";
-                            cellEl.append(errorEl);
-                        }
-                    } break;
-                    case "text": {
-                        const textEl = ItemGridInteractive.createText(element);
-                        if (textEl != null) {
-                            cellEl.append(textEl);
-                        } else {
-                            const errorEl = document.createElement("DIV");
-                            errorEl.className = "error";
-                            cellEl.append(errorEl);
-                        }
-                    } break;
-                    case "empty": {
-                        const emptyEl = document.createElement("DIV");
-                        emptyEl.className = "empty";
-                        cellEl.append(emptyEl);
-                    } break;
-                    default: {
-                        continue;
-                    }
+
+                const el = ItemGridInteractive.createElement(this, element);
+                if (el != null) {
+                    cellEl.append(el);
+                } else {
+                    const errorEl = document.createElement("DIV");
+                    errorEl.className = "error";
+                    cellEl.append(errorEl);
                 }
 
                 rowEl.append(cellEl);
@@ -98,9 +48,66 @@ export default class ItemGridInteractive extends CustomElement {
         }
     }
 
-    static createItem(value, data) {
-        const el = UIRegistry.get("itemgrid-item").create(data.type, value);
-        el.className = "item";
+    static createElement(target, element) {
+        switch (element.type) {
+            case "conditional": {
+                const conditionalEl = this.createConditional(target, element);
+                return conditionalEl;
+            }
+            case "collection": {
+                const mirrorCollectionEl = this.createItemMirrorCollection(target, element);
+                return mirrorCollectionEl;
+            }
+            case "mirror": {
+                const mirrorEl = this.createItemMirror(element);
+                return mirrorEl;
+            }
+            case "item": {
+                const data = ITEMS[element.value];
+                const itemEl = this.createItem(element.value, data);
+                return itemEl;
+            }
+            case "icon": {
+                const iconEl = this.createIcon(element.value);
+                return iconEl;
+            }
+            case "text": {
+                const textEl = this.createText(element);
+                return textEl;
+            }
+            case "empty": {
+                const emptyEl = document.createElement("DIV");
+                emptyEl.className = "empty";
+                return emptyEl;
+            }
+        }
+    }
+
+    static createConditional(target, element) {
+        const {condition, onTrue, onFalse} = element;
+
+        const el = document.createElement("gt-itemgrid-conditional");
+
+        el.setCondition(condition);
+
+        const thenEl = this.createElement(target, onTrue);
+        if (thenEl != null) {
+            el.setThenEl(thenEl);
+        } else {
+            const errorEl = document.createElement("DIV");
+            errorEl.className = "error";
+            el.setThenEl(errorEl);
+        }
+
+        const elseEl = this.createElement(target, onFalse);
+        if (thenEl != null) {
+            el.setElseEl(elseEl);
+        } else {
+            const errorEl = document.createElement("DIV");
+            errorEl.className = "error";
+            el.setElseEl(errorEl);
+        }
+
         return el;
     }
 
@@ -158,6 +165,12 @@ export default class ItemGridInteractive extends CustomElement {
             }
         }
 
+        return el;
+    }
+
+    static createItem(value, data) {
+        const el = UIRegistry.get("itemgrid-item").create(data.type, value);
+        el.className = "item";
         return el;
     }
 

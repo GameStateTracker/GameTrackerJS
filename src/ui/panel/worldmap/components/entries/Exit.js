@@ -29,11 +29,6 @@ const TPL = new Template(`
 
 const STYLE = new GlobalStyle(`
 :host {
-    width: calc(48px * var(--scale, 100) / 100);
-    height: calc(48px * var(--scale, 100) / 100);
-    transform: translate(calc(-24px * var(--scale, 100) / 100), calc(-24px * var(--scale, 100) / 100));
-}
-#marker {
     --size: 48px;
     --rotation: 0deg;
     --border-radius: 50% 50% 5% 5%;
@@ -47,6 +42,8 @@ const STYLE = new GlobalStyle(`
     background-color: var(--world-entry-status-available-color, #00ff00);
     border: solid 4px black;
     border-radius: 0%;
+    transform: rotate(45deg);
+    transform-origin: center;
     content: " ";
 }
 #marker[data-entrances="true"]::after {

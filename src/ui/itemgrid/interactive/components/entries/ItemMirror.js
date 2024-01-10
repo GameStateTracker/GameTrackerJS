@@ -7,7 +7,6 @@ import "../../../../../state/item/StartSettingsState.js";
 import TPL from "./ItemMirror.js.html" assert {type: "html"};
 import STYLE from "./ItemMirror.js.css" assert {type: "css"};
 
-// TODO calculate total values
 export default class ItemMirror extends CustomElement {
 
     #tooltipEl;
