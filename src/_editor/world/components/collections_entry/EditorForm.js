@@ -10,6 +10,15 @@ import TPL from "./EditorForm.js.html" assert {type: "html"};
 import STYLE from "./EditorForm.js.css" assert {type: "css"};
 import FORM_CONFIG from "./EditorForm.js.json" assert {type: "json"};
 
+const LOGIC_OPERATOR_GROUPS = [
+    "special",
+    "items",
+    "options",
+    "settings",
+    "filter",
+    "active area list"
+];
+
 // TODO outsource main functionality
 export default class EditorForm_Collections_Entry extends CustomElement {
 
@@ -54,6 +63,8 @@ export default class EditorForm_Collections_Entry extends CustomElement {
         /* --- */
         this.#markerListEl = this.shadowRoot.getElementById("marker-list");
         /* --- */
+        this.#markerListEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
+        /* --- */
         const mapImageSelectEl = this.shadowRoot.getElementById("mapselect");
         const mapImageWidthEl = this.shadowRoot.getElementById("mapwidth");
         const mapImageHeightEl = this.shadowRoot.getElementById("mapheight");
@@ -81,6 +92,10 @@ export default class EditorForm_Collections_Entry extends CustomElement {
         });
     }
 
+    acceptChanges() {
+        this.#formContext.acceptChanges();
+    }
+
     resetScroll() {
         this.#formContainerEl.resetScroll();
     }
@@ -97,6 +112,10 @@ export default class EditorForm_Collections_Entry extends CustomElement {
 
     getData() {
         return this.#formContext.getData();
+    }
+
+    hasChanges() {
+        return this.#formContext.hasChanges();
     }
 
     setFilterConfig() {

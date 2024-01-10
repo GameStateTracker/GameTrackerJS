@@ -14,7 +14,7 @@ const LOGIC_OPERATOR_GROUPS = [
     "options",
     "settings",
     "filter",
-    "locations done"
+    "active area list"
 ];
 
 // TODO outsource main functionality
@@ -68,6 +68,10 @@ export default class EditorForm_Locations_Entry extends CustomElement {
         this.#visibleInputEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
     }
 
+    acceptChanges() {
+        this.#formContext.acceptChanges();
+    }
+
     resetScroll() {
         this.#formContainerEl.resetScroll();
     }
@@ -82,6 +86,10 @@ export default class EditorForm_Locations_Entry extends CustomElement {
 
     getData() {
         return this.#formContext.getData();
+    }
+
+    hasChanges() {
+        return this.#formContext.hasChanges();
     }
 
     setFilterConfig(config) {

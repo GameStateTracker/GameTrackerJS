@@ -14,7 +14,8 @@ const STORAGES = {
     locations: Savestate.getStorage("locations"),
     startItems: Savestate.getStorage("startItems"),
     options: Savestate.getStorage("options"),
-    filter: Savestate.getStorage("filter")
+    filter: Savestate.getStorage("filter"),
+    areaActiveLists: Savestate.getStorage("areaActiveLists")
 };
 const STORAGE_REGISTER = new Map();
 
@@ -86,6 +87,7 @@ class LogicDataCollector extends EventTarget {
         this.registerStorage(STORAGES.locations, "location[", "]");
         this.registerStorage(STORAGES.options, "option[", "]");
         this.registerStorage(STORAGES.filter, "filter[", "]");
+        this.registerStorage(STORAGES.areaActiveLists, "arealist[", "]");
         this.registerStorage(SettingsStorage, "setting[", "]");
     }
 

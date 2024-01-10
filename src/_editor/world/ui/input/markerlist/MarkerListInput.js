@@ -47,6 +47,8 @@ export default class MarkerListInput extends CustomFormElementDelegating {
 
     #relationSelectModal = new ModalDialogAddTypeEntities();
 
+    #logicOperatorGroups = new Set();
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
@@ -106,6 +108,7 @@ export default class MarkerListInput extends CustomFormElementDelegating {
         }));
         this.#gridEl.addEventListener("rows-updated", () => {
             this.#updateCoordinateCells();
+            this.#updateVisibleCells();
         });
         this.#gridEl.addEventListener("move-row-up", (event) => {
             event.stopPropagation();
@@ -289,6 +292,15 @@ export default class MarkerListInput extends CustomFormElementDelegating {
         await BusyIndicatorManager.unbusy();
     });
 
+    #updateVisibleCells = debounce(async () => {
+        await BusyIndicatorManager.busy();
+        const coordinatesColumCells = this.#gridEl.getAllCellsForColumn("visible");
+        for (const visibleCell of coordinatesColumCells) {
+            visibleCell.addOperatorGroup(...this.#logicOperatorGroups);
+        }
+        await BusyIndicatorManager.unbusy();
+    });
+
     loadMapData(mapData) {
         this.#mapData = deepClone(mapData);
         this.#updateCoordinateCells();
@@ -297,6 +309,23 @@ export default class MarkerListInput extends CustomFormElementDelegating {
     loadConnections(connections) {
         this.#connections = deepClone(connections);
         this.#updateCoordinateCells();
+    }
+
+    addOperatorGroup(...groupList) {
+        let changes = false;
+        for (const group of groupList) {
+            if (!(typeof group === "string") || group === "") {
+                continue;
+            }
+            if (!this.#logicOperatorGroups.has(group)) {
+                this.#logicOperatorGroups.add(group);
+                changes = true;
+            }
+        }
+        /* --- */
+        if (changes) {
+            this.#updateVisibleCells();
+        }
     }
 
 }

@@ -56,6 +56,10 @@ export default class EditorForm_WorldConfig extends CustomElement {
         FormBuilder.replaceForm(this.#detailFormEl, FORM_CONFIG);
     }
 
+    acceptChanges() {
+        this.#formContext.acceptChanges();
+    }
+
     resetScroll() {
         this.#formContainerEl.resetScroll();
     }
@@ -66,6 +70,10 @@ export default class EditorForm_WorldConfig extends CustomElement {
 
     setData(data) {
         this.#formContext.loadData(data);
+    }
+
+    hasChanges() {
+        return this.#formContext.hasChanges();
     }
 
     getData() {

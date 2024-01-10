@@ -11,6 +11,12 @@ export default class Controller_Areas extends ComponentController {
         /* --- */
         treeEl.addEventListener(`addEntity[${this.type}]`, async (event) => {
             event.stopPropagation();
+            if (containerEl.checkCurrentEditorHasChanges()) {
+                const result = await ModalDialog.confirm("Unsaved changes", "You have unsaved changes in the current form. Discard changes and continue?");
+                if (result !== true) {
+                    return;
+                }
+            }
             let newName = null;
             while (newName == null) {
                 newName = await ModalDialog.prompt("Add area", "Please enter a new name!");
@@ -23,7 +29,7 @@ export default class Controller_Areas extends ComponentController {
                 }
             }
             DataManager.writeEntity("Area", newName, {});
-            treeEl.selectItemByPathRef(["areas", newName]);
+            treeEl.selectItemByRefPath(["areas", newName]);
         });
         /* --- */
         if (editorEl != null) {
@@ -31,7 +37,7 @@ export default class Controller_Areas extends ComponentController {
                 event.stopPropagation();
                 event.preventDefault();
                 const {entityName} = event.data;
-                treeEl.selectItemByPathRef(["areas", entityName]);
+                treeEl.selectItemByRefPath(["areas", entityName]);
             });
         }
     }

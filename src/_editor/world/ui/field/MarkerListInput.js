@@ -86,6 +86,10 @@ export default class MarkerListInput extends AbstractFormInput {
         this.#inputEl.loadConnections(connections);
     }
 
+    addOperatorGroup(...groupList) {
+        this.#inputEl.addOperatorGroup(...groupList);
+    }
+
 }
 
 FormElementRegistry.register("MarkerListInput", MarkerListInput);

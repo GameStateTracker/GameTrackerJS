@@ -86,6 +86,10 @@ export default class MultiMarkerListInput extends AbstractFormInput {
         this.#inputEl.loadConnections(connections);
     }
 
+    addOperatorGroup(...groupList) {
+        this.#inputEl.addOperatorGroup(...groupList);
+    }
+
 }
 
 FormElementRegistry.register("MultiMarkerListInput", MultiMarkerListInput);

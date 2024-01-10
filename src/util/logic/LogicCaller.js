@@ -18,7 +18,8 @@ const STORAGES = {
     startItems: Savestate.getStorage("startItems"),
     locations: Savestate.getStorage("locations"),
     options: Savestate.getStorage("options"),
-    filter: Savestate.getStorage("filter")
+    filter: Savestate.getStorage("filter"),
+    areaActiveLists: Savestate.getStorage("areaActiveLists")
 };
 const STORAGE_REGISTER = new Map();
 
@@ -95,6 +96,7 @@ class LogicCaller extends EventTarget {
         this.registerStorage(STORAGES.locations, "location[", "]");
         this.registerStorage(STORAGES.options, "option[", "]");
         this.registerStorage(STORAGES.filter, "filter[", "]");
+        this.registerStorage(STORAGES.areaActiveLists, "arealist[", "]");
         this.registerStorage(SettingsStorage, "setting[", "]");
     }
 

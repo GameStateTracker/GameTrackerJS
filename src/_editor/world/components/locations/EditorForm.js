@@ -27,6 +27,10 @@ export default class EditorForm_Locations extends CustomElement {
         });
     }
 
+    acceptChanges() {
+        // ignore
+    }
+
     reset() {
         // ignore
     }
@@ -37,6 +41,10 @@ export default class EditorForm_Locations extends CustomElement {
 
     setData() {
         // ignore
+    }
+
+    hasChanges() {
+        return false;
     }
 
     setFilterConfig() {

@@ -17,7 +17,7 @@ const LOGIC_OPERATOR_GROUPS = [
     "options",
     "settings",
     "filter",
-    "locations done"
+    "active area list"
 ];
 
 // TODO outsource main functionality
@@ -75,6 +75,7 @@ export default class EditorForm_Areas_Entry extends CustomElement {
         /* --- */
         this.#filterInputEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
         this.#visibleInputEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
+        this.#markerListEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
         /* --- */
         const mapImageSelectEl = this.shadowRoot.getElementById("mapselect");
         const mapImageWidthEl = this.shadowRoot.getElementById("mapwidth");
@@ -103,6 +104,10 @@ export default class EditorForm_Areas_Entry extends CustomElement {
         });
     }
 
+    acceptChanges() {
+        this.#formContext.acceptChanges();
+    }
+
     resetScroll() {
         this.#formContainerEl.resetScroll();
     }
@@ -119,6 +124,10 @@ export default class EditorForm_Areas_Entry extends CustomElement {
 
     getData() {
         return this.#formContext.getData();
+    }
+
+    hasChanges() {
+        return this.#formContext.hasChanges();
     }
 
     setFilterConfig(config) {

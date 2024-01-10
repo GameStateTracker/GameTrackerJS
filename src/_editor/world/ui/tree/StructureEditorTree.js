@@ -69,22 +69,30 @@ export default class StructureEditorTree extends BaseClass {
         return this.#treeConfigExtractor ?? DEFAULT_TREE_CONFIG_EXTRACTOR;
     }
 
+    getSelectedPath() {
+        return this.#treeEl.getSelectedPath();
+    }
+
+    getSelectedRefPath() {
+        return this.#treeEl.getSelectedRefPath();
+    }
+
     selectItemByPath(path) {
         this.#treeEl.forcePathExpanded(path.slice(0, -1));
         this.#treeEl.selectItemByPath(path);
     }
 
-    selectItemByPathRef(path) {
-        this.#treeEl.forcePathExpandedRef(path.slice(0, -1));
-        this.#treeEl.selectItemByPathRef(path);
+    selectItemByRefPath(path) {
+        this.#treeEl.forceRefPathExpanded(path.slice(0, -1));
+        this.#treeEl.selectItemByRefPath(path);
     }
 
     forcePathExpanded(path) {
         this.#treeEl.forcePathExpanded(path);
     }
 
-    forcePathExpandedRef(path) {
-        this.#treeEl.forcePathExpandedRef(path);
+    forceRefPathExpanded(path) {
+        this.#treeEl.forceRefPathExpanded(path);
     }
 
     refresh(type) {
@@ -95,19 +103,19 @@ export default class StructureEditorTree extends BaseClass {
             switch (type) {
                 case "Location": {
                     const config = this.treeConfigExtractor.extractTreeStructureLocations();
-                    this.#treeEl.loadConfigAtPathRef(["locations"], config);
+                    this.#treeEl.loadConfigAtRefPath(["locations"], config);
                 } break;
                 case "Collection": {
                     const config = this.treeConfigExtractor.extractTreeStructureCollections();
-                    this.#treeEl.loadConfigAtPathRef(["collections"], config);
+                    this.#treeEl.loadConfigAtRefPath(["collections"], config);
                 } break;
                 case "Area": {
                     const config = this.treeConfigExtractor.extractTreeStructureAreas();
-                    this.#treeEl.loadConfigAtPathRef(["areas"], config);
+                    this.#treeEl.loadConfigAtRefPath(["areas"], config);
                 } break;
                 case "Exit": {
                     const config = this.treeConfigExtractor.extractTreeStructureExits();
-                    this.#treeEl.loadConfigAtPathRef(["exits"], config);
+                    this.#treeEl.loadConfigAtRefPath(["exits"], config);
                 } break;
             }
         }

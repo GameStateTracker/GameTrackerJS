@@ -11,6 +11,12 @@ export default class Controller_Collections extends ComponentController {
         /* --- */
         treeEl.addEventListener(`addEntity[${this.type}]`, async (event) => {
             event.stopPropagation();
+            if (containerEl.checkCurrentEditorHasChanges()) {
+                const result = await ModalDialog.confirm("Unsaved changes", "You have unsaved changes in the current form. Discard changes and continue?");
+                if (result !== true) {
+                    return;
+                }
+            }
             let newName = null;
             while (newName == null) {
                 newName = await ModalDialog.prompt("Add collection", "Please enter a new name!");
@@ -23,7 +29,7 @@ export default class Controller_Collections extends ComponentController {
                 }
             }
             DataManager.writeEntity("Collection", newName, {});
-            treeEl.selectItemByPathRef(["collections", newName]);
+            treeEl.selectItemByRefPath(["collections", newName]);
         });
         /* --- */
         if (editorEl != null) {
@@ -31,7 +37,7 @@ export default class Controller_Collections extends ComponentController {
                 event.stopPropagation();
                 event.preventDefault();
                 const {entityName} = event.data;
-                treeEl.selectItemByPathRef(["collections", entityName]);
+                treeEl.selectItemByRefPath(["collections", entityName]);
             });
         }
     }

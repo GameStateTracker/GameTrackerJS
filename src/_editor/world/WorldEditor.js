@@ -86,18 +86,21 @@ class WorldEditor extends CustomElement {
         new Controller_Exits_Entry(this, this.#structureEditorTreeEl, this.#formEl_ExitsEntry);
         /* --- */
         DataManager.addEventListener("change", (event) => {
-            const {type, changes} = event.data;
+            const {type, data} = event.data;
             this.#structureEditorTreeEl.refresh(type);
             /* --- */
-            if (type === "Location") {
-                for (const name in changes) {
-                    const {oldValue, newValue} = changes[name];
-                    if (oldValue == null) {
-                        LogicOperatorRegistry.setOperator("locations done", `location[${name}]`, {
-                            type: "value"
+            if (type === "Area") {
+                for (const name in data) {
+                    const entry = data[name];
+                    const listNames = Object.keys(entry.lists);
+                    if (listNames.length > 1) {
+                        LogicOperatorRegistry.setOperator("active area list", `arealist[${name}]`, {
+                            type: "state",
+                            options: deepClone(listNames),
+                            value: listNames[0]
                         });
-                    } else if (newValue == null) {
-                        LogicOperatorRegistry.deleteOperator("locations done", `location[${name}]`);
+                    } else {
+                        LogicOperatorRegistry.deleteOperator("active area list", `arealist[${name}]`);
                     }
                 }
             }
@@ -117,6 +120,7 @@ class WorldEditor extends CustomElement {
         this.#optionGroupRegistry.setAll(options);
         /* --- */
         this.#tagsTokenRegistry.clear();
+        LogicOperatorRegistry.clearGroup("arealist");
         const extractedTags = new Set();
         for (const entry of Object.values(data.locations)) {
             for (const tag of entry.tags) {
@@ -142,6 +146,10 @@ class WorldEditor extends CustomElement {
         const data = DataManager.getData();
         TypeValidator.validate("World", data, {throwErrors: true});
         return data;
+    }
+
+    checkCurrentEditorHasChanges() {
+        return this.#activeDetailEditor?.hasChanges?.() ?? false;
     }
 
     async switchDetailEditor(detailEditorEl) {
@@ -180,6 +188,7 @@ class WorldEditor extends CustomElement {
         LogicOperatorRegistry.clearGroup("options");
         LogicOperatorRegistry.clearGroup("items");
         LogicOperatorRegistry.clearGroup("filter");
+        LogicOperatorRegistry.clearGroup("active area list");
         // ---
         this.#tagsTokenRegistry.clear();
         // ---

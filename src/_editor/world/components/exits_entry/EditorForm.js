@@ -14,7 +14,7 @@ const LOGIC_OPERATOR_GROUPS = [
     "options",
     "settings",
     "filter",
-    "locations done"
+    "active area list"
 ];
 
 // TODO outsource main functionality
@@ -31,6 +31,8 @@ export default class EditorForm_Exits_Entry extends CustomElement {
     #filterInputEl;
 
     #visibleInputEl;
+
+    #entranceActiveInputEl;
 
     constructor() {
         super();
@@ -63,9 +65,15 @@ export default class EditorForm_Exits_Entry extends CustomElement {
         /* --- */
         this.#filterInputEl = this.shadowRoot.getElementById("filter-input");
         this.#visibleInputEl = this.shadowRoot.getElementById("visible-input");
+        this.#entranceActiveInputEl = this.shadowRoot.getElementById("entrance-active");
         /* --- */
         this.#filterInputEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
         this.#visibleInputEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
+        this.#entranceActiveInputEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
+    }
+
+    acceptChanges() {
+        this.#formContext.acceptChanges();
     }
 
     resetScroll() {
@@ -82,6 +90,10 @@ export default class EditorForm_Exits_Entry extends CustomElement {
 
     getData() {
         return this.#formContext.getData();
+    }
+
+    hasChanges() {
+        return this.#formContext.hasChanges();
     }
 
     setFilterConfig(config) {
