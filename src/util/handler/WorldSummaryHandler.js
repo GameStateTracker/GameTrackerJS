@@ -148,6 +148,24 @@ export default class WorldSummaryHandler extends EventTarget {
         this.#setAccess(immute(access));
     });
 
+    getAccessData() {
+        const accessData = {};
+
+        for (const state of this.#remainingLocationsSet.values()) {
+            accessData[state.entry?.ref ?? state.ref] = state.access;
+        }
+
+        for (const state of this.#multiListAreaSet.values()) {
+            accessData[state.ref] = state.access;
+        }
+
+        return accessData;
+    }
+
+    getAccessDataMissingEntries() {
+        return Object.fromEntries(Object.entries(this.getAccessData()).filter((entry) => entry[1].done !== entry[1].total));
+    }
+
     get access() {
         return this.#access;
     }

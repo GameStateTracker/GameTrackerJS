@@ -36,7 +36,9 @@ export default class LocationState extends CustomElement {
     }
 
     generateList() {
-        return new WorldSummaryHandler();
+        const worldSummaryHandler = new WorldSummaryHandler();
+        window.worldSummaryHandler = worldSummaryHandler;
+        return worldSummaryHandler;
     }
 
 }
