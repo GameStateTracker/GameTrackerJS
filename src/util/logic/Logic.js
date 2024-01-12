@@ -1,9 +1,7 @@
-// frameworks
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
-import LogicGraph from "/emcJS/util/graph/LogicGraph.js";
-
+import LogicGraph from "/emcJS/util/logic_graph/LogicGraph.js";
 import SettingsObserver from "../observer/SettingsObserver.js";
 
 const logicDebugObserver = new SettingsObserver("debug_logic");

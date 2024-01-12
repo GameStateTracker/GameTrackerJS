@@ -1,11 +1,9 @@
-// frameworks
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
-import LogicCompiler from "/emcJS/util/logic/Compiler.js";
+import LogicCompiler from "/emcJS/util/logic/processor/LogicCompiler.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-
-import LogicDataCollector from "../logic/LogicDataCollector.js";
+import TrackerLogicDataCollector from "../logic/TrackerLogicDataCollector.js";
 import FilterStorage from "../../savestate/storage/FilterStorage.js";
 
 const EVENTS = ["load", "change"];
@@ -30,7 +28,7 @@ export default class FilterHandler extends EventTarget {
         FilterStorage.addEventListener("change", () => {
             this.#update();
         });
-        const storageEventManager = new EventTargetManager(LogicDataCollector);
+        const storageEventManager = new EventTargetManager(TrackerLogicDataCollector);
         storageEventManager.set(EVENTS, () => {
             this.#update();
         });
@@ -56,7 +54,7 @@ export default class FilterHandler extends EventTarget {
     }
 
     #getValue(key) {
-        return this.#data.get(key) ?? LogicDataCollector.get(key);
+        return this.#data.get(key) ?? TrackerLogicDataCollector.get(key);
     }
 
     #execute(logicFn) {

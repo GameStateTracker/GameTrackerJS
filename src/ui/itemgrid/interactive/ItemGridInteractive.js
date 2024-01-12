@@ -116,6 +116,15 @@ export default class ItemGridInteractive extends CustomElement {
 
         const el = document.createElement("gt-itemgrid-itemmirror");
 
+        el.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+        el.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+
         el.ref = value;
         el.icon = icon;
         el.valign = valign;
@@ -140,18 +149,20 @@ export default class ItemGridInteractive extends CustomElement {
             const ctxMnu = ItemGridInteractive.createItemGridContextMenu(contentGrid);
             const catcherEl = CtxMenuLayer.findNextLayer(target);
             catcherEl.append(ctxMnu);
-            // ---
+
             el.addEventListener("click", (event) => {
+                event.preventDefault();
                 event.stopPropagation();
                 const rect = el.getBoundingClientRect();
                 ctxMnu.show(rect.x, rect.y);
             });
             el.addEventListener("contextmenu", (event) => {
+                event.preventDefault();
                 event.stopPropagation();
                 const rect = el.getBoundingClientRect();
                 ctxMnu.show(rect.x, rect.y);
             });
-            // ---
+
             if (counting) {
                 for (const rows of contentGrid) {
                     for (const entry of rows) {

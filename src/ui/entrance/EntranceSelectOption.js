@@ -61,17 +61,19 @@ export default class EntranceSelectOption extends BaseClass {
         if (areaContentHints) {
             const areaTagConfig = WorldListState.config.areaContentHints;
             for (const tag in areaContentHints) {
-                const areaTagData = areaTagConfig[tag];
-                if (areaTagData != null) {
-                    const value = areaContentHints[tag];
-                    const tagEl = document.createElement("emc-labeledicon");
-                    tagEl.src = areaTagData.icon;
-                    if (areaTagData.counting) {
-                        tagEl.text = value;
-                        tagEl.halign = "end";
-                        tagEl.valign = "end";
+                const value = parseInt(areaContentHints[tag]);
+                if (!isNaN(value) && value > 0) {
+                    const areaTagData = areaTagConfig[tag];
+                    if (areaTagData != null) {
+                        const tagEl = document.createElement("emc-labeledicon");
+                        tagEl.src = areaTagData.icon;
+                        if (areaTagData.counting) {
+                            tagEl.text = value;
+                            tagEl.halign = "end";
+                            tagEl.valign = "end";
+                        }
+                        tagsEl.append(tagEl);
                     }
-                    tagsEl.append(tagEl);
                 }
             }
         }

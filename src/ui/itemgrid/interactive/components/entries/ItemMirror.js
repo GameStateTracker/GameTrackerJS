@@ -97,10 +97,12 @@ export default class ItemMirror extends CustomElement {
                         const el = UIRegistry.get("itemgrid-item").create(data.type, newValue);
                         el.noValue = true;
                         el.addEventListener("click", (event) => {
+                            event.preventDefault();
                             event.stopPropagation();
                             this.dispatchEvent(new MouseEvent("click", event));
                         }, true);
                         el.addEventListener("contextmenu", (event) => {
+                            event.preventDefault();
                             event.stopPropagation();
                             this.dispatchEvent(new MouseEvent("contextmenu", event));
                         }, true);
