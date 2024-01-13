@@ -31,6 +31,8 @@ export default class MapPosInput extends CustomElement {
 
     #posScaleInputEl;
 
+    #entryMarkerLookup = new Map();
+
     #entryMarkerList = [];
 
     #connectionMarkerList = [];
@@ -163,7 +165,9 @@ export default class MapPosInput extends CustomElement {
         this.#currentMarkerType = currentType;
         this.#currentMarkerName = currentName;
         this.#currentMarkerLabel = currentLabel;
-        this.#currentMarkerEl = this.querySelector(`[data-ref="${currentType}__${currentName}"]`);
+        const type = this.#currentMarkerType ?? "";
+        const name = this.#currentMarkerName ?? "";
+        this.#currentMarkerEl = this.#entryMarkerLookup.get(`${type}::${name}`);
         if (this.#currentMarkerEl) {
             this.#currentMarkerEl.classList.add("active");
         }
@@ -198,10 +202,14 @@ export default class MapPosInput extends CustomElement {
         for (const entry of connections ?? []) {
             const {label, posA, posB} = entry;
             if (posA != null) {
-                this.#connectionMarkerList.push(this.#createMarker("connection", `${label}_posA`, posA.x, posA.y, posA.scale, label));
+                const markerEl = this.#createMarker("connection", `${label}_posA`, posA.x, posA.y, posA.scale, label);
+                this.#connectionMarkerList.push(markerEl);
+                this.#entryMarkerLookup.set(`Connection::${label}_posA`, markerEl);
             }
             if (posB != null) {
-                this.#connectionMarkerList.push(this.#createMarker("connection", `${label}_posB`, posB.x, posB.y, posB.scale, label));
+                const markerEl = this.#createMarker("connection", `${label}_posB`, posB.x, posB.y, posB.scale, label);
+                this.#connectionMarkerList.push(markerEl);
+                this.#entryMarkerLookup.set(`Connection::${label}_posB`, markerEl);
             }
         }
         this.#rerender();
@@ -211,11 +219,14 @@ export default class MapPosInput extends CustomElement {
     async loadEntries(entries) {
         await BusyIndicatorManager.busy();
         this.#entryMarkerList = [];
+        this.#entryMarkerLookup.clear();
         for (const entry of entries ?? []) {
             const {pos = {}, ref = {}} = entry ?? {};
             const {type = null, name = null} = ref ?? {};
             if (type != null && pos != null) {
-                this.#entryMarkerList.push(this.#createMarker(type, name, pos.x, pos.y, pos.scale));
+                const markerEl = this.#createMarker(type, name, pos.x, pos.y, pos.scale);
+                this.#entryMarkerList.push(markerEl);
+                this.#entryMarkerLookup.set(`${type}::${name}`, markerEl);
             }
         }
         this.#rerender();
@@ -229,7 +240,6 @@ export default class MapPosInput extends CustomElement {
             el.x = x;
             el.y = y;
             el.scale = scale;
-            el.dataset.ref = `${type}__${name}`;
             if (label != null) {
                 el.label = label;
             }
@@ -243,7 +253,7 @@ export default class MapPosInput extends CustomElement {
 
     #handleCurrentMarker() {
         if (this.#xValue != null && this.#yValue != null) {
-            if (this.#currentMarkerEl) {
+            if (this.#currentMarkerEl != null) {
                 if (this.#currentMarkerEl.x != this.#xValue || this.#currentMarkerEl.y != this.#yValue || this.#currentMarkerEl.scale != this.#scaleValue) {
                     this.#currentMarkerEl.x = this.#xValue;
                     this.#currentMarkerEl.y = this.#yValue;
@@ -252,14 +262,20 @@ export default class MapPosInput extends CustomElement {
                     this.#onChange();
                 }
             } else {
-                this.#currentMarkerEl = this.#createMarker(this.#currentMarkerType, this.#currentMarkerName, this.#xValue, this.#yValue, this.#scaleValue, this.#currentMarkerLabel);
-                if (this.#currentMarkerEl) {
+                const type = this.#currentMarkerType ?? "";
+                const name = this.#currentMarkerName ?? "";
+                this.#currentMarkerEl = this.#createMarker(type, name ?? "", this.#xValue, this.#yValue, this.#scaleValue, this.#currentMarkerLabel);
+                if (this.#currentMarkerEl != null) {
+                    this.#entryMarkerLookup.set(`${type}::${name}`, this.#currentMarkerEl);
                     this.#currentMarkerEl.classList.add("active");
                     this.append(this.#currentMarkerEl);
                     this.#onChange();
                 }
             }
-        } else if (this.#currentMarkerEl) {
+        } else if (this.#currentMarkerEl != null) {
+            const type = this.#currentMarkerType ?? "";
+            const name = this.#currentMarkerName ?? "";
+            this.#entryMarkerLookup.delete(`${type}::${name}`);
             this.#currentMarkerEl.remove();
             this.#currentMarkerEl = null;
             this.#onChange();
@@ -275,8 +291,10 @@ export default class MapPosInput extends CustomElement {
         for (const el of this.#entryMarkerList) {
             this.append(el);
         }
-        this.#currentMarkerEl = this.querySelector(`[data-ref="${this.#currentMarkerType}__${this.#currentMarkerName}"]`);
-        if (this.#currentMarkerEl) {
+        const type = this.#currentMarkerType ?? "";
+        const name = this.#currentMarkerName ?? "";
+        this.#currentMarkerEl = this.#entryMarkerLookup.get(`${type}::${name}`);
+        if (this.#currentMarkerEl != null) {
             this.#currentMarkerEl.classList.add("active");
         }
         await BusyIndicatorManager.unbusy();

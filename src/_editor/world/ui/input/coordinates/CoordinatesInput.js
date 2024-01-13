@@ -15,6 +15,12 @@ export default class CoordinatesInput extends CustomFormElementDelegating {
 
     #buttonEl;
 
+    #currentType = "";
+
+    #currentName = "";
+
+    #currentLabel = "";
+
     #coordinatesInputModal = new CoordinatesInputModal();
 
     constructor() {
@@ -26,6 +32,7 @@ export default class CoordinatesInput extends CustomFormElementDelegating {
         this.#buttonEl = this.shadowRoot.getElementById("button");
         this.#buttonEl.addEventListener("click", () => {
             this.#coordinatesInputModal.value = this.value;
+            this.#coordinatesInputModal.setCurrentMarker(this.#currentType, this.#currentName, this.#currentLabel);
             this.#coordinatesInputModal.show();
         });
         this.#coordinatesInputModal.addEventListener("submit", () => {
@@ -84,11 +91,17 @@ export default class CoordinatesInput extends CustomFormElementDelegating {
     }
 
     static get observedAttributes() {
-        return ["value", "sorted"];
+        return ["name", "value", "sorted"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
         switch (name) {
+            case "name": {
+                if (oldValue != newValue) {
+                    this.#coordinatesInputModal = CoordinatesInputModal.getModalByName(newValue);
+                    this.#coordinatesInputModal.name = newValue;
+                }
+            } break;
             case "value": {
                 if (oldValue != newValue) {
                     if (this.#value === undefined) {
@@ -131,7 +144,9 @@ export default class CoordinatesInput extends CustomFormElementDelegating {
     }
 
     setCurrentMarker(currentType, currentName, currentLabel) {
-        this.#coordinatesInputModal.setCurrentMarker(currentType, currentName, currentLabel);
+        this.#currentType = currentType;
+        this.#currentName = currentName;
+        this.#currentLabel = currentLabel;
     }
 
     loadMapData(mapData) {

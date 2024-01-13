@@ -15,7 +15,9 @@ import {
 } from "/emcJS/util/helper/collection/ArrayMutations.js";
 import SimpleDataProvider from "/emcJS/util/grid/provider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
+import LogicElementModal from "/emcJS/ui/form/element/input/logic/components/modal/LogicElementModal.js";
 import ModalDialogAddTypeEntities from "../../modal/ModalDialogAddTypeEntities.js";
+import CoordinatesInputModal from "../coordinates/components/CoordinatesInputModal.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/form/button/Button.js";
 import "/emcJS/ui/grid/DataGrid.js";
@@ -41,13 +43,7 @@ export default class MarkerListInput extends CustomFormElementDelegating {
 
     #dataManager;
 
-    #mapData = {};
-
-    #connections = [];
-
     #relationSelectModal = new ModalDialogAddTypeEntities();
-
-    #logicOperatorGroups = new Set();
 
     constructor() {
         super();
@@ -106,10 +102,6 @@ export default class MarkerListInput extends CustomFormElementDelegating {
                 this.value = newValue;
             }
         }));
-        this.#gridEl.addEventListener("rows-updated", () => {
-            this.#updateCoordinateCells();
-            this.#updateVisibleCells();
-        });
         this.#gridEl.addEventListener("move-row-up", (event) => {
             event.stopPropagation();
             event.preventDefault();
@@ -261,11 +253,14 @@ export default class MarkerListInput extends CustomFormElementDelegating {
     }
 
     #applyValue(value) {
-        const data = value.map((row) => {
+        const currentList = value ?? [];
+        this.#loadEntries(currentList);
+        const data = currentList.map((row) => {
             return {
                 name: this.#generateRowName(row.ref),
                 entityType: row.ref.type,
                 entityName: row.ref.name,
+                entityLabel: "",
                 relation: row.ref,
                 pos: row.pos,
                 visible: row.visible
@@ -278,54 +273,44 @@ export default class MarkerListInput extends CustomFormElementDelegating {
         return `${entry.name}\n[${entry.type}]`
     }
 
-    #updateCoordinateCells = debounce(async () => {
+    async addOperatorGroup(...groupList) {
         await BusyIndicatorManager.busy();
-        const coordinatesColumCells = this.#gridEl.getAllCellsForColumn("pos");
-        for (const coordinatesCell of coordinatesColumCells) {
-            const rowData = coordinatesCell.rowData;
-            const {entityType, entityName} = rowData;
-            coordinatesCell.setCurrentMarker(entityType.toLowerCase(), entityName);
-            coordinatesCell.loadMapData(this.#mapData);
-            coordinatesCell.loadConnections(this.#connections);
-            coordinatesCell.loadEntries(this.#value ?? []);
-        }
+        const gridId = this.#gridEl.internalId;
+        const modal = LogicElementModal.getModalByName(`${gridId}-visible`);
+        modal.addOperatorGroup(...groupList);
         await BusyIndicatorManager.unbusy();
-    });
-
-    #updateVisibleCells = debounce(async () => {
-        await BusyIndicatorManager.busy();
-        const coordinatesColumCells = this.#gridEl.getAllCellsForColumn("visible");
-        for (const visibleCell of coordinatesColumCells) {
-            visibleCell.addOperatorGroup(...this.#logicOperatorGroups);
-        }
-        await BusyIndicatorManager.unbusy();
-    });
-
-    loadMapData(mapData) {
-        this.#mapData = deepClone(mapData);
-        this.#updateCoordinateCells();
     }
 
-    loadConnections(connections) {
-        this.#connections = deepClone(connections);
-        this.#updateCoordinateCells();
+    async removeOperatorGroup(...groupList) {
+        await BusyIndicatorManager.busy();
+        const gridId = this.#gridEl.internalId;
+        const modal = LogicElementModal.getModalByName(`${gridId}-visible`);
+        modal.removeOperatorGroup(...groupList);
+        await BusyIndicatorManager.unbusy();
     }
 
-    addOperatorGroup(...groupList) {
-        let changes = false;
-        for (const group of groupList) {
-            if (!(typeof group === "string") || group === "") {
-                continue;
-            }
-            if (!this.#logicOperatorGroups.has(group)) {
-                this.#logicOperatorGroups.add(group);
-                changes = true;
-            }
-        }
-        /* --- */
-        if (changes) {
-            this.#updateVisibleCells();
-        }
+    async loadMapData(mapData) {
+        await BusyIndicatorManager.busy();
+        const gridId = this.#gridEl.internalId;
+        const modal = CoordinatesInputModal.getModalByName(`${gridId}-pos`);
+        modal.loadMapData(mapData);
+        await BusyIndicatorManager.unbusy();
+    }
+
+    async #loadEntries(entries) {
+        await BusyIndicatorManager.busy();
+        const gridId = this.#gridEl.internalId;
+        const modal = CoordinatesInputModal.getModalByName(`${gridId}-pos`);
+        modal.loadEntries(entries);
+        await BusyIndicatorManager.unbusy();
+    }
+
+    async loadConnections(connections) {
+        await BusyIndicatorManager.busy();
+        const gridId = this.#gridEl.internalId;
+        const modal = CoordinatesInputModal.getModalByName(`${gridId}-pos`);
+        modal.loadConnections(connections);
+        await BusyIndicatorManager.unbusy();
     }
 
 }

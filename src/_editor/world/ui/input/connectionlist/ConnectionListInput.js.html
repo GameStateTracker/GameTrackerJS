@@ -3,8 +3,8 @@
 </div>
 <emc-grid-datagrid id="grid" stretched="name">
     <emc-grid-column name="name" caption="Label" type="string" width="200"></emc-grid-column>
-    <emc-grid-column name="posA" caption="Position A" type="coordinates" width="300" editable action="posA"></emc-grid-column>
-    <emc-grid-column name="posB" caption="Position B" type="coordinates" width="300" editable action="posB"></emc-grid-column>
+    <emc-grid-column name="posA" caption="Position A" type="coordinates" width="300" editable action="posA" postfix="_posA"></emc-grid-column>
+    <emc-grid-column name="posB" caption="Position B" type="coordinates" width="300" editable action="posB" postfix="_posB"></emc-grid-column>
     <emc-grid-column name="delete" caption="" type="button" width="100" text="Delete" action="delete"></emc-grid-column>
 </emc-grid-datagrid>
 <emc-form-row class="footer" align="end">

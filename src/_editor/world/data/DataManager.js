@@ -167,6 +167,7 @@ class DataManager extends EventTarget {
 
     reset() {
         this.#config.set(DEFAULT_CONFIG);
+        this.#config.flushChange();
         this.#locationStorage.clear();
         this.#collectionStorage.clear();
         this.#areaStorage.clear();
@@ -175,6 +176,7 @@ class DataManager extends EventTarget {
 
     loadData(value) {
         this.#config.set(value.config);
+        this.#config.flushChange();
         this.#locationStorage.deserialize(value.locations);
         this.#collectionStorage.deserialize(value.collections);
         this.#areaStorage.deserialize(value.areas);
@@ -300,6 +302,22 @@ class DataManager extends EventTarget {
             }
         }
         return null;
+    }
+
+    hasChanges() {
+        return this.#config.hasChange() ||
+            this.#locationStorage.hasChanges() ||
+            this.#collectionStorage.hasChanges() ||
+            this.#areaStorage.hasChanges() ||
+            this.#exitStorage.hasChanges();
+    }
+
+    flushChanges() {
+        this.#config.flushChange();
+        this.#locationStorage.flushChanges();
+        this.#collectionStorage.flushChanges();
+        this.#areaStorage.flushChanges();
+        this.#exitStorage.flushChanges();
     }
 
 }

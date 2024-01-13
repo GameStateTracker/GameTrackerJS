@@ -1,10 +1,12 @@
 import CustomFormElementDelegating from "/emcJS/ui/element/CustomFormElementDelegating.js";
+import ImageSelectModal from "/emcJS/ui/form/element/select/image/components/ImageSelectModal.js";
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
 import {
     isEqual
 } from "/emcJS/util/helper/Comparator.js";
+import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import SimpleDataProvider from "/emcJS/util/grid/provider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
@@ -188,6 +190,14 @@ export default class AreaHintListInput extends CustomFormElementDelegating {
             }
         });
         this.#dataManager.setSource(data);
+    }
+
+    async setImageSelctOptionGroup(value) {
+        await BusyIndicatorManager.busy();
+        const gridId = this.#gridEl.internalId;
+        const modal = ImageSelectModal.getModalByName(`${gridId}-icon`);
+        modal.optiongroup = value;
+        await BusyIndicatorManager.unbusy();
     }
 
 }

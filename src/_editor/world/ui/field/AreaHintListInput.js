@@ -82,6 +82,10 @@ export default class AreaHintListInput extends AbstractFormInput {
         this.#inputEl.loadFilterConfig(config);
     }
 
+    setImageSelctOptionGroup(value) {
+        this.#inputEl.setImageSelctOptionGroup(value);
+    }
+
 }
 
 FormElementRegistry.register("AreaHintList", AreaHintListInput);

@@ -3,7 +3,11 @@ import TokenRegistry from "/emcJS/data/registry/form/TokenRegistry.js";
 import LogicOperatorRegistry from "/emcJS/data/registry/LogicOperatorRegistry.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import TypeValidator from "/emcJS/util/type/TypeValidator.js";
+import {
+    deepClone
+} from "/emcJS/util/helper/DeepClone.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
+import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import "/emcJS/ui/container/CaptionPanel.js";
 import "/emcJS/ui/container/CollapsePanel.js";
 import Controller_Areas from "./components/areas/Controller.js";
@@ -22,9 +26,6 @@ import "./util/ExtendedFormFieldsLoader.js";
 import "./ui/tree/StructureEditorTree.js";
 import TPL from "./WorldEditor.js.html" assert {type: "html"};
 import STYLE from "./WorldEditor.js.css" assert {type: "css"};
-import {
-    deepClone
-} from "/emcJS/util/helper/DeepClone.js";
 
 class WorldEditor extends CustomElement {
 
@@ -92,16 +93,18 @@ class WorldEditor extends CustomElement {
             if (type === "Area") {
                 for (const name in data) {
                     const entry = data[name];
-                    const listNames = Object.keys(entry.lists);
-                    if (listNames.length > 1) {
-                        LogicOperatorRegistry.setOperator("active area list", `arealist[${name}]`, {
-                            type: "state",
-                            options: deepClone(listNames),
-                            value: listNames[0]
-                        });
-                    } else {
-                        LogicOperatorRegistry.deleteOperator("active area list", `arealist[${name}]`);
+                    if (entry.lists != null) {
+                        const listNames = Object.keys(entry.lists);
+                        if (listNames.length > 1) {
+                            LogicOperatorRegistry.setOperator("active area list", `arealist[${name}]`, {
+                                type: "state",
+                                options: deepClone(listNames),
+                                value: listNames[0]
+                            });
+                            continue;
+                        }
                     }
+                    LogicOperatorRegistry.deleteOperator("active area list", `arealist[${name}]`);
                 }
             }
         });
@@ -111,41 +114,56 @@ class WorldEditor extends CustomElement {
     }
 
     async setWorldData(data) {
-        await BusyIndicatorManager.busy();
-        TypeValidator.validate("World", data, {throwErrors: true});
-        DataManager.loadData(data);
-        this.reloadDetailEditor();
-        /* --- */
-        const options = Object.keys(data.config.areaContentHints);
-        this.#optionGroupRegistry.setAll(options);
-        /* --- */
-        this.#tagsTokenRegistry.clear();
-        LogicOperatorRegistry.clearGroup("arealist");
-        const extractedTags = new Set();
-        for (const entry of Object.values(data.locations)) {
-            for (const tag of entry.tags) {
-                extractedTags.add(tag);
+        try {
+            await BusyIndicatorManager.busy();
+            /* --- */
+            scope.reset();
+            this.switchDetailEditor();
+            DataManager.loadData(data);
+            /* --- */
+            const options = Object.keys(data.config.areaContentHints);
+            this.#optionGroupRegistry.setAll(options);
+            /* --- */
+            this.#tagsTokenRegistry.clear();
+            LogicOperatorRegistry.clearGroup("arealist");
+            const extractedTags = new Set();
+            for (const entry of Object.values(data.locations)) {
+                for (const tag of entry.tags) {
+                    extractedTags.add(tag);
+                }
             }
-        }
-        for (const entry of Object.values(data.areas)) {
-            for (const tag of entry.tags) {
-                extractedTags.add(tag);
+            for (const entry of Object.values(data.areas)) {
+                for (const tag of entry.tags) {
+                    extractedTags.add(tag);
+                }
             }
-        }
-        for (const entry of Object.values(data.exits)) {
-            for (const tag of entry.tags) {
-                extractedTags.add(tag);
+            for (const entry of Object.values(data.exits)) {
+                for (const tag of entry.tags) {
+                    extractedTags.add(tag);
+                }
             }
+            this.#tagsTokenRegistry.setAll(extractedTags);
+            /* --- */
+            await BusyIndicatorManager.unbusy();
+        } catch {
+            DataManager.reset();
+            await BusyIndicatorManager.unbusy();
+            await ModalDialog.alert("Error loading data", "The provided data does not match the expected configuration.");
         }
-        this.#tagsTokenRegistry.setAll(extractedTags);
-        /* --- */
-        await BusyIndicatorManager.unbusy();
     }
 
     getWorldData() {
         const data = DataManager.getData();
         TypeValidator.validate("World", data, {throwErrors: true});
         return data;
+    }
+
+    checkWorldDataHasChanges() {
+        return DataManager.hasChanges();
+    }
+
+    flushWorldDataChanges() {
+        DataManager.flushChanges();
     }
 
     checkCurrentEditorHasChanges() {

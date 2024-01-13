@@ -11,6 +11,7 @@ import {
 } from "/emcJS/util/helper/DeepClone.js";
 import SimpleDataProvider from "/emcJS/util/grid/provider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
+import CoordinatesInputModal from "../coordinates/components/CoordinatesInputModal.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/form/button/Button.js";
 import "/emcJS/ui/grid/DataGrid.js";
@@ -29,10 +30,6 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
     #addEl;
 
     #dataManager;
-
-    #mapData = {};
-
-    #entries = [];
 
     constructor() {
         super();
@@ -92,9 +89,6 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
                 this.value = newValue;
             }
         }));
-        this.#gridEl.addEventListener("rows-updated", () => {
-            this.#updateCoordinateCells();
-        });
         /* --- */
         this.#addEl = this.shadowRoot.getElementById("add");
         this.#addEl.addEventListener("click", async () => {
@@ -219,9 +213,14 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
     }
 
     #applyValue(value) {
-        const data = value.map((row) => {
+        const currentList = value ?? [];
+        this.#loadConnections(currentList);
+        const data = currentList.map((row) => {
             return {
                 name: row.label,
+                entityType: "Connection",
+                entityName: row.label,
+                entityLabel: row.label,
                 posA: row.posA,
                 posB: row.posB
             }
@@ -229,37 +228,34 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
         this.#dataManager.setSource(data);
     }
 
-    #updateCoordinateCells = debounce(async () => {
+    async loadMapData(mapData) {
         await BusyIndicatorManager.busy();
-        const coordinatesColumCellsA = this.#gridEl.getAllCellsForColumn("posA");
-        for (const coordinatesCell of coordinatesColumCellsA) {
-            const rowData = coordinatesCell.rowData;
-            const {name} = rowData;
-            coordinatesCell.setCurrentMarker("connection", `${name}_posA`, name);
-            coordinatesCell.loadMapData(this.#mapData);
-            coordinatesCell.loadConnections(this.#value ?? []);
-            coordinatesCell.loadEntries(this.#entries);
-        }
-        const coordinatesColumCellsB = this.#gridEl.getAllCellsForColumn("posB");
-        for (const coordinatesCell of coordinatesColumCellsB) {
-            const rowData = coordinatesCell.rowData;
-            const {name} = rowData;
-            coordinatesCell.setCurrentMarker("connection", `${name}_posB`, name);
-            coordinatesCell.loadMapData(this.#mapData);
-            coordinatesCell.loadConnections(this.#value ?? []);
-            coordinatesCell.loadEntries(this.#entries);
-        }
+        const gridId = this.#gridEl.internalId;
+        const modalA = CoordinatesInputModal.getModalByName(`${gridId}-posA`);
+        modalA.loadMapData(mapData);
+        const modalB = CoordinatesInputModal.getModalByName(`${gridId}-posB`);
+        modalB.loadMapData(mapData);
         await BusyIndicatorManager.unbusy();
-    });
-
-    loadMapData(mapData) {
-        this.#mapData = deepClone(mapData);
-        this.#updateCoordinateCells();
     }
 
-    loadEntries(entries) {
-        this.#entries = deepClone(entries);
-        this.#updateCoordinateCells();
+    async loadEntries(entries) {
+        await BusyIndicatorManager.busy();
+        const gridId = this.#gridEl.internalId;
+        const modalA = CoordinatesInputModal.getModalByName(`${gridId}-posA`);
+        modalA.loadEntries(entries);
+        const modalB = CoordinatesInputModal.getModalByName(`${gridId}-posB`);
+        modalB.loadEntries(entries);
+        await BusyIndicatorManager.unbusy();
+    }
+
+    async #loadConnections(connections) {
+        await BusyIndicatorManager.busy();
+        const gridId = this.#gridEl.internalId;
+        const modalA = CoordinatesInputModal.getModalByName(`${gridId}-posA`);
+        modalA.loadConnections(connections);
+        const modalB = CoordinatesInputModal.getModalByName(`${gridId}-posB`);
+        modalB.loadConnections(connections);
+        await BusyIndicatorManager.unbusy();
     }
 
 }

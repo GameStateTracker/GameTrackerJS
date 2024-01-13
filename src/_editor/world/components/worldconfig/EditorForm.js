@@ -38,22 +38,25 @@ export default class EditorForm_WorldConfig extends CustomElement {
         this.#formContainerEl = this.shadowRoot.getElementById("form-container");
         this.#detailFormEl = this.shadowRoot.getElementById("detail-form");
         this.#formContext.registerForm(this.#detailFormEl);
-        this.#prepareForm();
         /* --- */
         const headerFormEl = this.shadowRoot.getElementById("header-form");
         this.#formContext.registerForm(headerFormEl);
         const footerFormEl = this.shadowRoot.getElementById("footer-form");
         this.#formContext.registerForm(footerFormEl);
         /* --- */
-        this.#areaHintEl = this.shadowRoot.getElementById("area-hints");
-        this.#areaHintEl.addEventListener("change", () => {
-            const options = Object.keys(this.#areaHintEl.value);
-            this.#optionGroupRegistry.setAll(options);
-        });
+        this.#prepareForm();
     }
 
     #prepareForm() {
         FormBuilder.replaceForm(this.#detailFormEl, FORM_CONFIG);
+        /* --- */
+        this.#areaHintEl = this.shadowRoot.getElementById("area-hints");
+        /* --- */
+        this.#areaHintEl.setImageSelctOptionGroup("worldEditor_icons");
+        this.#areaHintEl.addEventListener("change", () => {
+            const options = Object.keys(this.#areaHintEl.value);
+            this.#optionGroupRegistry.setAll(options);
+        });
     }
 
     acceptChanges() {

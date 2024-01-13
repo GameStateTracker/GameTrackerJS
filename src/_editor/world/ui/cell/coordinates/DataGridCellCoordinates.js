@@ -24,50 +24,55 @@ export default class DataGridCellCoordinates extends DataGridCell {
         this.#inputEventManager.set("change", (event) => {
             this.#onInput(event);
         });
-    }
-
-    setCurrentMarker(currentType, currentName, currentLabel) {
-        this.#inputEl.setCurrentMarker(currentType, currentName, currentLabel);
-    }
-
-    loadMapData(mapData) {
-        this.#inputEl.loadMapData(mapData);
-    }
-
-    loadConnections(connections) {
-        this.#inputEl.loadConnections(connections);
-    }
-
-    loadEntries(entries) {
-        this.#inputEl.loadEntries(entries);
-    }
-
-    get value() {
-        return this.getJSONAttribute("value");
+        /* --- */
+        this.addEventListener("rowdata", () => {
+            const {entityType = "", entityName = "", entityLabel = ""} = this.rowData ?? {};
+            this.#inputEl.setCurrentMarker(entityType, `${this.prefix}${entityName}${this.postfix}`, entityLabel);
+        });
     }
 
     set value(val) {
         this.setJSONAttribute("value", val);
     }
 
-    get action() {
-        return this.getAttribute("action");
+    get value() {
+        return this.getJSONAttribute("value");
     }
 
     set action(val) {
         this.setAttribute("action", val);
     }
 
-    get editable() {
-        return this.getBooleanAttribute("editable");
+    get action() {
+        return this.getAttribute("action");
     }
 
     set editable(val) {
         this.setBooleanAttribute("editable", val);
     }
 
+    get editable() {
+        return this.getBooleanAttribute("editable");
+    }
+
+    set prefix(val) {
+        this.setAttribute("prefix", val);
+    }
+
+    get prefix() {
+        return this.getAttribute("prefix") ?? "";
+    }
+
+    set postfix(val) {
+        this.setAttribute("postfix", val);
+    }
+
+    get postfix() {
+        return this.getAttribute("postfix") ?? "";
+    }
+
     static get observedAttributes() {
-        return [...super.observedAttributes, "editable", "row-name"];
+        return [...super.observedAttributes, "editable", "row-name", "prefix", "postfix"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -83,6 +88,14 @@ export default class DataGridCellCoordinates extends DataGridCell {
                 } break;
                 case "row-name": {
                     // this.#inputEl.setModalRefName(newValue);
+                } break;
+                case "col-name": {
+                    this.#inputEl.name = `${this.dataGridId}-${newValue}`;
+                } break;
+                case "prefix":
+                case "postfix": {
+                    const {type = "", name = ""} = this.rowData ?? {};
+                    this.#inputEl.setCurrentMarker(type, `${this.prefix}${name}${this.postfix}`, name);
                 } break;
             }
         }
@@ -128,6 +141,18 @@ export default class DataGridCellCoordinates extends DataGridCell {
             y: yValue,
             scale: scaleValue
         };
+    }
+
+    loadMapData(mapData) {
+        this.#inputEl.loadMapData(mapData);
+    }
+
+    loadConnections(connections) {
+        this.#inputEl.loadConnections(connections);
+    }
+
+    loadEntries(entries) {
+        this.#inputEl.loadEntries(entries);
     }
 
 }

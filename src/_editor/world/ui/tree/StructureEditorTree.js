@@ -4,12 +4,9 @@ import {
     mix
 } from "/emcJS/util/Mixin.js";
 import "/emcJS/ui/tree/Tree.js";
-// import StructureTreeContextMenuForm from "./contextmenu/StructureTreeContextMenuForm.js";
-// import StructureTreeContextMenuFormElement from "./contextmenu/StructureTreeContextMenuFormElement.js";
-// import StructureTreeContextMenuFormElementWithChild from "./contextmenu/StructureTreeContextMenuFormElementWithChild.js";
+import TreeConfigExtractor from "../../util/TreeConfigExtractor.js";
 import TPL from "./StructureEditorTree.js.html" assert {type: "html"};
 import STYLE from "./StructureEditorTree.js.css" assert {type: "css"};
-import TreeConfigExtractor from "../../util/TreeConfigExtractor.js";
 
 const DEFAULT_TREE_CONFIG_EXTRACTOR = new TreeConfigExtractor()
 
@@ -31,7 +28,7 @@ export default class StructureEditorTree extends BaseClass {
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.addEventListener("contextmenusclosed", () => {
-            this.#treeEl.markItemByPathForMenu();
+            this.#treeEl.markItemForMenuByPath();
         });
         /* --- */
         this.#treeEl = this.shadowRoot.getElementById("tree");
@@ -42,7 +39,7 @@ export default class StructureEditorTree extends BaseClass {
         });
         this.#treeEl.addEventListener("menu", (event) => {
             const {path, element} = event.data;
-            this.#treeEl.markItemByPathForMenu(path);
+            this.#treeEl.markItemForMenuByPath(path);
             if (path.length === 1) {
                 this.showContextMenu("form", event, {path});
             } else if (path.length > 1) {

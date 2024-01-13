@@ -11,6 +11,7 @@ import {
 } from "/emcJS/util/Debouncer.js";
 import SimpleDataProvider from "/emcJS/util/grid/provider/SimpleDataProvider.js";
 import CharacterSearch from "/emcJS/util/search/CharacterSearch.js";
+import LogicElementModal from "/emcJS/ui/form/element/input/logic/components/modal/LogicElementModal.js";
 import "/emcJS/ui/grid/DataGrid.js";
 import TPL from "./FilterInput.js.html" assert {type: "html"};
 import STYLE from "./FilterInput.js.css" assert {type: "css"};
@@ -55,9 +56,9 @@ export default class FilterInput extends CustomFormElementDelegating {
             this.value = currentValue;
         }, 300));
         this.#gridEl.addEventListener("rows-updated", () => {
-            const logicEls = this.#gridEl.getAllCellsForColumn("value");
-            for (const logicEl of logicEls) {
-                logicEl.addOperatorGroup(...this.#operatorGroups);
+            const logicColumnCells = this.#gridEl.getAllCellsForColumn("value");
+            for (const [, logicCell] of logicColumnCells) {
+                logicCell.addOperatorGroup(...this.#operatorGroups);
             }
         });
         /* --- */
@@ -93,50 +94,6 @@ export default class FilterInput extends CustomFormElementDelegating {
             const value = this.#value[valueName];
             valueEl.value = value ?? {};
         }
-    }
-
-    async addOperatorGroup(...groupList) {
-        await BusyIndicatorManager.busy();
-        let changes = false;
-        for (const group of groupList) {
-            if (!(typeof group === "string") || group === "") {
-                continue;
-            }
-            if (!this.#operatorGroups.has(group)) {
-                this.#operatorGroups.add(group);
-                changes = true;
-            }
-        }
-        /* --- */
-        if (changes) {
-            const logicEls = this.#gridEl.getAllCellsForColumn("value");
-            for (const logicEl of logicEls) {
-                logicEl.addOperatorGroup(...groupList);
-            }
-        }
-        await BusyIndicatorManager.unbusy();
-    }
-
-    async removeOperatorGroup(...groupList) {
-        await BusyIndicatorManager.busy();
-        let changes = false;
-        for (const group of groupList) {
-            if (!(typeof group === "string") || group === "") {
-                continue;
-            }
-            if (this.#operatorGroups.has(group)) {
-                this.#operatorGroups.delete(group);
-                changes = true;
-            }
-        }
-        /* --- */
-        if (changes) {
-            const logicEls = this.#gridEl.getAllCellsForColumn("value");
-            for (const logicEl of logicEls) {
-                logicEl.removeOperatorGroup(...groupList);
-            }
-        }
-        await BusyIndicatorManager.unbusy();
     }
 
     async loadFilterConfig(config) {
@@ -191,6 +148,22 @@ export default class FilterInput extends CustomFormElementDelegating {
         return this.#filterConfig.some((entry) => {
             return entry.category === category && entry.key === key;
         });
+    }
+
+    async addOperatorGroup(...groupList) {
+        await BusyIndicatorManager.busy();
+        const gridId = this.#gridEl.internalId;
+        const modal = LogicElementModal.getModalByName(`${gridId}-value`);
+        modal.addOperatorGroup(...groupList);
+        await BusyIndicatorManager.unbusy();
+    }
+
+    async removeOperatorGroup(...groupList) {
+        await BusyIndicatorManager.busy();
+        const gridId = this.#gridEl.internalId;
+        const modal = LogicElementModal.getModalByName(`${gridId}-value`);
+        modal.removeOperatorGroup(...groupList);
+        await BusyIndicatorManager.unbusy();
     }
 
 }
