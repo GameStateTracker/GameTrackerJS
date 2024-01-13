@@ -19,6 +19,11 @@
     },
     {
         "type": "SwitchInput",
+        "name": "visibleIfEmpty",
+        "label": "Visible if list is empty"
+    },
+    {
+        "type": "SwitchInput",
         "name": "visibleRootOnly",
         "label": "Visible on root only (dont show if in sub tree)"
     },

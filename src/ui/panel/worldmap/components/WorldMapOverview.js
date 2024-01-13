@@ -221,11 +221,11 @@ export default class WorldMapOverview extends BaseClass {
         /* map */
         const mapEl = this.shadowRoot.getElementById("map");
         if (mapEl != null) {
-            mapEl.style.backgroundImage = `url("${mapData.background}")`;
+            mapEl.style.backgroundImage = `url("${mapData.backgroundImage}")`;
         }
         const focusEl = this.shadowRoot.getElementById("focus");
         if (focusEl != null) {
-            focusEl.style.backgroundImage = `url("${mapData.background}")`;
+            focusEl.style.backgroundImage = `url("${mapData.backgroundImage}")`;
         }
         this.#calcutlateMask(width, height, 0, 0, zoom);
     }

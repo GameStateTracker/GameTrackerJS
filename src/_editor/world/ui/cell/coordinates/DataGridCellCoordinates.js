@@ -12,8 +12,8 @@ export default class DataGridCellCoordinates extends DataGridCell {
 
     #inputEventManager;
 
-    constructor() {
-        super();
+    constructor(dataGridId) {
+        super(dataGridId);
         this.shadowRoot.getElementById("content").append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* --- */

@@ -115,7 +115,7 @@ export default class DefaultAreaState extends BaseClass {
     }
 
     checkVisibility = debounce(() => {
-        const value = this.visible && this.listVisible && !this.filtered;
+        const value = this.visible && (this.props.visibleIfEmpty || this.listVisible) && !this.filtered;
         if (this.#visible != value) {
             this.#visible = value;
             // external

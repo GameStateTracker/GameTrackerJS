@@ -18,6 +18,11 @@
             "optional": false,
             "default": true
         },
+        "visibleIfEmpty": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        },
         "visibleRootOnly": {
             "@type": "Boolean",
             "optional": false,
