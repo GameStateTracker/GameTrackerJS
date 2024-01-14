@@ -1,9 +1,10 @@
-import DataManager from "../data/DataManager.js";
-import scope from "../data/WorldEditorScope";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
+import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {
     isEqual
 } from "/emcJS/util/helper/Comparator.js";
+import DataManager from "../data/DataManager.js";
+import scope from "../data/WorldEditorScope";
 
 export default class ComponentController extends Object {
 
@@ -34,10 +35,17 @@ export default class ComponentController extends Object {
         });
         // save data
         if (editorEl != null) {
-            editorEl.addEventListener("save", (event) => {
-                const ref = scope.entityName;
-                DataManager.writeEntity(this.#entityType, ref, event.data);
-                editorEl.acceptChanges();
+            editorEl.addEventListener("save", async (event) => {
+                try {
+                    await BusyIndicatorManager.busy();
+                    const ref = scope.entityName;
+                    DataManager.writeEntity(this.#entityType, ref, event.data);
+                    editorEl.acceptChanges();
+                    await BusyIndicatorManager.unbusy();
+                } catch {
+                    await BusyIndicatorManager.unbusy();
+                    await ModalDialog.alert("Error submitting data", "The submitted data does not match the expected configuration.\nPlease notify the creator of the editor!");
+                }
             });
         }
     }

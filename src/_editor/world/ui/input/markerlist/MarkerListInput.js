@@ -160,7 +160,8 @@ export default class MarkerListInput extends CustomFormElementDelegating {
                         ref: entityEntry,
                         pos: {
                             x: 0,
-                            y: 0
+                            y: 0,
+                            scale: 100
                         },
                         visible: true
                     }
