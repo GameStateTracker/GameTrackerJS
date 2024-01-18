@@ -113,9 +113,12 @@ export default class WorldListSubList extends BaseClass {
                 headerEl.classList.add("collapsible");
                 if (collapsible == "start_expanded") {
                     headerEl.classList.add("startexpanded");
+                } else {
+                    headerEl.classList.remove("startexpanded");
                 }
             } else {
                 headerEl.classList.remove("collapsible");
+                headerEl.classList.remove("startexpanded");
             }
         });
         const collapsible = sublistCollapsibleObserver.value;

@@ -148,7 +148,9 @@ export default class WorldListArea extends BaseClass {
         }
         /* collapsed */
         // TODO remember and restore collapsed state
-        this.setCollapsed(data.value == AccessStateEnum.OPENED);
+        if (data.value == AccessStateEnum.OPENED) {
+            this.setCollapsed(true);
+        }
     }
 
     applyHint(hint = "") {

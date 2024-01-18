@@ -42,7 +42,7 @@
             }
         },
         "listContents": {
-            "@type": "Logic",
+            "@type": "Boolean",
             "optional": false,
             "default": false
         },
