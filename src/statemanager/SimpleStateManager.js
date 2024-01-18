@@ -22,6 +22,13 @@ export default class SimpleStateManager {
         this.#propdata = props;
     }
 
+    setDefaultState(DefaultState) {
+        if (!(DefaultState.prototype instanceof DataState)) {
+            throw new Error("DefaultState must be an instance of DataState");
+        }
+        this.#defaultState = DefaultState;
+    }
+
     register(type, CustomState) {
         this.#classes.set(type, CustomState);
     }

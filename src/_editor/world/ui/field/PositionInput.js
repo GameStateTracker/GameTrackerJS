@@ -1,5 +1,5 @@
 import AbstractFormInput from "/emcJS/ui/form/abstract/AbstractFormInput.js";
-import FormElementRegistry from "/emcJS/data/registry/FormElementRegistry.js";
+import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.js";
 import {
     safeSetAttribute
 } from "/emcJS/util/helper/ui/NodeAttributes.js";

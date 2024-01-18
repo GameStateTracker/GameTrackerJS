@@ -200,7 +200,7 @@ export default class DefaultAreaState extends BaseClass {
     }
 
     get listContents() {
-        return /* !OptionsStorage.get("mixed_entrance_pool") && */ this.props.listContents ?? false;
+        return this.props.listContents ?? false;
     }
 
     get defaultAccess() {
