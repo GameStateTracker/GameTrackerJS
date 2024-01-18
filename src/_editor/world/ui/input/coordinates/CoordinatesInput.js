@@ -7,6 +7,7 @@ import CoordinatesInputModal from "./components/CoordinatesInputModal.js";
 import TPL from "./CoordinatesInput.js.html" assert {type: "html"};
 import STYLE from "./CoordinatesInput.js.css" assert {type: "css"};
 
+// TODO use modal handler
 export default class CoordinatesInput extends CustomFormElementDelegating {
 
     #value;
@@ -31,12 +32,13 @@ export default class CoordinatesInput extends CustomFormElementDelegating {
         this.#textEl = this.shadowRoot.getElementById("text");
         this.#buttonEl = this.shadowRoot.getElementById("button");
         this.#buttonEl.addEventListener("click", () => {
-            this.#coordinatesInputModal.value = this.value;
             this.#coordinatesInputModal.setCurrentMarker(this.#currentType, this.#currentName, this.#currentLabel);
+            this.#coordinatesInputModal.value = this.value;
+            this.#coordinatesInputModal.onsubmit = () => {
+                this.value = this.#coordinatesInputModal.value;
+                this.#coordinatesInputModal.setCurrentMarker();
+            };
             this.#coordinatesInputModal.show();
-        });
-        this.#coordinatesInputModal.addEventListener("submit", () => {
-            this.value = this.#coordinatesInputModal.value;
         });
     }
 
