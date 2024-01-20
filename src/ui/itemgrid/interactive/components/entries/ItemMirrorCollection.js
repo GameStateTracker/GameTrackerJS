@@ -16,6 +16,10 @@ export default class ItemMirrorCollection extends BaseClass {
 
     #valueEl;
 
+    #currentEl;
+
+    #maxEl;
+
     constructor() {
         super();
         const tpl = TPL.generate();
@@ -23,6 +27,10 @@ export default class ItemMirrorCollection extends BaseClass {
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.#valueEl = this.shadowRoot.getElementById("value");
+        this.#currentEl = this.shadowRoot.getElementById("current");
+        this.#maxEl = this.shadowRoot.getElementById("max");
+        this.#valueEl.append(this.#currentEl);
+        this.#valueEl.append(this.#maxEl);
         /* --- */
         this.registerStateHandler("max", () => {
             this.refreshValue();
@@ -33,7 +41,8 @@ export default class ItemMirrorCollection extends BaseClass {
     }
 
     applyDefaultValues() {
-        this.#valueEl.innerHTML = "";
+        this.#currentEl.innerHTML = 0;
+        this.#maxEl.innerHTML = 0;
         this.#valueEl.classList.toggle("mark", false);
     }
 
@@ -50,8 +59,12 @@ export default class ItemMirrorCollection extends BaseClass {
                 value += state.value ?? 0;
                 maxValue += state.max ?? 0;
             }
-            this.#valueEl.innerHTML = `${value} / ${maxValue}`;
+            this.#maxEl.innerHTML = maxValue;
+            this.#currentEl.innerHTML = value;
             this.#valueEl.classList.toggle("mark", value >= maxValue);
+        } else {
+            this.#maxEl.innerHTML = 0;
+            this.#currentEl.innerHTML = 0;
         }
     }
 

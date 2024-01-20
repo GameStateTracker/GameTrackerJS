@@ -276,13 +276,15 @@ export default class WorldList extends BaseClass {
             if (list != null && list.length > 0) {
                 for (const record of list) {
                     const loc = record.entry;
-                    elManagerData.push({
-                        key: loc.ref,
-                        type: record.type,
-                        subtype: loc.props.type,
-                        order: definedOrder++,
-                        state: record
-                    });
+                    if (!record.props.listHidden) {
+                        elManagerData.push({
+                            key: loc.ref,
+                            type: record.type,
+                            subtype: loc.props.type,
+                            order: definedOrder++,
+                            state: record
+                        });
+                    }
                 }
             }
         }

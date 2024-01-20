@@ -20,8 +20,8 @@ import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 
 const showDetailedMapsObserver = new SettingsObserver("show_detailed_maps");
 
-//TODO save map settings per map
-
+// TODO save map settings per map
+// TODO add "(to overworld)" button
 const TPL = new Template(`
 <gt-worldmap-view id="view"></gt-worldmap-view>
 <div class="overview-wrapper">
