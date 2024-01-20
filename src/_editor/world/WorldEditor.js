@@ -21,6 +21,7 @@ import Controller_Locations_Entry from "./components/locations_entry/Controller.
 import Controller_WorldConfig from "./components/worldconfig/Controller.js";
 import scope from "./data/WorldEditorScope.js";
 import DataManager from "./data/DataManager.js";
+import ComponentController from "./util/ComponentController.js";
 import "./util/ExtendedDataGridCellsLoader.js";
 import "./util/ExtendedFormFieldsLoader.js";
 import "./ui/tree/StructureEditorTree.js";
@@ -118,7 +119,12 @@ class WorldEditor extends CustomElement {
             await BusyIndicatorManager.busy();
             /* --- */
             scope.reset();
-            this.switchDetailEditor();
+            const currentEditorPath = ComponentController.getSelection();
+            if (currentEditorPath.length > 1) {
+                //this.switchDetailEditor();
+                this.#structureEditorTreeEl.selectItemByRefPath([currentEditorPath[0]]);
+                ComponentController.setSelection([currentEditorPath[0]]);
+            }
             DataManager.loadData(data);
             /* --- */
             const options = Object.keys(data.config.areaContentHints);

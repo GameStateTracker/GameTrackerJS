@@ -12,6 +12,8 @@ export default class DataGridTypeEntries extends CustomElementDelegating {
 
     #gridEl;
 
+    #paginationEl;
+
     #dataManager;
 
     constructor() {
@@ -43,9 +45,13 @@ export default class DataGridTypeEntries extends CustomElementDelegating {
             this.dispatchEvent(ev);
         });
         /* --- */
+        this.#paginationEl = this.shadowRoot.getElementById("pagination");
+        /* --- */
         this.#dataManager = new TypeStorageReferenceProvider(this.#gridEl);
+        this.#dataManager.setPagination(this.#paginationEl);
         this.#dataManager.setOptions({
-            sort: ["entityName"]
+            sort: ["entityName"],
+            pageSize: 15
         });
         /* --- */
         this.#searchEl = this.shadowRoot.getElementById("search");

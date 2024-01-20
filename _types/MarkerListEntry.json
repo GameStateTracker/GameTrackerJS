@@ -21,6 +21,10 @@
             "@type": "Logic",
             "optional": false,
             "default": true
+        },
+        "listHidden": {
+            "@type": "Boolean",
+            "default": false
         }
     }
 }

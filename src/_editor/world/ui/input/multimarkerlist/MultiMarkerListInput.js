@@ -122,6 +122,21 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
                 this.value = newValue;
             }
         }));
+        this.#gridEl.addEventListener("edit::listHidden", debounce((event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            const {value, rowName} = event.data;
+            const currentValue = this.value ?? [];
+            const currentList = currentValue[this.#activeList] ?? [];
+            const index = currentList.findIndex((entry) => {
+                return rowName === this.#generateRowName(entry.ref);
+            });
+            if (index >= 0) {
+                const newValue = deepClone(currentValue);
+                newValue[this.#activeList][index].listHidden = value;
+                this.value = newValue;
+            }
+        }));
         this.#gridEl.addEventListener("move-row-up", (event) => {
             event.stopPropagation();
             event.preventDefault();
@@ -196,7 +211,8 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
                                 y: 0,
                                 scale: 100
                             },
-                            visible: true
+                            visible: true,
+                            listHidden: false
                         }
                     ]
                 };

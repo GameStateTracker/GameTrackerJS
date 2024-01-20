@@ -157,5 +157,5 @@ export default class DataGridCellCoordinates extends DataGridCell {
 
 }
 
-DataGridCell.registerCellType("coordinates", DataGridCellCoordinates, 200);
+DataGridCell.registerCellType("coordinates", DataGridCellCoordinates, 210);
 customElements.define("gt-edt-grid-datagrid-cell-coordinates", DataGridCellCoordinates);

@@ -29,7 +29,10 @@ export default class Controller_Collections extends ComponentController {
                 }
             }
             DataManager.writeEntity("Collection", newName, {});
-            treeEl.selectItemByRefPath(["collections", newName]);
+            setTimeout(() => {
+                treeEl.selectItemByRefPath(["collections", newName]);
+                ComponentController.setSelection(["collections", newName]);
+            }, 0);
         });
         /* --- */
         if (editorEl != null) {
@@ -38,6 +41,7 @@ export default class Controller_Collections extends ComponentController {
                 event.preventDefault();
                 const {entityName} = event.data;
                 treeEl.selectItemByRefPath(["collections", entityName]);
+                ComponentController.setSelection(["collections", entityName]);
             });
         }
     }

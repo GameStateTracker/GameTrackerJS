@@ -29,7 +29,10 @@ export default class Controller_Locations extends ComponentController {
                 }
             }
             DataManager.writeEntity("Location", newName, {});
-            treeEl.selectItemByRefPath(["locations", newName]);
+            setTimeout(() => {
+                treeEl.selectItemByRefPath(["locations", newName]);
+                ComponentController.setSelection(["locations", newName]);
+            }, 0);
         });
         /* --- */
         if (editorEl != null) {
@@ -38,6 +41,7 @@ export default class Controller_Locations extends ComponentController {
                 event.preventDefault();
                 const {entityName} = event.data;
                 treeEl.selectItemByRefPath(["locations", entityName]);
+                ComponentController.setSelection(["locations", entityName]);
             });
         }
     }

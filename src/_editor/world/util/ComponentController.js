@@ -3,6 +3,9 @@ import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {
     isEqual
 } from "/emcJS/util/helper/Comparator.js";
+import {
+    deepClone
+} from "/emcJS/util/helper/DeepClone.js";
 import DataManager from "../data/DataManager.js";
 import scope from "../data/WorldEditorScope";
 
@@ -43,7 +46,7 @@ export default class ComponentController extends Object {
                     editorEl.acceptChanges();
                     await BusyIndicatorManager.unbusy();
                 } catch {
-                    await BusyIndicatorManager.unbusy();
+                    await BusyIndicatorManager.clear();
                     await ModalDialog.alert("Error submitting data", "The submitted data does not match the expected configuration.\nPlease notify the creator of the editor!");
                 }
             });
@@ -56,6 +59,14 @@ export default class ComponentController extends Object {
 
     get entityType() {
         return this.#entityType;
+    }
+
+    static getSelection() {
+        return deepClone(this.#currentSelection);
+    }
+
+    static setSelection(selection = []) {
+        this.#currentSelection = selection;
     }
 
 }

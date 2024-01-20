@@ -29,7 +29,10 @@ export default class Controller_Exits extends ComponentController {
                 }
             }
             DataManager.writeEntity("Exit", newName, {});
-            treeEl.selectItemByRefPath(["exits", newName]);
+            setTimeout(() => {
+                treeEl.selectItemByRefPath(["exits", newName]);
+                ComponentController.setSelection(["exits", newName]);
+            }, 0);
         });
         /* --- */
         if (editorEl != null) {
@@ -38,6 +41,7 @@ export default class Controller_Exits extends ComponentController {
                 event.preventDefault();
                 const {entityName} = event.data;
                 treeEl.selectItemByRefPath(["exits", entityName]);
+                ComponentController.setSelection(["exits", entityName]);
             });
         }
     }
