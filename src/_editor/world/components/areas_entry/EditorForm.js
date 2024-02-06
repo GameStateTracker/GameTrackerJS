@@ -1,6 +1,10 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import FormBuilder from "/emcJS/util/form/FormBuilder.js";
 import FormContext from "/emcJS/util/form/FormContext.js";
+import OptionGroupRegistry from "/emcJS/data/registry/form/OptionGroupRegistry.js";
+import {
+    deepClone
+} from "/emcJS/util/helper/DeepClone.js";
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
@@ -39,6 +43,12 @@ export default class EditorForm_Areas_Entry extends CustomElement {
 
     #markerListEl;
 
+    #data = {};
+
+    #filterConfig = {};
+
+    #optionGroup = new OptionGroupRegistry("worldEditor_areaContentHints");
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
@@ -61,6 +71,12 @@ export default class EditorForm_Areas_Entry extends CustomElement {
         this.#formContext.registerForm(headerFormEl);
         const footerFormEl = this.shadowRoot.getElementById("footer-form");
         this.#formContext.registerForm(footerFormEl);
+        /* --- */
+        this.#optionGroup.addEventListener("change", () => {
+            const fullData = this.getFullData(this.#data);
+            this.#formContext.loadData(fullData);
+            this.#updateMapData(fullData);
+        });
         /* --- */
         this.#prepareForm();
     }
@@ -117,9 +133,11 @@ export default class EditorForm_Areas_Entry extends CustomElement {
     }
 
     setData(data) {
-        this.#formContext.loadData(data);
+        this.#data = deepClone(data);
+        const fullData = this.getFullData(data);
+        this.#formContext.loadData(fullData);
         /* --- */
-        this.#updateMapData(data);
+        this.#updateMapData(fullData);
     }
 
     getData() {
@@ -131,7 +149,12 @@ export default class EditorForm_Areas_Entry extends CustomElement {
     }
 
     setFilterConfig(config) {
+        this.#filterConfig = deepClone(config);
         this.#filterInputEl.loadFilterConfig(config);
+        /* --- */
+        const fullData = this.getFullData(this.#data);
+        this.#formContext.loadData(fullData);
+        this.#updateMapData(fullData);
     }
 
     #updateMapData = debounce((data) => {
@@ -145,6 +168,45 @@ export default class EditorForm_Areas_Entry extends CustomElement {
         this.#markerListEl.loadMapData(data.map);
         this.#markerListEl.loadConnections(data.connections);
     });
+
+    getFullData(data) {
+        const res = {
+            type: data?.type ?? "",
+            category: data?.category ?? "",
+            visible: data?.visible ?? true,
+            visibleIfEmpty: data?.visibleIfEmpty ?? true,
+            visibleRootOnly: data?.visibleRootOnly ?? false,
+            filter: {},
+            listContents: data?.visibleIfEmpty ?? true,
+            accessPenetration: data?.visibleRootOnly ?? false,
+            icon: data?.icon ?? "",
+            map: {
+                active: data?.map?.active ?? false,
+                backgroundColor: data?.map?.backgroundColor ?? "#000000",
+                backgroundImage: data?.map?.backgroundImage ?? "",
+                width: data?.map?.width ?? 0,
+                height: data?.map?.height ?? 0,
+                zoom: data?.map?.zoom ?? 100
+            },
+            connections: data?.connections ?? [],
+            lists: data?.lists ?? {},
+            areaContentHints: {},
+            tags: data?.tags ?? []
+        };
+
+        for (const category in this.#filterConfig) {
+            res.filter[category] = {};
+            for (const key of this.#filterConfig[category]) {
+                res.filter[category][key] = data?.filter?.[category]?.[key] ?? true;
+            }
+        }
+
+        for (const [value] of this.#optionGroup) {
+            res.areaContentHints[value] = data?.areaContentHints?.[value] ?? 0;
+        }
+
+        return res;
+    }
 
 }
 

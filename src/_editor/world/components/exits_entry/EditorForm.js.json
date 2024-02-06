@@ -4,7 +4,8 @@
         "name": "type",
         "label": "Type",
         "optiongroup": "worldEditor_exitTypes",
-        "sorted": true
+        "sorted": true,
+        "required": true
     },
     {
         "type": "RelationSelect",
@@ -14,12 +15,14 @@
             "Exit"
         ],
         "placeholder": "Select exit...",
-        "sorted": true
+        "sorted": true,
+        "required": true
     },
     {
         "type": "StringInput",
         "name": "logicAccess",
-        "label": "Logic access reference"
+        "label": "Logic access reference",
+        "required": true
     },
     {
         "type": "RelationSelect",
@@ -29,7 +32,8 @@
             "Area"
         ],
         "placeholder": "Select area...",
-        "sorted": true
+        "sorted": true,
+        "required": true
     },
     {
         "type": "BoolOrLogicInput",
@@ -41,7 +45,8 @@
     {
         "type": "SwitchInput",
         "name": "visibleRootOnly",
-        "label": "Visible on root only (dont show if in sub tree)"
+        "label": "Visible on root only (dont show if in sub tree)",
+        "value": false
     },
     {
         "type": "FilterInput",
@@ -67,12 +72,14 @@
     {
         "type": "SwitchInput",
         "name": "unbindable",
-        "label": "Make entrance impossible to be bound"
+        "label": "Make entrance impossible to be bound",
+        "value": false
     },
     {
         "type": "SwitchInput",
         "name": "ignoreBound",
-        "label": "Include bound entrances"
+        "label": "Include bound entrances",
+        "value": false
     },
     {
         "type": "BoolOrLogicInput",
@@ -84,7 +91,8 @@
     {
         "type": "SwitchInput",
         "name": "includeInactiveEntrances",
-        "label": "Include inactive entrances"
+        "label": "Include inactive entrances",
+        "value": false
     },
     {
         "type": "SwitchInput",
@@ -96,7 +104,7 @@
         "type": "SwitchInput",
         "name": "ignoreMixedEntrances",
         "label": "Ignore in mixed entrances",
-        "value": true
+        "value": false
     },
     {
         "type": "TokenSelect",

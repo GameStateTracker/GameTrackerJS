@@ -153,7 +153,7 @@ class WorldEditor extends CustomElement {
             await BusyIndicatorManager.unbusy();
         } catch {
             DataManager.reset();
-            await BusyIndicatorManager.unbusy();
+            await BusyIndicatorManager.reset();
             await ModalDialog.alert("Error loading data", "The provided data does not match the expected configuration.");
         }
     }

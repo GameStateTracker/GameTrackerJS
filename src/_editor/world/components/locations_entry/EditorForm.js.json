@@ -5,12 +5,14 @@
         "label": "Type",
         "value": "chest",
         "optiongroup": "worldEditor_locationTypes",
-        "sorted": true
+        "sorted": true,
+        "required": true
     },
     {
         "type": "StringInput",
         "name": "logicAccess",
-        "label": "Access Name"
+        "label": "Access Name",
+        "required": true
     },
     {
         "type": "BoolOrLogicInput",

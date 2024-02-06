@@ -1,5 +1,5 @@
 import Dialog from "/emcJS/ui/overlay/window/Dialog.js";
-import LogicUIAbstractElement from "/editors/ui/logic/AbstractElement.js";
+import LogicUIAbstractElement from "/JSEditors/ui/logic/AbstractElement.js";
 import LogicResource from "/script/resource/LogicResource.js";
 
 class LogicViewer {

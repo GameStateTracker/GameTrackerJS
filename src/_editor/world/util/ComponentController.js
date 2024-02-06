@@ -44,9 +44,11 @@ export default class ComponentController extends Object {
                     const ref = scope.entityName;
                     DataManager.writeEntity(this.#entityType, ref, event.data);
                     editorEl.acceptChanges();
+                    // TODO toast
                     await BusyIndicatorManager.unbusy();
-                } catch {
-                    await BusyIndicatorManager.clear();
+                } catch (err) {
+                    console.error(err);
+                    await BusyIndicatorManager.reset();
                     await ModalDialog.alert("Error submitting data", "The submitted data does not match the expected configuration.\nPlease notify the creator of the editor!");
                 }
             });

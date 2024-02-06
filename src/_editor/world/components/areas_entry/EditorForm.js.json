@@ -4,7 +4,8 @@
         "name": "type",
         "label": "Type",
         "optiongroup": "worldEditor_areaTypes",
-        "sorted": true
+        "sorted": true,
+        "required": true
     },
     {
         "type": "StringInput",

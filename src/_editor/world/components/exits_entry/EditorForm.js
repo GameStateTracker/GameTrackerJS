@@ -1,6 +1,9 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import FormBuilder from "/emcJS/util/form/FormBuilder.js";
 import FormContext from "/emcJS/util/form/FormContext.js";
+import {
+    deepClone
+} from "/emcJS/util/helper/DeepClone.js";
 import "/emcJS/ui/form/FormContainer.js";
 import "/emcJS/ui/form/field/DefaultFormFieldsLoader.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
@@ -33,6 +36,10 @@ export default class EditorForm_Exits_Entry extends CustomElement {
     #visibleInputEl;
 
     #entranceActiveInputEl;
+
+    #data = {};
+
+    #filterConfig = {};
 
     constructor() {
         super();
@@ -85,7 +92,9 @@ export default class EditorForm_Exits_Entry extends CustomElement {
     }
 
     setData(data) {
-        this.#formContext.loadData(data);
+        this.#data = deepClone(data);
+        const fullData = this.getFullData(data);
+        this.#formContext.loadData(fullData);
     }
 
     getData() {
@@ -97,7 +106,41 @@ export default class EditorForm_Exits_Entry extends CustomElement {
     }
 
     setFilterConfig(config) {
+        this.#filterConfig = deepClone(config);
         this.#filterInputEl.loadFilterConfig(config);
+        /* --- */
+        const fullData = this.getFullData(this.#data);
+        this.#formContext.loadData(fullData);
+    }
+
+    getFullData(data) {
+        const res = {
+            type: data?.type ?? "",
+            target: data?.target,
+            logicAccess: data?.logicAccess ?? "",
+            area: data?.area,
+            visible: data?.visible ?? true,
+            visibleRootOnly: data?.visibleRootOnly ?? false,
+            filter: {},
+            icon: data?.icon ?? "",
+            bindsTo: data?.bindsTo ?? [],
+            unbindable: data?.unbindable ?? false,
+            ignoreBound: data?.ignoreBound ?? false,
+            entranceActive: data?.entranceActive ?? true,
+            includeInactiveEntrances: data?.includeInactiveEntrances ?? false,
+            isBiDir: data?.isBiDir ?? true,
+            ignoreMixedEntrances: data?.ignoreMixedEntrances ?? true,
+            tags: data?.tags ?? []
+        };
+
+        for (const category in this.#filterConfig) {
+            res.filter[category] = {};
+            for (const key of this.#filterConfig[category]) {
+                res.filter[category][key] = data?.filter?.[category]?.[key] ?? true;
+            }
+        }
+
+        return res;
     }
 
 }

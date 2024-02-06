@@ -105,9 +105,10 @@ export default class EditorForm_Collections_Entry extends CustomElement {
     }
 
     setData(data) {
-        this.#formContext.loadData(data);
+        const fullData = this.getFullData(data);
+        this.#formContext.loadData(fullData);
         /* --- */
-        this.#updateMapData(data);
+        this.#updateMapData(fullData);
     }
 
     getData() {
@@ -125,6 +126,22 @@ export default class EditorForm_Collections_Entry extends CustomElement {
     #updateMapData = debounce((data) => {
         this.#markerListEl.loadMapData(data.map);
     });
+
+    getFullData(data) {
+        const res = {
+            map: {
+                active: data?.map?.active ?? false,
+                backgroundColor: data?.map?.backgroundColor ?? "#000000",
+                backgroundImage: data?.map?.backgroundImage ?? "",
+                width: data?.map?.width ?? 0,
+                height: data?.map?.height ?? 0,
+                zoom: data?.map?.zoom ?? 100
+            },
+            list: data?.list ?? []
+        };
+
+        return res;
+    }
 
 }
 
