@@ -87,12 +87,14 @@ class MapMarkerElementManager extends ElementManager {
                     connectionPointEl.label = params.label;
                     connectionPointEl.left = position.x;
                     connectionPointEl.top = position.y;
+                    connectionPointEl.scale = position.scale;
                     el.append(connectionPointEl);
                 }
             }
         } else {
             el.left = params.x;
             el.top = params.y;
+            el.scale = params.scale;
             // XXX tooltips should really automatically adjust
             el.tooltip = calculateTooltipPosition(params.x, params.y, params.areaWidth, params.areaHeight);
         }
@@ -383,6 +385,7 @@ export default class WorldMapView extends BaseClass {
                             subtype: loc.props.type,
                             x: record.x,
                             y: record.y,
+                            scale: record.scale,
                             areaWidth: state.props.map.width,
                             areaHeight: state.props.map.height
                         });

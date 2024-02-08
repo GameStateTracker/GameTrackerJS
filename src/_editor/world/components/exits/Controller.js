@@ -23,6 +23,10 @@ export default class Controller_Exits extends ComponentController {
                 if (typeof newName !== "string") {
                     return;
                 }
+                if (newName === "") {
+                    await ModalDialog.alert("Invalid exit name", "The exit name can not be empty. Please enter another name!");
+                    newName = null;
+                }
                 if (DataManager.hasEntity("Exit", newName)) {
                     await ModalDialog.alert("Exit already exists", `The exit "${newName}" does already exist. Please enter another name!`);
                     newName = null;

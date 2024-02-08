@@ -23,6 +23,10 @@ export default class Controller_Collections extends ComponentController {
                 if (typeof newName !== "string") {
                     return;
                 }
+                if (newName === "") {
+                    await ModalDialog.alert("Invalid collection name", "The collection name can not be empty. Please enter another name!");
+                    newName = null;
+                }
                 if (DataManager.hasEntity("Collection", newName)) {
                     await ModalDialog.alert("Collection already exists", `The collection "${newName}" does already exist. Please enter another name!`);
                     newName = null;

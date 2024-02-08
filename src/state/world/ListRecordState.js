@@ -66,6 +66,10 @@ export default class ListRecordState extends BaseClass {
         return this.props.pos?.y;
     }
 
+    get scale() {
+        return this.props.pos?.scale ?? 100;
+    }
+
     get type() {
         return this.props.ref?.type ?? "";
     }

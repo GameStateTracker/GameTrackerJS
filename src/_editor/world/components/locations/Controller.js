@@ -23,6 +23,10 @@ export default class Controller_Locations extends ComponentController {
                 if (typeof newName !== "string") {
                     return;
                 }
+                if (newName === "") {
+                    await ModalDialog.alert("Invalid location name", "The location name can not be empty. Please enter another name!");
+                    newName = null;
+                }
                 if (DataManager.hasEntity("Location", newName)) {
                     await ModalDialog.alert("Location already exists", `The location "${newName}" does already exist. Please enter another name!`);
                     newName = null;

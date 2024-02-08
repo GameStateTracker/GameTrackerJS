@@ -63,10 +63,14 @@ const BaseClass = mix(
 
 export default class WorldMapStateEntry extends BaseClass {
 
+    #tooltipEl;
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
+        /* --- */
+        this.#tooltipEl = this.shadowRoot.getElementById("tooltip");
         /* state handler */
         this.registerStateHandler("visibility", (event) => {
             this.style.display = event.value ? "" : "none";
@@ -135,11 +139,20 @@ export default class WorldMapStateEntry extends BaseClass {
         this.setAttribute("ref", val);
     }
 
+    get tooltip() {
+        return this.getAttribute("tooltip");
+    }
+
+    set tooltip(val) {
+        this.setAttribute("tooltip", val);
+    }
+
     static get observedAttributes() {
-        return ["ref"];
+        return [...super.observedAttributes, "ref", "tooltip"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback(name, oldValue, newValue);
         if (oldValue != newValue) {
             switch (name) {
                 case "ref": {
@@ -150,6 +163,9 @@ export default class WorldMapStateEntry extends BaseClass {
                     if (textEl != null) {
                         textEl.i18nValue = this.textRef;
                     }
+                } break;
+                case "tooltip": {
+                    this.#tooltipEl.position = newValue;
                 } break;
             }
         }

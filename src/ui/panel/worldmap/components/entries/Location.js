@@ -125,53 +125,6 @@ export default class WorldMapLocation extends WorldMapMarkedEntry {
         }
     }
 
-    get left() {
-        return this.getAttribute("left");
-    }
-
-    set left(val) {
-        this.setAttribute("left", val);
-    }
-
-    get top() {
-        return this.getAttribute("top");
-    }
-
-    set top(val) {
-        this.setAttribute("top", val);
-    }
-
-    get tooltip() {
-        return this.getAttribute("tooltip");
-    }
-
-    set tooltip(val) {
-        this.setAttribute("tooltip", val);
-    }
-
-    static get observedAttributes() {
-        return [...super.observedAttributes, "left", "top", "tooltip"];
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
-        if (oldValue != newValue) {
-            switch (name) {
-                case "top":
-                case "left":
-                    this.style.left = `${this.left}px`;
-                    this.style.top = `${this.top}px`;
-                    break;
-                case "tooltip":
-                    {
-                        const tooltip = this.shadowRoot.getElementById("tooltip");
-                        tooltip.position = newValue;
-                    }
-                    break;
-            }
-        }
-    }
-
     get textRef() {
         return `location[${super.textRef}]`;
     }

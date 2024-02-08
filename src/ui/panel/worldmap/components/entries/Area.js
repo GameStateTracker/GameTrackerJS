@@ -172,53 +172,6 @@ export default class WorldMapArea extends WorldMapMarkedEntry {
         }
     }
 
-    get left() {
-        return this.getAttribute("left");
-    }
-
-    set left(val) {
-        this.setAttribute("left", val);
-    }
-
-    get top() {
-        return this.getAttribute("top");
-    }
-
-    set top(val) {
-        this.setAttribute("top", val);
-    }
-
-    get tooltip() {
-        return this.getAttribute("tooltip");
-    }
-
-    set tooltip(val) {
-        this.setAttribute("tooltip", val);
-    }
-
-    static get observedAttributes() {
-        return [...super.observedAttributes, "left", "top", "tooltip"];
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
-        switch (name) {
-            case "top":
-            case "left":
-                if (oldValue != newValue) {
-                    this.style.left = `${this.left}px`;
-                    this.style.top = `${this.top}px`;
-                }
-                break;
-            case "tooltip":
-                if (oldValue != newValue) {
-                    const tooltip = this.shadowRoot.getElementById("tooltip");
-                    tooltip.position = newValue;
-                }
-                break;
-        }
-    }
-
     get textRef() {
         return `area[${super.textRef}]`;
     }

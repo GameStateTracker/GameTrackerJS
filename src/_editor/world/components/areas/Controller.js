@@ -23,6 +23,10 @@ export default class Controller_Areas extends ComponentController {
                 if (typeof newName !== "string") {
                     return;
                 }
+                if (newName === "") {
+                    await ModalDialog.alert("Invalid area name", "The area name can not be empty. Please enter another name!");
+                    newName = null;
+                }
                 if (DataManager.hasEntity("Area", newName)) {
                     await ModalDialog.alert("Area already exists", `The area "${newName}" does already exist. Please enter another name!`);
                     newName = null;
