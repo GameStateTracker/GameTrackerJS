@@ -41,7 +41,8 @@
         "label": "Show the content as group (render as sub tree)"
     },
     {
-        "type": "SwitchInput",
+        "type": "BoolOrLogicInput",
+        "id": "access-penetration-input",
         "name": "accessPenetration",
         "label": "Add this areas access count to its parent access count"
     },

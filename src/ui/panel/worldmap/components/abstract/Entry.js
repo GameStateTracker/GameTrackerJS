@@ -88,32 +88,32 @@ export default class WorldMapEntry extends BaseClass {
         return false;
     }
 
-    get left() {
-        return this.getAttribute("left");
-    }
-
-    set left(val) {
-        this.setAttribute("left", val);
+    set top(value) {
+        this.setIntAttribute("top", value);
     }
 
     get top() {
-        return this.getAttribute("top");
+        return this.getIntAttribute("top");
     }
 
-    set top(val) {
-        this.setAttribute("top", val);
+    set left(value) {
+        this.setIntAttribute("left", value);
     }
 
-    get scale() {
-        return this.getAttribute("scale");
+    get left() {
+        return this.getIntAttribute("left");
     }
 
     set scale(val) {
-        this.setAttribute("scale", val);
+        this.setIntAttribute("scale", val);
+    }
+
+    get scale() {
+        return this.getIntAttribute("scale");
     }
 
     static get observedAttributes() {
-        return ["left", "top", "scale"];
+        return ["top", "left", "scale"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {

@@ -39,6 +39,8 @@ export default class EditorForm_Areas_Entry extends CustomElement {
 
     #visibleInputEl;
 
+    #accessPenetrationInputEl;
+
     #connectionListEl;
 
     #markerListEl;
@@ -86,11 +88,13 @@ export default class EditorForm_Areas_Entry extends CustomElement {
         /* --- */
         this.#filterInputEl = this.shadowRoot.getElementById("filter-input");
         this.#visibleInputEl = this.shadowRoot.getElementById("visible-input");
+        this.#accessPenetrationInputEl = this.shadowRoot.getElementById("access-penetration-input");
         this.#connectionListEl = this.shadowRoot.getElementById("connection-list");
         this.#markerListEl = this.shadowRoot.getElementById("marker-list");
         /* --- */
         this.#filterInputEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
         this.#visibleInputEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
+        this.#accessPenetrationInputEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
         this.#markerListEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
         /* --- */
         const mapImageSelectEl = this.shadowRoot.getElementById("mapselect");
@@ -177,8 +181,8 @@ export default class EditorForm_Areas_Entry extends CustomElement {
             visibleIfEmpty: data?.visibleIfEmpty ?? true,
             visibleRootOnly: data?.visibleRootOnly ?? false,
             filter: {},
-            listContents: data?.visibleIfEmpty ?? true,
-            accessPenetration: data?.visibleRootOnly ?? false,
+            listContents: data?.listContents ?? false,
+            accessPenetration: data?.accessPenetration ?? false,
             icon: data?.icon ?? "",
             map: {
                 active: data?.map?.active ?? false,

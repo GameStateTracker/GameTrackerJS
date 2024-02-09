@@ -20,23 +20,31 @@ export default class ConnectionPoint extends CustomElement {
     }
 
     set top(value) {
-        this.setAttribute("top", value);
+        this.setIntAttribute("top", value);
     }
 
     get top() {
-        return this.getAttribute("top");
+        return this.getIntAttribute("top");
     }
 
     set left(value) {
-        this.setAttribute("left", value);
+        this.setIntAttribute("left", value);
     }
 
     get left() {
-        return this.getAttribute("left");
+        return this.getIntAttribute("left");
+    }
+
+    set scale(val) {
+        this.setIntAttribute("scale", val);
+    }
+
+    get scale() {
+        return this.getIntAttribute("scale");
     }
 
     static get observedAttributes() {
-        return ["label", "top", "left"];
+        return ["label", "top", "left", "scale"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -47,12 +55,14 @@ export default class ConnectionPoint extends CustomElement {
                     labelEl.innerHTML = newValue;
                 }
             } break;
-            case "top":
+            case "top": {
+                this.style.top = `${newValue}px`;
+            } break;
             case "left": {
-                if (oldValue != newValue) {
-                    this.style.left = `${this.left}px`;
-                    this.style.top = `${this.top}px`;
-                }
+                this.style.left = `${newValue}px`;
+            } break;
+            case "scale": {
+                this.style.setProperty("--scale", newValue);
             } break;
         }
     }

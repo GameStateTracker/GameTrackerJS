@@ -97,21 +97,23 @@ class WorldEditor extends CustomElement {
                     if (entry.lists != null) {
                         const listNames = Object.keys(entry.lists);
                         if (listNames.length > 1) {
-                            LogicOperatorRegistry.setOperator("active area list", `arealist[${name}]`, {
+                            LogicOperatorRegistry.setOperator(`arealist[${name}]`, {
                                 type: "state",
                                 options: deepClone(listNames),
                                 value: listNames[0]
                             });
+                            LogicOperatorRegistry.linkOperator(`arealist[${name}]`, "active area list");
                             continue;
                         }
                     }
-                    LogicOperatorRegistry.deleteOperator("active area list", `arealist[${name}]`);
+                    LogicOperatorRegistry.deleteOperator(`arealist[${name}]`);
                 }
             }
         });
-        LogicOperatorRegistry.setOperator("special", "$IS_DONE", {
+        LogicOperatorRegistry.setOperator("$IS_DONE", {
             type: "value"
         });
+        LogicOperatorRegistry.linkOperator("$IS_DONE", "special");
     }
 
     async setWorldData(data) {
@@ -227,15 +229,17 @@ class WorldEditor extends CustomElement {
         for (const name in data) {
             const entry = data[name];
             if (Array.isArray(entry.values)) {
-                LogicOperatorRegistry.setOperator("settings", `setting[${name}]`, {
+                LogicOperatorRegistry.setOperator(`setting[${name}]`, {
                     type: "state",
                     options: deepClone(entry.values),
                     value: entry.default ?? entry.values[0]
                 });
+                LogicOperatorRegistry.linkOperator(`setting[${name}]`, "settings");
             } else {
-                LogicOperatorRegistry.setOperator("settings", `setting[${name}]`, {
+                LogicOperatorRegistry.setOperator(`setting[${name}]`, {
                     type: "value"
                 });
+                LogicOperatorRegistry.linkOperator(`setting[${name}]`, "settings");
             }
         }
         // ---
@@ -248,15 +252,17 @@ class WorldEditor extends CustomElement {
         for (const name in data) {
             const entry = data[name];
             if (Array.isArray(entry.values)) {
-                LogicOperatorRegistry.setOperator("options", `option[${name}]`, {
+                LogicOperatorRegistry.setOperator(`option[${name}]`, {
                     type: "state",
                     options: deepClone(entry.values),
                     value: entry.default ?? entry.values[0]
                 });
+                LogicOperatorRegistry.linkOperator(`option[${name}]`, "options");
             } else {
-                LogicOperatorRegistry.setOperator("options", `option[${name}]`, {
+                LogicOperatorRegistry.setOperator(`option[${name}]`, {
                     type: "value"
                 });
+                LogicOperatorRegistry.linkOperator(`option[${name}]`, "options");
             }
         }
         // ---
@@ -267,9 +273,10 @@ class WorldEditor extends CustomElement {
         await BusyIndicatorManager.busy();
         // ---
         for (const name in data) {
-            LogicOperatorRegistry.setOperator("items", `item[${name}]`, {
+            LogicOperatorRegistry.setOperator(`item[${name}]`, {
                 type: "value"
             });
+            LogicOperatorRegistry.linkOperator(`item[${name}]`, "items");
         }
         // ---
         await BusyIndicatorManager.unbusy();
@@ -284,11 +291,12 @@ class WorldEditor extends CustomElement {
             const values = entry.values;
             filterConfig[name] = values;
             // ---
-            LogicOperatorRegistry.setOperator("filter", `filter[${name}]`, {
+            LogicOperatorRegistry.setOperator(`filter[${name}]`, {
                 type: "state",
                 options: deepClone(entry.values),
                 value: entry.default ?? entry.values[0]
             });
+            LogicOperatorRegistry.linkOperator(`filter[${name}]`, "filter");
         }
         scope.filterConfig = filterConfig;
         if (this.#activeDetailEditor != null) {
