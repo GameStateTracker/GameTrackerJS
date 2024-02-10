@@ -153,10 +153,10 @@ class WorldEditor extends CustomElement {
             this.#tagsTokenRegistry.setAll(extractedTags);
             /* --- */
             await BusyIndicatorManager.unbusy();
-        } catch {
+        } catch (err) {
             DataManager.reset();
             await BusyIndicatorManager.reset();
-            await ModalDialog.alert("Error loading data", "The provided data does not match the expected configuration.");
+            await ModalDialog.error("Error loading data", "The provided data does not match the expected configuration.", err);
         }
     }
 
