@@ -5,6 +5,8 @@ import FilterResource from "../data/resource/FilterResource.js";
 import SettingsObserver from "../util/observer/SettingsObserver.js";
 import TPL from "./Badge.js.html" assert {type: "html"};
 import STYLE from "./Badge.js.css" assert {type: "css"};
+import EventMultiTargetManager from "/emcJS/util/event/EventMultiTargetManager.js";
+import BadgeFilterIconHandler from "../util/handler/BadgeFilterIconHandler.js";
 
 const colorBlindObserver = new SettingsObserver("color_blind_badge_icons");
 const showFiltersObserver = new SettingsObserver("show_filter_badges");
@@ -16,42 +18,15 @@ const ACCESS_VALUES = [
     "possible"
 ];
 
-function getFilterImage(name, filter, data) {
-    if (filter.badge) {
-        if (Array.isArray(filter.badge)) {
-            const current = data[name];
-            if (current == null) {
-                return "";
-            }
-            for (const entry of filter.badge) {
-                if (entry.values == null || Object.entries(entry.values).every(([key, value]) => current[key] == value)) {
-                    return entry.image ?? "";
-                }
-            }
-            return filter.images[filter.values.indexOf(filter.default)];
-        } else {
-            return filter.images[getLoneFilterIndex(name, filter, data)];
-        }
-    }
-}
-
-function getLoneFilterIndex(name, filter, data) {
-    const def = filter.values.indexOf(filter.default);
-    let current = def;
-    for (let i = 0; i < filter.values.length; ++i) {
-        const value = filter.values[i];
-        if (data[`${name}/${value}`]) {
-            if (current != def) {
-                return def;
-            } else {
-                current = i;
-            }
-        }
-    }
-    return current;
-}
-
 export default class Badge extends EventTargetListenerElementMixin(CustomElement) {
+
+    #colorBlindEl;
+
+    #filtersEl;
+
+    #filterIconEls = new Map();
+
+    #badgeFilterIconHandlerManager = new EventMultiTargetManager();
 
     constructor() {
         super();
@@ -59,34 +34,36 @@ export default class Badge extends EventTargetListenerElementMixin(CustomElement
         STYLE.apply(this.shadowRoot);
         /* --- */
         const filter = FilterResource.get();
-        const filtersEl = this.shadowRoot.getElementById("filters");
+        this.#filtersEl = this.shadowRoot.getElementById("filters");
         for (const name in filter) {
             const value = filter[name];
             if (value.badge) {
                 const el = document.createElement("emc-icon");
-                el.id = `badge-${name}`;
-                filtersEl.append(el);
+                this.#filterIconEls.set(`badge-${name}`, el);
+                this.#filtersEl.append(el);
             }
         }
-        if (filtersEl != null) {
-            filtersEl.style.display = showFiltersObserver.value ? "" : "none";
-        }
+        this.#filtersEl.style.display = showFiltersObserver.value ? "" : "none";
         this.switchEventTarget("showFilters", showFiltersObserver);
         this.setEventTargetListener("showFilters", "change", (event) => {
-            if (filtersEl != null) {
-                filtersEl.style.display = event.value ? "" : "none";
-            }
+            this.#filtersEl.style.display = event.value ? "" : "none";
         });
         /* --- */
-        const colorBlindEl = this.shadowRoot.getElementById("access");
-        if (colorBlindEl != null) {
-            colorBlindEl.style.display = colorBlindObserver.value ? "" : "none";
+        this.#colorBlindEl = this.shadowRoot.getElementById("access");
+        if (this.#colorBlindEl != null) {
+            this.#colorBlindEl.style.display = colorBlindObserver.value ? "" : "none";
         }
         this.switchEventTarget("colorBlind", colorBlindObserver);
         this.setEventTargetListener("colorBlind", "change", (event) => {
-            if (colorBlindEl != null) {
-                colorBlindEl.style.display = event.value ? "" : "none";
+            if (this.#colorBlindEl != null) {
+                this.#colorBlindEl.style.display = event.value ? "" : "none";
             }
+        });
+        /* --- */
+        this.#badgeFilterIconHandlerManager.set("change", (event) => {
+            const {ref, icon} = event.data;
+            const el = this.#filterIconEls.get(`badge-${ref}`);
+            el.src = icon;
         });
     }
 
@@ -120,12 +97,11 @@ export default class Badge extends EventTargetListenerElementMixin(CustomElement
                     }
                 } break;
                 case "access": {
-                    const colorBlindEl = this.shadowRoot.getElementById("access");
-                    if (colorBlindEl != null) {
+                    if (this.#colorBlindEl != null) {
                         if (ACCESS_VALUES.indexOf(newValue) >= 0) {
-                            colorBlindEl.src = `images/icons/access_${newValue}.svg`;
+                            this.#colorBlindEl.src = `images/icons/access_${newValue}.svg`;
                         } else {
-                            colorBlindEl.src = "";
+                            this.#colorBlindEl.src = "";
                         }
                     }
                 } break;
@@ -134,17 +110,16 @@ export default class Badge extends EventTargetListenerElementMixin(CustomElement
     }
 
     setFilterData(data) {
+        this.#badgeFilterIconHandlerManager.clearTargets();
         const filter = FilterResource.get();
-        for (const name in filter) {
-            const badgeImageEl = this.shadowRoot.getElementById(`badge-${name}`);
-            if (badgeImageEl != null) {
-                if (data != null) {
-                    const value = filter[name];
-                    if (value.badge) {
-                        badgeImageEl.src = getFilterImage(name, value, data);
-                    }
-                } else {
-                    badgeImageEl.src = "";
+        if (data != null) {
+            for (const name in filter) {
+                const value = filter[name];
+                if (value.badge) {
+                    const handler = new BadgeFilterIconHandler(name, value, data[name]);
+                    this.#badgeFilterIconHandlerManager.addTarget(handler);
+                    const el = this.#filterIconEls.get(`badge-${name}`);
+                    el.src = handler.icon;
                 }
             }
         }
