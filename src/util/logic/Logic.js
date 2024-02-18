@@ -61,6 +61,18 @@ class TrackerLogic extends EventTarget {
         LOGIC_PROCESSOR.clearReachables();
     }
 
+    addCollectible(target, value) {
+        LOGIC_PROCESSOR.addCollectible(target, value);
+    }
+
+    deleteCollectible(target) {
+        LOGIC_PROCESSOR.deleteCollectible(target);
+    }
+
+    clearCollectibles() {
+        LOGIC_PROCESSOR.clearCollectibles();
+    }
+
     execute(data, root) {
         if (data) {
             LOGIC_PROCESSOR.setAll(data);
