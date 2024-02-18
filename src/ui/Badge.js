@@ -1,12 +1,12 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
+import EventMultiTargetManager from "/emcJS/util/event/EventMultiTargetManager.js";
 import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
 import "/emcJS/ui/Icon.js";
 import FilterResource from "../data/resource/FilterResource.js";
 import SettingsObserver from "../util/observer/SettingsObserver.js";
+import BadgeFilterIconHandler from "../util/handler/BadgeFilterIconHandler.js";
 import TPL from "./Badge.js.html" assert {type: "html"};
 import STYLE from "./Badge.js.css" assert {type: "css"};
-import EventMultiTargetManager from "/emcJS/util/event/EventMultiTargetManager.js";
-import BadgeFilterIconHandler from "../util/handler/BadgeFilterIconHandler.js";
 
 const colorBlindObserver = new SettingsObserver("color_blind_badge_icons");
 const showFiltersObserver = new SettingsObserver("show_filter_badges");
