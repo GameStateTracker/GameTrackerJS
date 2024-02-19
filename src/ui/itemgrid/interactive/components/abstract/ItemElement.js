@@ -30,7 +30,7 @@ export default class ItemElement extends BaseClass {
         this.registerStateHandler("value", (event) => {
             this.value = event.value;
         });
-        this.registerStateHandler("visibility", (event) => {
+        this.registerStateHandler("visible", (event) => {
             if (event.value) {
                 this.style.visibility = "";
             } else {
@@ -47,6 +47,7 @@ export default class ItemElement extends BaseClass {
         // alignment
         this.halign = "center";
         this.valign = "center";
+        this.style.visibility = "";
     }
 
     applyStateValues(state) {
@@ -55,6 +56,12 @@ export default class ItemElement extends BaseClass {
         // alignment
         this.halign = state.props.halign ?? "center";
         this.valign = state.props.valign ?? "center";
+        // visibility
+        if (state.visible) {
+            this.style.visibility = "";
+        } else {
+            this.style.visibility = "hidden";
+        }
     }
 
     set ref(val) {
