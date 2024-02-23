@@ -4,6 +4,7 @@ import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
+import "/emcJS/ui/overlay/Tooltip.js";
 
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
@@ -33,6 +34,7 @@ const STYLE = new GlobalStyle(`
     padding: 5px;
     word-break: keep-all;
     white-space: nowrap;
+    --tooltip-scale: calc((1 / (var(--zoom, 100) / 100)) * (1 / (var(--scale, 100) / 100)));
 }
 #marker:hover + #tooltip,
 :host(.ctx-marked) #tooltp {

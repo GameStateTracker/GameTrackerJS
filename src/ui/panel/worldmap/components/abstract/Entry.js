@@ -46,7 +46,7 @@ const STYLE = new GlobalStyle(`
 }
 #marker:hover,
 :host(.ctx-marked) #marker {
-    box-shadow: 0 0 2px 4px #67ffea;
+    box-shadow: 0 0 calc(2px * (1 / (var(--zoom, 100) / 100)) * (1 / (var(--scale, 100) / 100))) calc(4px * (1 / (var(--zoom, 100) / 100)) * (1 / (var(--scale, 100) / 100))) #67ffea;
 }
 `);
 
