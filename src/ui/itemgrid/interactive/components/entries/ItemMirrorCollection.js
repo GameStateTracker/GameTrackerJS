@@ -56,8 +56,10 @@ export default class ItemMirrorCollection extends BaseClass {
             let value = 0;
             let maxValue = 0;
             for (const state of states) {
-                value += state.value ?? 0;
-                maxValue += state.max ?? 0;
+                const stateMax = state.max ?? 0;
+                const stateValue = Math.min(state.value ?? 0, stateMax);
+                value += stateValue;
+                maxValue += stateMax;
             }
             this.#maxEl.innerHTML = maxValue;
             this.#currentEl.innerHTML = value;
