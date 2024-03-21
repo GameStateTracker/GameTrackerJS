@@ -226,7 +226,7 @@ export default class ExitList extends Panel {
     addEntrance(state) {
         const el = document.createElement("gt-exitchoice");
         el.ref = state.ref;
-        el.setAttribute("access", state.props.logicAccess);
+        el.setAttribute("access", state.props.logicAccess ?? "");
         el.setAttribute("type", state.props.type);
         el.setAttribute("tags", JSON.stringify(state.props.tags));
         for (const cat of state.props.tags) {

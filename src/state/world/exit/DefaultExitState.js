@@ -167,7 +167,7 @@ export default class DefaultExitState extends BaseClass {
         }, 0);
 
         /* LOGIC */
-        const logicAccess = props.logicAccess;
+        const logicAccess = props.logicAccess ?? "";
         this.#reachable = getReachable(logicAccess);
         this.#access = getLogicAccess(this.#reachable);
         this.setLogicData("$IS_DONE", this.access.value === AccessStateEnum.OPENED);

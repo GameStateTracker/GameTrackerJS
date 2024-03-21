@@ -11,8 +11,7 @@
     {
         "type": "StringInput",
         "name": "logicAccess",
-        "label": "Access Name",
-        "required": true
+        "label": "Access Name"
     },
     {
         "type": "BoolOrLogicInput",

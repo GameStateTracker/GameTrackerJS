@@ -21,8 +21,7 @@
     {
         "type": "StringInput",
         "name": "logicAccess",
-        "label": "Logic access reference",
-        "required": true
+        "label": "Logic access reference"
     },
     {
         "type": "RelationSelect",

@@ -74,10 +74,11 @@ export default class DefaultAreaState extends BaseClass {
         });
 
         /* LOGIC */
+        const logicAccess = props.logicAccess ?? "";
         this.setLogicData("$IS_DONE", this.access.value === AccessStateEnum.OPENED);
-        this.#reachable = !!Logic.getValue(props.logicAccess);
+        this.#reachable = !!Logic.getValue(logicAccess);
         Logic.addEventListener("change", () => {
-            const reachable = !!Logic.getValue(props.logicAccess);
+            const reachable = !!Logic.getValue(logicAccess);
             if (reachable != this.#reachable) {
                 this.#reachable = reachable;
                 // external

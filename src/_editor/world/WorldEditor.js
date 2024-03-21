@@ -187,10 +187,10 @@ class WorldEditor extends CustomElement {
         if (detailEditorEl != null) {
             const data = DataManager.readEntity(scope.entityType, scope.entityName);
             detailEditorEl.setName(scope.entityName);
-            detailEditorEl.setData(data);
             detailEditorEl.setFilterConfig(scope.filterConfig);
             detailEditorEl.classList.add("active");
             this.#activeDetailEditor = detailEditorEl;
+            detailEditorEl.setData(data);
         }
         await BusyIndicatorManager.unbusy();
     }

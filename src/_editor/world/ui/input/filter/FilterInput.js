@@ -122,7 +122,7 @@ export default class FilterInput extends CustomFormElementDelegating {
         return this.#value;
     }
 
-    #applyValue() {
+    #applyValue = debounce(() => {
         const curValue = this.#value;
         const filterConfig = this.#filterConfig;
         const data = [];
@@ -135,7 +135,7 @@ export default class FilterInput extends CustomFormElementDelegating {
             });
         }
         this.#dataManager.setSource(data);
-    }
+    });
 
     #notifyValueChange = debounce(() => {
         this.#applyValue();
