@@ -94,8 +94,8 @@ export default class ExitBindingContextMenu extends BaseClass {
         this.#exitSelectEl.append(unbindEl);
         // add empty
         const emptyEl = document.createElement("gt-entrance-select-option");
-        emptyEl.ref = "\u0000";
-        emptyEl.value = "\u0000";
+        emptyEl.ref = "0";
+        emptyEl.value = "0";
         emptyEl.style.fontStyle = "italic";
         this.#exitSelectEl.append(emptyEl);
         // set choices and value

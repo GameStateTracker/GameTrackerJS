@@ -43,7 +43,7 @@ class WorldStateManagerRegistry {
     }
 
     get(type) {
-        if (!type || type === "\u0000") {
+        if (!type || type === "0") {
             return emptyStateManager;
         }
         if (typeof type != "string") {

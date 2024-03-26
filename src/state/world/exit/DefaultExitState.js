@@ -45,7 +45,7 @@ function getEntranceArea(value) {
     if (value == null || value == "") {
         return null;
     }
-    if (value == "\u0000") {
+    if (value == "0") {
         return emptyState;
     }
     const entrance = EntranceStateManager.get(value);

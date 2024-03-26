@@ -245,7 +245,7 @@ export default class WorldListExit extends BaseClass {
         const valueEl = this.shadowRoot.getElementById("value");
         if (valueEl != null) {
             if (value) {
-                if (value == "\u0000") {
+                if (value == "0") {
                     this.toggleDefaultContextMenuGroupActive("area", false);
                 } else {
                     this.toggleDefaultContextMenuGroupActive("area", true);

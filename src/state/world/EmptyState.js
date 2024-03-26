@@ -8,7 +8,7 @@ export default class EmptyState extends DataState {
     }
 
     get ref() {
-        return "\u0000";
+        return "0";
     }
 
     setAccess() {

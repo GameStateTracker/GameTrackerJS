@@ -32,7 +32,7 @@ export default class EntranceSelectOption extends BaseClass {
         const tagsEl = this.shadowRoot.getElementById("tags");
         if (this.ref === "") {
             typeEl.i18nValue = "entrance_type[unbound]";
-        } else if (this.ref === "\u0000") {
+        } else if (this.ref === "0") {
             typeEl.i18nValue = "entrance_type[empty]";
         } else {
             typeEl.i18nValue = "";

@@ -178,7 +178,7 @@ export default class WorldMapStateEntry extends BaseClass {
     }
 
     get type() {
-        return "\u0000";
+        return "0";
     }
 
 }
