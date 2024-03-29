@@ -10,6 +10,8 @@ const SET_TYPES = [
 
 const DEFAULTS = new Map();
 
+const CUSTOM_DEFAULTS = new Map();
+
 for (const [key, value] of Object.entries(OptionsResource.get())) {
     if (SET_TYPES.indexOf(value.type) >= 0) {
         const def = new Set(value.default);
@@ -23,7 +25,7 @@ for (const [key, value] of Object.entries(OptionsResource.get())) {
 
 let INSTANCE = null;
 
-class OptionsStorage extends ObservableStorage {
+class AppOptionsStorage extends ObservableStorage {
 
     constructor() {
         if (INSTANCE != null) {
@@ -37,8 +39,12 @@ class OptionsStorage extends ObservableStorage {
         return this;
     }
 
+    getDefault(key) {
+        return CUSTOM_DEFAULTS.get(key) ?? DEFAULTS.get(key)
+    }
+
     set(key, value) {
-        if (DEFAULTS.has(key)) {
+        if (CUSTOM_DEFAULTS.has(key) || DEFAULTS.has(key)) {
             super.set(key, value);
         }
     }
@@ -47,7 +53,7 @@ class OptionsStorage extends ObservableStorage {
         const res = {};
         for (const key in values) {
             const value = values[key];
-            if (DEFAULTS.has(key)) {
+            if (CUSTOM_DEFAULTS.has(key) || DEFAULTS.has(key)) {
                 res[key] = value;
             }
         }
@@ -55,8 +61,8 @@ class OptionsStorage extends ObservableStorage {
     }
 
     get(key) {
-        if (DEFAULTS.has(key)) {
-            return super.get(key) ?? DEFAULTS.get(key);
+        if (CUSTOM_DEFAULTS.has(key) || DEFAULTS.has(key)) {
+            return super.get(key) ?? CUSTOM_DEFAULTS.has(key) ?? DEFAULTS.get(key);
         }
     }
 
@@ -65,20 +71,26 @@ class OptionsStorage extends ObservableStorage {
         for (const [key, value] of DEFAULTS) {
             res[key] = super.get(key) ?? value;
         }
+        for (const [key, value] of CUSTOM_DEFAULTS) {
+            res[key] = super.get(key) ?? value;
+        }
         return res;
     }
 
     has(key) {
-        return DEFAULTS.has(key);
+        return CUSTOM_DEFAULTS.has(key) || DEFAULTS.has(key);
     }
 
     keys() {
-        return DEFAULTS.keys();
+        return [
+            ...DEFAULTS.keys(),
+            ...CUSTOM_DEFAULTS.keys()
+        ];
     }
 
     deserialize(data = {}) {
         const res = {};
-        for (const [key] of DEFAULTS) {
+        for (const key in data) {
             const newValue = data[key];
             if (newValue != null) {
                 res[key] = newValue;
@@ -89,17 +101,18 @@ class OptionsStorage extends ObservableStorage {
 
     overwrite(data = {}) {
         const res = {};
-        for (const [key] of DEFAULTS) {
-            if (key in data) {
-                const newValue = data[key];
-                res[key] = newValue;
-            }
+        for (const key in data) {
+            res[key] = data[key];
         }
         super.overwrite(res);
     }
 
+    registerDefault(key, def) {
+        CUSTOM_DEFAULTS.set(key, def);
+    }
+
 }
 
-const storage = new OptionsStorage();
+const OptionsStorage = new AppOptionsStorage();
 
-export default storage;
+export default OptionsStorage;

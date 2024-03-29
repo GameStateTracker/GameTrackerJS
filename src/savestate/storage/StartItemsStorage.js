@@ -14,7 +14,7 @@ for (const [key, value] of Object.entries(ItemsResource.get())) {
 
 let INSTANCE = null;
 
-class StartItemsStorage extends ObservableStorage {
+class AppStartItemsStorage extends ObservableStorage {
 
     constructor() {
         if (INSTANCE != null) {
@@ -90,6 +90,6 @@ class StartItemsStorage extends ObservableStorage {
 
 }
 
-const storage = new StartItemsStorage();
+const StartItemsStorage = new AppStartItemsStorage();
 
-export default storage;
+export default StartItemsStorage;

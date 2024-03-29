@@ -7,7 +7,7 @@ import {
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
 
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
-import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
+import LocationStateManager from "../../../../../statemanager/world/location/LocationStateManager.js";
 import TPL from "./LocationListEntry.js.html" assert {type: "html"};
 import STYLE from "./LocationListEntry.js.css" assert {type: "css"};
 
@@ -105,7 +105,7 @@ export default class LocationListEntry extends BaseClass {
         }
         /* --- */
         if (this.ref) {
-            const state = WorldStateManagerRegistry.get(this.type).get(this.ref);
+            const state = LocationStateManager.get(this.ref);
             this.switchState(state);
             /* text */
             this.#textEl.i18nValue = this.textRef;
@@ -151,13 +151,8 @@ export default class LocationListEntry extends BaseClass {
         if (oldValue != newValue) {
             switch (name) {
                 case "ref": {
-                    const state = WorldStateManagerRegistry.get(this.type).get(this.ref);
+                    const state = LocationStateManager.get(this.ref);
                     this.switchState(state);
-                    /* ref */
-                    const refEl = this.shadowRoot.getElementById("ref");
-                    if (refEl != null) {
-                        refEl.innerText = this.ref;
-                    }
                     /* text */
                     const textEl = this.shadowRoot.getElementById("text");
                     if (textEl != null) {

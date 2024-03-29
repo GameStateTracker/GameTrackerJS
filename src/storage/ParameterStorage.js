@@ -3,7 +3,7 @@ import ObservableIDBProxyStorage from "/emcJS/data/storage/observable/Observable
 
 // TODO sync data to other page instances
 
-class ParameterStorage extends ObservableIDBProxyStorage {
+class AppParameterStorage extends ObservableIDBProxyStorage {
 
     constructor() {
         super("parameter");
@@ -11,6 +11,7 @@ class ParameterStorage extends ObservableIDBProxyStorage {
 
 }
 
-const storage = new ParameterStorage();
+const ParameterStorage = new AppParameterStorage();
+await ParameterStorage.awaitLoaded();
 
-export default await storage.awaitLoaded();
+export default ParameterStorage;

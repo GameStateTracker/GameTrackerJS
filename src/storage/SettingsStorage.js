@@ -23,7 +23,7 @@ for (const [key, value] of Object.entries(SettingsResource.get())) {
     }
 }
 
-class SettingsStorage extends ObservableIDBProxyStorage {
+class AppSettingsStorage extends ObservableIDBProxyStorage {
 
     constructor() {
         super("settings");
@@ -92,6 +92,7 @@ class SettingsStorage extends ObservableIDBProxyStorage {
 
 }
 
-const storage = new SettingsStorage();
+const SettingsStorage = new AppSettingsStorage();
+await SettingsStorage.awaitLoaded();
 
-export default await storage.awaitLoaded();
+export default SettingsStorage;
