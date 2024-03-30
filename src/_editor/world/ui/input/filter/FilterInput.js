@@ -9,14 +9,15 @@ import {
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
+import {
+    sleep
+} from "/emcJS/util/process/Sleep.js";
 import SimpleDataProvider from "/emcJS/util/grid/provider/SimpleDataProvider.js";
 import CharacterSearch from "/emcJS/util/search/CharacterSearch.js";
 import LogicElementModal from "/emcJS/ui/form/element/input/logic/components/modal/LogicElementModal.js";
 import "/emcJS/ui/grid/DataGrid.js";
 import TPL from "./FilterInput.js.html" assert {type: "html"};
 import STYLE from "./FilterInput.js.css" assert {type: "css"};
-
-// TODO on value change
 
 export default class FilterInput extends CustomFormElementDelegating {
 
@@ -122,7 +123,8 @@ export default class FilterInput extends CustomFormElementDelegating {
         return this.#value;
     }
 
-    #applyValue = debounce(() => {
+    async #applyValue() {
+        await BusyIndicatorManager.busy();
         const curValue = this.#value;
         const filterConfig = this.#filterConfig;
         const data = [];
@@ -135,7 +137,9 @@ export default class FilterInput extends CustomFormElementDelegating {
             });
         }
         this.#dataManager.setSource(data);
-    });
+        await sleep(1000);
+        await BusyIndicatorManager.unbusy();
+    }
 
     #notifyValueChange = debounce(() => {
         this.#applyValue();
