@@ -12,7 +12,7 @@ import {
 import {
     sleep
 } from "/emcJS/util/process/Sleep.js";
-import SimpleDataProvider from "/emcJS/util/grid/provider/SimpleDataProvider.js";
+import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import CharacterSearch from "/emcJS/util/search/CharacterSearch.js";
 import LogicElementModal from "/emcJS/ui/form/element/input/logic/components/modal/LogicElementModal.js";
 import "/emcJS/ui/grid/DataGrid.js";

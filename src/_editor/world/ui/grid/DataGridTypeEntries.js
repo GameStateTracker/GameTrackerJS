@@ -1,5 +1,5 @@
 import CustomElementDelegating from "/emcJS/ui/element/CustomElementDelegating.js";
-import TypeStorageReferenceProvider from "/emcJS/util/grid/provider/TypeStorageReferenceProvider.js";
+import TypeStorageReferenceProvider from "/emcJS/util/dataprovider/TypeStorageReferenceProvider.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/grid/DataGrid.js";
 import TPL from "./DataGridTypeEntries.js.html" assert {type: "html"};

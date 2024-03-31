@@ -13,7 +13,7 @@ import {
     deleteAtIndexImmuted,
     moveInArrayImmuted
 } from "/emcJS/util/helper/collection/ArrayMutations.js";
-import SimpleDataProvider from "/emcJS/util/grid/provider/SimpleDataProvider.js";
+import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import LogicElementModal from "/emcJS/ui/form/element/input/logic/components/modal/LogicElementModal.js";
 import ModalDialogAddTypeEntities from "../../modal/ModalDialogAddTypeEntities.js";
