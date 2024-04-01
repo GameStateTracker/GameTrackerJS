@@ -5,6 +5,7 @@
     flex-shrink: 0;
     padding: 2px;
     margin-left: 5px;
+    background-color: var(--gt-badge-back-color, #77777744);
     border: 1px solid var(--navigation-back-color, #ffffff);
     border-radius: 2px;
     user-select: none;
