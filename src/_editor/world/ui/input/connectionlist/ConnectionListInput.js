@@ -48,10 +48,10 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("action::delete", (event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {rowName} = event.data;
+            const {rowKey} = event.data;
             const currentValue = this.value ?? [];
             const index = currentValue.findIndex((entry) => {
-                return rowName === entry.label;
+                return rowKey === entry.label;
             });
             if (index >= 0) {
                 const newValue = [
@@ -64,10 +64,10 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("edit::posA", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowName} = event.data;
+            const {value, rowKey} = event.data;
             const currentValue = this.value ?? [];
             const index = currentValue.findIndex((entry) => {
-                return rowName === entry.label;
+                return rowKey === entry.label;
             });
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
@@ -78,10 +78,10 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("edit::posB", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowName} = event.data;
+            const {value, rowKey} = event.data;
             const currentValue = this.value ?? [];
             const index = currentValue.findIndex((entry) => {
-                return rowName === entry.label;
+                return rowKey === entry.label;
             });
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
@@ -92,30 +92,30 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
         /* --- */
         this.#addEl = this.shadowRoot.getElementById("add");
         this.#addEl.addEventListener("click", async () => {
-            let rowName = null;
+            let rowKey = null;
             const currentValue = this.value ?? [];
-            while (rowName == null) {
-                rowName = await ModalDialog.prompt("Add label", "Please enter a label");
-                if (rowName == null || rowName === false) {
+            while (rowKey == null) {
+                rowKey = await ModalDialog.prompt("Add label", "Please enter a label");
+                if (rowKey == null || rowKey === false) {
                     return;
                 }
-                if (rowName.length > 2 || rowName === "") {
+                if (rowKey.length > 2 || rowKey === "") {
                     await ModalDialog.alert("The entered label is invalid", "The label can have 1 to 2 letters. Please enter another one!");
-                    rowName = null;
+                    rowKey = null;
                     continue;
                 }
                 const index = currentValue.findIndex((entry) => {
-                    return rowName === entry.label;
+                    return rowKey === entry.label;
                 });
                 if (index >= 0) {
-                    await ModalDialog.alert("Label already exists", `The label "${rowName}" was already added to this list. Please enter another one!`);
-                    rowName = null;
+                    await ModalDialog.alert("Label already exists", `The label "${rowKey}" was already added to this list. Please enter another one!`);
+                    rowKey = null;
                 }
             }
             this.value = [
                 ...currentValue,
                 {
-                    label: rowName,
+                    label: rowKey,
                     posA: {
                         x: 0,
                         y: 0
@@ -217,6 +217,7 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
         this.#loadConnections(currentList);
         const data = currentList.map((row) => {
             return {
+                key: row.label,
                 name: row.label,
                 entityType: "Connection",
                 entityName: row.label,

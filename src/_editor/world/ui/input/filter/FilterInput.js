@@ -42,15 +42,15 @@ export default class FilterInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("edit::value", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowName} = event.data;
+            const {value, rowKey} = event.data;
             const currentValue = deepClone(this.#value);
-            const [category, key] = rowName.split("/");
-            if (this.#hasInConfig(category, key)) {
+            const [category, name] = rowKey.split("/");
+            if (this.#hasInConfig(category, name)) {
                 if (category in currentValue) {
-                    currentValue[category][key] = value;
+                    currentValue[category][name] = value;
                 } else {
                     currentValue[category] = {
-                        [key]: value
+                        [name]: value
                     };
                 }
             }
@@ -101,10 +101,10 @@ export default class FilterInput extends CustomFormElementDelegating {
         await BusyIndicatorManager.busy();
         this.#filterConfig = [];
         for (const category in config) {
-            for (const key of config[category]) {
+            for (const name of config[category]) {
                 this.#filterConfig.push({
                     category,
-                    key
+                    name
                 });
             }
             this.#applyValue();
@@ -128,12 +128,12 @@ export default class FilterInput extends CustomFormElementDelegating {
         const curValue = this.#value;
         const filterConfig = this.#filterConfig;
         const data = [];
-        for (const {category, key} of filterConfig) {
+        for (const {category, name} of filterConfig) {
             data.push({
                 category,
-                key,
-                name: `${category}/${key}`,
-                value: curValue?.[category]?.[key] ?? true
+                key: `${category}/${name}`,
+                name,
+                value: curValue?.[category]?.[name] ?? true
             });
         }
         this.#dataManager.setSource(data);
@@ -148,9 +148,9 @@ export default class FilterInput extends CustomFormElementDelegating {
         this.dispatchEvent(ev);
     });
 
-    #hasInConfig(category, key) {
+    #hasInConfig(category, name) {
         return this.#filterConfig.some((entry) => {
-            return entry.category === category && entry.key === key;
+            return entry.category === category && entry.name === name;
         });
     }
 

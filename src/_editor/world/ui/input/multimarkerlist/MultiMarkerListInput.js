@@ -80,11 +80,11 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("action::delete", (event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {rowName} = event.data;
+            const {rowKey} = event.data;
             const currentValue = this.value ?? [];
             const currentList = currentValue[this.#activeList] ?? [];
             const index = currentList.findIndex((entry) => {
-                return rowName === this.#generateRowName(entry.ref);
+                return rowKey === this.#generateRowKey(entry.ref);
             });
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
@@ -95,11 +95,11 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("edit::pos", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowName} = event.data;
+            const {value, rowKey} = event.data;
             const currentValue = this.value ?? [];
             const currentList = currentValue[this.#activeList] ?? [];
             const index = currentList.findIndex((entry) => {
-                return rowName === this.#generateRowName(entry.ref);
+                return rowKey === this.#generateRowKey(entry.ref);
             });
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
@@ -110,11 +110,11 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("edit::visible", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowName} = event.data;
+            const {value, rowKey} = event.data;
             const currentValue = this.value ?? [];
             const currentList = currentValue[this.#activeList] ?? [];
             const index = currentList.findIndex((entry) => {
-                return rowName === this.#generateRowName(entry.ref);
+                return rowKey === this.#generateRowKey(entry.ref);
             });
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
@@ -125,11 +125,11 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("edit::listHidden", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowName} = event.data;
+            const {value, rowKey} = event.data;
             const currentValue = this.value ?? [];
             const currentList = currentValue[this.#activeList] ?? [];
             const index = currentList.findIndex((entry) => {
-                return rowName === this.#generateRowName(entry.ref);
+                return rowKey === this.#generateRowKey(entry.ref);
             });
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
@@ -140,11 +140,11 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("move-row-up", (event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {rowName} = event.data;
+            const {rowKey} = event.data;
             const currentValue = this.value ?? [];
             const currentList = currentValue[this.#activeList] ?? [];
             const index = currentList.findIndex((entry) => {
-                return rowName === this.#generateRowName(entry.ref);
+                return rowKey === this.#generateRowKey(entry.ref);
             });
             if (index > 0) {
                 const newValue = deepClone(currentValue);
@@ -155,11 +155,11 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("move-row-down", (event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {rowName} = event.data;
+            const {rowKey} = event.data;
             const currentValue = this.value ?? [];
             const currentList = currentValue[this.#activeList] ?? [];
             const index = currentList.findIndex((entry) => {
-                return rowName === this.#generateRowName(entry.ref);
+                return rowKey === this.#generateRowKey(entry.ref);
             });
             if (index + 1 < currentValue[this.#activeList].length) {
                 const newValue = deepClone(currentValue);
@@ -177,10 +177,10 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
             let continous = true;
             while (continous) {
                 let entityEntry = null;
-                let rowName = null;
+                let rowKey = null;
                 const currentValue = this.value ?? {};
                 const currentList = currentValue[this.#activeList] ?? [];
-                while (rowName == null) {
+                while (rowKey == null) {
                     const result = await this.#relationSelectModal.show();
                     if (result == null || result === false) {
                         return;
@@ -191,13 +191,13 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
                         await ModalDialog.alert("Empty entry selected", "You selected the empty entry, which can not be added. Please select another one!");
                         continue;
                     }
-                    rowName = this.#generateRowName(entityEntry);
+                    rowKey = this.#generateRowKey(entityEntry);
                     const index = currentList.findIndex((entry) => {
-                        return rowName === this.#generateRowName(entry.ref);
+                        return rowKey === this.#generateRowKey(entry.ref);
                     });
                     if (index >= 0) {
-                        await ModalDialog.alert("Entry already exists", `The entry "${rowName}" was already added to this list. Please select another one!`);
-                        rowName = null;
+                        await ModalDialog.alert("Entry already exists", `The entry "${rowKey}" was already added to this list. Please select another one!`);
+                        rowKey = null;
                     }
                 }
                 this.value = {
@@ -345,7 +345,7 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         this.#loadEntries(currentList);
         const data = currentList.map((row) => {
             return {
-                name: this.#generateRowName(row.ref),
+                key: this.#generateRowKey(row.ref),
                 entityType: row.ref.type,
                 entityName: row.ref.name,
                 entityLabel: "",
@@ -357,7 +357,7 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
         this.#dataManager.setSource(data);
     }
 
-    #generateRowName(entry) {
+    #generateRowKey(entry) {
         return `${entry.name}\n[${entry.type}]`
     }
 

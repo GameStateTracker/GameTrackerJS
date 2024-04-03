@@ -43,51 +43,51 @@ export default class AreaHintListInput extends CustomFormElementDelegating {
         this.#gridEl.addEventListener("action::delete", (event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {rowName} = event.data;
+            const {rowKey} = event.data;
             const currentValue = {...this.#value};
-            if (rowName in currentValue) {
-                delete currentValue[rowName];
+            if (rowKey in currentValue) {
+                delete currentValue[rowKey];
                 this.value = currentValue;
             }
         });
         this.#gridEl.addEventListener("edit::icon", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowName} = event.data;
+            const {value, rowKey} = event.data;
             const currentValue = {...this.#value};
-            if (rowName in currentValue) {
-                currentValue[rowName].icon = value;
+            if (rowKey in currentValue) {
+                currentValue[rowKey].icon = value;
             }
             this.value = currentValue;
         }));
         this.#gridEl.addEventListener("edit::counting", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowName} = event.data;
+            const {value, rowKey} = event.data;
             const currentValue = {...this.#value};
-            if (rowName in currentValue) {
-                currentValue[rowName].counting = value;
+            if (rowKey in currentValue) {
+                currentValue[rowKey].counting = value;
             }
             this.value = currentValue;
         }));
         /* --- */
         this.#addEl = this.shadowRoot.getElementById("add");
         this.#addEl.addEventListener("click", async () => {
-            let rowName = null;
+            let rowKey = null;
             const currentValue = this.value ?? {};
-            while (rowName == null) {
-                rowName = await ModalDialog.prompt("Add item", "Please enter a new key");
-                if (typeof rowName !== "string") {
+            while (rowKey == null) {
+                rowKey = await ModalDialog.prompt("Add item", "Please enter a new key");
+                if (typeof rowKey !== "string") {
                     return;
                 }
-                if (rowName in this.value) {
-                    await ModalDialog.alert("Key already exists", `The key "${rowName}" does already exist. Please enter another one!`);
-                    rowName = null;
+                if (rowKey in this.value) {
+                    await ModalDialog.alert("Key already exists", `The key "${rowKey}" does already exist. Please enter another one!`);
+                    rowKey = null;
                 }
             }
             this.value = {
                 ...currentValue,
-                [rowName]: {
+                [rowKey]: {
                     icon: "",
                     counting: false
                 }
@@ -184,6 +184,7 @@ export default class AreaHintListInput extends CustomFormElementDelegating {
     #applyValue(value) {
         const data = Object.entries(value).map((row) => {
             return {
+                key: row[0],
                 name: row[0],
                 icon: row[1].icon,
                 counting: row[1].counting
