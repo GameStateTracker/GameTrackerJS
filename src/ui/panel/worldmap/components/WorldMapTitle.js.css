@@ -1,0 +1,52 @@
+:host {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    padding: 10px;
+    font-size: 1.5em;
+    line-height: 1em;
+    background-color: var(--page-background-color, #000000);
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--page-border-color-inverted, #ffffff);
+    user-select: none;
+}
+#text {
+    display: block;
+    flex: 1;
+    font-size: .8em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+:host([access="opened"]) #text {
+    color: var(--world-entry-status-opened-color, #777777);
+}
+:host([access="available"]) #text {
+    color: var(--world-entry-status-available-color, #00ff00);
+}
+:host([access="unavailable"]) #text {
+    color: var(--world-entry-status-unavailable-color, #ff0000);
+}
+:host([access="possible"]) #text {
+    color: var(--world-entry-status-possible-color, #ffff00);
+}
+#back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 4px;
+    margin-right: 8px;
+    color: var(--page-text-color, #000000);
+    background-color: var(--page-background-color, #ffffff);
+    border: solid 2px var(--navigation-back-color, #ffffff);
+    border-radius: 10px;
+    font-family: monospace;
+    cursor: pointer;
+}
+#back.hidden {
+    display: none;
+}

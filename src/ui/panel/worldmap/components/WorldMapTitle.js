@@ -1,56 +1,13 @@
-// frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
-
 import AreaStateManager from "../../../../statemanager/world/area/AreaStateManager.js";
 import StateDataEventManagerMixin from "../../../mixin/StateDataEventManagerMixin.js";
-
-const TPL = new Template(`
-<emc-i18n-label id="text"></emc-i18n-label>
-<slot></slot>
-`);
-
-const STYLE = new GlobalStyle(`
-:host {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    max-width: 360px;
-    padding: 10px;
-    font-size: 1.5em;
-    line-height: 1em;
-    background-color: var(--page-background-color, #000000);
-    border-style: solid;
-    border-width: 2px;
-    border-color: var(--page-border-color-inverted, #ffffff);
-    user-select: none;
-}
-#text {
-    display: block;
-    flex: 1;
-    font-size: .8em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-:host([access="opened"]) #text {
-    color: var(--world-entry-status-opened-color, #777777);
-}
-:host([access="available"]) #text {
-    color: var(--world-entry-status-available-color, #00ff00);
-}
-:host([access="unavailable"]) #text {
-    color: var(--world-entry-status-unavailable-color, #ff0000);
-}
-:host([access="possible"]) #text {
-    color: var(--world-entry-status-possible-color, #ffff00);
-}
-`);
+import WorldListState from "../../../../state/world/WorldListState.js";
+import TPL from "./WorldMapTitle.js.html" assert {type: "html"};
+import STYLE from "./WorldMapTitle.js.css" assert {type: "css"};
 
 const BaseClass = mix(
     CustomElement
@@ -60,11 +17,17 @@ const BaseClass = mix(
 
 export default class WorldMapTitle extends BaseClass {
 
+    #backEl;
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
-
+        /* back button */
+        this.#backEl = this.shadowRoot.getElementById("back");
+        this.#backEl.addEventListener("click", () => {
+            WorldListState.reset();
+        });
         /* state handler */
         this.registerStateHandler("access", (event) => {
             const access = event.value;
@@ -129,6 +92,10 @@ export default class WorldMapTitle extends BaseClass {
                 case "ref": {
                     const state = AreaStateManager.get(this.ref);
                     this.switchState(state);
+                    /* back button */
+                    if (this.#backEl != null) {
+                        this.#backEl.classList.toggle("hidden", WorldListState.isDefault);
+                    }
                 } break;
             }
         }

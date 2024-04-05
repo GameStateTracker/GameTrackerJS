@@ -101,8 +101,10 @@ export default class DefaultLocationState extends BaseClass {
         /* LOGIC */
         const logicAccess = props.logicAccess ?? "";
         this.#reachable = !!Logic.getValue(logicAccess);
-        this.#access = getLogicAccess(this.value, this.reachable);
-        this.setLogicData("$IS_DONE", this.#access.value === AccessStateEnum.OPENED);
+        setTimeout(() => {
+            this.#access = getLogicAccess(this.value, this.reachable);
+            this.setLogicData("$IS_DONE", this.#access.value === AccessStateEnum.OPENED);
+        }, 0);
         Logic.addEventListener("change", () => {
             const reachable = !!Logic.getValue(logicAccess);
             if (reachable != this.#reachable) {

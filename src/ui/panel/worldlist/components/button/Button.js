@@ -4,7 +4,7 @@ import WorldListEntry from "../abstract/Entry.js";
 export default class WorldListButton extends WorldListEntry {
 
     clickHandler(/* event */) {
-        this.dispatchEvent(new Event("trigger"));
+        this.dispatchEvent(new Event("click"));
     }
 
     get text() {
