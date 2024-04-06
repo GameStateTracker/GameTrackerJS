@@ -24,20 +24,28 @@ export default class BadgeAccess extends Badge {
         });
     }
 
-    get available() {
-        return this.getAttribute("available");
+    set hideValues(val) {
+        this.setBooleanAttribute("hidevalues", val);
+    }
+
+    get hideValues() {
+        return this.getBooleanAttribute("hidevalues");
     }
 
     set available(val) {
         this.setAttribute("available", val);
     }
 
-    get unopened() {
-        return this.getAttribute("unopened");
+    get available() {
+        return this.getAttribute("available");
     }
 
     set unopened(val) {
         this.setAttribute("unopened", val);
+    }
+
+    get unopened() {
+        return this.getAttribute("unopened");
     }
 
     static get observedAttributes() {

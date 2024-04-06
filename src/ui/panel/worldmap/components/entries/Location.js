@@ -18,9 +18,6 @@ const STYLE = new GlobalStyle(`
     --rotation: 0deg;
     --border-radius: 50%;
 }
-#marker {
-    border-radius: 50%;
-}
 #item {
     width: 32px;
     height: 32px;

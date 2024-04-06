@@ -101,19 +101,19 @@ export default class WorldMapStateEntry extends BaseClass {
     }
 
     applyDefaultValues() {
-        /* visible */
-        this.style.display = "none";
         /* access */
         this.applyAccess("unavailable", {});
+        /* visible */
+        this.hidden = true;
     }
 
     applyStateValues(state) {
-        /* visible */
-        this.style.display = state.isVisible() ? "" : "none";
         /* access */
         const access = this.getStateAccess(state);
         const accessValue = access.value;
         this.applyAccess(("" + accessValue).toLowerCase(), access);
+        /* visible */
+        this.hidden = !state.isVisible();
     }
 
     getStateAccess(state) {

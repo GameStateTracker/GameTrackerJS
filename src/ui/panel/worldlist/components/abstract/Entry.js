@@ -81,12 +81,12 @@ export default class WorldListEntry extends CustomElement {
         // nothing
     }
 
-    get hidden() {
-        return this.getAttribute("hidden") != "false";
+    set hidden(val) {
+        this.setBooleanAttribute("hidden", val);
     }
 
-    set hidden(val) {
-        this.setAttribute("hidden", !!val);
+    get hidden() {
+        return this.getBooleanAttribute("hidden");
     }
 
     get textRef() {

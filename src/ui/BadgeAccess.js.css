@@ -17,3 +17,6 @@
     white-space: pre;
     word-break: keep-all;
 }
+:host([hidevalues]:not([hidevalues="false"])) #access-values {
+    display: none;
+}

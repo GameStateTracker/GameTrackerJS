@@ -25,6 +25,9 @@ const STYLE = new GlobalStyle(`
     transform: translate(calc(var(--size, 0px) * -0.5), calc(var(--size, 0px) * -0.5)) rotate(var(--rotation, 0deg)) scale(calc(var(--scale, 100) / 100));
     user-select: none;
 }
+:host([hidden]:not([hidden="false"])) {
+    display: none;
+}
 :host(:hover) {
     z-index: 1000;
 }
@@ -86,6 +89,14 @@ export default class WorldMapEntry extends BaseClass {
         event.stopPropagation();
         event.preventDefault();
         return false;
+    }
+
+    set hidden(val) {
+        this.setBooleanAttribute("hidden", val);
+    }
+
+    get hidden() {
+        return this.getBooleanAttribute("hidden");
     }
 
     set top(value) {
