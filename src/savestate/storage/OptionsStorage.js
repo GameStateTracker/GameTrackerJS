@@ -40,7 +40,7 @@ class AppOptionsStorage extends ObservableStorage {
     }
 
     getDefault(key) {
-        return CUSTOM_DEFAULTS.get(key) ?? DEFAULTS.get(key)
+        return CUSTOM_DEFAULTS.get(key) ?? DEFAULTS.get(key);
     }
 
     set(key, value) {

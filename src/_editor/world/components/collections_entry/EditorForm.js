@@ -77,7 +77,7 @@ export default class EditorForm_Collections_Entry extends CustomElement {
             img.onerror = () => {
                 mapImageWidthEl.value = 0;
                 mapImageHeightEl.value = 0;
-            }
+            };
             img.src = mapImageSelectEl.value;
         });
         /* --- */

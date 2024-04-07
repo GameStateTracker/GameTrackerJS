@@ -152,7 +152,7 @@ export default class StateListHandler extends EventTarget {
             } else if (recordState.type == "Location") {
                 const ref = recordState.entry.ref;
                 if (!access.locations.has(ref)) {
-                    access.locations.set(ref, recordState.access)
+                    access.locations.set(ref, recordState.access);
                 }
             }
         }

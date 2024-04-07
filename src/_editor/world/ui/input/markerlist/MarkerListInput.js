@@ -280,13 +280,13 @@ export default class MarkerListInput extends CustomFormElementDelegating {
                 relation: row.ref,
                 pos: row.pos,
                 visible: row.visible
-            }
+            };
         });
         this.#dataManager.setSource(data);
     }
 
     #generateRowKey(entry) {
-        return `${entry.name}\n[${entry.type}]`
+        return `${entry.name}\n[${entry.type}]`;
     }
 
     async addOperatorGroup(...groupList) {

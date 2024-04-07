@@ -60,7 +60,7 @@ export default createMixin((superclass) => class StateDataEventManagerMixin exte
     registerStateHandler(name, fn) {
         if (Array.isArray(name)) {
             for (const n of name) {
-                this.registerStateHandler(n, fn)
+                this.registerStateHandler(n, fn);
             }
         } else {
             const fns = this.#getSubs(name);
@@ -76,7 +76,7 @@ export default createMixin((superclass) => class StateDataEventManagerMixin exte
     unregisterStateHandler(name, fn) {
         if (Array.isArray(name)) {
             for (const n of name) {
-                this.unregisterStateHandler(n, fn)
+                this.unregisterStateHandler(n, fn);
             }
         } else {
             const fns = this.#getSubs(name);

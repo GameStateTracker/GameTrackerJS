@@ -123,7 +123,7 @@ export default class DefaultExitState extends BaseClass {
             const ev = new Event("active");
             ev.value = event.value;
             this.dispatchEvent(ev);
-        })
+        });
 
         /* AREA */
         this.#manager.registerStateHandler("access", (event) => {

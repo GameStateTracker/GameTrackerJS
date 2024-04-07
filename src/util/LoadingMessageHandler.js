@@ -10,7 +10,7 @@ class LoadingMessageHandler {
         if (typeof value == "function") {
             fn = value;
         } else {
-            fn = defaultFn
+            fn = defaultFn;
         }
     }
 

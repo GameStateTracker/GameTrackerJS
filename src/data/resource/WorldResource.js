@@ -1,6 +1,6 @@
 import JSONCResource from "/emcJS/data/resource/file/JSONCResource.js";
 
-const WorldResource = await JSONCResource.get("/database/world.json")
+const WorldResource = await JSONCResource.get("/database/world.json");
 
 export default WorldResource;
 

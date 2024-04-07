@@ -224,7 +224,7 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
                 entityLabel: row.label,
                 posA: row.posA,
                 posB: row.posB
-            }
+            };
         });
         this.#dataManager.setSource(data);
     }

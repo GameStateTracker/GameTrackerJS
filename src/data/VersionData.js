@@ -18,9 +18,9 @@ async function getData() {
         res.dev = resourceData.dev;
         if (resourceData.dev) {
             if (resourceData.dev == "N") {
-                res.version = `nightly [${resourceData.commit.slice(0, 7)}]`
+                res.version = `nightly [${resourceData.commit.slice(0, 7)}]`;
             } else {
-                res.version = `DEV [${resourceData.commit.slice(0, 7)}]`
+                res.version = `DEV [${resourceData.commit.slice(0, 7)}]`;
             }
         } else {
             res.version = resourceData.version || 0;

@@ -156,7 +156,7 @@ export default class WorldMap extends BaseClass {
         sliderEl.addEventListener("input", (event) => {
             const zoom = event.value;
             viewEl.setZoom(zoom, 0, 0);
-        })
+        });
         this.addEventListener("wheel", (event) => {
             if (!this.fixed) {
                 const parW = viewEl.clientWidth;

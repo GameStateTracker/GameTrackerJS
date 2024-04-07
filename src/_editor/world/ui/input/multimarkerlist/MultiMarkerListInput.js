@@ -88,7 +88,7 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
             });
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
-                deleteAtIndex(newValue[this.#activeList], index)
+                deleteAtIndex(newValue[this.#activeList], index);
                 this.value = newValue;
             }
         });
@@ -352,13 +352,13 @@ export default class MultiMarkerListInput extends CustomFormElementDelegating {
                 relation: row.ref,
                 pos: row.pos,
                 visible: row.visible
-            }
+            };
         });
         this.#dataManager.setSource(data);
     }
 
     #generateRowKey(entry) {
-        return `${entry.name}\n[${entry.type}]`
+        return `${entry.name}\n[${entry.type}]`;
     }
 
     async #reloadListSelection() {

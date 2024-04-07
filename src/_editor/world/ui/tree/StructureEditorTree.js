@@ -8,7 +8,7 @@ import TreeConfigExtractor from "../../util/TreeConfigExtractor.js";
 import TPL from "./StructureEditorTree.js.html" assert {type: "html"};
 import STYLE from "./StructureEditorTree.js.css" assert {type: "css"};
 
-const DEFAULT_TREE_CONFIG_EXTRACTOR = new TreeConfigExtractor()
+const DEFAULT_TREE_CONFIG_EXTRACTOR = new TreeConfigExtractor();
 
 const BaseClass = mix(
     CustomElement

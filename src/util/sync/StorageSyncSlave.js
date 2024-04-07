@@ -65,7 +65,7 @@ if (await StorageSync.init()) {
                 handleStorageMessage(ParameterStorage, msg);
             } break;
             case "savestate": {
-                handleSavestateMessage(msg)
+                handleSavestateMessage(msg);
             } break;
         }
         muted.sub();

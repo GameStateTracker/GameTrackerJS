@@ -85,7 +85,7 @@ export default class SimpleStateManager {
                     return {done: true};
                 }
             }
-        }
+        };
     }
 
 }

@@ -69,7 +69,7 @@ export default class FilterInput extends CustomFormElementDelegating {
         this.#searchEl.addEventListener("change", () => {
             const options = {filterFunction: false};
             if (this.#searchEl.value != "") {
-                const searchValue = new CharacterSearch(this.#searchEl.value)
+                const searchValue = new CharacterSearch(this.#searchEl.value);
                 options.filterFunction = (record) => {
                     return searchValue.test(record.category) || searchValue.test(record.key);
                 };

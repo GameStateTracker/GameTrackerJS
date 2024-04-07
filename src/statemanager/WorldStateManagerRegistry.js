@@ -29,7 +29,7 @@ class EmptyStateManager {
             next: () => {
                 return {done: true};
             }
-        }
+        };
     }
 
 }

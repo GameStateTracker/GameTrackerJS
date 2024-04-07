@@ -74,7 +74,7 @@ self.PortHandler.addEventListener("message", (event) => {
             handleStorageMessage(PARAMETER, msg);
         } break;
         case "savestate": {
-            handleSavestateMessage(msg)
+            handleSavestateMessage(msg);
         } break;
     }
 });

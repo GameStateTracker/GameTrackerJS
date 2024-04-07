@@ -94,7 +94,7 @@ export default class DefaultItemState extends BaseClass {
 
         /* VALUES */
         const startItemsObserver = new ObservableStorageObserver(STORAGES.startItems, ref);
-        this.#start = parseSafeRange(startItemsObserver.value, 0)
+        this.#start = parseSafeRange(startItemsObserver.value, 0);
         startItemsObserver.addEventListener("change", (event) => {
             this.#setStart(event.value ?? 0);
         });

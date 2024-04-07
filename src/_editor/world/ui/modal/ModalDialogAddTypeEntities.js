@@ -27,7 +27,7 @@ export default class ModalDialogAddTypeEntities extends ModalDialog {
         const addContinuousLabelEl = els.getElementById("add-continuous-label");
         this.#addContinuousEl = els.getElementById("add-continuous-button");
         this.#addContinuousEl.addEventListener("change", () => {
-            LocalStorage.set(CONTINOUS_PROPERTY_NAME, this.#addContinuousEl.checked)
+            LocalStorage.set(CONTINOUS_PROPERTY_NAME, this.#addContinuousEl.checked);
         });
         contentEl.append(addContinuousLabelEl);
 

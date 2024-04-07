@@ -109,7 +109,7 @@ export default class EditorForm_Areas_Entry extends CustomElement {
             img.onerror = () => {
                 mapImageWidthEl.value = 0;
                 mapImageHeightEl.value = 0;
-            }
+            };
             img.src = mapImageSelectEl.value;
         });
         /* --- */

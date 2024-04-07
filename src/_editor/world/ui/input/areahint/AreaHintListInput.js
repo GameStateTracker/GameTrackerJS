@@ -188,7 +188,7 @@ export default class AreaHintListInput extends CustomFormElementDelegating {
                 name: row[0],
                 icon: row[1].icon,
                 counting: row[1].counting
-            }
+            };
         });
         this.#dataManager.setSource(data);
     }
