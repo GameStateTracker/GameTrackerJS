@@ -1,10 +1,11 @@
 import CustomElementDelegating from "/emcJS/ui/element/CustomElementDelegating.js";
 import TypeStorageReferenceProvider from "/emcJS/util/dataprovider/TypeStorageReferenceProvider.js";
+import TypeStorage from "/emcJS/data/type/TypeStorage.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
-import "/emcJS/ui/grid/DataGrid.js";
+import "/emcJS/ui/dataview/datagrid/DataGrid.js";
+import "/emcJS/ui/dataview/toolbar/PaginationToolbar.js";
 import TPL from "./DataGridTypeEntries.js.html" assert {type: "html"};
 import STYLE from "./DataGridTypeEntries.js.css" assert {type: "css"};
-import TypeStorage from "/emcJS/data/type/TypeStorage.js";
 
 export default class DataGridTypeEntries extends CustomElementDelegating {
 

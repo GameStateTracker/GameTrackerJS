@@ -1,10 +1,10 @@
 <div class="header">
     <emc-input-search id="search"></emc-input-search>
 </div>
-<emc-grid-datagrid id="grid" nohead stretched="entity">
-    <emc-grid-column name="entity" caption="Entity name" type="relation"></emc-grid-column>
-    <emc-grid-column name="edit" caption="" type="button" width="100" text="Edit" action="edit"></emc-grid-column>
-</emc-grid-datagrid>
+<emc-datagrid id="grid" nohead stretched="entity">
+    <emc-datagrid-column name="entity" caption="Entity name" type="relation"></emc-datagrid-column>
+    <emc-datagrid-column name="edit" caption="" type="button" width="100" text="Edit" action="edit"></emc-datagrid-column>
+</emc-datagrid>
 <emc-form-row class="footer" align="center">
-    <emc-grid-datagrid-pagination id="pagination" sizes="10,15,20,25,50,100" size="15" show-size show-total></emc-grid-datagrid-pagination>
+    <emc-dataview-pagination id="pagination" sizes="10,15,20,25,50,100" size="15" show-size show-total></emc-dataview-pagination>
 </emc-form-row>

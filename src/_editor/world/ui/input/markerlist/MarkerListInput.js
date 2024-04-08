@@ -20,7 +20,7 @@ import ModalDialogAddTypeEntities from "../../modal/ModalDialogAddTypeEntities.j
 import CoordinatesInputModal from "../coordinates/components/CoordinatesInputModal.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/form/button/Button.js";
-import "/emcJS/ui/grid/DataGrid.js";
+import "/emcJS/ui/dataview/datagrid/DataGrid.js";
 import TPL from "./MarkerListInput.js.html" assert {type: "html"};
 import STYLE from "./MarkerListInput.js.css" assert {type: "css"};
 

@@ -21,7 +21,7 @@ import CoordinatesInputModal from "../coordinates/components/CoordinatesInputMod
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/form/element/select/search/SearchSelect.js";
 import "/emcJS/ui/form/button/Button.js";
-import "/emcJS/ui/grid/DataGrid.js";
+import "/emcJS/ui/dataview/datagrid/DataGrid.js";
 import TPL from "./MultiMarkerListInput.js.html" assert {type: "html"};
 import STYLE from "./MultiMarkerListInput.js.css" assert {type: "css"};
 

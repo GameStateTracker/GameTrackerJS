@@ -1,14 +1,14 @@
 <div class="header">
     <emc-input-search id="search"></emc-input-search>
 </div>
-<emc-grid-datagrid id="grid" stretched="relation">
-    <emc-grid-column name="sort" caption="" type="button-sorter"></emc-grid-column>
-    <emc-grid-column name="relation" caption="Entity" type="relation"></emc-grid-column>
-    <emc-grid-column name="pos" caption="Position" type="coordinates" width="150" editable action="pos"></emc-grid-column>
-    <emc-grid-column name="visible" caption="Visible" type="boolorlogic" width="150" editable action="visible"></emc-grid-column>
-    <emc-grid-column name="listHidden" caption="Hide from List" type="boolean" width="50" editable action="listHidden"></emc-grid-column>
-    <emc-grid-column name="delete" caption="" type="button" width="100" text="Delete" action="delete"></emc-grid-column>
-</emc-grid-datagrid>
+<emc-datagrid id="grid" stretched="relation">
+    <emc-datagrid-column name="sort" caption="" type="button-sorter"></emc-datagrid-column>
+    <emc-datagrid-column name="relation" caption="Entity" type="relation"></emc-datagrid-column>
+    <emc-datagrid-column name="pos" caption="Position" type="coordinates" width="150" editable action="pos"></emc-datagrid-column>
+    <emc-datagrid-column name="visible" caption="Visible" type="boolorlogic" width="150" editable action="visible"></emc-datagrid-column>
+    <emc-datagrid-column name="listHidden" caption="Hide from List" type="boolean" width="50" editable action="listHidden"></emc-datagrid-column>
+    <emc-datagrid-column name="delete" caption="" type="button" width="100" text="Delete" action="delete"></emc-datagrid-column>
+</emc-datagrid>
 <emc-form-row class="footer" align="end">
     <emc-button id="add" text="Add entity" icon="+"></emc-button>
 </emc-form-row>

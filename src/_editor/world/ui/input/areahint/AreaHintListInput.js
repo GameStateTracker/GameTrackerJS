@@ -10,7 +10,7 @@ import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
-import "/emcJS/ui/grid/DataGrid.js";
+import "/emcJS/ui/dataview/datagrid/DataGrid.js";
 import TPL from "./AreaHintListInput.js.html" assert {type: "html"};
 import STYLE from "./AreaHintListInput.js.css" assert {type: "css"};
 
