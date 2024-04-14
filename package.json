@@ -7,7 +7,7 @@
     "type": "git",
     "url": "git+ssh://git@bitbucket.org/zidargs/gametrackerjs.git"
   },
-  "author": "Denis Peters (ZidArgs)",
+  "author": "Denis Weiß (ZidArgs)",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.16.10",
