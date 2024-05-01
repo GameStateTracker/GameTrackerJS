@@ -180,6 +180,11 @@ export default class ItemGridInteractive extends CustomElement {
     }
 
     static createItem(value, data) {
+        if (data == null) {
+            const errorEl = document.createElement("DIV");
+            errorEl.className = "error";
+            return errorEl;
+        }
         const el = UIRegistry.get("itemgrid-item").create(data.type, value);
         el.className = "item";
         return el;
