@@ -43,8 +43,8 @@ class LogicCaller extends EventTarget {
         Logic.clearReachables();
     }
 
-    addCollectible(target, value) {
-        Logic.addCollectible(target, value);
+    setCollectible(target, value) {
+        Logic.setCollectible(target, value);
     }
 
     deleteCollectible(target) {

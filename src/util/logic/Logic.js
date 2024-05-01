@@ -12,7 +12,7 @@ logicDebugObserver.addEventListener("change", (event) => {
     LOGIC_PROCESSOR.debug = event.value != "off" && event.value;
 });
 
-class TrackerLogic extends EventTarget {
+class Logic extends EventTarget {
 
     #callLogic = debounce((root) => {
         const data = LOGIC_PROCESSOR.traverse(root);
@@ -61,8 +61,8 @@ class TrackerLogic extends EventTarget {
         LOGIC_PROCESSOR.clearReachables();
     }
 
-    addCollectible(target, value) {
-        LOGIC_PROCESSOR.addCollectible(target, value);
+    setCollectible(target, value) {
+        LOGIC_PROCESSOR.setCollectible(target, value);
     }
 
     deleteCollectible(target) {
@@ -96,4 +96,4 @@ class TrackerLogic extends EventTarget {
 
 }
 
-export default new TrackerLogic();
+export default new Logic();
