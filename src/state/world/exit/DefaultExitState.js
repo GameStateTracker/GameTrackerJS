@@ -11,6 +11,12 @@ import {
 import {
     isEqual
 } from "/emcJS/util/helper/Comparator.js";
+import {
+    getStringOrDefault
+} from "/emcJS/util/helper/GetType.js";
+import {
+    isString
+} from "/emcJS/util/helper/CheckType.js";
 import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
 
 import Savestate from "../../../savestate/Savestate.js";
@@ -152,7 +158,7 @@ export default class DefaultExitState extends BaseClass {
 
         /* VALUES */
         const exitBindingsObserver = new ObservableStorageObserver(STORAGES.exitBindings, ref);
-        this.#value = exitBindingsObserver.value;
+        this.#value = getStringOrDefault(exitBindingsObserver.value, "");
         exitBindingsObserver.addEventListener("change", (event) => {
             this.value = event.value;
         });
@@ -229,7 +235,7 @@ export default class DefaultExitState extends BaseClass {
     }
 
     set value(value) {
-        if (value == this.ref) {
+        if (!isString(value) || value == this.ref) {
             value = "";
         }
         const old = this.#value;

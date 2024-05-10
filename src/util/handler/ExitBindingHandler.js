@@ -13,7 +13,10 @@ function initRedirects() {
     const initTransalation = [];
     for (const entry of AUGMENTORS) {
         if (entry.exit.visible) {
-            LogicExitAugmentor.applyBinding(initTransalation, entry.exit.ref, entry.exit.value);
+            const {ref, value} = entry.exit;
+            if (typeof ref === "string" && typeof value === "string") {
+                LogicExitAugmentor.applyBinding(initTransalation, ref, value);
+            }
         }
     }
     if (initTransalation.length) {

@@ -66,9 +66,15 @@ export default class LogicExitAugmentor {
     #changeBinding() {
         const changes = [];
         if (this.#exit.visible) {
-            LogicExitAugmentor.applyBinding(changes, this.#exit.ref, this.#exit.value);
+            const {ref, value} = this.#exit;
+            if (typeof ref === "string" && typeof value === "string") {
+                LogicExitAugmentor.applyBinding(changes, ref, value);
+            }
         } else {
-            LogicExitAugmentor.applyBinding(changes, this.#exit.ref, null);
+            const {ref} = this.#exit;
+            if (typeof ref === "string") {
+                LogicExitAugmentor.applyBinding(changes, ref, null);
+            }
         }
         if (changes.length) {
             Logic.setRedirect(changes, getRegion());

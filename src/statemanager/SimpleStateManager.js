@@ -38,7 +38,12 @@ export default class SimpleStateManager {
     }
 
     get(ref) {
-        if (ref == null || ref === "") {
+        if (typeof ref !== "string") {
+            console.warn(`tried to get state with non string ref "${ref}" (${typeof ref}) from "${this.constructor.name}"`);
+            return;
+        }
+        if (ref === "") {
+            console.warn(`tried to get state with empty ref from "${this.constructor.name}"`);
             return;
         }
         if (this.#instances.has(ref)) {
@@ -57,7 +62,7 @@ export default class SimpleStateManager {
                 return inst;
             }
         } else {
-            console.warn(`tried to get state for unknown entity "${ref}" from "${this.constructor.name}"`);
+            console.warn(`tried to get state with unknown ref "${ref}" from "${this.constructor.name}"`);
         }
     }
 
