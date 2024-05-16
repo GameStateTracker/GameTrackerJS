@@ -8,7 +8,8 @@ const STORAGES = {
     locations: Savestate.getStorage("locations"),
     options: Savestate.getStorage("options"),
     filter: Savestate.getStorage("filter"),
-    areaActiveLists: Savestate.getStorage("areaActiveLists")
+    areaActiveLists: Savestate.getStorage("areaActiveLists"),
+    exitBindings: Savestate.getStorage("exitBindings")
 };
 
 function augmentItemValues(newData) {
@@ -52,6 +53,7 @@ class TrackerLogicDataCollector extends LogicDataCollector {
         this.registerStorage(STORAGES.options, "option[", "]");
         this.registerStorage(STORAGES.filter, "filter[", "]");
         this.registerStorage(STORAGES.areaActiveLists, "arealist[", "]");
+        this.registerStorage(STORAGES.exitBindings, "exitBindings[", "]");
         this.registerStorage(SettingsStorage, "setting[", "]");
     }
 
