@@ -11,28 +11,20 @@ export default class ViewChoicePanel extends CustomElement {
         /* --- */
     }
 
-    get slot() {
-        return this.getAttribute("slot");
+    load() {
+        for (const ch of this.children) {
+            if (typeof ch.load === "function") {
+                ch.load();
+            }
+        }
     }
 
-    set slot(val) {
-        this.setAttribute("slot", val);
-    }
-
-    get label() {
-        return this.getAttribute("label");
-    }
-
-    set label(val) {
-        this.setAttribute("label", val);
-    }
-
-    get icon() {
-        return this.getAttribute("icon");
-    }
-
-    set icon(val) {
-        this.setAttribute("icon", val);
+    unload() {
+        for (const ch of this.children) {
+            if (typeof ch.unload === "function") {
+                ch.unload();
+            }
+        }
     }
 
 }

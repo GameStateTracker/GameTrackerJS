@@ -2,6 +2,7 @@
 import ElementManager from "/emcJS/util/html/ElementManager.js";
 import EventMultiTargetManager from "/emcJS/util/event/EventMultiTargetManager.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
+import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import Panel from "/emcJS/ui/layout/Panel.js";
 import {
     nodeTextComparator,
@@ -99,19 +100,27 @@ export default class LocationList extends Panel {
                 this.#elementManager.registerSortFunction(this.#sortByNameFunction);
             }
         });
+        this.#elementManager.addEventListener("afterrender", () => {
+            BusyIndicatorManager.unbusy();
+        });
+    }
+
+    load() {
+        /* init list */
+        this.#buildList();
+    }
+
+    unload() {
+        /* init list */
+        this.#elementManager.manage([]);
     }
 
     #sort = debounce(() => {
         this.#elementManager.sort();
     }, 1000);
 
-    connectedCallback() {
-        super.connectedCallback();
-        /* init list */
-        this.#buildList();
-    }
-
-    #buildList() {
+    async #buildList() {
+        await BusyIndicatorManager.busy();
         const elManagerData = [];
         this.#listEventManager.clearTargets();
         for (const ref in LOCATIONS) {

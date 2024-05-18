@@ -1,111 +1,51 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import ElementManager from "/emcJS/util/html/ElementManager.js";
-import EventMultiTargetManager from "/emcJS/util/event/EventMultiTargetManager.js";
+import {
+    isString,
+    isStringNotEmpty
+} from "/emcJS/util/helper/CheckType.js";
 import "/emcJS/ui/input/Option.js";
 import "./ViewChoicePanel.js";
 import TPL from "./ViewChoice.js.html" assert {type: "html"};
 import STYLE from "./ViewChoice.js.css" assert {type: "css"};
-import ChildlistMutationObserverMixin from "/emcJS/ui/mixin/ChildlistMutationObserverMixin.js";
 
-class ChoiceEntryElementManager extends ElementManager {
+export default class ViewChoice extends CustomElement {
 
-    composer(key, params, eventManager) {
-        const el = document.createElement("emc-option");
-        el.value = key;
-        eventManager.addTarget(el);
-        return el;
-    }
+    #slotEl;
 
-    mutator(el, key, params) {
-        el.style.backgroundImage = `url('${params.icon}')`;
-        el.title = params.title || key;
-    }
+    #categoryEl;
 
-    cleanup(el, key, eventManager) {
-        eventManager.removeTarget(el);
-    }
+    #panelList = new Map();
 
-}
-
-export default class ViewChoice extends ChildlistMutationObserverMixin(CustomElement) {
-
-    #elementManager;
-
-    #eventManager;
+    #buttonList = new Map();
 
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* --- */
-        const observer = new MutationObserver(() => {
-            this.connectedCallback();
+        this.#slotEl = this.shadowRoot.getElementById("body");
+        this.#slotEl.addEventListener("slotchange", () => {
+            this.#prepareTabs();
         });
-        observer.observe(this, {childList: true});
         /* --- */
-        this.#eventManager = new EventMultiTargetManager();
-        this.#eventManager.set("click", (event) => {
-            const el = event.currentTarget;
-            if (!el.classList.contains("active")) {
-                this.active = el.value;
+        this.#categoryEl = this.shadowRoot.getElementById("categories");
+        this.#categoryEl.onclick = (event) => {
+            const target = event.target.getAttribute("value");
+            if (target != null) {
+                this.active = target;
+                event.preventDefault();
+                return false;
             }
-        });
-        /* --- */
-        const choice = this.shadowRoot.getElementById("view-choice");
-        this.#elementManager = new ChoiceEntryElementManager(choice, this.#eventManager);
-    }
-
-    nodeAddedCallback() {
-        const all = this.querySelectorAll("gt-viewchoice-panel[slot]");
-        const data = [];
-        for (const el of all) {
-            data.push({
-                key: el.slot,
-                title: el.label,
-                icon: el.icon
-            });
-        }
-        this.#elementManager.manage(data);
-    }
-
-    nodeRemovedCallback() {
-        const all = this.querySelectorAll("gt-viewchoice-panel[slot]");
-        const data = [];
-        for (const el of all) {
-            data.push({
-                key: el.slot,
-                title: el.label,
-                icon: el.icon
-            });
-        }
-        this.#elementManager.manage(data);
+        };
     }
 
     connectedCallback() {
-        const all = this.querySelectorAll("gt-viewchoice-panel[slot]");
-        const data = [];
-        for (const el of all) {
-            data.push({
-                key: el.slot,
-                title: el.label,
-                icon: el.icon
-            });
-        }
-        this.#elementManager.manage(data);
-        // apply value
-        const choice = this.shadowRoot.getElementById("view-choice");
-        const el = choice.querySelector(`[value="${this.active}"]`);
-        if (el) {
-            el.classList.add("active");
-        }
-    }
-
-    disconnectedCallback() {
-        // revoke value
-        const choice = this.shadowRoot.getElementById("view-choice");
-        const current = choice.querySelector(`[value="${this.active}"]`);
-        if (current) {
-            current.classList.remove("active");
+        this.#prepareTabs();
+        if (!this.active) {
+            const el = this.#categoryEl.querySelector("[value]");
+            if (el != null) {
+                this.active = el.getAttribute("value");
+            }
         }
     }
 
@@ -122,26 +62,150 @@ export default class ViewChoice extends ChildlistMutationObserverMixin(CustomEle
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        switch (name) {
-            case "active":
-                if (oldValue != newValue) {
-                    const container = this.shadowRoot.getElementById("container");
-                    if (typeof newValue == "string") {
-                        container.name = newValue;
-                        // update choice
-                        const choice = this.shadowRoot.getElementById("view-choice");
-                        const current = choice.querySelector(`[value="${oldValue}"]`);
-                        if (current) {
-                            current.classList.remove("active");
+        if (oldValue != newValue) {
+            switch (name) {
+                case "active": {
+                    if (oldValue) {
+                        const oldPanel = this.#panelList.get(oldValue);
+                        if (oldPanel != null) {
+                            oldPanel.classList.remove("active");
+                            if (typeof oldPanel.unload === "function") {
+                                oldPanel.unload();
+                            }
                         }
-                        const el = choice.querySelector(`[value="${newValue}"]`);
-                        if (el) {
-                            el.classList.add("active");
+                        const oldButton = this.#buttonList.get(oldValue);
+                        if (oldButton != null) {
+                            oldButton.classList.remove("active");
                         }
                     }
-                }
-                break;
+                    const newPanel = this.#panelList.get(newValue);
+                    if (newPanel != null) {
+                        newPanel.classList.add("active");
+                        if (typeof newPanel.load === "function") {
+                            newPanel.load();
+                        }
+                    }
+                    const newButton = this.#buttonList.get(newValue);
+                    if (newButton != null) {
+                        newButton.classList.add("active");
+                        const ev = new Event("change");
+                        ev.panel = newValue;
+                        this.dispatchEvent(ev);
+                    } else {
+                        const firstButton = this.#categoryEl.querySelector("[value]");
+                        if (firstButton != null) {
+                            this.active = firstButton.getAttribute("value");
+                        }
+                    }
+                } break;
+            }
         }
+    }
+
+    setTab(category, name = category, icon = "") {
+        if (!isStringNotEmpty(category)) {
+            throw new Error("category must be an unempty string");
+        }
+        if (!isStringNotEmpty(name)) {
+            throw new Error("optional name must be an unempty string");
+        }
+        if (!isString(icon)) {
+            throw new Error("optional icon must be a string");
+        }
+        const buttonEl = this.#buttonList.get(category);
+        if (buttonEl == null) {
+            // panel
+            const panelEl = this.#panelList.get(category) ?? document.createElement("div");
+            panelEl.className = "panel";
+            if (category === this.active) {
+                panelEl.classList.add("active");
+            }
+            panelEl.setAttribute("category", category);
+            this.#panelList.set(category, panelEl);
+            this.append(panelEl);
+            // button
+            this.#addTabButton(category, name, icon);
+            // ---
+            return panelEl;
+        } else {
+            buttonEl.title = name;
+            if (isStringNotEmpty(icon)) {
+                buttonEl.style.backgroundImage = `url('${icon}')`;
+            } else {
+                buttonEl.style.backgroundImage = "";
+            }
+        }
+    }
+
+    getTab(category) {
+        return this.#panelList.get(category);
+    }
+
+    hasTab(category) {
+        return this.#panelList.has(category);
+    }
+
+    removeTab(category) {
+        const panelEl = this.#panelList.get(category);
+        if (panelEl != null) {
+            panelEl.remove();
+        }
+        const buttonEl = this.#buttonList.get(category);
+        if (buttonEl != null) {
+            buttonEl.remove();
+        }
+        this.#panelList.delete(category);
+        this.#buttonList.delete(category);
+    }
+
+    #prepareTabs() {
+        const panelElList = this.#slotEl.assignedNodes();
+        const deletedTabs = new Set(this.#buttonList.keys());
+        this.#categoryEl.innerHTML = "";
+        for (const panelEl of panelElList) {
+            if (panelEl instanceof HTMLElement) {
+                const category = panelEl.getAttribute("category");
+                if (isStringNotEmpty(category)) {
+                    deletedTabs.delete(category);
+                    this.#panelList.set(category, panelEl);
+                    panelEl.className = "panel";
+                    if (category === this.active) {
+                        panelEl.classList.add("active");
+                        if (typeof panelEl.load === "function") {
+                            panelEl.load();
+                        }
+                    }
+                    const buttonEl = this.#buttonList.get(category);
+                    if (buttonEl == null) {
+                        this.#addTabButton(category, category);
+                    } else {
+                        this.#categoryEl.append(buttonEl);
+                    }
+                }
+            }
+        }
+        for (const deleted of deletedTabs) {
+            this.#panelList.delete(deleted);
+            this.#buttonList.delete(deleted);
+            if (deleted === this.active) {
+                this.active = null;
+            }
+        }
+    }
+
+    #addTabButton(category, name, icon) {
+        const buttonEl = document.createElement("emc-option");
+        buttonEl.className = "category";
+        if (category === this.active) {
+            buttonEl.classList.add("active");
+        }
+        if (isStringNotEmpty(icon)) {
+            buttonEl.style.backgroundImage = `url('${icon}')`;
+        }
+        buttonEl.value = category;
+        buttonEl.title = name;
+        this.#buttonList.set(category, buttonEl);
+        this.#categoryEl.append(buttonEl);
     }
 
 }
