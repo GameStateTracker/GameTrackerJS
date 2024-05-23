@@ -1,13 +1,17 @@
-// frameworks
 import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
 import LocalStorage from "/emcJS/data/storage/global/LocalStorage.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-
-import Savestate from "./Savestate.js";
-import SavestateConverter from "./SavestateConverter.js";
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
+import {
+    deepClone
+} from "/emcJS/util/helper/DeepClone.js";
+import {
+    isEqual
+} from "/emcJS/util/helper/Comparator.js";
+import Savestate from "./Savestate.js";
+import SavestateConverter from "./SavestateConverter.js";
 
 const PERSISTANCE_NAME = "savestate";
 const STATE_DIRTY = "state_dirty";
@@ -17,16 +21,23 @@ const STORAGE = new IDBStorage("savestates");
 
 function updateTitle() {
     if (!TITLE_PREFIX.startsWith("[D]")) {
-        const name = Savestate.name || "new state";
-        if (LocalStorage.get(STATE_DIRTY)) {
-            document.title = `${TITLE_PREFIX} - ${name} *`;
+        const name = Savestate.name;
+        if (name) {
+            const title = `${TITLE_PREFIX}: ${name}`;
+            if (LocalStorage.get(STATE_DIRTY)) {
+                document.title = `${title} *`;
+            } else {
+                document.title = title;
+            }
         } else {
-            document.title = `${TITLE_PREFIX} - ${name}`;
+            document.title = `${TITLE_PREFIX} [new state] *`;
         }
     }
 }
 
 class SavestateHandler extends EventTarget {
+
+    #lastSavedState = {};
 
     constructor() {
         super();
@@ -37,7 +48,11 @@ class SavestateHandler extends EventTarget {
             this.dispatchEvent(new Event("reset"));
             const state = SavestateConverter.convert(initState);
             Savestate.deserialize(state);
-            updateTitle();
+            if (initState.name) {
+                this.#initLastSavedState(initState.name, state);
+            } else {
+                updateTitle();
+            }
             // trigger event
             const ev = new Event("load");
             ev.state = state;
@@ -50,7 +65,7 @@ class SavestateHandler extends EventTarget {
         /* --- */
         Savestate.addEventListener("change", (event) => {
             const state = Savestate.serialize();
-            this.#cacheData(state, true);
+            this.#cacheData(state);
             if (!event.category) {
                 const ev = new Event("change");
                 ev.data = event.data;
@@ -63,7 +78,7 @@ class SavestateHandler extends EventTarget {
         });
         Savestate.addEventListener("notes", (event) => {
             const state = Savestate.serialize();
-            this.#cacheData(state, true);
+            this.#cacheData(state);
             const ev = new Event("notes");
             ev.value = event.value;
             this.dispatchEvent(ev);
@@ -74,11 +89,11 @@ class SavestateHandler extends EventTarget {
         });
         Savestate.addEventListener("options", () => {
             const state = Savestate.serialize();
-            this.#cacheData(state, true);
+            this.#cacheData(state);
         });
         Savestate.addEventListener("filter", () => {
             const state = Savestate.serialize();
-            this.#cacheData(state, true);
+            this.#cacheData(state);
         });
     }
 
@@ -98,22 +113,42 @@ class SavestateHandler extends EventTarget {
         }
     });
 
-    #cacheData(data, setDirtyFlag = false) {
-        LocalStorage.set(PERSISTANCE_NAME, data);
-        if (setDirtyFlag) {
-            this.#updateDirtyFlag(true);
-        } else {
-            updateTitle();
-        }
+    async #initLastSavedState(name, referenceState) {
+        const state = await STORAGE.get(name);
+        this.#lastSavedState = state;
+        this.#updateDirtyFlag(referenceState);
     }
 
-    #updateDirtyFlag(value = true) {
+    forceCache() {
+        const state = Savestate.serialize();
+        this.#cacheData(state);
+    }
+
+    #cacheData(data, forceTidy = false) {
+        LocalStorage.set(PERSISTANCE_NAME, data);
+        this.#updateDirtyFlag(forceTidy ? null : data);
+    }
+
+    #updateDirtyFlag(referenceState) {
         const isDirty = LocalStorage.get(STATE_DIRTY);
-        if (isDirty != value) {
-            LocalStorage.set(STATE_DIRTY, value);
-            const ev = new Event("dirty");
-            ev.value = value;
-            this.dispatchEvent(ev);
+        if (referenceState == null) {
+            if (isDirty) {
+                LocalStorage.set(STATE_DIRTY, false);
+                const ev = new Event("dirty");
+                ev.value = false;
+                this.dispatchEvent(ev);
+            }
+        } else {
+            const cleanedReferenceState = this.#getNeutralSavestate(referenceState);
+            const cleanedLastState = this.#getNeutralSavestate(this.#lastSavedState);
+            const value = !isEqual(cleanedReferenceState, cleanedLastState);
+            const isDirty = LocalStorage.get(STATE_DIRTY);
+            if (isDirty != value) {
+                LocalStorage.set(STATE_DIRTY, value);
+                const ev = new Event("dirty");
+                ev.value = value;
+                this.dispatchEvent(ev);
+            }
         }
         updateTitle();
     }
@@ -122,14 +157,15 @@ class SavestateHandler extends EventTarget {
         const updateCache = Savestate.name != name;
         Savestate.name = name;
         const state = Savestate.serialize();
+        this.#lastSavedState = deepClone(state);
         state.timestamp = new Date();
         state.autosave = false;
         await STORAGE.set(name, state);
         // undirty
         if (updateCache) {
-            this.#cacheData(state, false);
+            this.#cacheData(state, true);
         } else {
-            this.#updateDirtyFlag(false);
+            this.#updateDirtyFlag();
         }
     }
 
@@ -141,9 +177,8 @@ class SavestateHandler extends EventTarget {
             const state = SavestateConverter.convert(await STORAGE.get(name));
             // write state data
             Savestate.deserialize(state);
-            this.#cacheData(state, false);
-            // undirty
-            this.#updateDirtyFlag(false);
+            this.#lastSavedState = deepClone(state);
+            this.#cacheData(state, true);
             // trigger event
             const ev = new Event("load");
             ev.state = state;
@@ -172,8 +207,9 @@ class SavestateHandler extends EventTarget {
         this.dispatchEvent(new Event("reset"));
         // write state data
         Savestate.deserialize(newState);
+        this.#lastSavedState = deepClone(newState);
         // cache data
-        this.#cacheData(newState, false);
+        this.#cacheData(newState, true);
         // trigger event
         const ev = new Event("load");
         ev.state = newState;
@@ -238,6 +274,16 @@ class SavestateHandler extends EventTarget {
         } finally {
             console.groupEnd("StateConverter - Test");
         }
+    }
+
+    #getNeutralSavestate(sourceState) {
+        return {
+            data: {
+                ...sourceState.data,
+                filter: {}
+            },
+            notes: sourceState.notes
+        };
     }
 
 }
