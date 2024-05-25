@@ -135,7 +135,7 @@ export default class ItemGridInteractive extends CustomElement {
     }
 
     static createItemMirrorCollection(target, element) {
-        const {value, icon, halign, valign, tooltip, contentGrid = [[]], counting = false, countBlacklist = []} = element;
+        const {value, icon, halign, valign, tooltip, hideMax, contentGrid = [[]], counting = false, countBlacklist = []} = element;
 
         const el = document.createElement("gt-itemgrid-itemmirror-collection");
 
@@ -144,6 +144,7 @@ export default class ItemGridInteractive extends CustomElement {
         el.valign = valign;
         el.halign = halign;
         el.tooltip = tooltip;
+        el.hideMax = hideMax;
 
         if (Array.isArray(contentGrid)) {
             const ctxMnu = ItemGridInteractive.createItemGridContextMenu(contentGrid);

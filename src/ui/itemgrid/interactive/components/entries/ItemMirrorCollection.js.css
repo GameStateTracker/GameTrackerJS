@@ -32,3 +32,6 @@
     word-break: normal;
     white-space: pre;
 }
+:host([hidemax]:not([hidemax="false"])) #max {
+    display: none;
+}

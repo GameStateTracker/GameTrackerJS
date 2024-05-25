@@ -40,6 +40,14 @@ export default class ItemMirrorCollection extends BaseClass {
         });
     }
 
+    set hideMax(value) {
+        this.setBooleanAttribute("hidemax", value);
+    }
+
+    get hideMax() {
+        return this.getBooleanAttribute("hidemax");
+    }
+
     applyDefaultValues() {
         this.#currentEl.innerHTML = 0;
         this.#maxEl.innerHTML = 0;
