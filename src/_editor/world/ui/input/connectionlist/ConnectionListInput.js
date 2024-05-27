@@ -1,4 +1,5 @@
 import CustomFormElementDelegating from "/emcJS/ui/element/CustomFormElementDelegating.js";
+import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {
     isEqual
@@ -18,8 +19,12 @@ import "/emcJS/ui/dataview/datagrid/DataGrid.js";
 import "/emcJS/ui/dataview/datagrid/DataGrid.js";
 import TPL from "./ConnectionListInput.js.html" assert {type: "html"};
 import STYLE from "./ConnectionListInput.js.css" assert {type: "css"};
+import {
+    deleteAtIndexImmuted, insertAtIndex
+} from "/emcJS/util/helper/collection/ArrayMutations.js";
+import CellContextMenu from "./ctxmnu/CellContextMenu.js";
 
-export default class ConnectionListInput extends CustomFormElementDelegating {
+export default class ConnectionListInput extends ContextMenuManagerMixin(CustomFormElementDelegating) {
 
     #value;
 
@@ -49,17 +54,7 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
             event.stopPropagation();
             event.preventDefault();
             const {rowKey} = event.data;
-            const currentValue = this.value ?? [];
-            const index = currentValue.findIndex((entry) => {
-                return rowKey === entry.label;
-            });
-            if (index >= 0) {
-                const newValue = [
-                    ...currentValue.slice(0, index),
-                    ...currentValue.slice(index + 1)
-                ];
-                this.value = newValue;
-            }
+            this.#removeElement(rowKey);
         });
         this.#gridEl.addEventListener("edit::posA", debounce((event) => {
             event.stopPropagation();
@@ -89,6 +84,27 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
                 this.value = newValue;
             }
         }));
+        /* --- */
+        this.setContextMenu("cell", CellContextMenu);
+        this.#gridEl.addEventListener("menu", (event) => {
+            const rowKey = event.data.rowKey;
+            this.showContextMenu("cell", event, {rowKey});
+            event.stopPropagation();
+            event.preventDefault();
+            return false;
+        });
+        this.addContextMenuHandler("cell", "addbefore", (event) => {
+            const {rowKey} = event.props[0];
+            this.#addElement(rowKey, true);
+        });
+        this.addContextMenuHandler("cell", "addafter", (event) => {
+            const {rowKey} = event.props[0];
+            this.#addElement(rowKey);
+        });
+        this.addContextMenuHandler("cell", "remove", (event) => {
+            const {rowKey} = event.props[0];
+            this.#removeElement(rowKey);
+        });
         /* --- */
         this.#addEl = this.shadowRoot.getElementById("add");
         this.#addEl.addEventListener("click", async () => {
@@ -257,6 +273,73 @@ export default class ConnectionListInput extends CustomFormElementDelegating {
         const modalB = CoordinatesInputModal.getModalByName(`${gridId}-posB`);
         modalB.loadConnections(connections);
         await BusyIndicatorManager.unbusy();
+    }
+
+    async #addElement(rowKey, before = false) {
+        const initialValue = this.value ?? {};
+        let currentIndex = initialValue.findIndex((entry) => {
+            return rowKey === entry.label;
+        });
+
+        let newRowKey = null;
+        const currentValue = this.value ?? {};
+        while (newRowKey == null) {
+            newRowKey = await ModalDialog.prompt("Add label", "Please enter a label");
+            if (newRowKey == null || newRowKey === false) {
+                return;
+            }
+            if (newRowKey.length > 2 || newRowKey === "") {
+                await ModalDialog.alert("The entered label is invalid", "The label can have 1 to 2 letters. Please enter another one!");
+                rowKey = null;
+                continue;
+            }
+            const index = currentValue.findIndex((entry) => {
+                return newRowKey === entry.label;
+            });
+            if (index >= 0) {
+                await ModalDialog.alert("Label already exists", `The label "${rowKey}" was already added to this list. Please enter another one!`);
+                newRowKey = null;
+            }
+        }
+
+        const newEntry = {
+            label: newRowKey,
+            posA: {
+                x: 0,
+                y: 0
+            },
+            posB: {
+                x: 0,
+                y: 0
+            }
+        };
+        if (rowKey != null) {
+            const newValue = deepClone(currentValue);
+            if (!before) {
+                currentIndex++;
+            }
+            insertAtIndex(newValue, currentIndex, newEntry);
+            this.value = newValue;
+        } else {
+            this.value = {
+                ...initialValue,
+                newEntry
+            };
+        }
+    }
+
+    async #removeElement(rowKey) {
+        const result = await ModalDialog.confirm("Remove entry", `Do you really want to remove the entry?\n\n${rowKey}`);
+        if (result !== true) {
+            return;
+        }
+        const currentValue = this.value ?? [];
+        const index = currentValue.findIndex((entry) => {
+            return rowKey === entry.label;
+        });
+        if (index >= 0) {
+            this.value = deleteAtIndexImmuted(currentValue, index);
+        }
     }
 
 }

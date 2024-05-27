@@ -1,0 +1,20 @@
+import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
+
+export default class CellContextMenu extends ContextMenu {
+
+    initItems() {
+        super.setItems([
+            {menuAction: "addbefore", content: "Add Entry before"},
+            {menuAction: "addafter", content: "Add Entry after"},
+            "splitter",
+            {menuAction: "remove", content: "Remove"}
+        ]);
+    }
+
+    setItems() {
+        // nothing
+    }
+
+}
+
+customElements.define("gt-edt-input-multi-marker-list-ctxmnu-cell", CellContextMenu);

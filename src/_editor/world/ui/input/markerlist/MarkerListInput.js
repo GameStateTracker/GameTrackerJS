@@ -1,4 +1,5 @@
 import CustomFormElementDelegating from "/emcJS/ui/element/CustomFormElementDelegating.js";
+import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {
     isEqual
@@ -11,6 +12,7 @@ import {
 } from "/emcJS/util/helper/DeepClone.js";
 import {
     deleteAtIndexImmuted,
+    insertAtIndex,
     moveInArrayImmuted
 } from "/emcJS/util/helper/collection/ArrayMutations.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
@@ -23,6 +25,7 @@ import "/emcJS/ui/form/button/Button.js";
 import "/emcJS/ui/dataview/datagrid/DataGrid.js";
 import TPL from "./MarkerListInput.js.html" assert {type: "html"};
 import STYLE from "./MarkerListInput.js.css" assert {type: "css"};
+import CellContextMenu from "./ctxmnu/CellContextMenu.js";
 
 const RELATION_TYPES = [
     "Area",
@@ -31,7 +34,7 @@ const RELATION_TYPES = [
     "Location"
 ];
 
-export default class MarkerListInput extends CustomFormElementDelegating {
+export default class MarkerListInput extends ContextMenuManagerMixin(CustomFormElementDelegating) {
 
     #value;
 
@@ -66,13 +69,7 @@ export default class MarkerListInput extends CustomFormElementDelegating {
             event.stopPropagation();
             event.preventDefault();
             const {rowKey} = event.data;
-            const currentValue = this.value ?? [];
-            const index = currentValue.findIndex((entry) => {
-                return rowKey === this.#generateRowKey(entry.ref);
-            });
-            if (index >= 0) {
-                this.value = deleteAtIndexImmuted(currentValue, index);
-            }
+            this.#removeElement(rowKey);
         });
         this.#gridEl.addEventListener("edit::pos", debounce((event) => {
             event.stopPropagation();
@@ -141,47 +138,30 @@ export default class MarkerListInput extends CustomFormElementDelegating {
             }
         });
         /* --- */
+        this.setContextMenu("cell", CellContextMenu);
+        this.#gridEl.addEventListener("menu", (event) => {
+            const rowKey = event.data.rowKey;
+            this.showContextMenu("cell", event, {rowKey});
+            event.stopPropagation();
+            event.preventDefault();
+            return false;
+        });
+        this.addContextMenuHandler("cell", "addbefore", (event) => {
+            const {rowKey} = event.props[0];
+            this.#addElement(rowKey, true);
+        });
+        this.addContextMenuHandler("cell", "addafter", (event) => {
+            const {rowKey} = event.props[0];
+            this.#addElement(rowKey);
+        });
+        this.addContextMenuHandler("cell", "remove", (event) => {
+            const {rowKey} = event.props[0];
+            this.#removeElement(rowKey);
+        });
+        /* --- */
         this.#addEl = this.shadowRoot.getElementById("add");
         this.#addEl.addEventListener("click", async () => {
-            let continous = true;
-            while (continous) {
-                let entityEntry = null;
-                let rowKey = null;
-                const currentValue = this.value ?? [];
-                while (rowKey == null) {
-                    const result = await this.#relationSelectModal.show();
-                    if (result == null || result === false) {
-                        return;
-                    }
-                    entityEntry = result[0];
-                    continous = result[1];
-                    if (entityEntry.type == null || entityEntry.type === "" || entityEntry.name == null || entityEntry.name === "") {
-                        await ModalDialog.alert("Empty entry selected", "You selected the empty entry, which can not be added. Please select another one!");
-                        continue;
-                    }
-                    rowKey = this.#generateRowKey(entityEntry);
-                    const index = currentValue.findIndex((entry) => {
-                        return rowKey === this.#generateRowKey(entry.ref);
-                    });
-                    if (index >= 0) {
-                        await ModalDialog.alert("Entry already exists", `The entry "${rowKey}" was already added to this list. Please select another one!`);
-                        rowKey = null;
-                    }
-                }
-                this.value = [
-                    ...currentValue,
-                    {
-                        ref: entityEntry,
-                        pos: {
-                            x: 0,
-                            y: 0,
-                            scale: 100
-                        },
-                        visible: true,
-                        listHidden: false
-                    }
-                ];
-            }
+            this.#addElement();
         });
         /* --- */
         this.#dataManager = new SimpleDataProvider(this.#gridEl);
@@ -327,6 +307,77 @@ export default class MarkerListInput extends CustomFormElementDelegating {
         const modal = CoordinatesInputModal.getModalByName(`${gridId}-pos`);
         modal.loadConnections(connections);
         await BusyIndicatorManager.unbusy();
+    }
+
+    async #addElement(rowKey, before = false) {
+        const initialValue = this.value ?? {};
+        let currentIndex = initialValue.findIndex((entry) => {
+            return rowKey === this.#generateRowKey(entry.ref);
+        });
+
+        let continous = true;
+        while (continous) {
+            let entityEntry = null;
+            let newRowKey = null;
+            const currentValue = this.value ?? {};
+            while (newRowKey == null) {
+                const result = await this.#relationSelectModal.show();
+                if (result == null || result === false) {
+                    return;
+                }
+                entityEntry = result[0];
+                continous = result[1];
+                if (entityEntry.type == null || entityEntry.type === "" || entityEntry.name == null || entityEntry.name === "") {
+                    await ModalDialog.alert("Empty entry selected", "You selected the empty entry, which can not be added. Please select another one!");
+                    continue;
+                }
+                newRowKey = this.#generateRowKey(entityEntry);
+                const index = currentValue.findIndex((entry) => {
+                    return newRowKey === this.#generateRowKey(entry.ref);
+                });
+                if (index >= 0) {
+                    await ModalDialog.alert("Entry already exists", `The entry "${newRowKey}" was already added to this list. Please select another one!`);
+                    newRowKey = null;
+                }
+            }
+            const newEntry = {
+                ref: entityEntry,
+                pos: {
+                    x: 0,
+                    y: 0,
+                    scale: 100
+                },
+                visible: true,
+                listHidden: false
+            };
+            if (rowKey != null) {
+                const newValue = deepClone(currentValue);
+                if (!before) {
+                    currentIndex++;
+                }
+                insertAtIndex(newValue, currentIndex, newEntry);
+                this.value = newValue;
+            } else {
+                this.value = {
+                    ...initialValue,
+                    newEntry
+                };
+            }
+        }
+    }
+
+    async #removeElement(rowKey) {
+        const result = await ModalDialog.confirm("Remove entry", `Do you really want to remove the entry?\n\n${rowKey}`);
+        if (result !== true) {
+            return;
+        }
+        const currentValue = this.value ?? [];
+        const index = currentValue.findIndex((entry) => {
+            return rowKey === this.#generateRowKey(entry.ref);
+        });
+        if (index >= 0) {
+            this.value = deleteAtIndexImmuted(currentValue, index);
+        }
     }
 
 }
