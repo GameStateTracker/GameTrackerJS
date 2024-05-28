@@ -72,6 +72,9 @@ const STYLE = new GlobalStyle(`
 }
 `);
 
+const ZOOM_MIN = 10;
+const ZOOM_MAX = 200;
+
 const BaseClass = mix(
     CustomElement
 ).with(
@@ -212,7 +215,7 @@ export default class WorldMapOverview extends BaseClass {
         /* VALUES */
         const width = mapData.width ?? 0;
         const height = mapData.height ?? 0;
-        const zoom = mapData.zoom ?? 100;
+        const zoom = Math.min(Math.max(ZOOM_MIN, Math.floor(mapData.zoom ?? 100)), ZOOM_MAX);
         this.#width = width;
         this.#height = height;
         this.#zoom = zoom;

@@ -5,10 +5,13 @@ import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
+import {
+    debounce
+} from "/emcJS/util/Debouncer.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import ElementManager from "/emcJS/util/html/ElementManager.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
-
+import ParameterStorage from "../../../../storage/ParameterStorage.js";
 import SettingsObserver from "../../../../util/observer/SettingsObserver.js";
 import AreaStateManager from "../../../../statemanager/world/area/AreaStateManager.js";
 import UIRegistry from "../../../../registry/UIRegistry.js";
@@ -216,18 +219,19 @@ export default class WorldMapView extends BaseClass {
             mapEl.style.width = `${mapData.width}px`;
             mapEl.style.height = `${mapData.height}px`;
             /* value */
-            const zoom = Math.min(Math.max(ZOOM_MIN, Math.floor(mapData.zoom ?? 100)), ZOOM_MAX);
-            mapEl.style.setProperty("--zoom", zoom);
-            mapEl.style.setProperty("--offset-x", 0);
-            mapEl.style.setProperty("--offset-y", 0);
-            this.#zoom = zoom;
-            this.#offsetX = 0;
-            this.#offsetY = 0;
+            const {x = 0, y = 0, zoom = mapData.zoom ?? 100} = this.#loadTransformation() ?? {};
+            const resultZoom = Math.min(Math.max(ZOOM_MIN, Math.floor(zoom ?? 100)), ZOOM_MAX);
+            mapEl.style.setProperty("--zoom", resultZoom);
+            mapEl.style.setProperty("--offset-x", x);
+            mapEl.style.setProperty("--offset-y", y);
+            this.#zoom = resultZoom;
+            this.#offsetX = x;
+            this.#offsetY = y;
             /* event */
             const ev = new Event("transform");
-            ev.zoom = zoom;
-            ev.x = 0;
-            ev.y = 0;
+            ev.zoom = resultZoom;
+            ev.x = x;
+            ev.y = y;
             this.dispatchEvent(ev);
         }
         /* list */
@@ -279,6 +283,11 @@ export default class WorldMapView extends BaseClass {
     }
 
     setTranslation(x, y) {
+        this.#setTranslation(x, y);
+        this.#saveTransformation();
+    }
+
+    #setTranslation(x, y) {
         x = Math.floor(x);
         y = Math.floor(y);
         const [offsetX, offsetY] = this.#containBoundaries(x, y, this.#zoom);
@@ -299,6 +308,11 @@ export default class WorldMapView extends BaseClass {
     }
 
     setZoom(zoom/* , anchorX = 0, anchorY = 0 */) {
+        this.#setZoom(zoom/* , anchorX, anchorY */);
+        this.#saveTransformation();
+    }
+
+    #setZoom(zoom/* , anchorX = 0, anchorY = 0 */) {
         zoom = Math.min(Math.max(ZOOM_MIN, Math.floor(zoom)), ZOOM_MAX);
         if (this.#zoom != zoom) {
             const mapEl = this.shadowRoot.getElementById("map");
@@ -410,6 +424,32 @@ export default class WorldMapView extends BaseClass {
             }
         }
         this.#elementManager.manage(elManagerData);
+    }
+
+    // TODO map transform state should also be by instance (like only work if you got a state name for it)
+    #saveTransformation = debounce(() => {
+        ParameterStorage.set(`worldmap_transform[${this.ref}]`, {
+            x: this.#offsetX,
+            y: this.#offsetY,
+            zoom: this.#zoom
+        });
+    });
+
+    #loadTransformation() {
+        return ParameterStorage.get(`worldmap_transform[${this.ref}]`);
+    }
+
+    resetTransformation() {
+        ParameterStorage.delete(`worldmap_transform[${this.ref}]`);
+        const state = this.getState();
+        if (state != null) {
+            const mapData = state.props.map;
+            const resultZoom = Math.min(Math.max(ZOOM_MIN, Math.floor(mapData.zoom ?? 100)), ZOOM_MAX);
+            this.#setZoom(resultZoom, 0, 0);
+        } else {
+            this.#setZoom(100, 0, 0);
+        }
+        this.#setTranslation(0, 0);
     }
 
 }

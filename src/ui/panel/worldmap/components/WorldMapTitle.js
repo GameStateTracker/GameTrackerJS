@@ -3,6 +3,7 @@ import {
     mix
 } from "/emcJS/util/Mixin.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
+import "/emcJS/ui/i18n/I18nTooltip.js";
 import AreaStateManager from "../../../../statemanager/world/area/AreaStateManager.js";
 import StateDataEventManagerMixin from "../../../mixin/StateDataEventManagerMixin.js";
 import WorldListState from "../../../../state/world/WorldListState.js";

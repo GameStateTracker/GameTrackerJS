@@ -6,6 +6,7 @@ import {
 } from "/emcJS/util/Mixin.js";
 import Panel from "/emcJS/ui/layout/Panel.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
+import "/emcJS/ui/i18n/I18nTooltip.js";
 import "/emcJS/ui/input/Slider.js";
 
 import WorldListState from "../../../state/world/WorldListState.js";
@@ -20,10 +21,11 @@ import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 
 const showDetailedMapsObserver = new SettingsObserver("show_detailed_maps");
 
-// TODO save map settings per map
-// TODO add "(to overworld)" button
 const TPL = new Template(`
 <gt-worldmap-view id="view"></gt-worldmap-view>
+<emc-i18n-tooltip i18n-tooltip="reset zoom & position">
+    <div id="reset-transform-button">↻</div>
+</emc-i18n-tooltip>
 <div class="overview-wrapper">
     <gt-worldmap-overview id="overview"></gt-worldmap-overview>
     <emc-slider min="10" max="200" value="50" id="zoom-slider"></emc-slider>
@@ -44,7 +46,8 @@ const STYLE = new GlobalStyle(`
     height: 400px;
     user-select: none;
 }
-.overview-wrapper {
+.overview-wrapper,
+#reset-transform-button {
     position: absolute;
     box-sizing: content-box;
     bottom: 10px;
@@ -58,6 +61,20 @@ const STYLE = new GlobalStyle(`
     height: 40px;
     transition: width .2s, height .2s;
     overflow: hidden;
+}
+.overview-wrapper {
+    bottom: 10px;
+    left: 10px;
+}
+#reset-transform-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 60px;
+    left: 10px;
+    font-size: 30px;
+    line-height: 1em;
+    cursor: pointer;
 }
 .overview-wrapper:hover {
     width: 200px;
@@ -118,6 +135,16 @@ const BaseClass = mix(
 
 export default class WorldMap extends BaseClass {
 
+    #titleEl;
+
+    #hintEl;
+
+    #viewEl;
+
+    #overviewEl;
+
+    #sliderEl;
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
@@ -136,14 +163,17 @@ export default class WorldMap extends BaseClass {
             }
         });
         /* view */
-        const viewEl = this.shadowRoot.getElementById("view");
-        const overviewEl = this.shadowRoot.getElementById("overview");
+        this.#titleEl = this.shadowRoot.getElementById("title");
+        this.#hintEl = this.shadowRoot.getElementById("hint");
+        this.#viewEl = this.shadowRoot.getElementById("view");
+        this.#overviewEl = this.shadowRoot.getElementById("overview");
         const iconEl = this.shadowRoot.getElementById("overview-icon");
-        viewEl.addEventListener("transform", (event) => {
-            overviewEl.setTransform(event.x, event.y, event.zoom);
+        this.#viewEl.addEventListener("transform", (event) => {
+            this.#overviewEl.setTransform(event.x, event.y, event.zoom);
+            this.#sliderEl.value = event.zoom;
         });
-        overviewEl.addEventListener("move", (event) => {
-            viewEl.setTranslation(event.x, event.y);
+        this.#overviewEl.addEventListener("move", (event) => {
+            this.#viewEl.setTranslation(event.x, event.y);
         });
         iconEl.addEventListener("click", (event) => {
             event.stopPropagation();
@@ -152,33 +182,40 @@ export default class WorldMap extends BaseClass {
         });
 
         /* ZOOM */
-        const sliderEl = this.shadowRoot.getElementById("zoom-slider");
-        sliderEl.addEventListener("input", (event) => {
+        this.#sliderEl = this.shadowRoot.getElementById("zoom-slider");
+        this.#sliderEl.addEventListener("input", (event) => {
             const zoom = event.value;
-            viewEl.setZoom(zoom, 0, 0);
+            this.#viewEl.setZoom(zoom, 0, 0);
         });
         this.addEventListener("wheel", (event) => {
             if (!this.fixed) {
-                const parW = viewEl.clientWidth;
-                const parH = viewEl.clientHeight;
+                const parW = this.#viewEl.clientWidth;
+                const parH = this.#viewEl.clientHeight;
                 const anchorX = event.layerX - parW / 2;
                 const anchorY = event.layerY - parH / 2;
-                const zoom = viewEl.zoom;
+                const zoom = this.#viewEl.zoom;
                 if (zoom > 100) {
                     const delta = Math.sign(event.deltaY) * LARGE_ZOOM_SPD;
-                    viewEl.setZoom(zoom - delta, anchorX, anchorY);
+                    this.#viewEl.setZoom(zoom - delta, anchorX, anchorY);
                 } else if (zoom > 50) {
                     const delta = Math.sign(event.deltaY) * NORMAL_ZOOM_SPD;
-                    viewEl.setZoom(zoom - delta, anchorX, anchorY);
+                    this.#viewEl.setZoom(zoom - delta, anchorX, anchorY);
                 } else {
                     const delta = Math.sign(event.deltaY) * SMALL_ZOOM_SPD;
-                    viewEl.setZoom(zoom - delta, anchorX, anchorY);
+                    this.#viewEl.setZoom(zoom - delta, anchorX, anchorY);
                 }
-                sliderEl.value = viewEl.zoom;
             }
             event.stopPropagation();
             event.preventDefault();
         }, {capture: true});
+
+        const resetTransformEl = this.shadowRoot.getElementById("reset-transform-button");
+        resetTransformEl.addEventListener("click", (event) => {
+            this.#viewEl.resetTransformation();
+            event.stopPropagation();
+            event.preventDefault();
+            return false;
+        });
     }
 
     connectedCallback() {
@@ -189,48 +226,24 @@ export default class WorldMap extends BaseClass {
 
     applyDefaultValues() {
         /* title */
-        const titleEl = this.shadowRoot.getElementById("title");
-        if (titleEl != null) {
-            titleEl.ref = "";
-        }
+        this.#titleEl.ref = "";
         /* overview */
-        const overviewEl = this.shadowRoot.getElementById("overview");
-        if (overviewEl != null) {
-            overviewEl.ref = "";
-        }
+        this.#overviewEl.ref = "";
         /* view */
-        const viewEl = this.shadowRoot.getElementById("view");
-        if (viewEl != null) {
-            viewEl.ref = "";
-        }
+        this.#viewEl.ref = "";
         /* hint button */
-        const hintEl = this.shadowRoot.getElementById("hint");
-        if (hintEl != null) {
-            hintEl.ref = "";
-        }
+        this.#hintEl.ref = "";
     }
 
     applyStateValues(state) {
         /* title */
-        const titleEl = this.shadowRoot.getElementById("title");
-        if (titleEl != null) {
-            titleEl.ref = state.ref;
-        }
+        this.#titleEl.ref = state.ref;
         /* overview */
-        const overviewEl = this.shadowRoot.getElementById("overview");
-        if (overviewEl != null) {
-            overviewEl.ref = state.ref;
-        }
+        this.#overviewEl.ref = state.ref;
         /* view */
-        const viewEl = this.shadowRoot.getElementById("view");
-        if (viewEl != null) {
-            viewEl.ref = state.ref;
-        }
+        this.#viewEl.ref = state.ref;
         /* hint button */
-        const hintEl = this.shadowRoot.getElementById("hint");
-        if (hintEl != null) {
-            hintEl.ref = state.ref;
-        }
+        this.#hintEl.ref = state.ref;
     }
 
     get ref() {

@@ -120,7 +120,7 @@ export default class WorldMapArea extends WorldMapMarkedEntry {
 
     clickHandler() {
         const state = this.getState();
-        if (state != null && !state.listContents) {
+        if (state != null) {
             WorldListState.area = this.ref;
         }
     }
