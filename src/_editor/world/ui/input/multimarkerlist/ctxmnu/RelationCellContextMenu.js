@@ -1,6 +1,6 @@
 import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
 
-export default class CellContextMenu extends ContextMenu {
+export default class RelationCellContextMenu extends ContextMenu {
 
     initItems() {
         super.setItems([
@@ -17,4 +17,4 @@ export default class CellContextMenu extends ContextMenu {
 
 }
 
-customElements.define("gt-edt-input-marker-list-ctxmnu-cell", CellContextMenu);
+customElements.define("gt-edt-input-multi-marker-list-ctxmnu-cell-relation", RelationCellContextMenu);

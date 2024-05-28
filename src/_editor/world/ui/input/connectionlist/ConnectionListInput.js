@@ -1,5 +1,6 @@
 import CustomFormElementDelegating from "/emcJS/ui/element/CustomFormElementDelegating.js";
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
+import Toast from "/emcJS/ui/overlay/message/Toast.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {
     isEqual
@@ -10,19 +11,20 @@ import {
 import {
     deepClone
 } from "/emcJS/util/helper/DeepClone.js";
+import {
+    deleteAtIndexImmuted, insertAtIndex
+} from "/emcJS/util/helper/collection/ArrayMutations.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import CoordinatesInputModal from "../coordinates/components/CoordinatesInputModal.js";
+import PosCellContextMenu from "./ctxmnu/PosCellContextMenu.js";
+import NameCellContextMenu from "./ctxmnu/NameCellContextMenu.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/form/button/Button.js";
 import "/emcJS/ui/dataview/datagrid/DataGrid.js";
 import "/emcJS/ui/dataview/datagrid/DataGrid.js";
 import TPL from "./ConnectionListInput.js.html" assert {type: "html"};
 import STYLE from "./ConnectionListInput.js.css" assert {type: "css"};
-import {
-    deleteAtIndexImmuted, insertAtIndex
-} from "/emcJS/util/helper/collection/ArrayMutations.js";
-import CellContextMenu from "./ctxmnu/CellContextMenu.js";
 
 export default class ConnectionListInput extends ContextMenuManagerMixin(CustomFormElementDelegating) {
 
@@ -61,9 +63,7 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(CustomF
             event.preventDefault();
             const {value, rowKey} = event.data;
             const currentValue = this.value ?? [];
-            const index = currentValue.findIndex((entry) => {
-                return rowKey === entry.label;
-            });
+            const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
                 newValue[index].posA = value;
@@ -75,9 +75,7 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(CustomF
             event.preventDefault();
             const {value, rowKey} = event.data;
             const currentValue = this.value ?? [];
-            const index = currentValue.findIndex((entry) => {
-                return rowKey === entry.label;
-            });
+            const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
                 newValue[index].posB = value;
@@ -85,63 +83,58 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(CustomF
             }
         }));
         /* --- */
-        this.setContextMenu("cell", CellContextMenu);
+        this.setContextMenu("name-cell", NameCellContextMenu);
+        this.setContextMenu("pos-cell", PosCellContextMenu);
         this.#gridEl.addEventListener("menu", (event) => {
+            const columnName = event.data.columnName;
             const rowKey = event.data.rowKey;
-            this.showContextMenu("cell", event, {rowKey});
+            if (columnName === "posA" || columnName === "posB") {
+                this.showContextMenu("pos-cell", event, {rowKey, columnName});
+            } else if (columnName === "name") {
+                this.showContextMenu("name-cell", event, {rowKey});
+            }
             event.stopPropagation();
             event.preventDefault();
             return false;
         });
-        this.addContextMenuHandler("cell", "addbefore", (event) => {
-            const {rowKey} = event.props[0];
-            this.#addElement(rowKey, true);
-        });
-        this.addContextMenuHandler("cell", "addafter", (event) => {
-            const {rowKey} = event.props[0];
-            this.#addElement(rowKey);
-        });
-        this.addContextMenuHandler("cell", "remove", (event) => {
+        this.addContextMenuHandler("name-cell", "remove", (event) => {
             const {rowKey} = event.props[0];
             this.#removeElement(rowKey);
+        });
+        this.addContextMenuHandler("pos-cell", "copyvalue", async (event) => {
+            const {rowKey, columnName} = event.props[0];
+            const source = this.#getElement(rowKey);
+            if (source != null) {
+                try {
+                    const cbText = JSON.stringify(source[columnName]);
+                    await navigator.clipboard.writeText(cbText);
+                } catch {
+                    Toast.error("could not write to clipboard");
+                }
+                Toast.success("value saved to clipboard");
+            }
+        });
+        this.addContextMenuHandler("pos-cell", "pastevalue", async (event) => {
+            const {rowKey, columnName} = event.props[0];
+            const index = this.#getElementIndex(rowKey);
+            if (index >= 0) {
+                try {
+                    const currentValue = this.value ?? [];
+                    const cbText = await navigator.clipboard.readText();
+                    const value = JSON.parse(cbText);
+                    const newValue = deepClone(currentValue);
+                    newValue[index][columnName] = value;
+                    this.value = newValue;
+                } catch {
+                    Toast.error("could not read from clipboard");
+                }
+                Toast.success("value loaded from clipboard");
+            }
         });
         /* --- */
         this.#addEl = this.shadowRoot.getElementById("add");
         this.#addEl.addEventListener("click", async () => {
-            let rowKey = null;
-            const currentValue = this.value ?? [];
-            while (rowKey == null) {
-                rowKey = await ModalDialog.prompt("Add label", "Please enter a label");
-                if (rowKey == null || rowKey === false) {
-                    return;
-                }
-                if (rowKey.length > 2 || rowKey === "") {
-                    await ModalDialog.alert("The entered label is invalid", "The label can have 1 to 2 letters. Please enter another one!");
-                    rowKey = null;
-                    continue;
-                }
-                const index = currentValue.findIndex((entry) => {
-                    return rowKey === entry.label;
-                });
-                if (index >= 0) {
-                    await ModalDialog.alert("Label already exists", `The label "${rowKey}" was already added to this list. Please enter another one!`);
-                    rowKey = null;
-                }
-            }
-            this.value = [
-                ...currentValue,
-                {
-                    label: rowKey,
-                    posA: {
-                        x: 0,
-                        y: 0
-                    },
-                    posB: {
-                        x: 0,
-                        y: 0
-                    }
-                }
-            ];
+            this.#addElement();
         });
         /* --- */
         this.#dataManager = new SimpleDataProvider(this.#gridEl);
@@ -293,9 +286,7 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(CustomF
                 rowKey = null;
                 continue;
             }
-            const index = currentValue.findIndex((entry) => {
-                return newRowKey === entry.label;
-            });
+            const index = this.#getElementIndex(newRowKey);
             if (index >= 0) {
                 await ModalDialog.alert("Label already exists", `The label "${rowKey}" was already added to this list. Please enter another one!`);
                 newRowKey = null;
@@ -334,12 +325,24 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(CustomF
             return;
         }
         const currentValue = this.value ?? [];
-        const index = currentValue.findIndex((entry) => {
-            return rowKey === entry.label;
-        });
+        const index = this.#getElementIndex(rowKey);
         if (index >= 0) {
             this.value = deleteAtIndexImmuted(currentValue, index);
         }
+    }
+
+    #getElement(rowKey) {
+        const currentValue = this.value ?? [];
+        return currentValue.find((entry) => {
+            return rowKey === entry.label;
+        });
+    }
+
+    #getElementIndex(rowKey) {
+        const currentValue = this.value ?? [];
+        return currentValue.findIndex((entry) => {
+            return rowKey === entry.label;
+        });
     }
 
 }

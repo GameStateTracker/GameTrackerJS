@@ -1,5 +1,6 @@
 import CustomFormElementDelegating from "/emcJS/ui/element/CustomFormElementDelegating.js";
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
+import Toast from "/emcJS/ui/overlay/message/Toast.js";
 import {
     isEqual
 } from "/emcJS/util/helper/Comparator.js";
@@ -20,13 +21,16 @@ import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import LogicElementModal from "/emcJS/ui/form/element/input/logic/components/modal/LogicElementModal.js";
 import ModalDialogAddTypeEntities from "../../modal/ModalDialogAddTypeEntities.js";
 import CoordinatesInputModal from "../coordinates/components/CoordinatesInputModal.js";
+import RelationCellContextMenu from "./ctxmnu/RelationCellContextMenu.js";
+import PosCellContextMenu from "./ctxmnu/PosCellContextMenu.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/form/element/select/search/SearchSelect.js";
 import "/emcJS/ui/form/button/Button.js";
 import "/emcJS/ui/dataview/datagrid/DataGrid.js";
 import TPL from "./MultiMarkerListInput.js.html" assert {type: "html"};
 import STYLE from "./MultiMarkerListInput.js.css" assert {type: "css"};
-import CellContextMenu from "./ctxmnu/CellContextMenu.js";
+
+navigator.permissions.query({name: "clipboard-write"});
 
 const RELATION_TYPES = [
     "Area",
@@ -91,10 +95,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
             event.preventDefault();
             const {value, rowKey} = event.data;
             const currentValue = this.value ?? [];
-            const currentList = currentValue[this.#activeList] ?? [];
-            const index = currentList.findIndex((entry) => {
-                return rowKey === this.#generateRowKey(entry.ref);
-            });
+            const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
                 newValue[this.#activeList][index].pos = value;
@@ -106,10 +107,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
             event.preventDefault();
             const {value, rowKey} = event.data;
             const currentValue = this.value ?? [];
-            const currentList = currentValue[this.#activeList] ?? [];
-            const index = currentList.findIndex((entry) => {
-                return rowKey === this.#generateRowKey(entry.ref);
-            });
+            const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
                 newValue[this.#activeList][index].visible = value;
@@ -121,10 +119,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
             event.preventDefault();
             const {value, rowKey} = event.data;
             const currentValue = this.value ?? [];
-            const currentList = currentValue[this.#activeList] ?? [];
-            const index = currentList.findIndex((entry) => {
-                return rowKey === this.#generateRowKey(entry.ref);
-            });
+            const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
                 newValue[this.#activeList][index].listHidden = value;
@@ -136,10 +131,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
             event.preventDefault();
             const {rowKey} = event.data;
             const currentValue = this.value ?? [];
-            const currentList = currentValue[this.#activeList] ?? [];
-            const index = currentList.findIndex((entry) => {
-                return rowKey === this.#generateRowKey(entry.ref);
-            });
+            const index = this.#getElementIndex(rowKey);
             if (index > 0) {
                 const newValue = deepClone(currentValue);
                 moveInArray(newValue[this.#activeList], index, index - 1);
@@ -151,10 +143,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
             event.preventDefault();
             const {rowKey} = event.data;
             const currentValue = this.value ?? [];
-            const currentList = currentValue[this.#activeList] ?? [];
-            const index = currentList.findIndex((entry) => {
-                return rowKey === this.#generateRowKey(entry.ref);
-            });
+            const index = this.#getElementIndex(rowKey);
             if (index + 1 < currentValue[this.#activeList].length) {
                 const newValue = deepClone(currentValue);
                 moveInArray(newValue[this.#activeList], index, index + 1);
@@ -162,25 +151,61 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
             }
         });
         /* --- */
-        this.setContextMenu("cell", CellContextMenu);
+        this.setContextMenu("relation-cell", RelationCellContextMenu);
+        this.setContextMenu("pos-cell", PosCellContextMenu);
         this.#gridEl.addEventListener("menu", (event) => {
+            const columnName = event.data.columnName;
             const rowKey = event.data.rowKey;
-            this.showContextMenu("cell", event, {rowKey});
+            if (columnName === "pos") {
+                this.showContextMenu("pos-cell", event, {rowKey});
+            } else if (columnName === "relation") {
+                this.showContextMenu("relation-cell", event, {rowKey});
+            }
             event.stopPropagation();
             event.preventDefault();
             return false;
         });
-        this.addContextMenuHandler("cell", "addbefore", (event) => {
+        this.addContextMenuHandler("relation-cell", "addbefore", (event) => {
             const {rowKey} = event.props[0];
             this.#addElement(rowKey, true);
         });
-        this.addContextMenuHandler("cell", "addafter", (event) => {
+        this.addContextMenuHandler("relation-cell", "addafter", (event) => {
             const {rowKey} = event.props[0];
             this.#addElement(rowKey);
         });
-        this.addContextMenuHandler("cell", "remove", (event) => {
+        this.addContextMenuHandler("relation-cell", "remove", (event) => {
             const {rowKey} = event.props[0];
             this.#removeElement(rowKey);
+        });
+        this.addContextMenuHandler("pos-cell", "copyvalue", async (event) => {
+            const {rowKey} = event.props[0];
+            const source = this.#getElement(rowKey);
+            if (source != null) {
+                try {
+                    const cbText = JSON.stringify(source.pos);
+                    await navigator.clipboard.writeText(cbText);
+                } catch {
+                    Toast.error("could not write to clipboard");
+                }
+                Toast.success("value saved to clipboard");
+            }
+        });
+        this.addContextMenuHandler("pos-cell", "pastevalue", async (event) => {
+            const {rowKey} = event.props[0];
+            const index = this.#getElementIndex(rowKey);
+            if (index >= 0) {
+                try {
+                    const currentValue = this.value ?? [];
+                    const cbText = await navigator.clipboard.readText();
+                    const value = JSON.parse(cbText);
+                    const newValue = deepClone(currentValue);
+                    newValue[this.#activeList][index].pos = value;
+                    this.value = newValue;
+                } catch {
+                    Toast.error("could not read from clipboard");
+                }
+                Toast.success("value loaded from clipboard");
+            }
         });
         /* --- */
         this.#addEl = this.shadowRoot.getElementById("add");
@@ -197,7 +222,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
                     return;
                 }
                 if (newName in this.#value) {
-                    await ModalDialog.alert("List already exists", `The list "${newName}" does already exist. Please enter another name!`);
+                    await ModalDialog.alert("List already exists", `The list\n\n${newName}\n\ndoes already exist. Please enter another name!`);
                     newName = null;
                 }
                 const currentValue = this.value ?? {};
@@ -416,11 +441,9 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
                     continue;
                 }
                 newRowKey = this.#generateRowKey(entityEntry);
-                const index = currentList.findIndex((entry) => {
-                    return newRowKey === this.#generateRowKey(entry.ref);
-                });
+                const index = this.#getElementIndex(newRowKey);
                 if (index >= 0) {
-                    await ModalDialog.alert("Entry already exists", `The entry "${newRowKey}" was already added to this list. Please select another one!`);
+                    await ModalDialog.alert("Entry already exists", `The entry\n\n${newRowKey}\n\nwas already added to this list. Please select another one!`);
                     newRowKey = null;
                 }
             }
@@ -460,15 +483,28 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
             return;
         }
         const currentValue = this.value ?? [];
-        const currentList = currentValue[this.#activeList] ?? [];
-        const index = currentList.findIndex((entry) => {
-            return rowKey === this.#generateRowKey(entry.ref);
-        });
+        const index = this.#getElementIndex(rowKey);
         if (index >= 0) {
             const newValue = deepClone(currentValue);
             deleteAtIndex(newValue[this.#activeList], index);
             this.value = newValue;
         }
+    }
+
+    #getElement(rowKey) {
+        const currentValue = this.value ?? [];
+        const currentList = currentValue[this.#activeList] ?? [];
+        return currentList.find((entry) => {
+            return rowKey === this.#generateRowKey(entry.ref);
+        });
+    }
+
+    #getElementIndex(rowKey) {
+        const currentValue = this.value ?? [];
+        const currentList = currentValue[this.#activeList] ?? [];
+        return currentList.findIndex((entry) => {
+            return rowKey === this.#generateRowKey(entry.ref);
+        });
     }
 
 }
