@@ -76,6 +76,9 @@ const STYLE = new GlobalStyle(`
     line-height: 1em;
     cursor: pointer;
 }
+#reset-transform-button.hidden {
+    display: none;
+}
 .overview-wrapper:hover {
     width: 200px;
     height: 230px;
@@ -167,10 +170,16 @@ export default class WorldMap extends BaseClass {
         this.#hintEl = this.shadowRoot.getElementById("hint");
         this.#viewEl = this.shadowRoot.getElementById("view");
         this.#overviewEl = this.shadowRoot.getElementById("overview");
+        const resetTransformButtonEl = this.shadowRoot.getElementById("reset-transform-button");
         const iconEl = this.shadowRoot.getElementById("overview-icon");
         this.#viewEl.addEventListener("transform", (event) => {
             this.#overviewEl.setTransform(event.x, event.y, event.zoom);
             this.#sliderEl.value = event.zoom;
+            if (this.#viewEl.isDefaultTransformation()) {
+                resetTransformButtonEl.classList.add("hidden");
+            } else {
+                resetTransformButtonEl.classList.remove("hidden");
+            }
         });
         this.#overviewEl.addEventListener("move", (event) => {
             this.#viewEl.setTranslation(event.x, event.y);
@@ -263,8 +272,16 @@ export default class WorldMap extends BaseClass {
         this.setAttribute("detailed", !!value);
     }
 
+    get storeTransform() {
+        return this.getAttribute("storetransform");
+    }
+
+    set storeTransform(val) {
+        this.setAttribute("storetransform", val);
+    }
+
     static get observedAttributes() {
-        return ["ref", "detailed"];
+        return ["ref", "detailed", "storetransform"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -285,7 +302,10 @@ export default class WorldMap extends BaseClass {
                     } else {
                         this.ref = WorldListState.defaultArea;
                     }
-                }
+                } break;
+                case "storetransform": {
+                    this.#viewEl.storeTransform = newValue;
+                } break;
             }
         }
     }

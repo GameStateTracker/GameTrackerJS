@@ -124,6 +124,8 @@ export default class WorldMapView extends BaseClass {
 
     #offsetY = 0;
 
+    #mapEl;
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
@@ -135,12 +137,12 @@ export default class WorldMapView extends BaseClass {
         });
 
         /* MAP EVENTS */
-        const mapEl = this.shadowRoot.getElementById("map");
-        const mapEventManager = new EventTargetManager(mapEl, false);
-        mapEl.addEventListener("mousedown", (event) => {
-            if (event.target === mapEl || event.target.tagName === "GT-CONNECTION-POINT") {
+        this.#mapEl = this.shadowRoot.getElementById("map");
+        const mapEventManager = new EventTargetManager(this.#mapEl, false);
+        this.#mapEl.addEventListener("mousedown", (event) => {
+            if (event.target === this.#mapEl || event.target.tagName === "GT-CONNECTION-POINT") {
                 if (!this.fixed && event.button === 0) {
-                    mapEl.classList.add("grabbed");
+                    this.#mapEl.classList.add("grabbed");
                     mapEventManager.setActive(true);
                 }
                 event.preventDefault();
@@ -148,7 +150,7 @@ export default class WorldMapView extends BaseClass {
             }
         });
         mapEventManager.set("mousemove", (event) => {
-            if (mapEl.classList.contains("grabbed")) {
+            if (this.#mapEl.classList.contains("grabbed")) {
                 if (event.button === 0) {
                     const vrtX = this.#offsetX;
                     const vrtY = this.#offsetY;
@@ -159,17 +161,17 @@ export default class WorldMapView extends BaseClass {
             }
         });
         mapEventManager.set("mouseup", (event) => {
-            if (mapEl.classList.contains("grabbed")) {
+            if (this.#mapEl.classList.contains("grabbed")) {
                 if (event.button === 0) {
-                    mapEl.classList.remove("grabbed");
+                    this.#mapEl.classList.remove("grabbed");
                     mapEventManager.setActive(false);
                 }
             }
         });
         mapEventManager.set("mouseleave", (event) => {
-            if (event.target === mapEl) {
+            if (event.target === this.#mapEl) {
                 if (event.button === 0) {
-                    mapEl.classList.remove("grabbed");
+                    this.#mapEl.classList.remove("grabbed");
                     mapEventManager.setActive(false);
                 }
             }
@@ -185,55 +187,49 @@ export default class WorldMapView extends BaseClass {
 
     applyDefaultValues() {
         /* map */
-        const mapEl = this.shadowRoot.getElementById("map");
-        if (mapEl != null) {
-            mapEl.style.backgroundColor = "#000000";
-            mapEl.style.backgroundImage = "";
-            mapEl.style.width = "600px";
-            mapEl.style.height = "600px";
-            /* value */
-            mapEl.style.setProperty("--zoom", 100);
-            mapEl.style.setProperty("--offset-x", 0);
-            mapEl.style.setProperty("--offset-y", 0);
-            this.#zoom = 100;
-            this.#offsetX = 0;
-            this.#offsetY = 0;
-            /* event */
-            const ev = new Event("transform");
-            ev.zoom = 100;
-            ev.x = 0;
-            ev.y = 0;
-            this.dispatchEvent(ev);
-        }
+        this.#mapEl.style.backgroundColor = "#000000";
+        this.#mapEl.style.backgroundImage = "";
+        this.#mapEl.style.width = "600px";
+        this.#mapEl.style.height = "600px";
+        /* value */
+        this.#mapEl.style.setProperty("--zoom", 100);
+        this.#mapEl.style.setProperty("--offset-x", 0);
+        this.#mapEl.style.setProperty("--offset-y", 0);
+        this.#zoom = 100;
+        this.#offsetX = 0;
+        this.#offsetY = 0;
+        /* event */
+        const ev = new Event("transform");
+        ev.zoom = 100;
+        ev.x = 0;
+        ev.y = 0;
+        this.dispatchEvent(ev);
         /* list */
         this.refreshList();
     }
 
     applyStateValues(state) {
         /* map */
-        const mapEl = this.shadowRoot.getElementById("map");
-        if (mapEl != null) {
-            const mapData = state.props.map;
-            mapEl.style.backgroundColor = mapData.backgroundColor;
-            mapEl.style.backgroundImage = `url("${mapData.backgroundImage}")`;
-            mapEl.style.width = `${mapData.width}px`;
-            mapEl.style.height = `${mapData.height}px`;
-            /* value */
-            const {x = 0, y = 0, zoom = mapData.zoom ?? 100} = this.#loadTransformation() ?? {};
-            const resultZoom = Math.min(Math.max(ZOOM_MIN, Math.floor(zoom ?? 100)), ZOOM_MAX);
-            mapEl.style.setProperty("--zoom", resultZoom);
-            mapEl.style.setProperty("--offset-x", x);
-            mapEl.style.setProperty("--offset-y", y);
-            this.#zoom = resultZoom;
-            this.#offsetX = x;
-            this.#offsetY = y;
-            /* event */
-            const ev = new Event("transform");
-            ev.zoom = resultZoom;
-            ev.x = x;
-            ev.y = y;
-            this.dispatchEvent(ev);
-        }
+        const mapData = state.props.map;
+        this.#mapEl.style.backgroundColor = mapData.backgroundColor;
+        this.#mapEl.style.backgroundImage = `url("${mapData.backgroundImage}")`;
+        this.#mapEl.style.width = `${mapData.width}px`;
+        this.#mapEl.style.height = `${mapData.height}px`;
+        /* value */
+        const {x = 0, y = 0, zoom = mapData.zoom ?? 100} = this.#loadTransformation() ?? {};
+        const resultZoom = Math.min(Math.max(ZOOM_MIN, Math.floor(zoom ?? 100)), ZOOM_MAX);
+        this.#mapEl.style.setProperty("--zoom", resultZoom);
+        this.#mapEl.style.setProperty("--offset-x", x);
+        this.#mapEl.style.setProperty("--offset-y", y);
+        this.#zoom = resultZoom;
+        this.#offsetX = x;
+        this.#offsetY = y;
+        /* event */
+        const ev = new Event("transform");
+        ev.zoom = resultZoom;
+        ev.x = x;
+        ev.y = y;
+        this.dispatchEvent(ev);
         /* list */
         this.refreshList();
     }
@@ -255,8 +251,16 @@ export default class WorldMapView extends BaseClass {
         this.setAttribute("fixed", !!val);
     }
 
+    get storeTransform() {
+        return this.getAttribute("storetransform");
+    }
+
+    set storeTransform(val) {
+        this.setAttribute("storetransform", val);
+    }
+
     static get observedAttributes() {
-        return ["ref"];
+        return ["ref", "storetransform"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -265,6 +269,20 @@ export default class WorldMapView extends BaseClass {
                 case "ref": {
                     const state = AreaStateManager.get(this.ref);
                     this.switchState(state);
+                } break;
+                case "storetransform": {
+                    const state = this.getState();
+                    if (state != null) {
+                        const mapData = state.props.map;
+                        const {x = 0, y = 0, zoom = mapData.zoom ?? 100} = this.#loadTransformation() ?? {};
+                        const resultZoom = Math.min(Math.max(ZOOM_MIN, Math.floor(zoom ?? 100)), ZOOM_MAX);
+                        this.#mapEl.style.setProperty("--zoom", resultZoom);
+                        this.#mapEl.style.setProperty("--offset-x", x);
+                        this.#mapEl.style.setProperty("--offset-y", y);
+                        this.#zoom = resultZoom;
+                        this.#offsetX = x;
+                        this.#offsetY = y;
+                    }
                 } break;
             }
         }
@@ -426,30 +444,44 @@ export default class WorldMapView extends BaseClass {
         this.#elementManager.manage(elManagerData);
     }
 
-    // TODO map transform state should also be by instance (like only work if you got a state name for it)
     #saveTransformation = debounce(() => {
-        ParameterStorage.set(`worldmap_transform[${this.ref}]`, {
-            x: this.#offsetX,
-            y: this.#offsetY,
-            zoom: this.#zoom
-        });
+        if (typeof this.storeTransform === "string" && this.storeTransform !== "") {
+            ParameterStorage.set(`worldmap_transform[${this.storeTransform}][${this.ref}]`, {
+                x: this.#offsetX,
+                y: this.#offsetY,
+                zoom: this.#zoom
+            });
+        }
     });
 
     #loadTransformation() {
-        return ParameterStorage.get(`worldmap_transform[${this.ref}]`);
+        if (typeof this.storeTransform === "string" && this.storeTransform !== "") {
+            return ParameterStorage.get(`worldmap_transform[${this.storeTransform}][${this.ref}]`);
+        }
     }
 
     resetTransformation() {
-        ParameterStorage.delete(`worldmap_transform[${this.ref}]`);
+        if (typeof this.storeTransform === "string" && this.storeTransform !== "") {
+            ParameterStorage.delete(`worldmap_transform[${this.storeTransform}][${this.ref}]`);
+            const state = this.getState();
+            if (state != null) {
+                const mapData = state.props.map;
+                const resultZoom = Math.min(Math.max(ZOOM_MIN, Math.floor(mapData.zoom ?? 100)), ZOOM_MAX);
+                this.#setZoom(resultZoom, 0, 0);
+            } else {
+                this.#setZoom(100, 0, 0);
+            }
+            this.#setTranslation(0, 0);
+        }
+    }
+
+    isDefaultTransformation() {
         const state = this.getState();
         if (state != null) {
             const mapData = state.props.map;
-            const resultZoom = Math.min(Math.max(ZOOM_MIN, Math.floor(mapData.zoom ?? 100)), ZOOM_MAX);
-            this.#setZoom(resultZoom, 0, 0);
-        } else {
-            this.#setZoom(100, 0, 0);
+            const defaultZoom = mapData.zoom ?? 100;
+            return this.#offsetX === 0 && this.#offsetY === 0 && this.#zoom === defaultZoom;
         }
-        this.#setTranslation(0, 0);
     }
 
 }
