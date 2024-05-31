@@ -206,11 +206,7 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
         if (state != null) {
             const area = state.area;
             if (area instanceof DefaultAreaState) {
-                if (!area.listContents) {
-                    WorldListState.area = area.ref;
-                } else {
-                    super.clickHandler(event);
-                }
+                WorldListState.area = area.ref;
             } else {
                 this.showContextMenu("exitbinding", event, this.ref, state.value);
             }
