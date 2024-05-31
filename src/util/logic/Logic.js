@@ -14,7 +14,12 @@ logicDebugObserver.addEventListener("change", (event) => {
 
 class Logic extends EventTarget {
 
+    #suspended = false;
+
     #callLogic = debounce((root) => {
+        if (this.#suspended) {
+            return;
+        }
         const data = LOGIC_PROCESSOR.traverse(root);
         if (Object.keys(data).length > 0) {
             const ev = new Event("change");
@@ -92,6 +97,14 @@ class Logic extends EventTarget {
 
     getAll() {
         return LOGIC_PROCESSOR.getAll();
+    }
+
+    set suspended(val) {
+        this.#suspended = !!val;
+    }
+
+    get suspended() {
+        return this.#suspended;
     }
 
 }

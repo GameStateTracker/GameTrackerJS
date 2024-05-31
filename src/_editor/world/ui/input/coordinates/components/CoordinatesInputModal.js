@@ -32,12 +32,16 @@ export default class CoordinatesInputModal extends Modal {
         footerEl.append(submitEl);
     }
 
-    setTitle(name) {
-        if (typeof name === "string" && name !== "") {
-            super.setTitle(`Edit coordinates: ${name}`);
+    set title(value) {
+        if (typeof value === "string" && value !== "") {
+            super.title = `Edit coordinates: ${value}`;
         } else {
-            super.setTitle("Edit coordinates");
+            super.title = "Edit coordinates";
         }
+    }
+
+    get title() {
+        return super.title;
     }
 
     submit() {
@@ -70,7 +74,7 @@ export default class CoordinatesInputModal extends Modal {
         if (title !== "" && currentType != null) {
             title += ` [${currentType}]`;
         }
-        this.setTitle(title);
+        this.title = title;
     }
 
     loadMapData(mapData) {
