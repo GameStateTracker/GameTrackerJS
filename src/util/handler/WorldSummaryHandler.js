@@ -16,6 +16,7 @@ import {
     getListSummaryAccess, getSummaryDefaultAccess
 } from "../helper/ListAccessHelper.js";
 import AccessStateEnum from "../../enum/AccessStateEnum.js";
+import ExitStateManager from "../../statemanager/world/exit/ExitStateManager.js";
 
 let instance = null;
 
@@ -27,7 +28,11 @@ export default class WorldSummaryHandler extends EventTarget {
 
     #remainingLocationsSet = new Set();
 
+    #remainingExitsSet = new Set();
+
     #multiListAreaSet = new Set();
+
+    #allExits = new Set();
 
     #allLocations = new Set();
 
@@ -43,6 +48,7 @@ export default class WorldSummaryHandler extends EventTarget {
 
     #generateList = debounce(() => {
         const usedLocations = new Set();
+        const usedExits = new Set();
         for (const [, area] of AreaStateManager) {
             const lists = Object.values(area.props.lists ?? {});
             if (lists.length > 1) {
@@ -52,17 +58,26 @@ export default class WorldSummaryHandler extends EventTarget {
                     this.#refreshAccess();
                 });
                 /* --- */
-                for (const list of lists) {
-                    const usedList = list.filter((r) => r.ref?.type === "Location").map((r) => r.ref?.name);
+                for (const usedList of lists) {
                     for (const entry of usedList) {
-                        usedLocations.add(entry);
-                        this.#allLocations.add(entry);
+                        const ref = entry.ref;
+                        if (ref != null) {
+                            if (ref.type === "Location") {
+                                const name = ref.name;
+                                usedLocations.add(name);
+                                this.#allLocations.add(name);
+                            } else if (ref.type === "Exit") {
+                                const name = ref.name;
+                                usedExits.add(name);
+                                this.#allExits.add(name);
+                            }
+                        }
                     }
                 }
             }
         }
 
-        let idx = 0;
+        let locationIdx = 0;
         for (const [key] of LocationStateManager) {
             if (!usedLocations.has(key)) {
                 const record = {
@@ -76,7 +91,7 @@ export default class WorldSummaryHandler extends EventTarget {
                     },
                     "visible": true
                 };
-                const recordState = new ListRecordState(`summary-${idx++}`, record);
+                const recordState = new ListRecordState(`summary-location-${locationIdx++}`, record);
                 this.#entityList.add(recordState);
                 if (recordState.visible) {
                     this.#remainingLocationsSet.add(recordState);
@@ -101,6 +116,46 @@ export default class WorldSummaryHandler extends EventTarget {
                 this.#allLocations.add(key);
             }
         }
+
+        let exitIdx = 0;
+        for (const [key] of ExitStateManager) {
+            if (!usedExits.has(key)) {
+                const record = {
+                    "ref": {
+                        "type": "Exit",
+                        "name": key
+                    },
+                    "pos": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "visible": true
+                };
+                const recordState = new ListRecordState(`summary-exit-${exitIdx++}`, record);
+                this.#entityList.add(recordState);
+                if (recordState.visible) {
+                    this.#remainingExitsSet.add(recordState);
+                }
+                const eventManager = new EventTargetManager(recordState);
+                eventManager.set("access", () => {
+                    if (this.#remainingExitsSet.has(recordState)) {
+                        this.#refreshAccess();
+                    }
+                });
+                eventManager.set("visibility", (event) => {
+                    if (event.value) {
+                        if (!this.#remainingExitsSet.has(recordState)) {
+                            this.#remainingExitsSet.add(recordState);
+                            this.#refreshAccess();
+                        }
+                    } else if (this.#remainingExitsSet.has(recordState)) {
+                        this.#remainingExitsSet.delete(recordState);
+                        this.#refreshAccess();
+                    }
+                });
+                this.#allExits.add(key);
+            }
+        }
         /* --- */
         this.#refreshAccess();
     });
@@ -122,12 +177,31 @@ export default class WorldSummaryHandler extends EventTarget {
             return state.access;
         });
 
+        const visibleEntrances = [];
+        const remainingExitsData = Array.from(this.#remainingExitsSet.values()).map((state) => {
+            if (state.entry.reachable && state.entry.area == null) {
+                visibleEntrances.push(state.entry.ref);
+                return {entrances: 1};
+            }
+            return {entrances: 0};
+        });
+
+        console.log(visibleEntrances);
+
         const multiListAreaData = Array.from(this.#multiListAreaSet.values()).map((state) => {
+            if (state.activeList == null) {
+                return {
+                    ...state.access,
+                    entrances_min: 0,
+                    entrances_max : state.access.entrances_max ?? state.access.entrances ?? 0
+                };
+            }
             return state.access;
         });
 
         const access = getListSummaryAccess([
             ...remainingLocationsData,
+            ...remainingExitsData,
             ...multiListAreaData
         ], false);
 

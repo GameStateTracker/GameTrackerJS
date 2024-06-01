@@ -9,14 +9,16 @@ export default class LocationState extends CustomElement {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
+        /* --- */
+        const doneEl = this.shadowRoot.getElementById("locations-done");
+        const availEl = this.shadowRoot.getElementById("locations-available");
+        const missEl = this.shadowRoot.getElementById("locations-missing");
+        const exitsEl = this.shadowRoot.getElementById("exits-available");
 
         /* LIST HANDLER */
         const listHandler = this.generateList();
         listHandler.addEventListener("access", (event) => {
-            const doneEl = this.shadowRoot.getElementById("locations-done");
-            const availEl = this.shadowRoot.getElementById("locations-available");
-            const missEl = this.shadowRoot.getElementById("locations-missing");
-            const {reachable_min, reachable_max, unopened_min, unopened_max, done_min, done_max} = event.value;
+            const {reachable_min, reachable_max, unopened_min, unopened_max, done_min, done_max, entrances_min, entrances_max} = event.value;
             if (reachable_min == reachable_max) {
                 availEl.innerHTML = reachable_min;
             } else {
@@ -31,6 +33,16 @@ export default class LocationState extends CustomElement {
                 doneEl.innerHTML = done_min;
             } else {
                 doneEl.innerHTML = `[${done_min}..${done_max}]`;
+            }
+            if (done_min == done_max) {
+                doneEl.innerHTML = done_min;
+            } else {
+                doneEl.innerHTML = `[${done_min}..${done_max}]`;
+            }
+            if (entrances_min == entrances_max) {
+                exitsEl.innerHTML = entrances_min;
+            } else {
+                exitsEl.innerHTML = `[${entrances_min}..${entrances_max}]`;
             }
         });
     }
