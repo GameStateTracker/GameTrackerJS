@@ -24,7 +24,7 @@ const showDetailedMapsObserver = new SettingsObserver("show_detailed_maps");
 const TPL = new Template(`
 <gt-worldmap-view id="view"></gt-worldmap-view>
 <emc-i18n-tooltip i18n-tooltip="reset zoom & position">
-    <div id="reset-transform-button">↻</div>
+    <div id="reset-transform-button"><span class="rotate-icon">↺</span></div>
 </emc-i18n-tooltip>
 <div class="overview-wrapper">
     <gt-worldmap-overview id="overview"></gt-worldmap-overview>
@@ -123,6 +123,10 @@ const STYLE = new GlobalStyle(`
     margin-left: 8px;
     border: solid 2px var(--navigation-back-color, #ffffff);
     border-radius: 10px;
+}
+.rotate-icon {
+    rotate: 270deg;
+    transform-origin: center;
 }
 `);
 

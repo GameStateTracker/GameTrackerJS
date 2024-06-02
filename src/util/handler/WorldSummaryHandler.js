@@ -186,8 +186,6 @@ export default class WorldSummaryHandler extends EventTarget {
             return {entrances: 0};
         });
 
-        console.log(visibleEntrances);
-
         const multiListAreaData = Array.from(this.#multiListAreaSet.values()).map((state) => {
             if (state.activeList == null) {
                 return {

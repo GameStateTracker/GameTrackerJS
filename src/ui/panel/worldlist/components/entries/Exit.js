@@ -29,6 +29,7 @@ const TPL = new Template(`
         <img src="images/icons/entrance.svg" />
     </div>
     <div id="hint"></div>
+    <div id="tags"></div>
 </div>
 `);
 
@@ -56,6 +57,25 @@ const STYLE = new GlobalStyle(`
 #entrances img {
     width: 25px;
     height: 25px;
+}
+#tags {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 2px;
+    margin-left: 5px;
+    border: 1px solid var(--navigation-back-color, #ffffff);
+    border-radius: 2px;
+    user-select: none;
+}
+#tags:empty {
+    display: none;
+}
+#tags emc-labeledicon {
+    width: 24px;
+    height: 24px;
+    margin: 1px;
 }
 `);
 
@@ -243,6 +263,8 @@ export default class WorldListExit extends BaseClass {
 
     applyValue = debounce((value = "") => {
         const valueEl = this.shadowRoot.getElementById("value");
+        const tagsEl = this.shadowRoot.getElementById("tags");
+        tagsEl.innerHTML = "";
         if (valueEl != null) {
             if (value) {
                 if (value == "0") {
@@ -254,6 +276,27 @@ export default class WorldListExit extends BaseClass {
                 const state = this.getState();
                 if (state != null) {
                     this.applyHint(state.hint);
+                    // area - tags
+                    const areaContentHints = state.area?.props.areaContentHints;
+                    if (areaContentHints) {
+                        const areaTagConfig = WorldListState.config.areaContentHints;
+                        for (const tag in areaContentHints) {
+                            const value = parseInt(areaContentHints[tag]);
+                            if (!isNaN(value) && value > 0) {
+                                const areaTagData = areaTagConfig[tag];
+                                if (areaTagData != null) {
+                                    const tagEl = document.createElement("emc-labeledicon");
+                                    tagEl.src = areaTagData.icon;
+                                    if (areaTagData.counting) {
+                                        tagEl.text = value;
+                                        tagEl.halign = "end";
+                                        tagEl.valign = "end";
+                                    }
+                                    tagsEl.append(tagEl);
+                                }
+                            }
+                        }
+                    }
                 } else {
                     this.applyHint();
                 }

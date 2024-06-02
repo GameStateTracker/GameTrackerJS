@@ -63,6 +63,10 @@ export default class ModalDialogAddTypeEntities extends ModalDialog {
         return this.#inputEl.sorted;
     }
 
+    get initialFocusElement() {
+        return this.#inputEl;
+    }
+
 }
 
 customElements.define("gt-edt-modal-dialog-add-type-entities", ModalDialogAddTypeEntities);
