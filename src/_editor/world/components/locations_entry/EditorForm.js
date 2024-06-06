@@ -114,7 +114,6 @@ export default class EditorForm_Locations_Entry extends CustomElement {
             type: data?.type ?? "",
             logicAccess: data?.logicAccess ?? "",
             visible: data?.visible ?? true,
-            visibleRootOnly: data?.visibleRootOnly ?? false,
             filter: {},
             icon: data?.icon ?? "",
             tags: data?.tags ?? []

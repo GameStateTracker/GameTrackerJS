@@ -23,11 +23,6 @@
             "optional": false,
             "default": false
         },
-        "visibleRootOnly": {
-            "@type": "Boolean",
-            "optional": false,
-            "default": false
-        },
         "filter": {
             "@type": "AssociativeList",
             "optional": false,

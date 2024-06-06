@@ -192,17 +192,15 @@ export default class WorldListSubList extends BaseClass {
             let definedOrder = 0;
             if (list != null && list.length > 0) {
                 for (const record of list) {
-                    if (!record.props.listHidden) {
+                    if (!record.props.mapOnly && !record.props.rootOnly) {
                         const loc = record.entry;
-                        if (!loc.props.visibleRootOnly) {
-                            elManagerData.push({
-                                key: loc.ref,
-                                type: record.type,
-                                subtype: loc.props.type,
-                                order: definedOrder++,
-                                record
-                            });
-                        }
+                        elManagerData.push({
+                            key: loc.ref,
+                            type: record.type,
+                            subtype: loc.props.type,
+                            order: definedOrder++,
+                            record
+                        });
                     }
                 }
             }

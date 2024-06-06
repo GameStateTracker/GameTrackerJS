@@ -194,7 +194,7 @@ export default class WorldList extends BaseClass {
             if (list != null && list.length > 0) {
                 for (const record of list) {
                     const loc = record.entry;
-                    if (!record.props.listHidden) {
+                    if (!record.props.mapOnly) {
                         elManagerData.push({
                             key: loc.ref,
                             type: record.type,

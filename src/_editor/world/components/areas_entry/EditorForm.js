@@ -179,7 +179,6 @@ export default class EditorForm_Areas_Entry extends CustomElement {
             category: data?.category ?? "",
             visible: data?.visible ?? true,
             visibleIfEmpty: data?.visibleIfEmpty ?? true,
-            visibleRootOnly: data?.visibleRootOnly ?? false,
             filter: {},
             listContents: data?.listContents ?? false,
             accessPenetration: data?.accessPenetration ?? false,

@@ -22,7 +22,11 @@
             "optional": false,
             "default": true
         },
-        "listHidden": {
+        "mapOnly": {
+            "@type": "Boolean",
+            "default": false
+        },
+        "rootOnly": {
             "@type": "Boolean",
             "default": false
         }

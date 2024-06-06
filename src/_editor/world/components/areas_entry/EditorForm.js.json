@@ -24,11 +24,6 @@
         "label": "Visible if list is empty"
     },
     {
-        "type": "SwitchInput",
-        "name": "visibleRootOnly",
-        "label": "Visible on root only (dont show if in sub tree)"
-    },
-    {
         "type": "FilterInput",
         "id": "filter-input",
         "name": "filter",

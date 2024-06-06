@@ -84,7 +84,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
         }, true);
         /* --- */
         this.#gridEl = this.shadowRoot.getElementById("grid");
-        this.#gridEl.addEventListener("action::delete", (event) => {
+        this.#gridEl.addEventListener("action::remove", (event) => {
             event.stopPropagation();
             event.preventDefault();
             const {rowKey} = event.data;
@@ -114,7 +114,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
                 this.value = newValue;
             }
         }));
-        this.#gridEl.addEventListener("edit::listHidden", debounce((event) => {
+        this.#gridEl.addEventListener("edit::mapOnly", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
             const {value, rowKey} = event.data;
@@ -122,7 +122,19 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
-                newValue[this.#activeList][index].listHidden = value;
+                newValue[this.#activeList][index].mapOnly = value;
+                this.value = newValue;
+            }
+        }));
+        this.#gridEl.addEventListener("edit::rootOnly", debounce((event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            const {value, rowKey} = event.data;
+            const currentValue = this.value ?? [];
+            const index = this.#getElementIndex(rowKey);
+            if (index >= 0) {
+                const newValue = deepClone(currentValue);
+                newValue[this.#activeList][index].rootOnly = value;
                 this.value = newValue;
             }
         }));
@@ -346,7 +358,8 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
                 relation: row.ref,
                 pos: row.pos,
                 visible: row.visible,
-                listHidden: row.listHidden
+                mapOnly: row.mapOnly,
+                rootOnly: row.rootOnly
             };
         });
         this.#dataManager.setSource(data);
@@ -455,7 +468,8 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
                     scale: 100
                 },
                 visible: true,
-                listHidden: false
+                mapOnly: false,
+                rootOnly: false
             };
             if (rowKey != null) {
                 const newValue = deepClone(currentValue);

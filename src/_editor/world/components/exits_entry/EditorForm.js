@@ -120,7 +120,6 @@ export default class EditorForm_Exits_Entry extends CustomElement {
             logicAccess: data?.logicAccess ?? "",
             area: data?.area,
             visible: data?.visible ?? true,
-            visibleRootOnly: data?.visibleRootOnly ?? false,
             filter: {},
             icon: data?.icon ?? "",
             bindsTo: data?.bindsTo ?? [],

@@ -67,7 +67,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(CustomFormE
         this.#relationSelectModal.sorted = true;
         /* --- */
         this.#gridEl = this.shadowRoot.getElementById("grid");
-        this.#gridEl.addEventListener("action::delete", (event) => {
+        this.#gridEl.addEventListener("action::remove", (event) => {
             event.stopPropagation();
             event.preventDefault();
             const {rowKey} = event.data;
@@ -97,7 +97,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(CustomFormE
                 this.value = newValue;
             }
         }));
-        this.#gridEl.addEventListener("edit::listHidden", debounce((event) => {
+        this.#gridEl.addEventListener("edit::mapOnly", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
             const {value, rowKey} = event.data;
@@ -105,7 +105,19 @@ export default class MarkerListInput extends ContextMenuManagerMixin(CustomFormE
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
                 const newValue = deepClone(currentValue);
-                newValue[index].listHidden = value;
+                newValue[index].mapOnly = value;
+                this.value = newValue;
+            }
+        }));
+        this.#gridEl.addEventListener("edit::rootOnly", debounce((event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            const {value, rowKey} = event.data;
+            const currentValue = this.value ?? [];
+            const index = this.#getElementIndex(rowKey);
+            if (index >= 0) {
+                const newValue = deepClone(currentValue);
+                newValue[index].rootOnly = value;
                 this.value = newValue;
             }
         }));
@@ -374,7 +386,8 @@ export default class MarkerListInput extends ContextMenuManagerMixin(CustomFormE
                     scale: 100
                 },
                 visible: true,
-                listHidden: false
+                mapOnly: false,
+                rootOnly: false
             };
             if (rowKey != null) {
                 const newValue = deepClone(currentValue);
