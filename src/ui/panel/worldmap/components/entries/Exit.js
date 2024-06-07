@@ -91,6 +91,7 @@ const STYLE = new GlobalStyle(`
     margin-left: 5px;
     border: 1px solid var(--navigation-back-color, #ffffff);
     border-radius: 2px;
+    font-size: 16px;
     user-select: none;
 }
 #tags:empty {
