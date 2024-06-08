@@ -32,16 +32,16 @@ export default class CoordinatesInputModal extends Modal {
         footerEl.append(submitEl);
     }
 
-    set title(value) {
+    set caption(value) {
         if (typeof value === "string" && value !== "") {
-            super.title = `Edit coordinates: ${value}`;
+            super.caption = `Edit coordinates: ${value}`;
         } else {
-            super.title = "Edit coordinates";
+            super.caption = "Edit coordinates";
         }
     }
 
-    get title() {
-        return super.title;
+    get caption() {
+        return super.caption;
     }
 
     submit() {
@@ -65,16 +65,16 @@ export default class CoordinatesInputModal extends Modal {
     setCurrentMarker(currentType, currentName, currentLabel) {
         this.#inputEl.setCurrentMarker(currentType, currentName, currentLabel);
         /* --- */
-        let title = "";
+        let caption = "";
         if (currentLabel != null) {
-            title = currentLabel;
+            caption = currentLabel;
         } else if (currentName != null) {
-            title = currentName;
+            caption = currentName;
         }
-        if (title !== "" && currentType != null) {
-            title += ` [${currentType}]`;
+        if (caption !== "" && currentType != null) {
+            caption += ` [${currentType}]`;
         }
-        this.title = title;
+        this.caption = caption;
     }
 
     loadMapData(mapData) {
