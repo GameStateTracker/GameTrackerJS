@@ -1,6 +1,6 @@
 // frameworks
 import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
-import "/emcJS/ui/Icon.js";
+import "/emcJS/ui/icon/Icon.js";
 
 import AccessStateEnum from "../../../../../enum/AccessStateEnum.js";
 import UIRegistry from "../../../../../registry/UIRegistry.js";

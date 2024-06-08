@@ -5,7 +5,7 @@ import {
 import Template from "/emcJS/util/html/Template.js";
 import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import "/emcJS/ui/overlay/Tooltip.js";
-import "/emcJS/ui/Icon.js";
+import "/emcJS/ui/icon/Icon.js";
 
 import WorldListState from "../../../../../state/world/WorldListState.js";
 import DefaultAreaState from "../../../../../state/world/area/DefaultAreaState.js";

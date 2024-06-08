@@ -3,7 +3,7 @@ import {
 } from "/emcJS/util/Mixin.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
-import "/emcJS/ui/LabeledIcon.js";
+import "/emcJS/ui/icon/LabeledIcon.js";
 import StateDataEventManagerMixin from "../mixin/StateDataEventManagerMixin.js";
 import EntranceStateManager from "../../statemanager/world/entrance/EntranceStateManager.js";
 import AreaStateManager from "../../statemanager/world/area/AreaStateManager.js";

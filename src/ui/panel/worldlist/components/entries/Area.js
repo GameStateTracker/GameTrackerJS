@@ -4,7 +4,7 @@ import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
-import "/emcJS/ui/Icon.js";
+import "/emcJS/ui/icon/Icon.js";
 
 import WorldListState from "../../../../../state/world/WorldListState.js";
 import AccessStateEnum from "../../../../../enum/AccessStateEnum.js";

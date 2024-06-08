@@ -1,7 +1,7 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import EventMultiTargetManager from "/emcJS/util/event/EventMultiTargetManager.js";
 import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
-import "/emcJS/ui/Icon.js";
+import "/emcJS/ui/icon/Icon.js";
 import FilterResource from "../data/resource/FilterResource.js";
 import SettingsObserver from "../util/observer/SettingsObserver.js";
 import BadgeFilterIconHandler from "../util/handler/BadgeFilterIconHandler.js";

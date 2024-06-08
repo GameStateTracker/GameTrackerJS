@@ -4,7 +4,7 @@ import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
-import "/emcJS/ui/LabeledIcon.js";
+import "/emcJS/ui/icon/LabeledIcon.js";
 
 import UIRegistry from "../../../../../registry/UIRegistry.js";
 import WorldListElement from "../abstract/Element.js";
