@@ -18,7 +18,9 @@
         linear-gradient(-45deg, transparent 75%, var(--image-checker-back-color) 75%);
     background-size:10px 10px;
     background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
-    border: solid var(--input-border-width, 2px) var(--input-border-color, #222222);
+    border-style: solid;
+    border-width: var(--input-border-width, 2px);
+    border-color: var(--input-border-color, #222222);
 }
 .map-wrapper {
     position: relative;
@@ -86,7 +88,9 @@
     padding: 0px 7px;
     color: var(--input-text-color, #000000);
     background-color: var(--input-back-color, #ffffff);
-    border: solid var(--input-border-width, 2px) var(--input-border-color, #222222);
+    border-style: solid;
+    border-width: var(--input-border-width, 2px);
+    border-color: var(--input-border-color, #222222);
     border-radius: var(--input-border-radius, 6px);
     font-size: 1em;
     text-align: end;
@@ -115,7 +119,9 @@
     margin: 5px;
     color: var(--button-text-color, #000000);
     background-color: var(--button-back-color, #eaeaea);
-    border: solid var(--button-border-width, 2px) var(--button-border-color, #222222);
+    border-style: solid;
+    border-width: var(--button-border-width, 2px);
+    border-color: var(--button-border-color, #222222);
     border-radius: var(--button-border-radius, 6px);
     user-select: none;
     overflow: hidden;

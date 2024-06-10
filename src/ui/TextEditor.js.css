@@ -16,10 +16,12 @@
 .controls label {
     display: inline-flex;
     padding: 5px;
-    background-color: var(--edit-background-color, #ffffff);
+    background-color: var(--edit-back-color, #ffffff);
     color: var(--edit-text-color, #000000);
-    border: solid 2px;
-    border-bottom: none 0px;
+    border-style: solid;
+    border-width: 2px;
+    border-bottom-style: none;
+    border-bottom-width: 0px;
     border-color: var(--edit-text-color, #ffffff);
 }
 .controls span {
@@ -37,9 +39,10 @@
     padding: 5px;
     resize: none;
     overflow: scroll;
-    background-color: var(--edit-background-color, #ffffff);
+    background-color: var(--edit-back-color, #ffffff);
     color: var(--edit-text-color, #000000);
-    border: solid 2px;
+    border-style: solid;
+    border-width: 2px;
     border-color: var(--edit-text-color, #ffffff);
     word-wrap: unset;
     white-space: pre;

@@ -12,7 +12,9 @@
     padding: 0px 7px;
     color: var(--input-text-color, #000000);
     background-color: var(--input-back-color, #ffffff);
-    border: solid var(--input-border-width, 2px) var(--input-border-color, #222222);
+    border-style: solid;
+    border-width: var(--input-border-width, 2px);
+    border-color: var(--input-border-color, #222222);
     border-radius: var(--input-border-radius, 6px) 0px 0px var(--input-border-radius, 6px);
     font-size: 1em;
 }
@@ -32,7 +34,9 @@
     appearance: none;
     color: var(--input-button-text-color, #000000);
     background-color: var(--input-button-back-color, #cccccc);
-    border: solid var(--input-border-width, 2px) var(--input-border-color, #222222);
+    border-style: solid;
+    border-width: var(--input-border-width, 2px);
+    border-color: var(--input-border-color, #222222);
     border-radius: 0px var(--input-border-radius, 6px) var(--input-border-radius, 6px) 0px;
     font-size: 1em;
     font-weight: bold;

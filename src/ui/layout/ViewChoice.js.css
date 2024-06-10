@@ -4,7 +4,7 @@
     width: 100dvw;
     height: 100%;
     margin: 0px;
-    background-color: var(--page-background-color, #000000);
+    background-color: var(--page-back-color, #000000);
     color: var(--page-text-color, #ffffff);
     user-select: none;
 }
@@ -25,7 +25,7 @@
     width: 100dvw;
     height: 100%;
     margin: 0px;
-    background-color: var(--page-background-color, #000000);
+    background-color: var(--page-back-color, #000000);
     color: var(--page-text-color, #ffffff);
     user-select: none;
 }

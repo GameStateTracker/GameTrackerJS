@@ -6,7 +6,9 @@
     padding: 0px;
     color: var(--input-text-color, #000000);
     background-color: var(--input-back-color, #ffffff);
-    border: solid var(--input-border-width, 2px) var(--input-border-color, #222222);
+    border-style: solid;
+    border-width: var(--input-border-width, 2px);
+    border-color: var(--input-border-color, #222222);
     border-radius: var(--input-border-radius, 6px);
 }
 :host(:disabled) {
@@ -20,7 +22,9 @@
 }
 .header {
     display: flex;
-    border-bottom: solid var(--input-border-width, 2px) var(--input-border-color, #222222);
+    border-bottom-style: solid;
+    border-bottom-width: var(--input-border-width, 2px);
+    border-bottom-color: var(--input-border-color, #222222);
 }
 :host([disabled]:not([disabled="false"])) .header {
     border-color: var(--input-disabled-border-color, #6a6a6a) !important;
@@ -38,7 +42,9 @@
 .footer {
     display: flex;
     padding: 5px;
-    border-top: solid var(--input-border-width, 2px) var(--input-border-color, #222222);
+    border-top-style: solid;
+    border-top-width: var(--input-border-width, 2px);
+    border-top-color: var(--input-border-color, #222222);
 }
 :host(:invalid) .footer {
     border-top-color: var(--input-invalid-border-color, #ff4444);

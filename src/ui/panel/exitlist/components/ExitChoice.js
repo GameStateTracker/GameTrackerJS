@@ -89,7 +89,7 @@ const STYLE = new GlobalStyle(`
 }
 :host(.markname) #text,
 :host(.markvalue) #value {
-    color: var(--page-background-color, #000000);
+    color: var(--page-back-color, #000000);
     background-color: var(--page-text-color, #ffffff);
     outline: 2px solid var(--page-text-color, #ffffff);
 }

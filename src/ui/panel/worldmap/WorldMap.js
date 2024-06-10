@@ -52,7 +52,7 @@ const STYLE = new GlobalStyle(`
     box-sizing: content-box;
     bottom: 10px;
     left: 10px;
-    background-color: var(--page-background-color, #ffffff);
+    background-color: var(--page-back-color, #ffffff);
     border-style: solid;
     border-width: 2px;
     border-color: var(--page-border-color-inverted, #ffffff);

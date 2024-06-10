@@ -9,7 +9,7 @@ import WorldListSubList from "../abstract/SubList.js";
 const STYLE = new GlobalStyle(`
 :host() {
     box-shadow:
-        inset 0 0 0px 2px var(--page-background-color, #ffffff),
+        inset 0 0 0px 2px var(--page-back-color, #ffffff),
         inset 0 0 1px 3px var(--page-text-color, #000000);
 }
 :host(:empty) {
