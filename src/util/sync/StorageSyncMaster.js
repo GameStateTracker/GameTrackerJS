@@ -123,7 +123,7 @@ if (await StorageSync.init()) {
     Savestate.addEventListener("meta", (event) => {
         if (!muted.value) {
             const {key, value} = event;
-            StorageSync.postMessage({storage: "savestate", type: "change", key, value});
+            StorageSync.postMessage({storage: "savestate", type: "meta", key, value});
         }
     });
 }
