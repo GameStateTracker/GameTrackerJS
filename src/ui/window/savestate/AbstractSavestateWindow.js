@@ -12,29 +12,44 @@ const TPL = new Template(`
 `);
 
 const STYLE = new GlobalStyle(`
+#window {
+    min-width: min(600px, -50px + 100vw);
+}
 #footer,
 .button {
     display: flex;
 }
 #footer {
-    height: 50px;
-    padding: 10px 30px 10px;
+    align-items: center;
     justify-content: flex-end;
-    border-top: solid 2px #cccccc;
+    min-height: 50px;
+    padding: 5px;
+    color: var(--modal-footer-text-color, #000000);
+    background-color: var(--modal-footer-back-color, #e4e4e4);
+    background-image: var(--modal-footer-back-image, none);
+    border-top: solid var(--modal-border-width, 2px) var(--modal-border-color, #cccccc);
 }
 .button {
     margin-left: 10px;
     padding: 5px;
-    border: solid 1px black;
-    border-radius: 2px;
+    color: var(--button-text-color, #000000);
+    background-color: var(--button-back-color, #eaeaea);
+    border-style: solid;
+    border-width: var(--button-border-width, 2px);
+    border-color: var(--button-border-color, #222222);
+    border-radius: var(--button-border-radius, 6px);
     align-items: center;
     justify-content: center;
+    font-weight: 900;
+    text-transform: uppercase;
     cursor: pointer;
-    -webkit-appearance: none;
+    user-select: none;
+    appearance: none;
 }
 .button:hover {
-    color: white;
-    background-color: black;
+    color: var(--button-hover-text-color, #ffffff);
+    background-color: var(--button-hover-back-color, #353935);
+    border-color: var(--button-hover-border-color, #222222);
 }
 #statename {
     display: block;
