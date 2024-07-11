@@ -301,4 +301,8 @@ export default class DefaultAreaState extends BaseClass {
         }
     }
 
+    get accessPenetration() {
+        return super.accessPenetration ?? false;
+    }
+
 }

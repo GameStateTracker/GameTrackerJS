@@ -92,7 +92,7 @@ export default class ListRecordState extends BaseClass {
     }
 
     get accessPenetration() {
-        return super.accessPenetration && this.#entry.accessPenetration;
+        return super.accessPenetration ?? this.#entry.accessPenetration;
     }
 
     get listContents() {

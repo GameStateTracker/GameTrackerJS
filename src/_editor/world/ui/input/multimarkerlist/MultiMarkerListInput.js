@@ -114,6 +114,18 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
                 this.value = newValue;
             }
         }));
+        this.#gridEl.addEventListener("edit::accessPenetration", debounce((event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            const {value, rowKey} = event.data;
+            const currentValue = this.value ?? [];
+            const index = this.#getElementIndex(rowKey);
+            if (index >= 0) {
+                const newValue = deepClone(currentValue);
+                newValue[this.#activeList][index].accessPenetration = value;
+                this.value = newValue;
+            }
+        }));
         this.#gridEl.addEventListener("edit::mapOnly", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
@@ -358,6 +370,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
                 relation: row.ref,
                 pos: row.pos,
                 visible: row.visible,
+                accessPenetration: row.accessPenetration,
                 mapOnly: row.mapOnly,
                 rootOnly: row.rootOnly
             };
@@ -468,6 +481,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Custom
                     scale: 100
                 },
                 visible: true,
+                accessPenetration: null,
                 mapOnly: false,
                 rootOnly: false
             };

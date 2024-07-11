@@ -22,12 +22,18 @@
             "optional": false,
             "default": true
         },
+        "accessPenetration": {
+            "@type": "Logic",
+            "optional": true
+        },
         "mapOnly": {
             "@type": "Boolean",
+            "optional": false,
             "default": false
         },
         "rootOnly": {
             "@type": "Boolean",
+            "optional": false,
             "default": false
         }
     }

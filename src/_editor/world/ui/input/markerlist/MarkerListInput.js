@@ -97,6 +97,18 @@ export default class MarkerListInput extends ContextMenuManagerMixin(CustomFormE
                 this.value = newValue;
             }
         }));
+        this.#gridEl.addEventListener("edit::accessPenetration", debounce((event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            const {value, rowKey} = event.data;
+            const currentValue = this.value ?? [];
+            const index = this.#getElementIndex(rowKey);
+            if (index >= 0) {
+                const newValue = deepClone(currentValue);
+                newValue[index].accessPenetration = value;
+                this.value = newValue;
+            }
+        }));
         this.#gridEl.addEventListener("edit::mapOnly", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
@@ -299,7 +311,10 @@ export default class MarkerListInput extends ContextMenuManagerMixin(CustomFormE
                 entityLabel: "",
                 relation: row.ref,
                 pos: row.pos,
-                visible: row.visible
+                visible: row.visible,
+                accessPenetration: row.accessPenetration,
+                mapOnly: row.mapOnly,
+                rootOnly: row.rootOnly
             };
         });
         this.#dataManager.setSource(data);
@@ -386,6 +401,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(CustomFormE
                     scale: 100
                 },
                 visible: true,
+                accessPenetration: null,
                 mapOnly: false,
                 rootOnly: false
             };

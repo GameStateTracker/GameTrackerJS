@@ -10,12 +10,14 @@ export default createMixin((superclass) => class StateAccessPenetrationMixin ext
     constructor(ref, props = {}) {
         super(ref, props);
 
-        this.#handler = new LogicHandler(props.accessPenetration);
-        this.#handler.addEventListener("change", (event) => {
-            const ev = new Event("accessPenetration");
-            ev.value = event.value;
-            this.dispatchEvent(ev);
-        });
+        if (props.accessPenetration != null) {
+            this.#handler = new LogicHandler(props.accessPenetration);
+            this.#handler.addEventListener("change", (event) => {
+                const ev = new Event("accessPenetration");
+                ev.value = event.value;
+                this.dispatchEvent(ev);
+            });
+        }
     }
 
     setLogicData(key, value) {
@@ -40,7 +42,7 @@ export default createMixin((superclass) => class StateAccessPenetrationMixin ext
     }
 
     get accessPenetration() {
-        return this.#handler?.value ?? false;
+        return this.#handler?.value;
     }
 
 });
