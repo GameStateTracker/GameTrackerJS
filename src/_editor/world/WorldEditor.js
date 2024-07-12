@@ -251,18 +251,30 @@ class WorldEditor extends CustomElement {
         // ---
         for (const name in data) {
             const entry = data[name];
-            if (Array.isArray(entry.values)) {
-                LogicOperatorRegistry.setOperator(`option[${name}]`, {
-                    type: "state",
-                    options: deepClone(entry.values),
-                    value: entry.default ?? entry.values[0]
-                });
-                LogicOperatorRegistry.linkOperator(`option[${name}]`, "options");
-            } else {
-                LogicOperatorRegistry.setOperator(`option[${name}]`, {
-                    type: "value"
-                });
-                LogicOperatorRegistry.linkOperator(`option[${name}]`, "options");
+            switch (entry.type) {
+                case "check":
+                case "number": {
+                    LogicOperatorRegistry.setOperator(`option[${name}]`, {
+                        type: "value"
+                    });
+                    LogicOperatorRegistry.linkOperator(`option[${name}]`, "options");
+                } break;
+                case "choice": {
+                    LogicOperatorRegistry.setOperator(`option[${name}]`, {
+                        type: "state",
+                        options: deepClone(entry.values),
+                        value: entry.default ?? entry.values[0]
+                    });
+                    LogicOperatorRegistry.linkOperator(`option[${name}]`, "options");
+                } break;
+                case "list": {
+                    for (const value of entry.values) {
+                        LogicOperatorRegistry.setOperator(`option[${value}]`, {
+                            type: "value"
+                        });
+                        LogicOperatorRegistry.linkOperator(`option[${value}]`, "options");
+                    }
+                }
             }
         }
         // ---
