@@ -1,0 +1,65 @@
+:host {
+    position: absolute;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    overflow: hidden;
+    user-select: none;
+    backdrop-filter: blur(2px);
+}
+
+:host(.show) {
+    display: flex;
+}
+
+#container {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    flex-direction: column;
+    background-color: var(--navigation-back-color, #ffffff);
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--page-border-color-inverted, #ffffff);
+}
+
+#map {
+    position: relative;
+    display: block;
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    background-color: var(--page-text-color, #000000);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center;
+    background-origin: content-box;
+}
+
+::slotted(*) {
+    position: absolute;
+}
+
+#close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: var(--modal-close-text-color, #222222);
+    background-color: var(--modal-close-back-color, #ffb9b9);
+    background-image: var(--modal-close-back-image, none);
+    font-size: 1.4em;
+    cursor: pointer;
+}
+
+#close:hover {
+    color: var(--modal-close-hover-text-color, #ffffff);
+    background-color: var(--modal-close-hover-back-color, #ff0000);
+    background-image: var(--modal-close-hover-back-image, none);
+}

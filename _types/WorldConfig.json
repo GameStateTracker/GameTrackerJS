@@ -10,6 +10,10 @@
                 "Area"
             ]
         },
+        "metaArea": {
+            "@type": "MetaArea",
+            "optional": false
+        },
         "areaContentHints": {
             "@type": "AssociativeList",
             "optional": false,

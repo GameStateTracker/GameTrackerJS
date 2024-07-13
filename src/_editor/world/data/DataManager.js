@@ -7,6 +7,9 @@ const DEFAULT_CONFIG = {
         type: "",
         name: ""
     },
+    metaArea: {
+        active: false
+    },
     areaContentHints: {},
     region: {
         root: "",

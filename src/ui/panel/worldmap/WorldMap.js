@@ -1,6 +1,3 @@
-// frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
@@ -17,118 +14,13 @@ import "../../button/HintButton.js";
 import "./components/WorldMapView.js";
 import "./components/WorldMapOverview.js";
 import "./components/WorldMapTitle.js";
+import "./components/metaarea/WorldMapMetaAreaButton.js";
+import "./components/metaarea/WorldMapMetaAreaView.js";
 import SettingsObserver from "../../../util/observer/SettingsObserver.js";
+import TPL from "./WorldMap.js.html" assert {type: "html"};
+import STYLE from "./WorldMap.js.css" assert {type: "css"};
 
 const showDetailedMapsObserver = new SettingsObserver("show_detailed_maps");
-
-const TPL = new Template(`
-<gt-worldmap-view id="view"></gt-worldmap-view>
-<emc-i18n-tooltip i18n-tooltip="reset zoom & position">
-    <div id="reset-transform-button"><span class="rotate-icon">↺</span></div>
-</emc-i18n-tooltip>
-<div class="overview-wrapper">
-    <gt-worldmap-overview id="overview"></gt-worldmap-overview>
-    <emc-slider min="10" max="200" value="50" id="zoom-slider"></emc-slider>
-    <div id="overview-icon">🧭</div>
-</div>
-<gt-worldmap-title id="title">
-    <gt-hintbutton class="button" id="hint">
-    </gt-hintbutton>
-    <gt-filtermenubutton class="button">
-    </gt-filtermenubutton>
-</gt-worldmap-title>
-`);
-
-const STYLE = new GlobalStyle(`
-:host {
-    display: grid;
-    width: 400px;
-    height: 400px;
-    user-select: none;
-}
-.overview-wrapper,
-#reset-transform-button {
-    position: absolute;
-    box-sizing: content-box;
-    bottom: 10px;
-    left: 10px;
-    background-color: var(--page-back-color, #ffffff);
-    border-style: solid;
-    border-width: 2px;
-    border-color: var(--page-border-color-inverted, #ffffff);
-    transform-origin: bottom left;
-    width: 40px;
-    height: 40px;
-    transition: width .2s, height .2s;
-    overflow: hidden;
-}
-.overview-wrapper {
-    bottom: 10px;
-    left: 10px;
-}
-#reset-transform-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    bottom: 60px;
-    left: 10px;
-    font-size: 30px;
-    line-height: 1em;
-    cursor: pointer;
-}
-#reset-transform-button.hidden {
-    display: none;
-}
-.overview-wrapper:hover {
-    width: 200px;
-    height: 230px;
-}
-.overview-wrapper #zoom-slider {
-    width: 200px;
-    height: 30px;
-    padding: 5px;
-}
-.overview-wrapper #overview-icon {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #000000;
-    font-size: 30px;
-    line-height: 1em;
-    overflow: hidden;
-    opacity: 1;
-    transition: opacity 0s, font-size 0s, width 0s, height 0s;
-}
-.overview-wrapper:hover #overview-icon {
-    font-size: 100px;
-    opacity: 0;
-    width: 0%;
-    height: 0%;
-    transition: opacity .2s .2s, font-size .2s .2s, width 0s .4s, height 0s .4s;
-}
-#title {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-}
-#title > .button {
-    width: 38px;
-    height: 38px;
-    padding: 4px;
-    margin-left: 8px;
-    border: solid 2px var(--navigation-back-color, #ffffff);
-    border-radius: 10px;
-}
-.rotate-icon {
-    rotate: 270deg;
-    transform-origin: center;
-}
-`);
 
 const SMALL_ZOOM_SPD = 1;
 const NORMAL_ZOOM_SPD = 2;
@@ -152,6 +44,10 @@ export default class WorldMap extends BaseClass {
 
     #sliderEl;
 
+    #metaAreaButtonEl;
+
+    #metaAreaViewEl;
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
@@ -174,6 +70,8 @@ export default class WorldMap extends BaseClass {
         this.#hintEl = this.shadowRoot.getElementById("hint");
         this.#viewEl = this.shadowRoot.getElementById("view");
         this.#overviewEl = this.shadowRoot.getElementById("overview");
+        this.#metaAreaButtonEl = this.shadowRoot.getElementById("meta-area-button");
+        this.#metaAreaViewEl = this.shadowRoot.getElementById("meta-area-view");
         const resetTransformButtonEl = this.shadowRoot.getElementById("reset-transform-button");
         const iconEl = this.shadowRoot.getElementById("overview-icon");
         this.#viewEl.addEventListener("transform", (event) => {
@@ -229,6 +127,15 @@ export default class WorldMap extends BaseClass {
             event.preventDefault();
             return false;
         });
+
+        /* meta area */
+        if (WorldListState.config.metaArea.active) {
+            this.#metaAreaButtonEl.addEventListener("click", () => {
+                this.#metaAreaViewEl.show();
+            });
+        } else {
+            this.#metaAreaButtonEl.style.display = "none";
+        }
     }
 
     connectedCallback() {

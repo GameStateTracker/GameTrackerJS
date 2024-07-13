@@ -10,6 +10,42 @@
         "sorted": true
     },
     {
+        "type": "Fieldset",
+        "label": "Meta Area",
+        "children": [
+            {
+                "type": "SwitchInput",
+                "name": "metaArea.active",
+                "label": "Active"
+            },
+            {
+                "type": "RelationSelect",
+                "name": "metaArea.ref",
+                "label": "Area/Collection",
+                "types": [
+                    "Area",
+                    "Collection"
+                ],
+                "placeholder": "Select area/collection...",
+                "sorted": true,
+                "visible": {
+                    "type": "value",
+                    "ref": "metaArea.active"
+                }
+            },
+            {
+                "type": "ImageSelect",
+                "name": "metaArea.icon",
+                "label": "Icon",
+                "optiongroup": "worldEditor_icons",
+                "visible": {
+                    "type": "value",
+                    "ref": "metaArea.active"
+                }
+            }
+        ]
+    },
+    {
         "type": "AreaHintList",
         "id": "area-hints",
         "name": "areaContentHints",

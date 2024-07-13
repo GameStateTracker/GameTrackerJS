@@ -1,0 +1,25 @@
+{
+    "parameters": {
+        "allowExtension": false
+    },
+    "definition": {
+        "active": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        },
+        "ref": {
+            "@type": "Relation",
+            "optional": true,
+            "types": [
+                "Area",
+                "Collection"
+            ]
+        },
+        "icon": {
+            "@type": "Image",
+            "optional": true,
+            "default": ""
+        }
+    }
+}

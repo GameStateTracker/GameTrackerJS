@@ -1,0 +1,34 @@
+#icon {
+    position: absolute;
+    box-sizing: content-box;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 40px;
+    height: 40px;
+    background-color: var(--page-back-color, #ffffff);
+    background-position: center;
+    background-size: contain;
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--page-border-color-inverted, #ffffff);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+#marker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 18px;
+    height: 18px;
+    margin: 1px;
+    background-color: var(--world-entry-status-available-color, #00ff00);
+    border-radius: 50%;
+    font-size: 0.8em;
+    color: #000000;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 3px;
+    border-color: var(--page-back-color, #ffffff);
+}
