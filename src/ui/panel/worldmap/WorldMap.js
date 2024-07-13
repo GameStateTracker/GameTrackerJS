@@ -118,7 +118,7 @@ export default class WorldMap extends BaseClass {
             }
             event.stopPropagation();
             event.preventDefault();
-        }, {capture: true});
+        });
 
         const resetTransformEl = this.shadowRoot.getElementById("reset-transform-button");
         resetTransformEl.addEventListener("click", (event) => {

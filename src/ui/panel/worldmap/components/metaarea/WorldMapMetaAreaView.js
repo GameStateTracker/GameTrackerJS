@@ -81,6 +81,10 @@ export default class WorldMapMetaAreaView extends BaseClass {
         this.#closeEl.addEventListener("click", () => {
             this.hide();
         });
+        this.addEventListener("wheel", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+        });
 
         /* state handler */
         this.registerStateHandler("listChange", () => {
