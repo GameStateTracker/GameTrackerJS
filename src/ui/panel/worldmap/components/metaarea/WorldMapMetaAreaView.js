@@ -87,6 +87,9 @@ export default class WorldMapMetaAreaView extends BaseClass {
         });
 
         /* state handler */
+        WorldListState.addEventListener("area", () => {
+            this.hide();
+        });
         this.registerStateHandler("listChange", () => {
             this.refreshList();
         });

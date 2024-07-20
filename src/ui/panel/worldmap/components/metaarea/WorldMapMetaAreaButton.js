@@ -45,6 +45,8 @@ export default class WorldMapMetaAreaButton extends BaseClass {
         this.#iconEl.style.backgroundImage = `url("${icon}")`;
         const state = WorldStateManagerRegistry.get(ref?.type)?.get(ref?.name);
         this.switchState(state);
+        this.checkVisibility();
+        this.refreshAccess();
     }
 
     checkVisibility() {
