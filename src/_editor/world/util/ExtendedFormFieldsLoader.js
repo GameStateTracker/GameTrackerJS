@@ -1,5 +1,6 @@
-import "../ui/field/AreaHintListInput.js";
-import "../ui/field/FilterInput.js";
-import "../ui/field/MarkerListInput.js";
-import "../ui/field/MultiMarkerListInput.js";
-import "../ui/field/ConnectionListInput.js";
+import "../ui/form/element/input/areahint/AreaHintListInput.js";
+import "../ui/form/element/input/connectionlist/ConnectionListInput.js";
+import "../ui/form/element/input/filter/FilterInput.js";
+import "../ui/form/element/input/markerlist/MarkerListInput.js";
+import "../ui/form/element/input/multimarkerlist/MultiMarkerListInput.js";
+import "../ui/form/element/input/optionamountlist/OptionAmountListInput.js";

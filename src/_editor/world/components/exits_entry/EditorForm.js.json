@@ -59,7 +59,7 @@
         "name": "bindsTo",
         "label": "Binds to types",
         "optiongroup": "worldEditor_exitTypes",
-        "multi": true,
+        "multiple": true,
         "sorted": true
     },
     {

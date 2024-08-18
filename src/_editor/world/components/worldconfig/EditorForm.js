@@ -3,7 +3,7 @@ import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import FormBuilder from "/emcJS/util/form/FormBuilder.js";
 import FormContext from "/emcJS/util/form/FormContext.js";
 import "/emcJS/ui/form/FormContainer.js";
-import "/emcJS/ui/form/field/DefaultFormFieldsLoader.js";
+import "/emcJS/ui/form/element/FormElementsLoader.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
 import TPL from "./EditorForm.js.html" assert {type: "html"};
 import STYLE from "./EditorForm.js.css" assert {type: "css"};
@@ -52,7 +52,7 @@ export default class EditorForm_WorldConfig extends CustomElement {
         /* --- */
         this.#areaHintEl = this.shadowRoot.getElementById("area-hints");
         /* --- */
-        this.#areaHintEl.setImageSelctOptionGroup("worldEditor_icons");
+        this.#areaHintEl.setImageSelectOptionGroup("worldEditor_icons");
         this.#areaHintEl.addEventListener("change", () => {
             const options = Object.keys(this.#areaHintEl.value);
             this.#optionGroupRegistry.setAll(options);

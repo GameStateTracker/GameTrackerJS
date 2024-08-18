@@ -120,13 +120,7 @@ class WorldEditor extends CustomElement {
         try {
             await BusyIndicatorManager.busy();
             /* --- */
-            scope.reset();
-            const currentEditorPath = ComponentController.getSelection();
-            if (currentEditorPath.length > 1) {
-                //this.switchDetailEditor();
-                this.#structureEditorTreeEl.selectItemByRefPath([currentEditorPath[0]]);
-                ComponentController.setSelection([currentEditorPath[0]]);
-            }
+            // scope.reset();
             DataManager.loadData(data);
             /* --- */
             const options = Object.keys(data.config.areaContentHints);
@@ -151,6 +145,15 @@ class WorldEditor extends CustomElement {
                 }
             }
             this.#tagsTokenRegistry.setAll(extractedTags);
+            /* --- */
+            const currentEditorPath = ComponentController.getSelection();
+            if (currentEditorPath.length > 1) {
+                this.switchDetailEditor();
+                this.#structureEditorTreeEl.selectItemByRefPath([currentEditorPath[0]]);
+                ComponentController.setSelection([currentEditorPath[0]]);
+            } else {
+                await this.reloadDetailEditor();
+            }
             /* --- */
             await BusyIndicatorManager.unbusy();
         } catch (err) {

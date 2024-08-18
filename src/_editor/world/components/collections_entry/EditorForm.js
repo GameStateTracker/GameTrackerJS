@@ -5,7 +5,7 @@ import {
     debounce
 } from "/emcJS/util/Debouncer.js";
 import "/emcJS/ui/form/FormContainer.js";
-import "/emcJS/ui/form/field/DefaultFormFieldsLoader.js";
+import "/emcJS/ui/form/element/FormElementsLoader.js";
 import TPL from "./EditorForm.js.html" assert {type: "html"};
 import STYLE from "./EditorForm.js.css" assert {type: "css"};
 import FORM_CONFIG from "./EditorForm.js.json" assert {type: "json"};

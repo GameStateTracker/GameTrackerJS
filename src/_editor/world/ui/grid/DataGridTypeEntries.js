@@ -1,5 +1,5 @@
 import CustomElementDelegating from "/emcJS/ui/element/CustomElementDelegating.js";
-import TypeStorageReferenceProvider from "/emcJS/util/dataprovider/TypeStorageReferenceProvider.js";
+import TypeStorageProvider from "/emcJS/util/dataprovider/TypeStorageProvider.js";
 import TypeStorage from "/emcJS/data/type/TypeStorage.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/dataview/datagrid/DataGrid.js";
@@ -48,7 +48,7 @@ export default class DataGridTypeEntries extends CustomElementDelegating {
         /* --- */
         this.#paginationEl = this.shadowRoot.getElementById("pagination");
         /* --- */
-        this.#dataManager = new TypeStorageReferenceProvider(this.#gridEl);
+        this.#dataManager = new TypeStorageProvider(this.#gridEl);
         this.#dataManager.setPagination(this.#paginationEl);
         this.#dataManager.setOptions({
             sort: ["entityName"],

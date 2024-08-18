@@ -1,6 +1,0 @@
-#input {
-    flex-grow: 1;
-}
-#input:focus {
-    outline: none;
-}

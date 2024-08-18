@@ -1,0 +1,10 @@
+<div class="header">
+    <emc-input-search id="search" nohover></emc-input-search>
+</div>
+<emc-datagrid id="grid" nohead stretched="name">
+    <emc-datagrid-column name="name" caption="Key" type="string" width="200"></emc-datagrid-column>
+    <emc-datagrid-column name="value" caption="Value" type="number" width="100" editable action="value"></emc-datagrid-column>
+</emc-datagrid>
+<emc-form-row class="footer" align="end">
+</emc-form-row>
+<slot id="options-container"></slot>
