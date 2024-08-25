@@ -120,26 +120,6 @@ class Savestate extends AppState {
         };
     }
 
-    /* STORAGES */
-    registerStorage(category, dataStorage, eventName) {
-        const storageCategory = category.toString();
-        if (storageCategory.includes(".")) {
-            console.warn(`failed to register storage "${storageCategory}" - names must not include "."`);
-        } else {
-            super.registerStorage(category, dataStorage, eventName);
-        }
-    }
-
-    getStorage(category) {
-        const storageCategory = category.toString();
-        if (storageCategory.includes(".")) {
-            console.warn(`failed to retrieve storage "${storageCategory}" - names must not include "."`);
-            return null;
-        } else {
-            return super.getStorage(category);
-        }
-    }
-
 }
 
 export default new Savestate();

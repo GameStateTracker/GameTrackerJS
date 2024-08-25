@@ -197,7 +197,7 @@ class SavestateHandler extends EventTarget {
     }
 
     /**
-     * Resets the state and initializes the savestate, options and filter with the given data, handling it as a stateload
+     * Resets the state and initializes the savestate, options and filter with the given data, handling it as a stateload.
      * @param {Object} stateData an Object containing data for savestate, options and filter
      */
     async reset(data = {}) {
@@ -219,7 +219,8 @@ class SavestateHandler extends EventTarget {
     }
 
     /**
-     * Overwrites the savestate, options and filter with the given data, handling it as a stateload
+     * Overwrites the savestate, options and filter with the given data, handling it as a stateload.
+     * Only overwrites the given keys for each respective Storage.
      * @param {Object} stateData an Object containing data for savestate, options and filter
      */
     async overwrite(data = {}) {
@@ -227,6 +228,27 @@ class SavestateHandler extends EventTarget {
         this.dispatchEvent(new Event("beforeload"));
         // write state data
         Savestate.overwrite(data);
+        // cache data
+        const state = Savestate.serialize();
+        this.#cacheData(state, true);
+        // trigger event
+        const ev = new Event("load");
+        ev.state = state;
+        this.dispatchEvent(ev);
+        this.dispatchEvent(new Event("afterload"));
+        await BusyIndicatorManager.unbusy();
+    }
+
+    /**
+     * Overwrites the savestate, options and filter with the given data, handling it as a stateload.
+     * Clears the respective Storage before writing the data.
+     * @param {Object} stateData an Object containing data for savestate, options and filter
+     */
+    async overwriteClean(data = {}) {
+        await BusyIndicatorManager.busy();
+        this.dispatchEvent(new Event("beforeload"));
+        // write state data
+        Savestate.overwriteClean(data);
         // cache data
         const state = Savestate.serialize();
         this.#cacheData(state, true);
