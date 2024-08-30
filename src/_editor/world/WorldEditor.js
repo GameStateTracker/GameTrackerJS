@@ -110,10 +110,9 @@ class WorldEditor extends CustomElement {
                 }
             }
         });
-        LogicOperatorRegistry.setOperator("$IS_DONE", {
+        LogicOperatorRegistry.setAndLinkOperator("$IS_DONE", {
             type: "value"
-        });
-        LogicOperatorRegistry.linkOperator("$IS_DONE", "special");
+        }, "special");
     }
 
     async setWorldData(data) {
