@@ -38,12 +38,12 @@ export default class TextEditor extends CustomElement {
         });
     }
 
-    set title(value) {
-        this.setAttribute("title", value);
+    set caption(value) {
+        this.setAttribute("caption", value);
     }
 
-    get title() {
-        return this.getAttribute("title");
+    get caption() {
+        return this.getAttribute("caption");
     }
 
     set value(value) {
@@ -57,12 +57,12 @@ export default class TextEditor extends CustomElement {
     }
 
     static get observedAttributes() {
-        return ["title"];
+        return ["caption"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
         switch (name) {
-            case "title":
+            case "caption":
                 if (oldValue != newValue) {
                     const title = this.shadowRoot.getElementById("title");
                     title.innerText = newValue;
