@@ -208,6 +208,24 @@ export default class ViewChoice extends CustomElement {
         this.#categoryEl.append(buttonEl);
     }
 
+    setTabButtonVisibility(category, visible = true) {
+        const buttonEl = this.#buttonList.get(category);
+        if (buttonEl != null) {
+            if (!visible) {
+                buttonEl.style.display = "none";
+                const value = buttonEl.getAttribute("value");
+                if (this.active === value) {
+                    const el = this.#categoryEl.querySelector("[value]");
+                    if (el != null) {
+                        this.active = el.getAttribute("value");
+                    }
+                }
+            } else {
+                buttonEl.style.display = "";
+            }
+        }
+    }
+
 }
 
 customElements.define("gt-viewchoice", ViewChoice);
