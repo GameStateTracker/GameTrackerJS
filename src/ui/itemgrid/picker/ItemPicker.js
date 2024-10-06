@@ -1,8 +1,9 @@
-// frameworks
 import Template from "/emcJS/util/html/Template.js";
 import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
 import Panel from "/emcJS/ui/layout/Panel.js";
-
+import {
+    isStringNotEmpty
+} from "/emcJS/util/helper/CheckType.js";
 import GridsResource from "../../../data/resource/GridsResource.js";
 import "./components/Item.js";
 
@@ -27,13 +28,36 @@ const STYLE = new GlobalStyle(`
     display: flex;
     padding: 2px;
 }
-.text,
-.icon,
 .empty {
     display: inline-block;
     width: 40px;
     height: 40px;
     padding: 2px;
+}
+.text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 2px;
+}
+.icon {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    margin: 2px;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-origin: border-box;
+    user-select: none;
+}
+.icon.clickable {
+    cursor: pointer;
+}
+.icon.clickable:hover {
+    background-size: 100%;
 }
 `);
 
@@ -44,17 +68,29 @@ function createItem(value) {
     return el;
 }
 
-function createText(value) {
+function createText(value, halign, valign) {
     const el = document.createElement("DIV");
     el.className = "text";
     el.innerHTML = value;
+
+    if (halign === "start") {
+        el.style.justifyContent = "flex-start";
+    } else if (halign === "end") {
+        el.style.justifyContent = "flex-end";
+    }
+    if (valign === "start") {
+        el.style.alignItems = "flex-start";
+    } else if (valign === "end") {
+        el.style.alignItems = "flex-end";
+    }
+
     return el;
 }
 
 function createIcon(value) {
     const el = document.createElement("DIV");
     el.className = "icon";
-    el.dataset.icon = value;
+    el.style.backgroundImage = `url(${value})`;
     return el;
 }
 
@@ -93,9 +129,19 @@ export default class ItemPicker extends Panel {
                     });
                     cnt.append(itemEl);
                 } else if (element.type == "text") {
-                    cnt.append(createText(element.value));
+                    cnt.append(createText(element.value, element.halign, element.valign));
                 } else if (element.type == "icon") {
-                    cnt.append(createIcon(element.value));
+                    const iconEl = createIcon(element.icon);
+                    if (isStringNotEmpty(element.value)) {
+                        iconEl.classList.add("clickable");
+                        iconEl.title = element.value;
+                        iconEl.addEventListener("click", () => {
+                            const ev = new Event("iconclick");
+                            ev.value = element.value;
+                            this.dispatchEvent(ev);
+                        });
+                    }
+                    cnt.append(iconEl);
                 } else {
                     cnt.append(createEmpty());
                 }

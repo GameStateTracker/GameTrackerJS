@@ -2,10 +2,12 @@
     width: 100%;
     height: 100%;
 }
+
 ::slotted(:not([value])),
 ::slotted([value]:not(.active)) {
     display: none !important;
 }
+
 ::slotted([value]) {
     display: inline-flex;
     align-items: center;
@@ -29,20 +31,19 @@
     font-weight: bold;
     word-break: normal;
     filter:
-        contrast(var(--shallow-item-contrast, 0.8))
-        saturate(var(--shallow-item-saturate, 0.5))
-        brightness(var(--shallow-item-brightness, 0.4));
+        contrast(var(--shallow-item-contrast, 0.8)) saturate(var(--shallow-item-saturate, 0.5)) brightness(var(--shallow-item-brightness, 0.4));
 }
+
 ::slotted([value].alwaysActive),
 ::slotted([value]:not([value="0"])) {
     filter:
-        contrast(var(--solid-item-contrast, 1))
-        saturate(var(--solid-item-saturate, 1))
-        brightness(var(--solid-item-brightness, 1));
+        contrast(var(--solid-item-contrast, 1)) saturate(var(--solid-item-saturate, 1)) brightness(var(--solid-item-brightness, 1));
 }
+
 ::slotted([value]:hover) {
     background-size: 100%;
 }
+
 ::slotted([value].mark) {
     color: #54ff54;
 }

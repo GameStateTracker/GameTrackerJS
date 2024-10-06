@@ -7,20 +7,19 @@
     background-position: center;
     background-origin: border-box;
     filter:
-        contrast(var(--shallow-item-contrast, 0.8))
-        saturate(var(--shallow-item-saturate, 0.5))
-        brightness(var(--shallow-item-brightness, 0.4));
+        contrast(var(--shallow-item-contrast, 0.8)) saturate(var(--shallow-item-saturate, 0.5)) brightness(var(--shallow-item-brightness, 0.4));
 }
+
 #icon.alwaysActive,
 :host([value]:not([value="0"])) #icon {
     filter:
-        contrast(var(--solid-item-contrast, 1))
-        saturate(var(--solid-item-saturate, 1))
-        brightness(var(--solid-item-brightness, 1));
+        contrast(var(--solid-item-contrast, 1)) saturate(var(--solid-item-saturate, 1)) brightness(var(--solid-item-brightness, 1));
 }
+
 :host(:hover) #icon {
     background-size: 100%;
 }
+
 #value {
     display: none;
     align-items: center;
@@ -39,10 +38,12 @@
     font-weight: bold;
     word-break: normal;
 }
+
 #value.alwaysActive,
 :host([value]:not([value="0"])) #value {
     display: inline-flex;
 }
+
 #value.mark {
     color: #54ff54;
 }

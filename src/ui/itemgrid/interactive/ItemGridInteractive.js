@@ -3,6 +3,7 @@ import CtxMenuLayer from "/emcJS/ui/overlay/ctxmenu/CtxMenuLayer.js";
 import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
 import ItemsResource from "../../../data/resource/ItemsResource.js";
 import UIRegistry from "../../../registry/UIRegistry.js";
+import ItemStateManager from "../../../statemanager/item/ItemStateManager.js";
 import "./components/entries/Item.js";
 import "./components/entries/ProgressiveItem.js";
 import "./components/entries/ItemMirror.js";
@@ -10,7 +11,6 @@ import "./components/entries/ItemMirrorCollection.js";
 import "./components/entries/Conditional.js";
 import TPL from "./ItemGridInteractive.js.html" assert {type: "html"};
 import STYLE from "./ItemGridInteractive.js.css" assert {type: "css"};
-import ItemStateManager from "../../../statemanager/item/ItemStateManager.js";
 
 const ITEMS = ItemsResource.get();
 
@@ -68,7 +68,7 @@ export default class ItemGridInteractive extends CustomElement {
                 return itemEl;
             }
             case "icon": {
-                const iconEl = this.createIcon(element.value);
+                const iconEl = this.createIcon(element.icon);
                 return iconEl;
             }
             case "text": {

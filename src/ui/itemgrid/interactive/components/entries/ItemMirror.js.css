@@ -5,6 +5,7 @@
     cursor: pointer;
     user-select: none;
 }
+
 #icon {
     display: block;
     width: 100%;
@@ -15,9 +16,11 @@
     background-position: center;
     background-origin: border-box;
 }
+
 :host(:hover) #icon {
     background-size: 100%;
 }
+
 #value {
     position: absolute;
     display: inline-flex;
@@ -38,18 +41,23 @@
     word-break: normal;
     white-space: pre;
 }
+
 :host([halign="start"]) #value {
     justify-content: flex-start;
 }
+
 :host([halign="end"]) #value {
     justify-content: flex-end;
 }
+
 :host([valign="start"]) #value {
     align-items: flex-start;
 }
+
 :host([valign="end"]) #value {
     align-items: flex-end;
 }
+
 #value.mark {
     color: #54ff54;
 }
