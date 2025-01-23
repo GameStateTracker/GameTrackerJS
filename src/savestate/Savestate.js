@@ -7,6 +7,8 @@ import FilterStorage from "./storage/FilterStorage.js";
 import StartItemsStorage from "./storage/StartItemsStorage.js";
 import SavestateConverter from "./SavestateConverter.js";
 
+const CATEGORY_NAME_REGEX = /^[A-Za-z][A-Za-z0-9_]*$/;
+
 class Savestate extends AppState {
 
     #info = {
@@ -100,6 +102,13 @@ class Savestate extends AppState {
             autosave,
             notes
         } = props;
+        /* --- */
+        for (const key in data) {
+            if (!CATEGORY_NAME_REGEX.test(key) && key !== "") {
+                console.warn(`abort deserializing savestate - unsupported storage name "${key}" - pattern [A-Za-z][A-Za-z0-9_]* or empty string`);
+                return;
+            }
+        }
         /* --- */
         this.#info.name = name?.toString() ?? "";
         this.#info.version = version ?? SavestateConverter.version;
