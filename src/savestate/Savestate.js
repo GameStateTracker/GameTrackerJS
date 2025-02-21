@@ -131,4 +131,7 @@ class Savestate extends AppState {
 
 }
 
-export default new Savestate();
+const savestate = Object.freeze(new Savestate());
+window.savestate = savestate;
+
+export default savestate;

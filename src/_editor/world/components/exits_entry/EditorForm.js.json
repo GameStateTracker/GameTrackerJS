@@ -94,12 +94,6 @@
         "value": true
     },
     {
-        "type": "SwitchInput",
-        "name": "ignoreMixedEntrances",
-        "label": "Ignore in mixed entrances",
-        "value": false
-    },
-    {
         "type": "TokenSelect",
         "name": "tags",
         "label": "Tags",

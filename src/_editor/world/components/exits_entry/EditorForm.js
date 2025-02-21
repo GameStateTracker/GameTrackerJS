@@ -128,7 +128,6 @@ export default class EditorForm_Exits_Entry extends CustomElement {
             entranceActive: data?.entranceActive ?? true,
             includeInactiveEntrances: data?.includeInactiveEntrances ?? false,
             isBiDir: data?.isBiDir ?? true,
-            ignoreMixedEntrances: data?.ignoreMixedEntrances ?? true,
             tags: data?.tags ?? []
         };
 

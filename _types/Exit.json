@@ -83,11 +83,6 @@
             "optional": false,
             "default": false
         },
-        "ignoreMixedEntrances": {
-            "@type": "Boolean",
-            "optional": false,
-            "default": false
-        },
         "tags": {
             "@type": "List",
             "optional": false,

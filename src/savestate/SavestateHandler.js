@@ -310,7 +310,7 @@ class SavestateHandler extends EventTarget {
 
 }
 
-const savestate = Object.freeze(new SavestateHandler());
-window.savestate = savestate;
+const savestateHandler = Object.freeze(new SavestateHandler());
+window.savestateHandler = savestateHandler;
 
-export default savestate;
+export default savestateHandler;
