@@ -16,7 +16,7 @@
         ],
         "placeholder": "Select exit...",
         "sorted": true,
-        "required": true
+        "required": false
     },
     {
         "type": "StringInput",

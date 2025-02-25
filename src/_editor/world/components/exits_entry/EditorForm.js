@@ -116,7 +116,10 @@ export default class EditorForm_Exits_Entry extends CustomElement {
     getFullData(data) {
         const res = {
             type: data?.type ?? "",
-            target: data?.target,
+            target: data?.target ?? {
+                type: "",
+                name: ""
+            },
             logicAccess: data?.logicAccess ?? "",
             area: data?.area,
             visible: data?.visible ?? true,

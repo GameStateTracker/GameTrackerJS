@@ -325,4 +325,8 @@ class DataManager extends EventTarget {
 
 }
 
-export default new DataManager();
+const dataManager = new DataManager();
+
+window.dataManager = dataManager;
+
+export default dataManager;
