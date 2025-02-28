@@ -8,6 +8,7 @@ import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListener
 import ExitStateManager from "../../statemanager/world/exit/ExitStateManager.js";
 import EntranceStateManager from "../../statemanager/world/entrance/EntranceStateManager.js";
 import Savestate from "../../savestate/Savestate.js";
+import EntranceBindingHandler from "../../util/handler/EntranceBindingHandler.js";
 import "../entrance/EntranceSelectList.js";
 
 const STORAGES = {
@@ -116,7 +117,7 @@ export default class ExitBindingContextMenu extends BaseClass {
     #addEntrance(access, entrance, exit, bound) {
         return new Promise((resolve) => {
             if (access != entrance.ref && (exit.props.ignoreBound || !bound.has(entrance.ref))) {
-                const isBindable = exit.checkBindable(entrance);
+                const isBindable = EntranceBindingHandler.checkBindable(exit, entrance);
                 if (isBindable) {
                     const entranceEl = document.createElement("gt-entrance-select-option");
                     entranceEl.ref = entrance.ref;

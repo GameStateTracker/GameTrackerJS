@@ -20,7 +20,6 @@ import {
 import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
 
 import Savestate from "../../../savestate/Savestate.js";
-import OptionsObserver from "../../../util/observer/OptionsObserver.js";
 import StateDataEventManager from "../../../util/StateDataEventManager.js";
 import AccessStateEnum from "../../../enum/AccessStateEnum.js";
 import Logic from "../../../util/logic/Logic.js";
@@ -29,7 +28,6 @@ import EntranceStateManager from "../../../statemanager/world/entrance/EntranceS
 import {
     emptyState
 } from "../EmptyState.js";
-import DefaultEntranceState from "../entrance/DefaultEntranceState.js";
 import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";
@@ -42,8 +40,6 @@ import {
 
 const CONFIG = WorldResource.get("config");
 const GATEWAYS_VARIANTS = CONFIG.gateways?.variants;
-
-const mixedEntrancePoolObserver = new OptionsObserver("mixed_entrance_pool");
 
 const STORAGES = {exitBindings: Savestate.getStorage("exitBindings")};
 
@@ -299,19 +295,6 @@ export default class DefaultExitState extends BaseClass {
             return this.#area.accessPenetration;
         }
         return true;
-    }
-
-    checkBindable(entrance) {
-        if (entrance instanceof DefaultEntranceState) {
-            if (entrance.props.unbindable) {
-                return false;
-            }
-            const ignoreBindsTo =
-                mixedEntrancePoolObserver.value;
-            const isActive = entrance.active || this.props.includeInactiveEntrances;
-            return isActive && (ignoreBindsTo || this.props.bindsTo.indexOf(entrance.props.type) >= 0);
-        }
-        return false;
     }
 
     isVisible() {
