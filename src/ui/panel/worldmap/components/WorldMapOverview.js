@@ -106,7 +106,7 @@ export default class WorldMapOverview extends BaseClass {
                 const evX = event.layerX;
                 const evY = event.layerY;
                 this.#moveFocus(evX, evY);
-                mapEventManager.setActive(true);
+                mapEventManager.active = true;
             }
             event.preventDefault();
             return false;
@@ -122,7 +122,7 @@ export default class WorldMapOverview extends BaseClass {
         });
         mapEventManager.set(["mouseup", "mouseleave"], (event) => {
             if (event.button === 0) {
-                mapEventManager.setActive(false);
+                mapEventManager.active = false;
             }
         });
         window.addEventListener("resize", () => {

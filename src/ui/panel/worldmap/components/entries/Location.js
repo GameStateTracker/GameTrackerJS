@@ -9,7 +9,7 @@ import LocationContextMenu from "../../../../ctxmenu/LocationContextMenu.js";
 import ItemPickerContextMenu from "../../../../ctxmenu/ItemPickerContextMenu.js";
 
 const TPL = new Template(`
-<emc-labeledicon id="item" halign="center" valign="center"></emc-labeledicon>
+<emc-labeledicon id="item" halign="end" valign="end"></emc-labeledicon>
 `);
 
 const STYLE = new GlobalStyle(`
@@ -111,13 +111,9 @@ export default class WorldMapLocation extends WorldMapMarkedEntry {
             if (itemData != null) {
                 itemEl.src = resolveIcon(itemData?.icon) ?? "/images/items/unknown.png";
                 itemEl.text = itemData?.label ?? "";
-                itemEl.valign = itemData?.valign ?? "center";
-                itemEl.halign = itemData?.halign ?? "center";
             } else {
                 itemEl.src = "";
                 itemEl.text = "";
-                itemEl.valign = "center";
-                itemEl.halign = "center";
             }
         }
     }

@@ -143,7 +143,7 @@ export default class WorldMapView extends BaseClass {
             if (event.target === this.#mapEl || event.target.tagName === "GT-CONNECTION-POINT") {
                 if (!this.fixed && event.button === 0) {
                     this.#mapEl.classList.add("grabbed");
-                    mapEventManager.setActive(true);
+                    mapEventManager.active = true;
                 }
                 event.preventDefault();
                 return false;
@@ -164,7 +164,7 @@ export default class WorldMapView extends BaseClass {
             if (this.#mapEl.classList.contains("grabbed")) {
                 if (event.button === 0) {
                     this.#mapEl.classList.remove("grabbed");
-                    mapEventManager.setActive(false);
+                    mapEventManager.active = false;
                 }
             }
         });
@@ -172,7 +172,7 @@ export default class WorldMapView extends BaseClass {
             if (event.target === this.#mapEl) {
                 if (event.button === 0) {
                     this.#mapEl.classList.remove("grabbed");
-                    mapEventManager.setActive(false);
+                    mapEventManager.active = false;
                 }
             }
         });
