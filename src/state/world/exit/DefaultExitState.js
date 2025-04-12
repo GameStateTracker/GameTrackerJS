@@ -159,15 +159,6 @@ export default class DefaultExitState extends BaseClass {
             this.value = event.value;
         });
 
-        setTimeout(() => {
-            this.#area = getEntranceArea(this.value);
-            this.#manager.switchState(this.#area);
-            // external
-            const ev = new Event("access");
-            ev.value = this.#area?.access ?? this.#access;
-            this.dispatchEvent(ev);
-        }, 0);
-
         /* LOGIC */
         const logicAccess = props.logicAccess ?? "";
         this.#reachable = getReachable(logicAccess);
@@ -186,6 +177,8 @@ export default class DefaultExitState extends BaseClass {
             }
         });
 
+        this.#init();
+
         /* EVENT */
         this.addEventListener("visible", () => {
             this.checkVisibility();
@@ -195,6 +188,15 @@ export default class DefaultExitState extends BaseClass {
         });
         this.checkVisibility();
     }
+
+    #init = debounce(() => {
+        this.#area = getEntranceArea(this.value);
+        this.#manager.switchState(this.#area);
+        // external
+        const ev = new Event("access");
+        ev.value = this.#area?.access ?? this.#access;
+        this.dispatchEvent(ev);
+    });
 
     checkVisibility = debounce(() => {
         const value = this.visible && !this.filtered;
