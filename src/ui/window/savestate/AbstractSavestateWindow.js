@@ -57,7 +57,7 @@ const STYLE = new GlobalStyle(`
     padding: 5px;
 }
 #statelist {
-    height: 40vh;
+    height: 40dvh;
     border: solid 2px #ccc;
 }
 emc-option .name {

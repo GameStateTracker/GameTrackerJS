@@ -171,17 +171,19 @@ class SavestateHandler extends EventTarget {
 
     async load(name) {
         await BusyIndicatorManager.busy();
-        if (await STORAGE.has(name)) {
+        const hasSavestate = await STORAGE.has(name);
+        if (hasSavestate) {
             this.dispatchEvent(new Event("beforeload"));
             this.dispatchEvent(new Event("reset"));
-            const state = SavestateConverter.convert(await STORAGE.get(name));
+            const savestate = await STORAGE.get(name);
+            const convertedSavestate = SavestateConverter.convert(savestate);
             // write state data
-            Savestate.deserialize(state);
-            this.#lastSavedState = deepClone(state);
-            this.#cacheData(state, true);
+            Savestate.deserialize(convertedSavestate);
+            this.#lastSavedState = deepClone(convertedSavestate);
+            this.#cacheData(convertedSavestate, true);
             // trigger event
             const ev = new Event("load");
-            ev.state = state;
+            ev.state = convertedSavestate;
             this.dispatchEvent(ev);
             this.dispatchEvent(new Event("afterload"));
         }

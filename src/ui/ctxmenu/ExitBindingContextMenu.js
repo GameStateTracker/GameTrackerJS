@@ -17,10 +17,10 @@ const STORAGES = {
 
 const STYLE = new GlobalStyle(`
 ::slotted(#select) {
-    min-height: 300px;
-    max-height: 50vh;
-    min-width: 300px;
-    max-width: 90vw;
+    min-height: min(300px, 50dvh);
+    max-height: 50dvh;
+    min-width: min(300px, 90dvw);
+    max-width: 90dvw;
 }
 `);
 
