@@ -1,6 +1,6 @@
 {
   "name": "gametrackerjs",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "Framework for GameTrackers",
   "type": "module",
   "repository": {

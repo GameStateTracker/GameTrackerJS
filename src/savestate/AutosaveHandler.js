@@ -85,10 +85,10 @@ async function autosave() {
     }
 }
 
-autosaveTimeObserver.addEventListener("change", () => {
+autosaveTimeObserver.onChange(() => {
     registerAutosaveTimer();
 });
-autosaveAmountObserver.addEventListener("change", () => {
+autosaveAmountObserver.onChange(() => {
     registerAutosaveTimer();
 });
 SavestateHandler.addEventListener("load", () => {

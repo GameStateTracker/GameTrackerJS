@@ -79,7 +79,7 @@ export default class WorldList extends BaseClass {
         if (worldListSortedObserver.value) {
             this.#elementManager.registerSortFunction(this.#sortFunction);
         }
-        worldListSortedObserver.addEventListener("change", () => {
+        worldListSortedObserver.onChange(() => {
             if (worldListSortedObserver.value) {
                 this.#elementManager.registerSortFunction(WorldListState.isDefault ? null : this.#sortFunction);
             } else {

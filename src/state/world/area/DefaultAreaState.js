@@ -64,12 +64,12 @@ export default class DefaultAreaState extends BaseClass {
         /* VALUES */
         const areaHintsObserver = new ObservableStorageObserver(STORAGES.areaHints, ref);
         this.#hint = areaHintsObserver.value;
-        areaHintsObserver.addEventListener("change", (event) => {
+        areaHintsObserver.onChange((event) => {
             this.hint = event.value;
         });
         this.#areaActiveListsObserver = new ObservableStorageObserver(STORAGES.areaActiveLists, ref);
         this.#activeList = this.#areaActiveListsObserver.value;
-        this.#areaActiveListsObserver.addEventListener("change", (event) => {
+        this.#areaActiveListsObserver.onChange((event) => {
             this.activeList = event.value;
         });
 
@@ -89,7 +89,7 @@ export default class DefaultAreaState extends BaseClass {
         });
 
         /* UNKNOWN LIST BEHAVIOR CHANGE */
-        unknownArealistNeedAllObserver.addEventListener("change", () => {
+        unknownArealistNeedAllObserver.onChange(() => {
             this.onAccessChange();
         });
 

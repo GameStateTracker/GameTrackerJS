@@ -58,7 +58,7 @@ export default class WorldMap extends BaseClass {
                 this.ref = event.value;
             }
         });
-        showDetailedMapsObserver.addEventListener("change", (event) => {
+        showDetailedMapsObserver.onChange((event) => {
             if (this.detailed || event.value) {
                 this.ref = WorldListState.area;
             } else {

@@ -177,7 +177,7 @@ export default class WorldMapView extends BaseClass {
             }
         });
         /* settings */
-        showMapConnectionsObserver.addEventListener("change", () => {
+        showMapConnectionsObserver.onChange(() => {
             this.refreshList();
         });
 

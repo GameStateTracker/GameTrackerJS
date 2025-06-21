@@ -93,7 +93,7 @@ export default class LocationList extends Panel {
         } else {
             this.#elementManager.registerSortFunction(this.#sortByNameFunction);
         }
-        locationistSortedObserver.addEventListener("change", () => {
+        locationistSortedObserver.onChange(() => {
             if (locationistSortedObserver.value) {
                 this.#elementManager.registerSortFunction(this.#sortByAccessAndNameFunction);
             } else {

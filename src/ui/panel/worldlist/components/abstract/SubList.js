@@ -135,7 +135,7 @@ export default class WorldListSubList extends BaseClass {
         if (worldListSortedObserver.value) {
             this.#elementManager.registerSortFunction(this.#sortFunction);
         }
-        worldListSortedObserver.addEventListener("change", () => {
+        worldListSortedObserver.onChange(() => {
             if (worldListSortedObserver.value) {
                 this.#elementManager.registerSortFunction(this.#sortFunction);
             } else {

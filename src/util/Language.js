@@ -10,7 +10,7 @@ const languageObserver = new SettingsObserver("language");
 class Language {
 
     constructor() {
-        languageObserver.addEventListener("change", (event) => {
+        languageObserver.onChange((event) => {
             I18n.language = event.value;
         });
         I18n.language = languageObserver.value;

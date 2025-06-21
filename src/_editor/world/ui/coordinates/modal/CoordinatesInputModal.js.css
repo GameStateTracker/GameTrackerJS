@@ -1,21 +1,25 @@
 #modal {
     max-width: calc(100vw - 20px);
+    max-height: calc(100dvh - 50px);
     margin-top: 10px;
 }
+
 #footer {
     display: flex;
 }
+
 #content {
     flex-direction: row;
-    flex-wrap: wrap;
     max-height: calc(100vh - 120px);
     height: 100vh;
 }
+
 #submit,
 #cancel {
     margin: 2px;
 }
+
 #input {
-    height: 100%;
+    height: calc(-220px + 100vh);
     width: 100%;
 }

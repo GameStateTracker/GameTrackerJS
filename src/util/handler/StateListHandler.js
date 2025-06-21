@@ -56,7 +56,7 @@ export default class StateListHandler extends EventTarget {
         super();
         INSTANCES.set(ref, this);
         /* --- */
-        detachedEntrancesObserver.addEventListener("change", () => {
+        detachedEntrancesObserver.onChange(() => {
             this.#refreshAccess();
         });
         /* --- */

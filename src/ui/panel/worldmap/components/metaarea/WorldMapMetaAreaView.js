@@ -95,7 +95,7 @@ export default class WorldMapMetaAreaView extends BaseClass {
         });
 
         /* settings */
-        showMapConnectionsObserver.addEventListener("change", () => {
+        showMapConnectionsObserver.onChange(() => {
             this.refreshList();
         });
 

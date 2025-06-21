@@ -252,13 +252,13 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
     }
 
     async #addElement(rowKey, before = false) {
-        const initialValue = this.value ?? {};
+        const initialValue = this.value ?? [];
         let currentIndex = initialValue.findIndex((entry) => {
             return rowKey === entry.label;
         });
 
         let newRowKey = null;
-        const currentValue = this.value ?? {};
+        const currentValue = this.value ?? [];
         while (newRowKey == null) {
             newRowKey = await ModalDialog.prompt("Add label", "Please enter a label");
             if (newRowKey == null || newRowKey === false) {
@@ -295,10 +295,10 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
             insertAtIndex(newValue, currentIndex, newEntry);
             this.value = newValue;
         } else {
-            this.value = {
+            this.value = [
                 ...initialValue,
                 newEntry
-            };
+            ];
         }
     }
 

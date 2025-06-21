@@ -155,7 +155,7 @@ export default class DefaultExitState extends BaseClass {
         /* VALUES */
         const exitBindingsObserver = new ObservableStorageObserver(STORAGES.exitBindings, ref);
         this.#value = getStringOrDefault(exitBindingsObserver.value, "");
-        exitBindingsObserver.addEventListener("change", (event) => {
+        exitBindingsObserver.onChange((event) => {
             this.value = event.value;
         });
 

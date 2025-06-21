@@ -50,7 +50,7 @@ export default class DefaultItemState extends BaseClass {
                     if (minVal != null) {
                         this.#min = minVal;
                     }
-                    optionObserver.addEventListener("change", (event) => {
+                    optionObserver.onChange((event) => {
                         this.#setMin(props.varMin.values[event.value]);
                     });
                 }
@@ -60,7 +60,7 @@ export default class DefaultItemState extends BaseClass {
                 if (minVal != null) {
                     this.#min = minVal;
                 }
-                optionObserver.addEventListener("change", (event) => {
+                optionObserver.onChange((event) => {
                     this.#setMin(event.value ?? 0);
                 });
             }
@@ -76,7 +76,7 @@ export default class DefaultItemState extends BaseClass {
                     if (maxVal != null) {
                         this.#max = maxVal;
                     }
-                    optionObserver.addEventListener("change", (event) => {
+                    optionObserver.onChange((event) => {
                         this.#setMax(props.varMax.values[event.value]);
                     });
                 }
@@ -86,7 +86,7 @@ export default class DefaultItemState extends BaseClass {
                 if (maxVal != null) {
                     this.#max = maxVal;
                 }
-                optionObserver.addEventListener("change", (event) => {
+                optionObserver.onChange((event) => {
                     this.#setMax(event.value ?? 0);
                 });
             }
@@ -95,13 +95,13 @@ export default class DefaultItemState extends BaseClass {
         /* VALUES */
         const startItemsObserver = new ObservableStorageObserver(STORAGES.startItems, ref);
         this.#start = parseSafeRange(startItemsObserver.value, 0);
-        startItemsObserver.addEventListener("change", (event) => {
+        startItemsObserver.onChange((event) => {
             this.#setStart(event.value ?? 0);
         });
 
         const itemsObserver = new ObservableStorageObserver(STORAGES.items, ref);
         this.#value = this.#restrictValue(itemsObserver.value);
-        itemsObserver.addEventListener("change", (event) => {
+        itemsObserver.onChange((event) => {
             this.value = event.value ?? 0;
         });
     }

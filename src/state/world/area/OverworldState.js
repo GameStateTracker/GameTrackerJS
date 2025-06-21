@@ -32,7 +32,7 @@ export default class OverworldState extends DataState {
         /* VALUES */
         const areaActiveListsObserver = new ObservableStorageObserver(STORAGES.areaActiveLists, ref);
         this.#activeList = areaActiveListsObserver.value;
-        areaActiveListsObserver.addEventListener("change", (event) => {
+        areaActiveListsObserver.onChange((event) => {
             this.activeList = event.value;
         });
 

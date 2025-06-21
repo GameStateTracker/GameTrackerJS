@@ -5,6 +5,7 @@
     height: 600px;
     overflow: hidden;
 }
+
 .wrapper {
     position: relative;
     height: 100%;
@@ -16,18 +17,20 @@
         linear-gradient(-45deg, var(--image-checker-back-color) 25%, transparent 25%),
         linear-gradient(45deg, transparent 75%, var(--image-checker-back-color) 75%),
         linear-gradient(-45deg, transparent 75%, var(--image-checker-back-color) 75%);
-    background-size:10px 10px;
+    background-size: 10px 10px;
     background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
     border-style: solid;
     border-width: var(--input-border-width, 2px);
     border-color: var(--input-border-color, #222222);
 }
+
 .map-wrapper {
     position: relative;
     min-width: 100%;
     width: max-content;
     padding: 50px;
 }
+
 #map {
     position: relative;
     display: block;
@@ -40,6 +43,7 @@
     background-position: center;
     background-origin: content-box;
 }
+
 #no-map {
     position: relative;
     display: none;
@@ -57,31 +61,40 @@
     background-origin: content-box;
     font-weight: bold;
 }
+
 #map.none {
     display: none;
 }
+
 #map.none + #no-map {
     display: flex;
 }
+
 ::slotted(*) {
     position: absolute;
     pointer-events: none;
 }
+
 ::slotted(.active) {
     z-index: 1000;
 }
+
 .position-input-wrapper {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
+
 .position-label {
     display: flex;
     align-items: center;
     margin: 5px 10px;
 }
+
 .input {
     margin-left: 5px;
 }
+
 .position-input {
     height: 2em;
     width: 100px;
@@ -97,18 +110,22 @@
     appearance: none;
     -moz-appearance: textfield;
 }
+
 .position-input:focus {
     box-shadow: 0 0 2px 3px var(--input-focus-color, #06b5ff);
     outline: none;
 }
+
 .position-input::-webkit-outer-spin-button,
 .position-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
+
 .scale-input {
     margin-left: 5px;
 }
+
 #remove {
     display: flex;
     align-items: center;
@@ -116,7 +133,7 @@
     width: min-content;
     height: 2em;
     padding: 0px 10px;
-    margin: 5px;
+    margin: 5px 10px;
     color: var(--button-text-color, #000000);
     background-color: var(--button-back-color, #eaeaea);
     border-style: solid;
@@ -128,11 +145,13 @@
     font-size: 1rem;
     cursor: pointer;
 }
+
 #remove:hover {
     color: var(--button-hover-text-color, #ffffff);
     background-color: var(--button-hover-back-color, #353935);
     border-color: var(--button-border-color, #222222);
 }
+
 #remove:focus {
     box-shadow: 0 0 2px 3px var(--input-focus-color, #06b5ff);
     outline: none;
