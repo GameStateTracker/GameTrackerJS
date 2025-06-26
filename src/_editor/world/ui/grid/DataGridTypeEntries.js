@@ -3,7 +3,7 @@ import TypeStorageProvider from "/emcJS/util/dataprovider/TypeStorageProvider.js
 import TypeStorage from "/emcJS/data/type/TypeStorage.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/dataview/datagrid/DataGrid.js";
-import "/emcJS/ui/dataview/toolbar/PaginationToolbar.js";
+import "/emcJS/ui/dataview/toolbar/DataViewControlToolbar.js";
 import TPL from "./DataGridTypeEntries.js.html" assert {type: "html"};
 import STYLE from "./DataGridTypeEntries.js.css" assert {type: "css"};
 
@@ -13,7 +13,7 @@ export default class DataGridTypeEntries extends CustomElementDelegating {
 
     #gridEl;
 
-    #paginationEl;
+    #controlToolbarEl;
 
     #dataManager;
 
@@ -46,10 +46,10 @@ export default class DataGridTypeEntries extends CustomElementDelegating {
             this.dispatchEvent(ev);
         });
         /* --- */
-        this.#paginationEl = this.shadowRoot.getElementById("pagination");
+        this.#controlToolbarEl = this.shadowRoot.getElementById("control-toolbar");
         /* --- */
         this.#dataManager = new TypeStorageProvider(this.#gridEl);
-        this.#dataManager.setPagination(this.#paginationEl);
+        this.#dataManager.setToolbar(this.#controlToolbarEl);
         this.#dataManager.setOptions({
             sort: ["entityName"],
             pageSize: 15
