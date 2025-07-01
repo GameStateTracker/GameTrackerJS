@@ -72,7 +72,7 @@ export default class FilterInput extends AbstractFormElement {
                     return searchValue.test(record.category) || searchValue.test(record.key);
                 };
             }
-            this.#dataManager.updateOptions(options);
+            this.#dataManager.updateConfig(options);
         }, true);
     }
 

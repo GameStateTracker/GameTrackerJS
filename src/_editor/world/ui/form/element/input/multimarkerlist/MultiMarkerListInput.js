@@ -291,7 +291,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
                     entityName: this.#searchEl.value
                 };
             }
-            this.#dataManager.updateOptions(options);
+            this.#dataManager.updateConfig(options);
         }, true);
     }
 

@@ -67,7 +67,7 @@ export default class OptionAmountListInput extends AbstractFormElement {
                     name: this.#searchEl.value
                 };
             }
-            this.#dataManager.updateOptions(options);
+            this.#dataManager.updateConfig(options);
         }, true);
     }
 
@@ -147,11 +147,11 @@ export default class OptionAmountListInput extends AbstractFormElement {
 
     #updateSort(value) {
         if (value) {
-            this.#dataManager.setOptions({
+            this.#dataManager.setConfig({
                 sort: ["name"]
             });
         } else {
-            this.#dataManager.setOptions({
+            this.#dataManager.setConfig({
                 sort: []
             });
         }

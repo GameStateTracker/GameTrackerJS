@@ -79,7 +79,7 @@ export default class AreaHintListInput extends AbstractFormElement {
         }));
         /* --- */
         this.#dataManager = new SimpleDataProvider(this.#gridEl);
-        this.#dataManager.setOptions({
+        this.#dataManager.setConfig({
             sort: ["name"]
         });
         /* --- */
@@ -91,7 +91,7 @@ export default class AreaHintListInput extends AbstractFormElement {
                     name: this.#searchEl.value
                 };
             }
-            this.#dataManager.updateOptions(options);
+            this.#dataManager.updateConfig(options);
         }, true);
     }
 

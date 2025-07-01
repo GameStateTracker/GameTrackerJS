@@ -236,7 +236,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
                     entityName: this.#searchEl.value
                 };
             }
-            this.#dataManager.updateOptions(options);
+            this.#dataManager.updateConfig(options);
         }, true);
     }
 

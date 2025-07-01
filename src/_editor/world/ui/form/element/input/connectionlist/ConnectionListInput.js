@@ -146,7 +146,7 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
                     entityName: this.#searchEl.value
                 };
             }
-            this.#dataManager.updateOptions(options);
+            this.#dataManager.updateConfig(options);
         }, true);
     }
 

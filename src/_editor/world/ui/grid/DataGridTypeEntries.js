@@ -1,5 +1,5 @@
 import CustomElementDelegating from "/emcJS/ui/element/CustomElementDelegating.js";
-import TypeStorageProvider from "/emcJS/util/dataprovider/TypeStorageProvider.js";
+import TypeStorageDataProvider from "/emcJS/util/dataprovider/TypeStorageDataProvider.js";
 import TypeStorage from "/emcJS/data/type/TypeStorage.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/dataview/datagrid/DataGrid.js";
@@ -48,11 +48,12 @@ export default class DataGridTypeEntries extends CustomElementDelegating {
         /* --- */
         this.#controlToolbarEl = this.shadowRoot.getElementById("control-toolbar");
         /* --- */
-        this.#dataManager = new TypeStorageProvider(this.#gridEl);
-        this.#dataManager.setToolbar(this.#controlToolbarEl);
-        this.#dataManager.setOptions({
-            sort: ["entityName"],
-            pageSize: 15
+        this.#dataManager = new TypeStorageDataProvider(this.#gridEl, null, {
+            config: {
+                sort: ["entityName"],
+                pageSize: 15
+            },
+            toolbar: this.#controlToolbarEl
         });
         /* --- */
         this.#searchEl = this.shadowRoot.getElementById("search");
@@ -63,7 +64,7 @@ export default class DataGridTypeEntries extends CustomElementDelegating {
                     entityName: this.#searchEl.value
                 };
             }
-            this.#dataManager.updateOptions(options);
+            this.#dataManager.updateConfig(options);
         }, true);
     }
 
