@@ -14,7 +14,7 @@ import {
 } from "/emcJS/util/helper/collection/ArrayMutations.js";
 import {
     registerFocusable
-} from "/emcJS/util/helper/html/getFocusableElements.js";
+} from "/emcJS/util/helper/html/ElementFocusHelper.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import CoordinatesInputModal from "../../../../coordinates/modal/CoordinatesInputModal.js";

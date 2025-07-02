@@ -4,7 +4,7 @@ import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js"
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
 import {
     registerFocusable
-} from "/emcJS/util/helper/html/getFocusableElements.js";
+} from "/emcJS/util/helper/html/ElementFocusHelper.js";
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";

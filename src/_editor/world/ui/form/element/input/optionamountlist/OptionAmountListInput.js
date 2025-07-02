@@ -3,11 +3,11 @@ import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.j
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {
     registerFocusable
-} from "/emcJS/util/helper/html/getFocusableElements.js";
+} from "/emcJS/util/helper/html/ElementFocusHelper.js";
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
-import MutationObserverManager from "/emcJS/util/observer/MutationObserverManager.js";
+import MutationObserverManager from "/emcJS/util/observer/manager/MutationObserverManager.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/dataview/datagrid/DataGrid.js";
