@@ -48,7 +48,7 @@ export default class ProgressiveItem extends ItemElement {
         if (activeEl != null) {
             activeEl.classList.remove("active");
         }
-        const newEl = this.querySelector(`[value="${this.value}"]`);
+        const newEl = this.querySelector(`[value="${this.value ?? ""}"]`);
         if (newEl != null) {
             newEl.classList.add("active");
         }
