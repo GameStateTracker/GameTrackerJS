@@ -51,7 +51,7 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
         });
         /* --- */
         this.#gridEl = this.shadowRoot.getElementById("grid");
-        this.#gridEl.addEventListener("action::delete", (event) => {
+        this.#gridEl.addEventListener("action::remove", (event) => {
             event.stopPropagation();
             event.preventDefault();
             const {rowKey} = event.data;

@@ -1,10 +1,10 @@
 // frameworks
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import {
     createMixin
 } from "/emcJS/util/Mixin.js";
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 :host([access="opened"]) #text {
     color: var(--world-entry-status-opened-color, #777777);
 }

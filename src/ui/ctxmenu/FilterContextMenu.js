@@ -1,5 +1,5 @@
 // frameworks
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
 import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
 
 import FilterResource from "../../data/resource/FilterResource.js";

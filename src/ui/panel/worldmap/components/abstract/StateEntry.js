@@ -1,6 +1,6 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
@@ -10,7 +10,7 @@ import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateMan
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
 import WorldMapEntry from "./Entry.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <emc-tooltip position="top" id="tooltip">
     <div id="header" class="textarea">
         <emc-i18n-label id="text"></emc-i18n-label>
@@ -18,7 +18,7 @@ const TPL = new Template(`
 </emc-tooltip>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 #text {
     display: flex;
     align-items: center;

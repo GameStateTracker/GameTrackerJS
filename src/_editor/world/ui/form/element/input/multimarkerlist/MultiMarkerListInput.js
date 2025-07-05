@@ -14,7 +14,7 @@ import {
 import {
     deleteAtIndex,
     insertAtIndex,
-    moveInArray
+    sortDictListByArray
 } from "/emcJS/util/helper/collection/ArrayMutations.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
@@ -149,29 +149,14 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
                 this.value = newValue;
             }
         }));
-        this.#gridEl.addEventListener("move-row-up", (event) => {
+        this.#gridEl.addEventListener("sort-change", (event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {rowKey} = event.data;
+            const {newOrder} = event;
             const currentValue = this.value ?? [];
-            const index = this.#getElementIndex(rowKey);
-            if (index > 0) {
-                const newValue = deepClone(currentValue);
-                moveInArray(newValue[this.#activeList], index, index - 1);
-                this.value = newValue;
-            }
-        });
-        this.#gridEl.addEventListener("move-row-down", (event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            const {rowKey} = event.data;
-            const currentValue = this.value ?? [];
-            const index = this.#getElementIndex(rowKey);
-            if (index + 1 < currentValue[this.#activeList].length) {
-                const newValue = deepClone(currentValue);
-                moveInArray(newValue[this.#activeList], index, index + 1);
-                this.value = newValue;
-            }
+            const newValue = deepClone(currentValue);
+            sortDictListByArray(newValue[this.#activeList], newOrder, "key");
+            this.value = newValue;
         });
         /* --- */
         this.setContextMenu("relation-cell", RelationCellContextMenu);
@@ -392,16 +377,20 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
     async addOperatorGroup(...groupList) {
         await BusyIndicatorManager.busy();
         const gridId = this.#gridEl.internalId;
-        const modal = LogicElementModal.getModalByName(`${gridId}-logic`);
-        modal.addOperatorGroup(...groupList);
+        const visibleModal = LogicElementModal.getModalByName(`${gridId}-visible`);
+        visibleModal.addOperatorGroup(...groupList);
+        const accessPenetrationModal = LogicElementModal.getModalByName(`${gridId}-accessPenetration`);
+        accessPenetrationModal.addOperatorGroup(...groupList);
         await BusyIndicatorManager.unbusy();
     }
 
     async removeOperatorGroup(...groupList) {
         await BusyIndicatorManager.busy();
         const gridId = this.#gridEl.internalId;
-        const modal = LogicElementModal.getModalByName(`${gridId}-logic`);
-        modal.removeOperatorGroup(...groupList);
+        const visibleModal = LogicElementModal.getModalByName(`${gridId}-visible`);
+        visibleModal.removeOperatorGroup(...groupList);
+        const accessPenetrationModal = LogicElementModal.getModalByName(`${gridId}-accessPenetration`);
+        accessPenetrationModal.removeOperatorGroup(...groupList);
         await BusyIndicatorManager.unbusy();
     }
 

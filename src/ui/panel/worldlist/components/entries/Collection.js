@@ -1,12 +1,12 @@
 // frameworks
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import "/emcJS/ui/icon/Icon.js";
 
 import AccessStateEnum from "../../../../../enum/AccessStateEnum.js";
 import UIRegistry from "../../../../../registry/UIRegistry.js";
 import WorldListSubList from "../abstract/SubList.js";
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 :host() {
     box-shadow:
         inset 0 0 0px 2px var(--page-back-color, #ffffff),

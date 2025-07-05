@@ -1,6 +1,6 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import "/emcJS/ui/overlay/Tooltip.js";
 
 import UIRegistry from "../../../../../registry/UIRegistry.js";
@@ -8,11 +8,11 @@ import WorldMapMarkedEntry from "../abstract/MarkedEntry.js";
 import LocationContextMenu from "../../../../ctxmenu/LocationContextMenu.js";
 import ItemPickerContextMenu from "../../../../ctxmenu/ItemPickerContextMenu.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <emc-labeledicon id="item" halign="end" valign="end"></emc-labeledicon>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 :host {
     --size: 32px;
     --rotation: 0deg;

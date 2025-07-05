@@ -5,8 +5,8 @@ import {
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import "/emcJS/ui/icon/Icon.js";
 
 import WorldListState from "../../../../../state/world/WorldListState.js";
@@ -19,7 +19,7 @@ import AccessListMarkerMixin from "../mixin/AccessListMarkerMixin.js";
 import ExitContextMenu from "../../../../ctxmenu/ExitContextMenu.js";
 import ExitBindingContextMenu from "../../../../ctxmenu/ExitBindingContextMenu.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <div id="canenter">
     <img src="images/icons/entrance.svg" />
 </div>
@@ -33,7 +33,7 @@ const TPL = new Template(`
 </div>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 #hint {
     margin-left: 5px;
 }

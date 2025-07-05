@@ -1,17 +1,17 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import DateUtil from "/emcJS/util/date/DateUtil.js";
 import Window from "/emcJS/ui/overlay/window/Window.js";
 import "/emcJS/ui/input/ListSelect.js";
 
 import SavestateManager from "../../../savestate/SavestateManager.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <emc-listselect id="statelist" sort></emc-listselect>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 #window {
     min-width: min(600px, -50px + 100vw);
 }

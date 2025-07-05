@@ -1,6 +1,6 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import {
     mix
@@ -26,12 +26,12 @@ import "./connection/ConnectionPoint.js";
 
 const showMapConnectionsObserver = new SettingsObserver("show_map_connections");
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <slot id="map">
 </slot>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 :host {
     display: flex;
     align-items: center;

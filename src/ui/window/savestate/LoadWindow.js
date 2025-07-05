@@ -1,12 +1,12 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import Dialog from "/emcJS/ui/overlay/window/Dialog.js";
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
 
 import SavestateHandler from "../../../savestate/SavestateHandler.js";
 import AbstractSavestateWindow from "./AbstractSavestateWindow.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <emc-listselect id="statelist"></emc-listselect>
 <div id="footer">
     <input type="hidden" id="statename" placeholder="Please select a state..." readonly />

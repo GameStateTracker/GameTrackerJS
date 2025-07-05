@@ -1,17 +1,17 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import "/emcJS/ui/icon/Icon.js";
 
 import WorldMapStateEntry from "./StateEntry.js";
 import Badge from "../../../../Badge.js";
 import "../../../../BadgeAccess.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <gt-badge-access id="badge"></gt-badge-access>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 #text[data-state="opened"] {
     color: var(--world-entry-status-opened-color, #777777);
 }

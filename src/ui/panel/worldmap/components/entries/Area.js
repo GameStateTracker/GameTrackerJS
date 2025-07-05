@@ -1,6 +1,6 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
 import "/emcJS/ui/overlay/Tooltip.js";
 import "/emcJS/ui/icon/Icon.js";
 
@@ -10,7 +10,7 @@ import WorldMapMarkedEntry from "../abstract/MarkedEntry.js";
 import AreaContextMenu from "../../../../ctxmenu/AreaContextMenu.js";
 import "../../../../../state/world/area/OverworldState.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <div id="entrances">
     <img src="images/icons/entrance.svg" />
 </div>

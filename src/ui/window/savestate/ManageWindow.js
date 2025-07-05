@@ -1,5 +1,5 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import DateUtil from "/emcJS/util/date/DateUtil.js";
 import FileSystem from "/emcJS/util/file/FileSystem.js";
 import Dialog from "/emcJS/ui/overlay/window/Dialog.js";
@@ -9,7 +9,7 @@ import SavestateManager from "../../../savestate/SavestateManager.js";
 import SavestateHandler from "../../../savestate/SavestateHandler.js";
 import AbstractSavestateWindow from "./AbstractSavestateWindow.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <div id="footer">
     <button id="delete" class="button" title="delete state">
         DELETE

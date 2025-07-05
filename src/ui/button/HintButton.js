@@ -1,19 +1,19 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import "/emcJS/ui/input/Option.js";
 
 import AreaStateManager from "../../statemanager/world/area/AreaStateManager.js";
 import StateDataEventManagerMixin from "../mixin/StateDataEventManagerMixin.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <emc-option value="" style="background-image: url('images/icons/area_nohint.svg')"></emc-option>
 <emc-option value="woth" style="background-image: url('images/icons/area_woth.svg')"></emc-option>
 <emc-option value="barren" style="background-image: url('images/icons/area_barren.svg')"></emc-option>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 :host {
     display: inline-flex;
     align-items: center;

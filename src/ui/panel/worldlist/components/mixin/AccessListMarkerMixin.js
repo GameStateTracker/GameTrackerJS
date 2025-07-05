@@ -1,10 +1,10 @@
 // frameworks
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import {
     createMixin
 } from "/emcJS/util/Mixin.js";
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 :host([access="opened"]:not(:empty)) {
     box-shadow:
         inset 0 0 0px 2px var(--page-back-color, #ffffff),

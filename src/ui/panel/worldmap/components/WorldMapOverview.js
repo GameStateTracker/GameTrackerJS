@@ -1,6 +1,6 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import {
     mix
@@ -11,7 +11,7 @@ import "/emcJS/ui/i18n/I18nLabel.js";
 import AreaStateManager from "../../../../statemanager/world/area/AreaStateManager.js";
 import StateDataEventManagerMixin from "../../../mixin/StateDataEventManagerMixin.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <div id="map">
     <div id="shadow">
         <div id="focus">
@@ -20,7 +20,7 @@ const TPL = new Template(`
 </div>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 :host {
     display: block;
     width: 200px;

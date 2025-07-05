@@ -1,6 +1,6 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import {
     mix
@@ -8,7 +8,7 @@ import {
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <div id="marker"></div>
 `);
 

@@ -1,6 +1,6 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
 import "/emcJS/ui/input/Option.js";
@@ -10,7 +10,7 @@ import FilterResource from "../../data/resource/FilterResource.js";
 import FilterStorage from "../../savestate/storage/FilterStorage.js";
 import FilterObserver from "../../util/observer/FilterObserver.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <slot>
 </slot>
 `);

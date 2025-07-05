@@ -1,16 +1,16 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
 
 import FilterContextMenu from "../ctxmenu/FilterContextMenu.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <emc-icon id="icon" src="images/icons/filter.svg"></emc-icon>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 :host {
     display: inline-flex;
     align-items: center;

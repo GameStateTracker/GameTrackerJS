@@ -1,6 +1,6 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import Dialog from "/emcJS/ui/overlay/window/Dialog.js";
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
 
@@ -8,7 +8,7 @@ import SavestateManager from "../../../savestate/SavestateManager.js";
 import SavestateHandler from "../../../savestate/SavestateHandler.js";
 import AbstractSavestateWindow from "./AbstractSavestateWindow.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <div id="footer">
     <input type="text" id="statename" placeholder="Please enter a name..." />
     <button id="submit" class="button" title="save state">
@@ -20,7 +20,7 @@ const TPL = new Template(`
 </div>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 emc-option.autosave {
     display: none;
 }

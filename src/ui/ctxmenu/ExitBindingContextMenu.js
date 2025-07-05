@@ -2,7 +2,7 @@
 import {
     mix
 } from "/emcJS/util/Mixin.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
 import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
 import ExitStateManager from "../../statemanager/world/exit/ExitStateManager.js";
@@ -15,7 +15,7 @@ const STORAGES = {
     exitBindings: Savestate.getStorage("exitBindings")
 };
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 ::slotted(#select) {
     min-height: min(300px, 50dvh);
     max-height: 50dvh;

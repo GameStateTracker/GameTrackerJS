@@ -1,6 +1,6 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
@@ -15,14 +15,14 @@ import AccessListMarkerMixin from "../mixin/AccessListMarkerMixin.js";
 import AreaContextMenu from "../../../../ctxmenu/AreaContextMenu.js";
 import "../../../../../state/world/area/OverworldState.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <div id="entrances">
     <img src="images/icons/entrance.svg" />
 </div>
 <div id="hint"></div>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 #hint {
     margin-left: 5px;
 }

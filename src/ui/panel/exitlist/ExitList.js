@@ -1,6 +1,6 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import Panel from "/emcJS/ui/layout/Panel.js";
 import SearchAnd from "/emcJS/util/search/SearchAnd.js";
 import "/emcJS/ui/input/SearchField.js";
@@ -13,7 +13,7 @@ import WorldStateManagerRegistry from "../../../statemanager/WorldStateManagerRe
 import Language from "../../../util/Language.js";
 import "./components/ExitChoice.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <div id="searchbar">
     <div class="search-group">
         <emc-searchinput id="search"></emc-searchinput>
@@ -53,7 +53,7 @@ const TPL = new Template(`
 </div>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 :host {
     display: flex;
     flex-direction: column;

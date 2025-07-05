@@ -1,5 +1,5 @@
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
@@ -13,7 +13,7 @@ import SettingsObserver from "../../../../../util/observer/SettingsObserver.js";
 import UIRegistry from "../../../../../registry/UIRegistry.js";
 import WorldListStateEntry from "./StateEntry.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <div id="list">
     <slot></slot>
 </div>

@@ -6,15 +6,14 @@
     <emc-button id="deleteList" text="Delete list" icon="🗑"></emc-button>
     <emc-button id="addList" text="Add list" icon="+"></emc-button>
 </div>
-<emc-datagrid id="grid" stretched="relation">
-    <emc-datagrid-column name="sort" label="" type="button-sorter"></emc-datagrid-column>
+<emc-datagrid id="grid" stretched="relation" sortable>
     <emc-datagrid-column name="relation" label="Entity" type="relation"></emc-datagrid-column>
     <emc-datagrid-column name="pos" label="Position" type="coordinates" width="150" editable action="pos"></emc-datagrid-column>
     <emc-datagrid-column name="visible" label="Visible" type="boolorlogic" width="150" editable action="visible"></emc-datagrid-column>
     <emc-datagrid-column name="accessPenetration" label="Access Penetration" type="boolorlogic" width="150" editable action="accessPenetration"></emc-datagrid-column>
     <emc-datagrid-column name="mapOnly" label="Map Only" type="boolean" width="50" editable action="mapOnly"></emc-datagrid-column>
     <emc-datagrid-column name="rootOnly" label="Root Only" type="boolean" width="50" editable action="rootOnly"></emc-datagrid-column>
-    <emc-datagrid-column name="remove" label="" type="button" width="100" text="Remove" action="remove"></emc-datagrid-column>
+    <emc-datagrid-column name="remove" label="" type="button" width="50" text="" icon="✖" tooltip="Remove" action="remove" fixed="end"></emc-datagrid-column>
 </emc-datagrid>
 <emc-form-row class="footer" align="end">
     <emc-button id="add" text="Add entity" icon="+"></emc-button>

@@ -72,7 +72,7 @@ export default class DataGridCellCoordinates extends DataGridCell {
     }
 
     static get observedAttributes() {
-        return [...super.observedAttributes, "editable", "row-name", "prefix", "postfix"];
+        return [...super.observedAttributes, "editable", "row-key", "prefix", "postfix"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -86,7 +86,7 @@ export default class DataGridCellCoordinates extends DataGridCell {
                         this.#inputEventManager.active = false;
                     }
                 } break;
-                case "row-name": {
+                case "row-key": {
                     // this.#inputEl.setModalRefName(newValue);
                 } break;
                 case "col-name": {

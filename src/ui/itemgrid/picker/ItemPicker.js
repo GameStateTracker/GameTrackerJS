@@ -1,5 +1,5 @@
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import Panel from "/emcJS/ui/layout/Panel.js";
 import {
     isStringNotEmpty
@@ -7,12 +7,12 @@ import {
 import GridsResource from "../../../data/resource/GridsResource.js";
 import "./components/Item.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <div id="content">
 </div>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 :host {
     display: block;
     min-width: min-content;

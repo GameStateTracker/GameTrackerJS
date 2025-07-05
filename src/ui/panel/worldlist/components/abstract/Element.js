@@ -1,5 +1,5 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
@@ -8,7 +8,7 @@ import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js"
 import WorldListStateEntry from "./StateEntry.js";
 import "../../../../Badge.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <gt-badge id="badge"></gt-badge>
 `);
 

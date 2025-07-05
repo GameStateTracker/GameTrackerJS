@@ -1,6 +1,6 @@
 // frameworks
-import Template from "/emcJS/util/html/Template.js";
-import GlobalStyle from "/emcJS/util/html/GlobalStyle.js";
+import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";
@@ -12,11 +12,11 @@ import AccessTextMarkerMixin from "../mixin/AccessTextMarkerMixin.js";
 import LocationContextMenu from "../../../../ctxmenu/LocationContextMenu.js";
 import ItemPickerContextMenu from "../../../../ctxmenu/ItemPickerContextMenu.js";
 
-const TPL = new Template(`
+const TPL = new HTMLTemplate(`
 <emc-labeledicon id="item" halign="end" valign="end"></emc-labeledicon>
 `);
 
-const STYLE = new GlobalStyle(`
+const STYLE = new CSSTemplate(`
 #item {
     width: 32px;
     height: 32px;
