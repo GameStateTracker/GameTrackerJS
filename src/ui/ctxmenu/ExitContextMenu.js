@@ -11,6 +11,7 @@ export default class ExitContextMenu extends ContextMenu {
             {menuAction: "goto", content: "Goto Area", group: "area"},
             {type: "splitter", group: "area"},
             {menuAction: "check", content: "Check All", group: "area"},
+            {menuAction: "check_reachable", content: "Check All Reachable"},
             {menuAction: "uncheck", content: "Uncheck All", group: "area"},
             {type: "splitter", group: "area"},
             {menuAction: "setwoth", content: "Set WOTH", group: "area"},

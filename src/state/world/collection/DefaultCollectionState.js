@@ -89,8 +89,12 @@ export default class DefaultCollectionState extends DataState {
         return this.#listHandler.getList();
     }
 
-    setAllEntries(value = true) {
-        this.#listHandler.setAllEntries(value);
+    setAllChecked(value = true) {
+        this.#listHandler.setAllChecked(value);
+    }
+
+    setAllReachableChecked(value = true) {
+        this.#listHandler.setAllReachableChecked(value);
     }
 
 }

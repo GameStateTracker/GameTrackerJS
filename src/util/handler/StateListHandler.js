@@ -178,16 +178,32 @@ export default class StateListHandler extends EventTarget {
         this.#setAccess(immute(access));
     });
 
-    setAllEntries(value = true) {
+    setAllChecked(value = true) {
         for (const recordState of this.#filteredEntityList) {
             if (recordState.type == "Area" || recordState.type == "Exit") {
                 if (recordState.accessPenetration) {
-                    recordState.entry.setAllEntries(value);
+                    recordState.entry.setAllChecked(value);
                 }
             } else if (recordState.type == "Collection") {
-                recordState.entry.setAllEntries(value);
+                recordState.entry.setAllChecked(value);
             } else if (recordState.type == "Location") {
                 recordState.entry.value = value;
+            }
+        }
+    }
+
+    setAllReachableChecked(value = true) {
+        for (const recordState of this.#filteredEntityList) {
+            if (recordState.type == "Area" || recordState.type == "Exit") {
+                if (recordState.accessPenetration) {
+                    recordState.entry.setAllReachableChecked(value);
+                }
+            } else if (recordState.type == "Collection") {
+                recordState.entry.setAllReachableChecked(value);
+            } else if (recordState.type == "Location") {
+                if (recordState.access.reachable) {
+                    recordState.entry.value = value;
+                }
             }
         }
     }

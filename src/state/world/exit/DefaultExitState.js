@@ -305,16 +305,15 @@ export default class DefaultExitState extends BaseClass {
 
     /* list */
     getList() {
-        if (this.#area != null) {
-            return this.#area.getList();
-        }
-        return [];
+        return this.#area?.getList() ?? [];
     }
 
-    setAllEntries(value = true) {
-        if (this.#area != null) {
-            this.#area.setAllEntries(value);
-        }
+    setAllChecked(value = true) {
+        this.#area?.setAllChecked(value);
+    }
+
+    setAllReachableChecked(value = true) {
+        this.#area?.setAllReachableChecked(value);
     }
 
 }

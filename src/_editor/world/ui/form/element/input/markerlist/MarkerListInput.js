@@ -293,7 +293,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
                 relation: row.ref,
                 pos: row.pos,
                 visible: row.visible ?? true,
-                accessPenetration: row.accessPenetration ?? false,
+                accessPenetration: row.accessPenetration,
                 mapOnly: row.mapOnly,
                 rootOnly: row.rootOnly
             };

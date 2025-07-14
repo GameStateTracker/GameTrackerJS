@@ -24,7 +24,8 @@
         },
         "accessPenetration": {
             "@type": "Logic",
-            "optional": true
+            "optional": true,
+            "default": null
         },
         "mapOnly": {
             "@type": "Boolean",

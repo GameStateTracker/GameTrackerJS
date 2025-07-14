@@ -347,7 +347,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
                 relation: row.ref,
                 pos: row.pos,
                 visible: row.visible ?? true,
-                accessPenetration: row.accessPenetration ?? false,
+                accessPenetration: row.accessPenetration,
                 mapOnly: row.mapOnly,
                 rootOnly: row.rootOnly
             };

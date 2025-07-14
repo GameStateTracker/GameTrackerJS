@@ -89,13 +89,19 @@ export default class WorldMapArea extends WorldMapMarkedEntry {
         this.addDefaultContextMenuHandler("check", () => {
             const state = this.getState();
             if (state != null) {
-                state.setAllEntries(true);
+                state.setAllChecked(true);
+            }
+        });
+        this.addDefaultContextMenuHandler("check_reachable", () => {
+            const state = this.getState();
+            if (state != null) {
+                state.setAllReachableChecked(true);
             }
         });
         this.addDefaultContextMenuHandler("uncheck", () => {
             const state = this.getState();
             if (state != null) {
-                state.setAllEntries(false);
+                state.setAllChecked(false);
             }
         });
         this.addDefaultContextMenuHandler("setwoth", () => {

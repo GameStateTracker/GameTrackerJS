@@ -164,8 +164,8 @@ export default class OverworldState extends DataState {
         return this.#listHandler.get(name);
     }
 
-    setAllEntries(value = true) {
-        this.#activeListHandler?.setAllEntries(value);
+    setAllChecked(value = true) {
+        this.#activeListHandler?.setAllChecked(value);
     }
 
     getAccess(name) {

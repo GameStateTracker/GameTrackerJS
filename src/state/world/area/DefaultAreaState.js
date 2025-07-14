@@ -263,8 +263,12 @@ export default class DefaultAreaState extends BaseClass {
         return this.#listHandler.get(name);
     }
 
-    setAllEntries(value = true) {
-        this.#activeListHandler?.setAllEntries(value);
+    setAllChecked(value = true) {
+        this.#activeListHandler?.setAllChecked(value);
+    }
+
+    setAllReachableChecked(value = true) {
+        this.#activeListHandler?.setAllReachableChecked(value);
     }
 
     getAccess(name) {

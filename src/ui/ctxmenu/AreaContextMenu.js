@@ -8,6 +8,7 @@ export default class AreaContextMenu extends ContextMenu {
             {menuAction: "goto", content: "Goto Area"},
             "splitter",
             {menuAction: "check", content: "Check All"},
+            {menuAction: "check_reachable", content: "Check All Reachable"},
             {menuAction: "uncheck", content: "Uncheck All"},
             "splitter",
             {menuAction: "setwoth", content: "Set WOTH"},

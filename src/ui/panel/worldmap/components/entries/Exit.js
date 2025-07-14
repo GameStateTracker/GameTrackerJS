@@ -172,7 +172,16 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
             if (state != null) {
                 const area = state.area;
                 if (area != null) {
-                    area.setAllEntries(true);
+                    area.setAllChecked(true);
+                }
+            }
+        });
+        this.addDefaultContextMenuHandler("check_reachable", () => {
+            const state = this.getState();
+            if (state != null) {
+                const area = state.area;
+                if (area != null) {
+                    state.setAllReachableChecked(true);
                 }
             }
         });
@@ -181,7 +190,7 @@ export default class WorldMapExit extends WorldMapMarkedEntry {
             if (state != null) {
                 const area = state.area;
                 if (area != null) {
-                    area.setAllEntries(false);
+                    area.setAllChecked(false);
                 }
             }
         });
