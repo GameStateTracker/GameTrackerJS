@@ -8,7 +8,7 @@ import {
 import {
     immute
 } from "/emcJS/data/Immutable.js";
-import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
+import ObservableStorageObserver from "/emcJS/util/observer/data/storage/ObservableStorageObserver.js";
 import {
     isEqual
 } from "/emcJS/util/helper/Comparator.js";

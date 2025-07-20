@@ -17,7 +17,7 @@ import {
 import {
     isString
 } from "/emcJS/util/helper/CheckType.js";
-import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
+import ObservableStorageObserver from "/emcJS/util/observer/data/storage/ObservableStorageObserver.js";
 
 import Savestate from "../../../savestate/Savestate.js";
 import StateDataEventManager from "../../../util/StateDataEventManager.js";

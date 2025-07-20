@@ -40,6 +40,7 @@ class ListEntryElementManager extends ElementManager {
 
 }
 
+// TODO use dataview/datalist
 export default class LocationList extends Panel {
 
     #elementManager;

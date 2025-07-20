@@ -1,5 +1,5 @@
 // frameworks
-import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
+import ObservableStorageObserver from "/emcJS/util/observer/data/storage/ObservableStorageObserver.js";
 import {
     mix
 } from "/emcJS/util/Mixin.js";

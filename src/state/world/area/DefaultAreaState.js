@@ -4,7 +4,7 @@ import {
 import {
     debounce
 } from "/emcJS/util/Debouncer.js";
-import ObservableStorageObserver from "/emcJS/util/observer/ObservableStorageObserver.js";
+import ObservableStorageObserver from "/emcJS/util/observer/data/storage/ObservableStorageObserver.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import Savestate from "../../../savestate/Savestate.js";
 // import OptionsStorage from "../../../savestate/storage/OptionsStorage.js";
