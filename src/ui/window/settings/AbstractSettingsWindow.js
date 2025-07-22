@@ -2,8 +2,14 @@
 import SettingsWindow from "/emcJS/ui/overlay/window/settings/SettingsWindow.js";
 
 import Language from "../../../util/Language.js";
+import WorldResource from "../../../data/resource/WorldResource.js";
 
-const VARS = {"I18n.languages": Language.getLanguages};
+const LOCATIONS = WorldResource.get("locations");
+const LOCATION_NAMES = Object.keys(LOCATIONS);
+const VARS = {
+    "I18n.languages": Language.getLanguages,
+    "Locations.names": () => LOCATION_NAMES
+};
 
 function convertValueList(values = {}) {
     if (typeof values == "string") {
