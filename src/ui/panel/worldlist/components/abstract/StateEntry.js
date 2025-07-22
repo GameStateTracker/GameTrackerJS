@@ -18,9 +18,6 @@ export default class WorldListStateEntry extends BaseClass {
     constructor() {
         super();
         /* state handler */
-        this.registerStateHandler("visibility", (event) => {
-            this.hidden = !event.value;
-        });
         this.registerStateHandler("access", (event) => {
             const access = event.value;
             const accessValue = access.value;
@@ -47,8 +44,6 @@ export default class WorldListStateEntry extends BaseClass {
     applyDefaultValues() {
         /* access */
         this.applyAccess();
-        /* visible */
-        this.hidden = true;
     }
 
     applyStateValues(state) {
@@ -56,8 +51,6 @@ export default class WorldListStateEntry extends BaseClass {
         const access = this.getStateAccess(state);
         const accessValue = access.value;
         this.applyAccess(("" + accessValue).toLowerCase(), access);
-        /* visible */
-        this.hidden = !state.isVisible();
     }
 
     getStateAccess(state) {

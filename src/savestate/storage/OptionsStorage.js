@@ -2,6 +2,7 @@
 import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
 
 import OptionsResource from "../../data/resource/OptionsResource.js";
+import SettingsAliasRegistry from "../../registry/SettingsAliasRegistry.js";
 
 const SET_TYPES = [
     "list",
@@ -14,7 +15,17 @@ const CUSTOM_DEFAULTS = new Map();
 
 for (const [key, value] of Object.entries(OptionsResource.get())) {
     if (SET_TYPES.indexOf(value.type) >= 0) {
-        const def = new Set(value.default);
+        let values = value.default;
+        if (typeof values !== "object") {
+            values = SettingsAliasRegistry.resolveAlias(values);
+        }
+        if (values == null) {
+            values = [];
+        }
+        if (!Array.isArray(values)) {
+            values = Object.keys(values);
+        }
+        const def = new Set(values);
         for (const el of value.values) {
             DEFAULTS.set(el, def.has(el));
         }

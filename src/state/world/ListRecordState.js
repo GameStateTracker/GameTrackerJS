@@ -100,7 +100,14 @@ export default class ListRecordState extends BaseClass {
     }
 
     #updateVisibility() {
-        const value = super.visible && this.#entry.isVisible();
+        if (this.props.ignoreEntryVisibility) {
+            this.#setVisibility(super.visible);
+        } else {
+            this.#setVisibility(super.visible && this.#entry.isVisible());
+        }
+    }
+
+    #setVisibility(value) {
         if (this.#visible != value) {
             this.#visible = value;
             // external

@@ -42,6 +42,10 @@ const RELATION_TYPES = [
 
 export default class MultiMarkerListInput extends ContextMenuManagerMixin(AbstractFormElement) {
 
+    static get changeDebounceTime() {
+        return 0;
+    }
+
     #searchEl;
 
     #listSelectionEl;
@@ -113,6 +117,18 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
                 this.value = newValue;
             }
         }));
+        this.#gridEl.addEventListener("edit::ignoreEntryVisibility", debounce((event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            const {value, rowKey} = event.data;
+            const currentValue = this.value ?? [];
+            const index = this.#getElementIndex(rowKey);
+            if (index >= 0) {
+                const newValue = deepClone(currentValue);
+                newValue[this.#activeList][index].ignoreEntryVisibility = value;
+                this.value = newValue;
+            }
+        }));
         this.#gridEl.addEventListener("edit::accessPenetration", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
@@ -155,7 +171,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
             const {newOrder} = event;
             const currentValue = this.value ?? [];
             const newValue = deepClone(currentValue);
-            sortDictListByArray(newValue[this.#activeList], newOrder, "key");
+            sortDictListByArray(newValue[this.#activeList], newOrder, (el) => this.#generateRowKey(el.ref));
             this.value = newValue;
         });
         /* --- */

@@ -22,6 +22,11 @@
             "optional": false,
             "default": true
         },
+        "ignoreEntryVisibility": {
+            "@type": "Boolean",
+            "optional": false,
+            "default": false
+        },
         "accessPenetration": {
             "@type": "Logic",
             "optional": true,

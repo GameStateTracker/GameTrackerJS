@@ -74,9 +74,6 @@ export default class WorldMapStateEntry extends BaseClass {
         /* --- */
         this.#tooltipEl = this.shadowRoot.getElementById("tooltip");
         /* state handler */
-        this.registerStateHandler("visibility", (event) => {
-            this.style.display = event.value ? "" : "none";
-        });
         this.registerStateHandler("access", (event) => {
             const access = event.value;
             const accessValue = access.value;
@@ -103,8 +100,6 @@ export default class WorldMapStateEntry extends BaseClass {
     applyDefaultValues() {
         /* access */
         this.applyAccess("unavailable", {});
-        /* visible */
-        this.hidden = true;
     }
 
     applyStateValues(state) {
@@ -112,8 +107,6 @@ export default class WorldMapStateEntry extends BaseClass {
         const access = this.getStateAccess(state);
         const accessValue = access.value;
         this.applyAccess(("" + accessValue).toLowerCase(), access);
-        /* visible */
-        this.hidden = !state.isVisible();
     }
 
     getStateAccess(state) {

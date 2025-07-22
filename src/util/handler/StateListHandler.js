@@ -141,14 +141,15 @@ export default class StateListHandler extends EventTarget {
         const access = getDefaultAccess();
         for (const recordState of this.#filteredEntityList) {
             if (recordState.type == "Area" || recordState.type == "Exit") {
-                if (recordState.accessPenetration) {
-                    mergeMapsInto(access.locations, recordState.access.locations);
-                }
                 if (recordState.type == "Exit" && recordState.entry.reachable && recordState.entry.area == null) {
                     access.entrances += 1;
+                } else if (recordState.accessPenetration) {
+                    mergeMapsInto(access.locations, recordState.access.locations);
+                    access.entrances += recordState.access.entrances;
                 }
             } else if (recordState.type == "Collection") {
                 mergeMapsInto(access.locations, recordState.access.locations);
+                access.entrances += recordState.access.entrances;
             } else if (recordState.type == "Location") {
                 const ref = recordState.entry.ref;
                 if (!access.locations.has(ref)) {
@@ -157,12 +158,11 @@ export default class StateListHandler extends EventTarget {
             }
         }
         for (const [, location] of access.locations) {
-            const {done, unopened, reachable, entrances, total} = location;
+            const {done, unopened, reachable, total} = location;
             access.done += done;
             access.unopened += unopened;
             access.reachable += reachable;
             access.total += total;
-            access.entrances += entrances;
         }
         if (access.unopened > 0) {
             if (access.reachable > 0) {

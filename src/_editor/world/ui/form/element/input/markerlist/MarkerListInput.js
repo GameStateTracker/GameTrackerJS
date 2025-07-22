@@ -39,6 +39,10 @@ const RELATION_TYPES = [
 
 export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFormElement) {
 
+    static get changeDebounceTime() {
+        return 0;
+    }
+
     #searchEl;
 
     #gridEl;
@@ -96,6 +100,18 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
                 this.value = newValue;
             }
         }));
+        this.#gridEl.addEventListener("edit::ignoreEntryVisibility", debounce((event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            const {value, rowKey} = event.data;
+            const currentValue = this.value ?? [];
+            const index = this.#getElementIndex(rowKey);
+            if (index >= 0) {
+                const newValue = deepClone(currentValue);
+                newValue[index].ignoreEntryVisibility = value;
+                this.value = newValue;
+            }
+        }));
         this.#gridEl.addEventListener("edit::accessPenetration", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
@@ -137,7 +153,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
             event.preventDefault();
             const {newOrder} = event;
             const currentValue = this.value ?? [];
-            this.value = sortDictListByArrayImmuted(currentValue, newOrder, "key");
+            this.value = sortDictListByArrayImmuted(currentValue, newOrder, (el) => this.#generateRowKey(el.ref));
         });
         /* --- */
         this.setContextMenu("relation-cell", RelationCellContextMenu);
@@ -398,10 +414,10 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
                 insertAtIndex(newValue, currentIndex, newEntry);
                 this.value = newValue;
             } else {
-                this.value = {
-                    ...initialValue,
+                this.value = [
+                    ...currentValue,
                     newEntry
-                };
+                ];
             }
         }
     }

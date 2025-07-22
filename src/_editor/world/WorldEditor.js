@@ -97,12 +97,11 @@ class WorldEditor extends CustomElement {
                     if (entry.lists != null) {
                         const listNames = Object.keys(entry.lists);
                         if (listNames.length > 1) {
-                            LogicOperatorRegistry.setOperator(`arealist[${name}]`, {
+                            LogicOperatorRegistry.setAndLinkOperator(`arealist[${name}]`, {
                                 type: "state",
                                 options: deepClone(listNames),
                                 value: listNames[0]
-                            });
-                            LogicOperatorRegistry.linkOperator(`arealist[${name}]`, "active area list");
+                            }, "active area list");
                             continue;
                         }
                     }
@@ -230,18 +229,26 @@ class WorldEditor extends CustomElement {
         // ---
         for (const name in data) {
             const entry = data[name];
-            if (Array.isArray(entry.values)) {
-                LogicOperatorRegistry.setOperator(`setting[${name}]`, {
-                    type: "state",
-                    options: deepClone(entry.values),
-                    value: entry.default ?? entry.values[0]
-                });
-                LogicOperatorRegistry.linkOperator(`setting[${name}]`, "settings");
-            } else {
-                LogicOperatorRegistry.setOperator(`setting[${name}]`, {
-                    type: "value"
-                });
-                LogicOperatorRegistry.linkOperator(`setting[${name}]`, "settings");
+            switch (entry.type) {
+                case "choice": {
+                    LogicOperatorRegistry.setAndLinkOperator(`setting[${name}]`, {
+                        type: "state",
+                        options: deepClone(entry.values),
+                        value: entry.default ?? entry.values[0]
+                    }, "settings");
+                } break;
+                case "list": {
+                    for (const value of entry.values) {
+                        LogicOperatorRegistry.setAndLinkOperator(`setting[${value}]`, {
+                            type: "value"
+                        }, "settings");
+                    }
+                }
+                default: {
+                    LogicOperatorRegistry.setAndLinkOperator(`setting[${name}]`, {
+                        type: "value"
+                    }, "settings");
+                } break;
             }
         }
         // ---
@@ -254,29 +261,25 @@ class WorldEditor extends CustomElement {
         for (const name in data) {
             const entry = data[name];
             switch (entry.type) {
-                case "check":
-                case "number": {
-                    LogicOperatorRegistry.setOperator(`option[${name}]`, {
-                        type: "value"
-                    });
-                    LogicOperatorRegistry.linkOperator(`option[${name}]`, "options");
-                } break;
                 case "choice": {
-                    LogicOperatorRegistry.setOperator(`option[${name}]`, {
+                    LogicOperatorRegistry.setAndLinkOperator(`option[${name}]`, {
                         type: "state",
                         options: deepClone(entry.values),
                         value: entry.default ?? entry.values[0]
-                    });
-                    LogicOperatorRegistry.linkOperator(`option[${name}]`, "options");
+                    }, "options");
                 } break;
                 case "list": {
                     for (const value of entry.values) {
-                        LogicOperatorRegistry.setOperator(`option[${value}]`, {
+                        LogicOperatorRegistry.setAndLinkOperator(`option[${value}]`, {
                             type: "value"
-                        });
-                        LogicOperatorRegistry.linkOperator(`option[${value}]`, "options");
+                        }, "options");
                     }
                 }
+                default: {
+                    LogicOperatorRegistry.setAndLinkOperator(`option[${name}]`, {
+                        type: "value"
+                    }, "options");
+                } break;
             }
         }
         // ---
@@ -287,10 +290,9 @@ class WorldEditor extends CustomElement {
         await BusyIndicatorManager.busy();
         // ---
         for (const name in data) {
-            LogicOperatorRegistry.setOperator(`item[${name}]`, {
+            LogicOperatorRegistry.setAndLinkOperator(`item[${name}]`, {
                 type: "value"
-            });
-            LogicOperatorRegistry.linkOperator(`item[${name}]`, "items");
+            }, "items");
         }
         // ---
         await BusyIndicatorManager.unbusy();
@@ -305,12 +307,11 @@ class WorldEditor extends CustomElement {
             const values = entry.values;
             filterConfig[name] = values;
             // ---
-            LogicOperatorRegistry.setOperator(`filter[${name}]`, {
+            LogicOperatorRegistry.setAndLinkOperator(`filter[${name}]`, {
                 type: "state",
                 options: deepClone(entry.values),
                 value: entry.default ?? entry.values[0]
-            });
-            LogicOperatorRegistry.linkOperator(`filter[${name}]`, "filter");
+            }, "filter");
         }
         scope.filterConfig = filterConfig;
         if (this.#activeDetailEditor != null) {
