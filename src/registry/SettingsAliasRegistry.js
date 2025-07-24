@@ -1,16 +1,26 @@
+import {
+    debounce
+} from "/emcJS/util/Debouncer.js";
 
-const ALIAS_REGISTRY = new Map();
+class SettingsValuesAliasRegistry extends EventTarget {
 
-const SettingsAliasRegistry = {
+    #aliasRegistry = new Map();
 
     registerAlias(name, callback) {
-        ALIAS_REGISTRY.set(name, callback);
-    },
-
-    resolveAlias(name) {
-        return ALIAS_REGISTRY.get(name)?.();
+        this.#aliasRegistry.set(name, callback);
+        this.#handleChange();
     }
 
-};
+    resolveAlias(name) {
+        return this.#aliasRegistry.get(name)?.();
+    }
+
+    #handleChange = debounce(() => {
+        this.dispatchEvent(new Event("change"));
+    });
+
+}
+
+const SettingsAliasRegistry = new SettingsValuesAliasRegistry();
 
 export default SettingsAliasRegistry;

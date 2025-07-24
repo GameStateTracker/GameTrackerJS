@@ -13,26 +13,37 @@ const DEFAULTS = new Map();
 
 const CUSTOM_DEFAULTS = new Map();
 
-for (const [key, value] of Object.entries(OptionsResource.get())) {
-    if (SET_TYPES.indexOf(value.type) >= 0) {
-        let values = value.default;
-        if (typeof values !== "object") {
-            values = SettingsAliasRegistry.resolveAlias(values);
+function resolveOptionValues(value) {
+    if (typeof values !== "object") {
+        value = SettingsAliasRegistry.resolveAlias(value);
+    }
+    if (value == null) {
+        value = [];
+    } else if (!Array.isArray(value)) {
+        value = Object.keys(value);
+    }
+    return value;
+}
+
+function resolveDefaults() {
+    for (const [key, value] of Object.entries(OptionsResource.get())) {
+        if (SET_TYPES.indexOf(value.type) >= 0) {
+            const values = resolveOptionValues(value.values);
+            const defaultValues = resolveOptionValues(value.default);
+            const defaultValueSet = new Set(defaultValues);
+            for (const el of values) {
+                DEFAULTS.set(el, defaultValueSet.has(el));
+            }
+        } else {
+            DEFAULTS.set(key, value.default);
         }
-        if (values == null) {
-            values = [];
-        }
-        if (!Array.isArray(values)) {
-            values = Object.keys(values);
-        }
-        const def = new Set(values);
-        for (const el of value.values) {
-            DEFAULTS.set(el, def.has(el));
-        }
-    } else {
-        DEFAULTS.set(key, value.default);
     }
 }
+
+resolveDefaults();
+SettingsAliasRegistry.addEventListener("change", () => {
+    resolveDefaults();
+});
 
 let INSTANCE = null;
 

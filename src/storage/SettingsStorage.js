@@ -2,6 +2,7 @@
 import ObservableIDBProxyStorage from "/emcJS/data/storage/observable/ObservableIDBProxyStorage.js";
 
 import SettingsResource from "../data/resource/SettingsResource.js";
+import SettingsAliasRegistry from "../registry/SettingsAliasRegistry.js";
 
 // TODO sync data to other page instances
 
@@ -12,16 +13,37 @@ const SET_TYPES = [
 
 const DEFAULTS = new Map();
 
-for (const [key, value] of Object.entries(SettingsResource.get())) {
-    if (SET_TYPES.indexOf(value.type) >= 0) {
-        const def = new Set(value.default);
-        for (const el of value.values) {
-            DEFAULTS.set(el, def.has(el));
+function resolveOptionValues(value) {
+    if (typeof values !== "object") {
+        value = SettingsAliasRegistry.resolveAlias(value);
+    }
+    if (value == null) {
+        value = [];
+    } else if (!Array.isArray(value)) {
+        value = Object.keys(value);
+    }
+    return value;
+}
+
+function resolveDefaults() {
+    for (const [key, value] of Object.entries(SettingsResource.get())) {
+        if (SET_TYPES.indexOf(value.type) >= 0) {
+            const values = resolveOptionValues(value.values);
+            const defaultValues = resolveOptionValues(value.default);
+            const defaultValueSet = new Set(defaultValues);
+            for (const el of values) {
+                DEFAULTS.set(el, defaultValueSet.has(el));
+            }
+        } else {
+            DEFAULTS.set(key, value.default);
         }
-    } else {
-        DEFAULTS.set(key, value.default);
     }
 }
+
+resolveDefaults();
+SettingsAliasRegistry.addEventListener("change", () => {
+    resolveDefaults();
+});
 
 class AppSettingsStorage extends ObservableIDBProxyStorage {
 
