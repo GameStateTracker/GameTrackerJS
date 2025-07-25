@@ -8,9 +8,9 @@ import AreaStateManager from "../../statemanager/world/area/AreaStateManager.js"
 import StateDataEventManagerMixin from "../mixin/StateDataEventManagerMixin.js";
 
 const TPL = new HTMLTemplate(`
-<emc-option value="" style="background-image: url('images/icons/area_nohint.svg')"></emc-option>
-<emc-option value="woth" style="background-image: url('images/icons/area_woth.svg')"></emc-option>
-<emc-option value="barren" style="background-image: url('images/icons/area_barren.svg')"></emc-option>
+<emc-option value="" style="background-image: url('/images/icons/area_nohint.svg')"></emc-option>
+<emc-option value="woth" style="background-image: url('/images/icons/area_woth.svg')"></emc-option>
+<emc-option value="barren" style="background-image: url('/images/icons/area_barren.svg')"></emc-option>
 `);
 
 const STYLE = new CSSTemplate(`

@@ -101,12 +101,12 @@ export default class WorldListLocation extends BaseClass {
     }
 
     applyDefaultValues() {
-        super.applyDefaultValues("images/icons/location.svg");
+        super.applyDefaultValues("/images/icons/location.svg");
         this.applyItem();
     }
 
     applyStateValues(state) {
-        super.applyStateValues(state, "images/icons/location.svg");
+        super.applyStateValues(state, "/images/icons/location.svg");
         this.applyItem(state.itemData);
     }
 

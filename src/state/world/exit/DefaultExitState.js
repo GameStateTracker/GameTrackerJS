@@ -135,6 +135,9 @@ export default class DefaultExitState extends BaseClass {
             this.dispatchEvent(ev);
             // logic data
             this.setLogicData("$IS_DONE", access.value == AccessStateEnum.OPENED);
+            this.setLogicData("$IS_AVAILABLE", access.value === AccessStateEnum.AVAILABLE);
+            this.setLogicData("$IS_POSSIBLE", access.value === AccessStateEnum.POSSIBLE);
+            this.setLogicData("$IS_UNAVAILABLE", access.value === AccessStateEnum.UNAVAILABLE);
         });
         this.#manager.registerStateHandler("hint", (event) => {
             const ev = new Event("hint");
@@ -164,6 +167,9 @@ export default class DefaultExitState extends BaseClass {
         this.#reachable = getReachable(logicAccess);
         this.#access = getLogicAccess(this.#reachable);
         this.setLogicData("$IS_DONE", this.access.value === AccessStateEnum.OPENED);
+        this.setLogicData("$IS_AVAILABLE", this.access.value === AccessStateEnum.AVAILABLE);
+        this.setLogicData("$IS_POSSIBLE", this.access.value === AccessStateEnum.POSSIBLE);
+        this.setLogicData("$IS_UNAVAILABLE", this.access.value === AccessStateEnum.UNAVAILABLE);
         Logic.addEventListener("change", () => {
             const reachable = getReachable(logicAccess);
             if (reachable != this.#reachable) {
@@ -220,6 +226,9 @@ export default class DefaultExitState extends BaseClass {
                 this.dispatchEvent(ev);
                 // logic data
                 this.setLogicData("$IS_DONE", access.value == AccessStateEnum.OPENED);
+                this.setLogicData("$IS_AVAILABLE", access.value === AccessStateEnum.AVAILABLE);
+                this.setLogicData("$IS_POSSIBLE", access.value === AccessStateEnum.POSSIBLE);
+                this.setLogicData("$IS_UNAVAILABLE", access.value === AccessStateEnum.UNAVAILABLE);
             }
         }
     }
@@ -256,6 +265,9 @@ export default class DefaultExitState extends BaseClass {
 
             // logic data
             this.setLogicData("$IS_DONE", this.access.value == AccessStateEnum.OPENED);
+            this.setLogicData("$IS_AVAILABLE", this.access.value === AccessStateEnum.AVAILABLE);
+            this.setLogicData("$IS_POSSIBLE", this.access.value === AccessStateEnum.POSSIBLE);
+            this.setLogicData("$IS_UNAVAILABLE", this.access.value === AccessStateEnum.UNAVAILABLE);
         }
     }
 

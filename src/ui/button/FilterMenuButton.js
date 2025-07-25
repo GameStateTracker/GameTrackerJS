@@ -7,7 +7,7 @@ import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js"
 import FilterContextMenu from "../ctxmenu/FilterContextMenu.js";
 
 const TPL = new HTMLTemplate(`
-<emc-icon id="icon" src="images/icons/filter.svg"></emc-icon>
+<emc-icon id="icon" src="/images/icons/filter.svg"></emc-icon>
 `);
 
 const STYLE = new CSSTemplate(`

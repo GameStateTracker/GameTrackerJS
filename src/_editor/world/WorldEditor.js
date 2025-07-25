@@ -112,6 +112,15 @@ class WorldEditor extends CustomElement {
         LogicOperatorRegistry.setAndLinkOperator("$IS_DONE", {
             type: "value"
         }, "special");
+        LogicOperatorRegistry.setAndLinkOperator("$IS_AVAILABLE", {
+            type: "value"
+        }, "special");
+        LogicOperatorRegistry.setAndLinkOperator("$IS_POSSIBLE", {
+            type: "value"
+        }, "special");
+        LogicOperatorRegistry.setAndLinkOperator("$IS_UNAVAILABLE", {
+            type: "value"
+        }, "special");
     }
 
     async setWorldData(data) {

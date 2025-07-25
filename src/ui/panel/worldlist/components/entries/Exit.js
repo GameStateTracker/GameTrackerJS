@@ -21,12 +21,12 @@ import ExitBindingContextMenu from "../../../../ctxmenu/ExitBindingContextMenu.j
 
 const TPL = new HTMLTemplate(`
 <div id="canenter">
-    <img src="images/icons/entrance.svg" />
+    <img src="/images/icons/entrance.svg" />
 </div>
 <div id="area" class="textarea">
     <emc-i18n-label id="value"></emc-i18n-label>
     <div id="entrances">
-        <img src="images/icons/entrance.svg" />
+        <img src="/images/icons/entrance.svg" />
     </div>
     <div id="hint"></div>
     <div id="tags"></div>
@@ -228,7 +228,7 @@ export default class WorldListExit extends BaseClass {
     }
 
     applyDefaultValues() {
-        super.applyDefaultValues("images/icons/entrance.svg");
+        super.applyDefaultValues("/images/icons/entrance.svg");
         /* can enter */
         const canenterEl = this.shadowRoot.getElementById("canenter");
         if (canenterEl != null) {
@@ -239,7 +239,7 @@ export default class WorldListExit extends BaseClass {
     }
 
     applyStateValues(state) {
-        super.applyStateValues(state, "images/icons/entrance.svg");
+        super.applyStateValues(state, "/images/icons/entrance.svg");
         /* can enter */
         const canenterEl = this.shadowRoot.getElementById("canenter");
         if (canenterEl != null) {

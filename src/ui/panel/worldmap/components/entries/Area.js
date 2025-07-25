@@ -12,7 +12,7 @@ import "../../../../../state/world/area/OverworldState.js";
 
 const TPL = new HTMLTemplate(`
 <div id="entrances">
-    <img src="images/icons/entrance.svg" />
+    <img src="/images/icons/entrance.svg" />
 </div>
 <div id="hint"></div>
 `);
@@ -132,13 +132,13 @@ export default class WorldMapArea extends WorldMapMarkedEntry {
     }
 
     applyDefaultValues() {
-        super.applyDefaultValues("images/icons/area.svg");
+        super.applyDefaultValues("/images/icons/area.svg");
         /* hint */
         this.applyHint();
     }
 
     applyStateValues(state) {
-        super.applyStateValues(state, "images/icons/area.svg");
+        super.applyStateValues(state, "/images/icons/area.svg");
         /* hint */
         this.applyHint(state.hint);
     }

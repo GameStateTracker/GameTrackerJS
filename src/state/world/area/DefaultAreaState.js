@@ -76,6 +76,9 @@ export default class DefaultAreaState extends BaseClass {
         /* LOGIC */
         const logicAccess = props.logicAccess ?? "";
         this.setLogicData("$IS_DONE", this.access.value === AccessStateEnum.OPENED);
+        this.setLogicData("$IS_AVAILABLE", this.access.value === AccessStateEnum.AVAILABLE);
+        this.setLogicData("$IS_POSSIBLE", this.access.value === AccessStateEnum.POSSIBLE);
+        this.setLogicData("$IS_UNAVAILABLE", this.access.value === AccessStateEnum.UNAVAILABLE);
         this.#reachable = !!Logic.getValue(logicAccess);
         Logic.addEventListener("change", () => {
             const reachable = !!Logic.getValue(logicAccess);
@@ -135,6 +138,9 @@ export default class DefaultAreaState extends BaseClass {
         this.dispatchEvent(ev);
         // logic data
         this.setLogicData("$IS_DONE", access == AccessStateEnum.OPENED);
+        this.setLogicData("$IS_AVAILABLE", access === AccessStateEnum.AVAILABLE);
+        this.setLogicData("$IS_POSSIBLE", access.value === AccessStateEnum.POSSIBLE);
+        this.setLogicData("$IS_UNAVAILABLE", access === AccessStateEnum.UNAVAILABLE);
     }
 
     onListEntriesChange() {

@@ -166,7 +166,7 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
         /* badge */
         const badge = this.shadowRoot.getElementById("badge");
         if (badge instanceof Badge) {
-            badge.typeIcon = "images/icons/entrance.svg";
+            badge.typeIcon = "/images/icons/entrance.svg";
             badge.setFilterData({});
         }
         /* visible */
@@ -180,7 +180,7 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
         /* badge */
         const badge = this.shadowRoot.getElementById("badge");
         if (badge instanceof Badge) {
-            badge.typeIcon = state.props.icon ?? "images/icons/entrance.svg";
+            badge.typeIcon = state.props.icon ?? "/images/icons/entrance.svg";
             badge.setFilterData(state.props.filter);
         }
         /* visible */
