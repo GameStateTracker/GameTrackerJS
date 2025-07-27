@@ -1,6 +1,7 @@
 import SettingsStorage from "../../storage/SettingsStorage.js";
 import ParameterStorage from "../../storage/ParameterStorage.js";
 import Savestate from "../../savestate/Savestate.js";
+import Logic from "../logic/Logic.js";
 import StorageSync from "./StorageSync.js";
 import Counter from "../Counter.js";
 
@@ -54,6 +55,7 @@ if (StorageSync.isActive()) {
     StorageSync.postMessage({storage: "settings", type: "init", data: SettingsStorage.serialize()});
     StorageSync.postMessage({storage: "parameter", type: "init", data: ParameterStorage.serialize()});
     StorageSync.postMessage({storage: "savestate", type: "init", data: Savestate.serialize()});
+    StorageSync.postMessage({storage: "__logic_results", type: "init", data: Logic.getAll()});
 
     // listen
     StorageSync.addEventListener("message", (event) => {
@@ -125,5 +127,10 @@ if (StorageSync.isActive()) {
             const {key, value} = event;
             StorageSync.postMessage({storage: "savestate", type: "meta", key, value});
         }
+    });
+
+    // send logic results
+    Logic.addEventListener("change", (event) => {
+        StorageSync.postMessage({storage: "__logic_results", type: "change", data: event.data});
     });
 }

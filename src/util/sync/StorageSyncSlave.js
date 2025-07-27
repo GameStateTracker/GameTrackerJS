@@ -1,6 +1,7 @@
 import SettingsStorage from "../../storage/SettingsStorage.js";
 import ParameterStorage from "../../storage/ParameterStorage.js";
 import Savestate from "../../savestate/Savestate.js";
+import Logic from "../logic/Logic.js";
 import StorageSync from "./StorageSync.js";
 import Counter from "../Counter.js";
 
@@ -68,6 +69,18 @@ if (StorageSync.isActive()) {
             } break;
             case "savestate": {
                 handleSavestateMessage(msg);
+            } break;
+            case "__logic_results": {
+                for (const [key, value] of Object.entries(msg.data)) {
+                    if (value) {
+                        Logic.addReachable(key);
+                    } else {
+                        Logic.deleteReachable(key);
+                    }
+                }
+                const ev = new Event("change");
+                ev.data = msg.data;
+                Logic.dispatchEvent(ev);
             } break;
         }
         muted.sub();

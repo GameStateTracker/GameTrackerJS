@@ -6,6 +6,8 @@ const SETTINGS = new StorageCache();
 const PARAMETER = new StorageCache();
 const SAVESTATE = new SavestateCache();
 
+const LOGIC_RESULTS = new Map();
+
 function handleStorageMessage(storage, msg) {
     const type = msg.type;
     switch (type) {
@@ -52,6 +54,15 @@ function handleSavestateMessage(msg) {
     }
 }
 
+function handleLogicResults(msg) {
+    const {data} = msg;
+    if (data != null) {
+        for (const [key, value] of Object.entries(data)) {
+            LOGIC_RESULTS.set(key, value);
+        }
+    }
+}
+
 MessagePortHandler.addEventListener("message", (event) => {
     const port = event.port;
 
@@ -60,6 +71,7 @@ MessagePortHandler.addEventListener("message", (event) => {
         MessagePortHandler.sendOne({storage: "settings", type: "init", data: SETTINGS.serialize()}, port);
         MessagePortHandler.sendOne({storage: "parameter", type: "init", data: PARAMETER.serialize()}, port);
         MessagePortHandler.sendOne({storage: "savestate", type: "init", data: SAVESTATE.serialize()}, port);
+        MessagePortHandler.sendOne({storage: "__logic_results", type: "init", data: Object.fromEntries(LOGIC_RESULTS)}, port);
     } else {
         /* echo */
         MessagePortHandler.sendAllButOne(event.data, port);
@@ -75,6 +87,9 @@ MessagePortHandler.addEventListener("message", (event) => {
             } break;
             case "savestate": {
                 handleSavestateMessage(msg);
+            } break;
+            case "__logic_results": {
+                handleLogicResults(msg);
             } break;
         }
     }
