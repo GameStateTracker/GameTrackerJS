@@ -1,10 +1,13 @@
-self.importScripts(`/emcJS/worker/legacy/PortHandler.js`);
-self.importScripts(`/emcJS/worker/legacy/StorageCache.js`);
-self.importScripts(`/GameTrackerJS/util/sync/worker/legacy/SavestateCache.js`);
+importScripts("/emcJS/worker/util/legacy/MessagePortHandler.js");
+const MessagePortHandler = self.MessagePortHandler;
+importScripts("/emcJS/worker/util/legacy/StorageCache.js");
+const StorageCache = self.StorageCache;
+importScripts(new URL("./util/legacy/SavestateCache.js", location));
+const SavestateCache = self.SavestateCache;
 
-const SETTINGS = new self.StorageCache();
-const PARAMETER = new self.StorageCache();
-const SAVESTATE = new self.SavestateCache();
+const SETTINGS = new StorageCache();
+const PARAMETER = new StorageCache();
+const SAVESTATE = new SavestateCache();
 
 function handleStorageMessage(storage, msg) {
     const type = msg.type;
@@ -52,29 +55,30 @@ function handleSavestateMessage(msg) {
     }
 }
 
-self.PortHandler.addEventListener("connect", (event) => {
+MessagePortHandler.addEventListener("message", (event) => {
     const port = event.port;
-    self.PortHandler.sendOne({storage: "settings", type: "init", data: SETTINGS.serialize()}, port);
-    self.PortHandler.sendOne({storage: "parameter", type: "init", data: PARAMETER.serialize()}, port);
-    self.PortHandler.sendOne({storage: "savestate", type: "init", data: SAVESTATE.serialize()}, port);
-});
 
-self.PortHandler.addEventListener("message", (event) => {
-    /* echo */
-    const port = event.port;
-    self.PortHandler.sendAllButOne(event.data, port);
+    /* init */
+    if (event.data === "ready") {
+        MessagePortHandler.sendOne({storage: "settings", type: "init", data: SETTINGS.serialize()}, port);
+        MessagePortHandler.sendOne({storage: "parameter", type: "init", data: PARAMETER.serialize()}, port);
+        MessagePortHandler.sendOne({storage: "savestate", type: "init", data: SAVESTATE.serialize()}, port);
+    } else {
+        /* echo */
+        MessagePortHandler.sendAllButOne(event.data, port);
 
-    /* cache */
-    const {storage, ...msg} = event.data;
-    switch (storage) {
-        case "settings": {
-            handleStorageMessage(SETTINGS, msg);
-        } break;
-        case "parameter": {
-            handleStorageMessage(PARAMETER, msg);
-        } break;
-        case "savestate": {
-            handleSavestateMessage(msg);
-        } break;
+        /* cache */
+        const {storage, ...msg} = event.data;
+        switch (storage) {
+            case "settings": {
+                handleStorageMessage(SETTINGS, msg);
+            } break;
+            case "parameter": {
+                handleStorageMessage(PARAMETER, msg);
+            } break;
+            case "savestate": {
+                handleSavestateMessage(msg);
+            } break;
+        }
     }
 });

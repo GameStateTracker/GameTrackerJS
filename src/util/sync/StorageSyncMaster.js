@@ -48,7 +48,7 @@ function handleSavestateMessage(msg) {
     }
 }
 
-if (await StorageSync.init()) {
+if (StorageSync.isActive()) {
     const muted = new Counter();
 
     StorageSync.postMessage({storage: "settings", type: "init", data: SettingsStorage.serialize()});

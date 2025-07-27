@@ -15,7 +15,7 @@
         "node": true
     },
     "globals": {
-        "WeakRef": false
+        "importScripts": false
     },
     "rules": {
         "no-unused-expressions": "error",

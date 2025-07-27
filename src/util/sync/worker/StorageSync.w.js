@@ -1,6 +1,6 @@
-import PortHandler from "/emcJS/worker/modules/PortHandler.js";
-import StorageCache from "/emcJS/worker/modules/StorageCache.js";
-import SavestateCache from "./modules/SavestateCache.js";
+import MessagePortHandler from "/emcJS/worker/util/MessagePortHandler.js";
+import StorageCache from "/emcJS/worker/util/StorageCache.js";
+import SavestateCache from "./util/SavestateCache.js";
 
 const SETTINGS = new StorageCache();
 const PARAMETER = new StorageCache();
@@ -52,29 +52,30 @@ function handleSavestateMessage(msg) {
     }
 }
 
-PortHandler.addEventListener("connect", (event) => {
+MessagePortHandler.addEventListener("message", (event) => {
     const port = event.port;
-    PortHandler.sendOne({storage: "settings", type: "init", data: SETTINGS.serialize()}, port);
-    PortHandler.sendOne({storage: "parameter", type: "init", data: PARAMETER.serialize()}, port);
-    PortHandler.sendOne({storage: "savestate", type: "init", data: SAVESTATE.serialize()}, port);
-});
 
-PortHandler.addEventListener("message", (event) => {
-    /* echo */
-    const port = event.port;
-    PortHandler.sendAllButOne(event.data, port);
+    /* init */
+    if (event.data === "ready") {
+        MessagePortHandler.sendOne({storage: "settings", type: "init", data: SETTINGS.serialize()}, port);
+        MessagePortHandler.sendOne({storage: "parameter", type: "init", data: PARAMETER.serialize()}, port);
+        MessagePortHandler.sendOne({storage: "savestate", type: "init", data: SAVESTATE.serialize()}, port);
+    } else {
+        /* echo */
+        MessagePortHandler.sendAllButOne(event.data, port);
 
-    /* cache */
-    const {storage, ...msg} = event.data;
-    switch (storage) {
-        case "settings": {
-            handleStorageMessage(SETTINGS, msg);
-        } break;
-        case "parameter": {
-            handleStorageMessage(PARAMETER, msg);
-        } break;
-        case "savestate": {
-            handleSavestateMessage(msg);
-        } break;
+        /* cache */
+        const {storage, ...msg} = event.data;
+        switch (storage) {
+            case "settings": {
+                handleStorageMessage(SETTINGS, msg);
+            } break;
+            case "parameter": {
+                handleStorageMessage(PARAMETER, msg);
+            } break;
+            case "savestate": {
+                handleSavestateMessage(msg);
+            } break;
+        }
     }
 });

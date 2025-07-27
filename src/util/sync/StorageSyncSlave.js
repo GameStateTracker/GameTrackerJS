@@ -50,8 +50,10 @@ function handleSavestateMessage(msg) {
     }
 }
 
-if (await StorageSync.init()) {
+if (StorageSync.isActive()) {
     const muted = new Counter();
+
+    StorageSync.postMessage("ready");
 
     // listen
     StorageSync.addEventListener("message", (event) => {

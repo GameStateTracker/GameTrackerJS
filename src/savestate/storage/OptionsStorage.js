@@ -47,7 +47,7 @@ SettingsAliasRegistry.addEventListener("change", () => {
 
 let INSTANCE = null;
 
-class AppOptionsStorage extends ObservableStorage {
+class OptionsStorage extends ObservableStorage {
 
     constructor() {
         if (INSTANCE != null) {
@@ -135,6 +135,4 @@ class AppOptionsStorage extends ObservableStorage {
 
 }
 
-const OptionsStorage = new AppOptionsStorage();
-
-export default OptionsStorage;
+export default new OptionsStorage();

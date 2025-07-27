@@ -15,7 +15,7 @@ for (const [key, value] of Object.entries(FilterResource.get())) {
 
 let INSTANCE = null;
 
-class AppFilterStorage extends ObservableStorage {
+class FilterStorage extends ObservableStorage {
 
     constructor() {
         if (INSTANCE != null) {
@@ -124,6 +124,4 @@ class AppFilterStorage extends ObservableStorage {
 
 }
 
-const FilterStorage = new AppFilterStorage();
-
-export default FilterStorage;
+export default new FilterStorage();

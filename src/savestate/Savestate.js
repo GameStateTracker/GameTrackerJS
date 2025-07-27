@@ -21,6 +21,7 @@ class Savestate extends AppState {
 
     constructor() {
         super();
+        globalThis.savestate = this;
         /* --- */
         this.registerStorage("options", OptionsStorage);
         this.registerStorage("filter", FilterStorage, "persistedchange");
@@ -131,7 +132,4 @@ class Savestate extends AppState {
 
 }
 
-const savestate = Object.freeze(new Savestate());
-window.savestate = savestate;
-
-export default savestate;
+export default new Savestate();
