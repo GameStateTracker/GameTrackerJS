@@ -1,2 +1,0 @@
-import "./handler/MessageHandler.js";
-
