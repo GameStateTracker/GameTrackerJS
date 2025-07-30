@@ -1,5 +1,5 @@
 // frameworks
-import ObservableDefaultingStorage from "/emcJS/data/storage/observable/ObservableDefaultingStorage.js";
+import ObservableMultiDefaultValueStorage from "/emcJS/data/storage/observable/ObservableMultiDefaultValueStorage.js";
 import SettingsBuilder from "/emcJS/util/SettingsBuilder.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 
@@ -18,7 +18,7 @@ export default class SavestateOptionsWindow extends AbstractSettingsWindow {
         /* --- */
         const options = OptionsResource.get();
         SettingsBuilder.build(this, options);
-        this.#itemStorage = new ObservableDefaultingStorage();
+        this.#itemStorage = new ObservableMultiDefaultValueStorage();
         /* --- */
         for (const key of Object.keys(ItemsResource.get())) {
             this.#itemStorage.setDefault(key, 0);
