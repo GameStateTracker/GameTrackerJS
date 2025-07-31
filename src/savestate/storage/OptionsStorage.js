@@ -13,16 +13,16 @@ const DEFAULTS = new Map();
 
 const CUSTOM_DEFAULTS = new Map();
 
-function resolveOptionValues(value) {
+function resolveOptionValues(values) {
     if (typeof values !== "object") {
-        value = SettingsAliasRegistry.resolveAlias(value);
+        values = SettingsAliasRegistry.resolveAlias(values);
     }
-    if (value == null) {
-        value = [];
-    } else if (!Array.isArray(value)) {
-        value = Object.keys(value);
+    if (values == null) {
+        values = [];
+    } else if (!Array.isArray(values)) {
+        values = Object.keys(values);
     }
-    return value;
+    return values;
 }
 
 function resolveDefaults() {
