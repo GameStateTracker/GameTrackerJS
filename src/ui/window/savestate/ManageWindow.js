@@ -4,6 +4,7 @@ import DateUtil from "/emcJS/util/date/DateUtil.js";
 import FileSystem from "/emcJS/util/file/FileSystem.js";
 import Dialog from "/emcJS/ui/overlay/window/Dialog.js";
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
+import {createArchive} from "/emcJS/util/zip/Deflate.js";
 
 import SavestateManager from "../../../savestate/SavestateManager.js";
 import SavestateHandler from "../../../savestate/SavestateHandler.js";
@@ -185,18 +186,33 @@ export default class ManageWindow extends AbstractSavestateWindow {
                 await Dialog.alert("No state selected", "Please select a state to export!");
                 return;
             }
-            const exportPromises = [];
-            for (const stateName of stateNames) {
-                exportPromises.push(this.#exportSavestate(stateName));
+
+            if (stateNames.length === 1) {
+                await this.#exportSavestate(stateNames[0]);
+            } else {
+                await this.#exportZippedSavestates(stateNames);
             }
-            await Promise.all(exportPromises);
         };
     }
 
     async #exportSavestate(stateName) {
         const data = await SavestateManager.exportSavestate(stateName);
         const date = DateUtil.convert(new Date(data.timestamp || 0), "YMDhms");
-        FileSystem.save(JSON.stringify(data, " ", 4), `track-oot-state.${stateName}.${date}.json`);
+        const fileName = `track-oot-state.${stateName.replace(/\//g, "_")}.${date}.json`;
+        FileSystem.save(JSON.stringify(data, null, 4), fileName);
+    }
+
+    async #exportZippedSavestates(stateNames) {
+        const files = [];
+        for (const stateName of stateNames) {
+            const data = await SavestateManager.exportSavestate(stateName);
+            const date = DateUtil.convert(new Date(data.timestamp || 0), "YMDhms");
+            const fileName = `track-oot-state.${stateName.replace(/\//g, "_")}.${date}.json`;
+            files.push(new File([JSON.stringify(data, null, 4)], fileName));
+        }
+        const archive = await createArchive(files);
+        const archiveDate = DateUtil.convert(new Date(), "YMDhms");
+        FileSystem.save(archive, `track-oot-states.${archiveDate}.zip`);
     }
 
 }

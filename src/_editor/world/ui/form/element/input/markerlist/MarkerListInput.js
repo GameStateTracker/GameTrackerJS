@@ -402,6 +402,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
                     scale: 100
                 },
                 visible: true,
+                ignoreEntryVisibility: false,
                 accessPenetration: null,
                 mapOnly: false,
                 rootOnly: false

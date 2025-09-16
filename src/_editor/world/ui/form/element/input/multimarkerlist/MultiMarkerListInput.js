@@ -478,6 +478,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
                     scale: 100
                 },
                 visible: true,
+                ignoreEntryVisibility: false,
                 accessPenetration: null,
                 mapOnly: false,
                 rootOnly: false

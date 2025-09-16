@@ -1,6 +1,6 @@
 {
   "name": "gametrackerjs",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Framework for GameTrackers",
   "type": "module",
   "repository": {
@@ -22,5 +22,8 @@
   "scripts": {
     "lint": "yarn eslint .",
     "lintfix": "yarn eslint --fix ."
+  },
+  "dependencies": {
+    "@stylistic/eslint-plugin": "^5.3.1"
   }
 }
