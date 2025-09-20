@@ -1,6 +1,4 @@
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
+import {mix} from "/emcJS/util/Mixin.js";
 import Panel from "/emcJS/ui/layout/Panel.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
 import "/emcJS/ui/i18n/I18nTooltip.js";
@@ -16,6 +14,7 @@ import "./components/WorldMapOverview.js";
 import "./components/WorldMapTitle.js";
 import "./components/metaarea/WorldMapMetaAreaButton.js";
 import "./components/metaarea/WorldMapMetaAreaView.js";
+import "./components/detailedmaps/WorldMapDetailedMapsButton.js";
 import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 import TPL from "./WorldMap.js.html" assert {type: "html"};
 import STYLE from "./WorldMap.js.css" assert {type: "css"};
@@ -26,11 +25,7 @@ const SMALL_ZOOM_SPD = 1;
 const NORMAL_ZOOM_SPD = 2;
 const LARGE_ZOOM_SPD = 5;
 
-const BaseClass = mix(
-    Panel
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(Panel).with(StateDataEventManagerMixin);
 
 export default class WorldMap extends BaseClass {
 
@@ -48,22 +43,18 @@ export default class WorldMap extends BaseClass {
 
     #metaAreaViewEl;
 
+    #detailedMapsButtonEl;
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* state handler */
         WorldListState.addEventListener("area", (event) => {
-            if (this.detailed || showDetailedMapsObserver.value) {
-                this.ref = event.value;
-            }
+            this.ref = event.value;
         });
-        showDetailedMapsObserver.onChange((event) => {
-            if (this.detailed || event.value) {
-                this.ref = WorldListState.area;
-            } else {
-                this.ref = WorldListState.defaultArea;
-            }
+        showDetailedMapsObserver.onChange(() => {
+            this.#refreshMapArea();
         });
         /* view */
         this.#titleEl = this.shadowRoot.getElementById("title");
@@ -72,6 +63,7 @@ export default class WorldMap extends BaseClass {
         this.#overviewEl = this.shadowRoot.getElementById("overview");
         this.#metaAreaButtonEl = this.shadowRoot.getElementById("meta-area-button");
         this.#metaAreaViewEl = this.shadowRoot.getElementById("meta-area-view");
+        this.#detailedMapsButtonEl = this.shadowRoot.getElementById("detailed-maps-button");
         const resetTransformButtonEl = this.shadowRoot.getElementById("reset-transform-button");
         const iconEl = this.shadowRoot.getElementById("overview-icon");
         this.#viewEl.addEventListener("transform", (event) => {
@@ -142,6 +134,8 @@ export default class WorldMap extends BaseClass {
         super.connectedCallback();
         /* init reference */
         this.ref = WorldListState.area;
+        /* init detailed maps button */
+        this.#refreshDetailedMapsButtonVisibility();
     }
 
     applyDefaultValues() {
@@ -176,7 +170,10 @@ export default class WorldMap extends BaseClass {
 
     get detailed() {
         const res = this.getAttribute("detailed");
-        return res != null && res !== "false";
+        if (res != null) {
+            return res !== "false";
+        }
+        return null;
     }
 
     set detailed(value) {
@@ -199,25 +196,45 @@ export default class WorldMap extends BaseClass {
         if (oldValue != newValue) {
             switch (name) {
                 case "ref": {
-                    const state = AreaStateManager.get(this.ref);
-                    if (state?.hasMap) {
-                        this.switchState(state);
-                    } else {
-                        const defaultState = AreaStateManager.get(WorldListState.defaultArea);
-                        this.switchState(defaultState);
-                    }
+                    this.#refreshMapArea();
                 } break;
                 case "detailed": {
-                    if (newValue != null && newValue !== "false" || showDetailedMapsObserver.value) {
-                        this.ref = WorldListState.area;
-                    } else {
-                        this.ref = WorldListState.defaultArea;
-                    }
+                    this.#refreshMapArea();
+                    this.#refreshDetailedMapsButtonVisibility();
                 } break;
                 case "storetransform": {
                     this.#viewEl.storeTransform = newValue;
                 } break;
             }
+        }
+    }
+
+    #refreshMapArea() {
+        if (this.getDetailedMapsActive()) {
+            const state = AreaStateManager.get(this.ref);
+            if (state?.hasMap) {
+                this.switchState(state);
+                return;
+            }
+        }
+        const defaultState = AreaStateManager.get(WorldListState.defaultArea);
+        this.switchState(defaultState);
+    }
+
+    #refreshDetailedMapsButtonVisibility() {
+        if (this.detailed == null) {
+            this.#detailedMapsButtonEl.style.display = "block";
+        } else {
+            this.#detailedMapsButtonEl.style.display = "";
+        }
+    }
+
+    getDetailedMapsActive() {
+        const res = this.detailed;
+        if (res == null) {
+            return showDetailedMapsObserver.value;
+        } else {
+            return res !== "false";
         }
     }
 

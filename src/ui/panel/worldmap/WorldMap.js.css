@@ -36,6 +36,14 @@
     cursor: pointer;
 }
 
+#detailed-maps-button {
+    position: absolute;
+    display: none;
+    box-sizing: content-box;
+    bottom: 110px;
+    left: 10px;
+}
+
 #reset-transform-button.hidden {
     display: none;
 }
