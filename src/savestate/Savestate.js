@@ -1,7 +1,6 @@
-// frameworks
 import AppState from "/emcJS/data/state/AppState.js";
 import ObservableDefaultValueStorage from "/emcJS/data/storage/observable/ObservableDefaultValueStorage.js";
-
+import {isValidDate} from "/emcJS/util/helper/CheckType.js";
 import OptionsStorage from "./storage/OptionsStorage.js";
 import FilterStorage from "./storage/FilterStorage.js";
 import StartItemsStorage from "./storage/StartItemsStorage.js";
@@ -113,11 +112,14 @@ class Savestate extends AppState {
         /* --- */
         this.#info.name = name?.toString() ?? "";
         this.#info.version = version ?? SavestateConverter.version;
-        this.#info.timestamp = new Date(timestamp) ?? new Date();
+        this.#info.timestamp = this.#createValidDate(timestamp);
         this.#info.autosave = autosave ?? false;
         this.#info.notes = notes?.toString() ?? "";
         /* --- */
-        super.deserialize({data, meta});
+        super.deserialize({
+            data,
+            meta
+        });
     }
 
     createNewData(initialData = {}) {
@@ -128,6 +130,14 @@ class Savestate extends AppState {
             version: this.version,
             ...super.createNewData(initialData)
         };
+    }
+
+    #createValidDate(timestamp) {
+        const date = new Date(timestamp);
+        if (isValidDate(date)) {
+            return date;
+        }
+        return new Date();
     }
 
 }
