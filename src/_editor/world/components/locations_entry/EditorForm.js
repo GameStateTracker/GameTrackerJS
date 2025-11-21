@@ -1,9 +1,7 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import FormBuilder from "/emcJS/util/form/FormBuilder.js";
 import FormContext from "/emcJS/util/form/FormContext.js";
-import {
-    deepClone
-} from "/emcJS/util/helper/DeepClone.js";
+import {deepClone} from "/emcJS/util/helper/DeepClone.js";
 import "/emcJS/ui/form/FormContainer.js";
 import "/emcJS/ui/form/element/FormElementsLoader.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
@@ -45,10 +43,11 @@ export default class EditorForm_Locations_Entry extends CustomElement {
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.#formContext.addEventListener("submit", () => {
-            const event = new Event("save", {bubbles: true, cancelable: true});
-            event.data = {
-                ...this.#formContext.getData()
-            };
+            const event = new Event("save", {
+                bubbles: true,
+                cancelable: true
+            });
+            event.data = {...this.#formContext.getData()};
             this.dispatchEvent(event);
         });
         /* --- */
@@ -90,7 +89,7 @@ export default class EditorForm_Locations_Entry extends CustomElement {
     setData(data) {
         this.#data = deepClone(data);
         const fullData = this.getFullData(data);
-        this.#formContext.loadData(fullData);
+        this.#formContext.setData(fullData);
     }
 
     getData() {
@@ -106,7 +105,7 @@ export default class EditorForm_Locations_Entry extends CustomElement {
         this.#filterInputEl.loadFilterConfig(config);
         /* --- */
         const fullData = this.getFullData(this.#data);
-        this.#formContext.loadData(fullData);
+        this.#formContext.setData(fullData);
     }
 
     getFullData(data) {
