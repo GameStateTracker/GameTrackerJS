@@ -197,7 +197,7 @@ export default class ManageWindow extends AbstractSavestateWindow {
 
     async #exportSavestate(stateName) {
         const data = await SavestateManager.exportSavestate(stateName);
-        const date = DateUtil.convert(new Date(data.timestamp || 0), "YMDhms");
+        const date = DateUtil.format(new Date(data.timestamp || 0), "YMDhms");
         const fileName = `track-oot-state.${stateName.replace(/\//g, "_")}.${date}.json`;
         FileSystem.save(JSON.stringify(data, null, 4), fileName);
     }
@@ -206,12 +206,12 @@ export default class ManageWindow extends AbstractSavestateWindow {
         const files = [];
         for (const stateName of stateNames) {
             const data = await SavestateManager.exportSavestate(stateName);
-            const date = DateUtil.convert(new Date(data.timestamp || 0), "YMDhms");
+            const date = DateUtil.format(new Date(data.timestamp || 0), "YMDhms");
             const fileName = `track-oot-state.${stateName.replace(/\//g, "_")}.${date}.json`;
             files.push(new File([JSON.stringify(data, null, 4)], fileName));
         }
         const archive = await createArchive(files);
-        const archiveDate = DateUtil.convert(new Date(), "YMDhms");
+        const archiveDate = DateUtil.format(new Date(), "YMDhms");
         FileSystem.save(archive, `track-oot-states.${archiveDate}.zip`);
     }
 

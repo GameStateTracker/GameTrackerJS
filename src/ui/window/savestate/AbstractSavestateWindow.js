@@ -131,7 +131,7 @@ function createOption(key, state) {
     const dte = document.createElement("span");
     dte.className = "date";
     if (state.timestamp != null) {
-        dte.innerHTML = DateUtil.convert(new Date(state.timestamp), "D.M.Y h:m:s");
+        dte.innerHTML = DateUtil.format(new Date(state.timestamp), "D.M.Y h:m:s");
     } else {
         dte.innerHTML = "no date";
     }

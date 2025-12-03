@@ -1,7 +1,5 @@
 // frameworks
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
 import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
 import DateUtil from "/emcJS/util/date/DateUtil.js";
 
@@ -78,7 +76,7 @@ async function autosave() {
             app: VersionData.versionString,
             browser: VersionData.browserData
         };
-        await STORAGE.set(`${DateUtil.convert(lastAutoSave, "YMDhms")}_${tmp.name}`, tmp);
+        await STORAGE.set(`${DateUtil.format(lastAutoSave, "YMDhms")}_${tmp.name}`, tmp);
         await removeOverflowAutosaves();
         /* -- */
         registerAutosaveTimer();

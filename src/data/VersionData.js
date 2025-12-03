@@ -1,9 +1,7 @@
 // frameworks
 import FileLoader from "/emcJS/util/file/FileLoader.js";
 import DateUtil from "/emcJS/util/date/DateUtil.js";
-import {
-    deepClone
-} from "/emcJS/util/helper/DeepClone.js";
+import {deepClone} from "/emcJS/util/helper/DeepClone.js";
 import DeviceData from "/emcJS/data/DeviceData.js";
 
 async function getData() {
@@ -25,7 +23,7 @@ async function getData() {
         } else {
             res.version = resourceData.version || 0;
         }
-        res.date = DateUtil.convert(new Date(resourceData.date), "D.M.Y h:m:s");
+        res.date = DateUtil.format(new Date(resourceData.date), "D.M.Y h:m:s");
     } catch (err) {
         console.error("Could not load version file", err);
     }
