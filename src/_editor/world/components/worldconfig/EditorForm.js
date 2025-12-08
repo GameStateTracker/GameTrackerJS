@@ -3,7 +3,7 @@ import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import FormBuilder from "/emcJS/util/form/FormBuilder.js";
 import FormContext from "/emcJS/util/form/FormContext.js";
 import "/emcJS/ui/form/FormContainer.js";
-import "/emcJS/ui/form/element/FormElementsLoader.js";
+import "/emcJS/ui/form/FormComponentsLoader.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
 import TPL from "./EditorForm.js.html" assert {type: "html"};
 import STYLE from "./EditorForm.js.css" assert {type: "css"};

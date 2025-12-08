@@ -1,6 +1,6 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import "/emcJS/ui/form/FormContainer.js";
-import "/emcJS/ui/form/element/FormElementsLoader.js";
+import "/emcJS/ui/form/FormComponentsLoader.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
 import "../../ui/grid/DataGridTypeEntries.js";
 import TPL from "./EditorForm.js.html" assert {type: "html"};
@@ -17,7 +17,9 @@ export default class EditorForm_Areas extends CustomElement {
         typeGridEl.addEventListener("edit", (event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {entityType, entityName} = event.data;
+            const {
+                entityType, entityName
+            } = event.data;
             const ev = new Event("edit", {bubbles: true});
             ev.data = {
                 entityType,
