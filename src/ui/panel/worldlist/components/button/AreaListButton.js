@@ -1,18 +1,12 @@
 // frameworks
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
+import {mix} from "/emcJS/util/Mixin.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
 import WorldListButton from "./Button.js";
 
-const BaseClass = mix(
-    WorldListButton
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(WorldListButton).with(StateDataEventManagerMixin);
 
 export default class WorldListAreaListButton extends BaseClass {
 
@@ -76,11 +70,12 @@ export default class WorldListAreaListButton extends BaseClass {
     }
 
     static get observedAttributes() {
-        return [...super.observedAttributes, "ref", "listname"];
+        const superObserved = super.observedAttributes ?? [];
+        return [...superObserved, "ref", "listname"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
+        super.attributeChangedCallback?.(name, oldValue, newValue);
         if (oldValue != newValue) {
             switch (name) {
                 case "ref": {

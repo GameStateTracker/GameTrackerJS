@@ -1,9 +1,7 @@
 // frameworks
 import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
+import {mix} from "/emcJS/util/Mixin.js";
 import "/emcJS/ui/overlay/Tooltip.js";
 
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
@@ -57,11 +55,7 @@ const STYLE = new CSSTemplate(`
 }
 `);
 
-const BaseClass = mix(
-    WorldMapEntry
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(WorldMapEntry).with(StateDataEventManagerMixin);
 
 export default class WorldMapStateEntry extends BaseClass {
 
@@ -143,11 +137,12 @@ export default class WorldMapStateEntry extends BaseClass {
     }
 
     static get observedAttributes() {
-        return [...super.observedAttributes, "ref", "tooltip"];
+        const superObserved = super.observedAttributes ?? [];
+        return [...superObserved, "ref", "tooltip"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
+        super.attributeChangedCallback?.(name, oldValue, newValue);
         if (oldValue != newValue) {
             switch (name) {
                 case "ref": {

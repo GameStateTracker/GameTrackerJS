@@ -1,15 +1,9 @@
 import AbstractFormElement from "/emcJS/ui/form/element/AbstractFormElement.js";
 import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.js";
 import ImageSelectModal from "/emcJS/ui/form/element/select/image/components/ImageSelectModal.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import {
-    deleteAtIndexImmuted
-} from "/emcJS/util/helper/collection/ArrayMutations.js";
-import {
-    registerFocusable
-} from "/emcJS/util/helper/html/ElementFocusHelper.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
+import {deleteAtIndexImmuted} from "/emcJS/util/helper/collection/ArrayMutations.js";
+import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
@@ -60,7 +54,9 @@ export default class AreaHintListInput extends AbstractFormElement {
         this.#gridEl.addEventListener("edit::icon", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = {...this.value};
             if (rowKey in currentValue) {
                 currentValue[rowKey].icon = value;
@@ -70,7 +66,9 @@ export default class AreaHintListInput extends AbstractFormElement {
         this.#gridEl.addEventListener("edit::counting", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = {...this.value};
             if (rowKey in currentValue) {
                 currentValue[rowKey].counting = value;
@@ -79,17 +77,13 @@ export default class AreaHintListInput extends AbstractFormElement {
         }));
         /* --- */
         this.#dataManager = new SimpleDataProvider(this.#gridEl);
-        this.#dataManager.setConfig({
-            sort: ["name"]
-        });
+        this.#dataManager.setConfig({sort: ["name"]});
         /* --- */
         this.#searchEl = this.shadowRoot.getElementById("search");
         this.#searchEl.addEventListener("change", () => {
             const options = {filter: {}};
             if (this.#searchEl.value != "") {
-                options.filter = {
-                    name: this.#searchEl.value
-                };
+                options.filter = {name: this.#searchEl.value};
             }
             this.#dataManager.updateConfig(options);
         }, true);
@@ -126,11 +120,12 @@ export default class AreaHintListInput extends AbstractFormElement {
     }
 
     static get observedAttributes() {
-        return [...super.observedAttributes, "readonly"];
+        const superObserved = super.observedAttributes ?? [];
+        return [...superObserved, "readonly"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
+        super.attributeChangedCallback?.(name, oldValue, newValue);
         switch (name) {
             case "readonly": {
                 if (oldValue != newValue) {

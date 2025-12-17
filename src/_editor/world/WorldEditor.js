@@ -3,9 +3,7 @@ import TokenRegistry from "/emcJS/data/registry/form/TokenRegistry.js";
 import LogicOperatorRegistry from "/emcJS/data/registry/LogicOperatorRegistry.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import TypeValidator from "/emcJS/util/type/TypeValidator.js";
-import {
-    deepClone
-} from "/emcJS/util/helper/DeepClone.js";
+import {deepClone} from "/emcJS/util/helper/DeepClone.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import "/emcJS/ui/container/CaptionPanel.js";
@@ -22,6 +20,7 @@ import Controller_WorldConfig from "./components/worldconfig/Controller.js";
 import scope from "./data/WorldEditorScope.js";
 import DataManager from "./data/DataManager.js";
 import ComponentController from "./util/ComponentController.js";
+import LogicOperatorListManager from "../../util/logic/LogicOperatorListManager.js";
 import "./util/ExtendedDataGridCellsLoader.js";
 import "./util/ExtendedFormFieldsLoader.js";
 import "./ui/tree/StructureEditorTree.js";
@@ -88,7 +87,9 @@ class WorldEditor extends CustomElement {
         new Controller_Exits_Entry(this, this.#structureEditorTreeEl, this.#formEl_ExitsEntry);
         /* --- */
         DataManager.addEventListener("change", (event) => {
-            const {type, data} = event.data;
+            const {
+                type, data
+            } = event.data;
             this.#structureEditorTreeEl.refresh(type);
             /* --- */
             if (type === "Area") {
@@ -109,18 +110,10 @@ class WorldEditor extends CustomElement {
                 }
             }
         });
-        LogicOperatorRegistry.setAndLinkOperator("$IS_DONE", {
-            type: "value"
-        }, "special");
-        LogicOperatorRegistry.setAndLinkOperator("$IS_AVAILABLE", {
-            type: "value"
-        }, "special");
-        LogicOperatorRegistry.setAndLinkOperator("$IS_POSSIBLE", {
-            type: "value"
-        }, "special");
-        LogicOperatorRegistry.setAndLinkOperator("$IS_UNAVAILABLE", {
-            type: "value"
-        }, "special");
+        LogicOperatorRegistry.setAndLinkOperator("$IS_DONE", {type: "value"}, "special");
+        LogicOperatorRegistry.setAndLinkOperator("$IS_AVAILABLE", {type: "value"}, "special");
+        LogicOperatorRegistry.setAndLinkOperator("$IS_POSSIBLE", {type: "value"}, "special");
+        LogicOperatorRegistry.setAndLinkOperator("$IS_UNAVAILABLE", {type: "value"}, "special");
     }
 
     async setWorldData(data) {
@@ -236,30 +229,10 @@ class WorldEditor extends CustomElement {
     async setSettings(data) {
         await BusyIndicatorManager.busy();
         // ---
-        for (const name in data) {
-            const entry = data[name];
-            switch (entry.type) {
-                case "choice": {
-                    LogicOperatorRegistry.setAndLinkOperator(`setting[${name}]`, {
-                        type: "state",
-                        options: deepClone(entry.values),
-                        value: entry.default ?? entry.values[0]
-                    }, "settings");
-                } break;
-                case "list": {
-                    for (const value of entry.values) {
-                        LogicOperatorRegistry.setAndLinkOperator(`setting[${value}]`, {
-                            type: "value"
-                        }, "settings");
-                    }
-                }
-                default: {
-                    LogicOperatorRegistry.setAndLinkOperator(`setting[${name}]`, {
-                        type: "value"
-                    }, "settings");
-                } break;
-            }
-        }
+        LogicOperatorListManager.set(data, "settings", {
+            prefix: "setting[",
+            postfix: "]"
+        });
         // ---
         await BusyIndicatorManager.unbusy();
     }
@@ -267,30 +240,10 @@ class WorldEditor extends CustomElement {
     async setOptions(data) {
         await BusyIndicatorManager.busy();
         // ---
-        for (const name in data) {
-            const entry = data[name];
-            switch (entry.type) {
-                case "choice": {
-                    LogicOperatorRegistry.setAndLinkOperator(`option[${name}]`, {
-                        type: "state",
-                        options: deepClone(entry.values),
-                        value: entry.default ?? entry.values[0]
-                    }, "options");
-                } break;
-                case "list": {
-                    for (const value of entry.values) {
-                        LogicOperatorRegistry.setAndLinkOperator(`option[${value}]`, {
-                            type: "value"
-                        }, "options");
-                    }
-                }
-                default: {
-                    LogicOperatorRegistry.setAndLinkOperator(`option[${name}]`, {
-                        type: "value"
-                    }, "options");
-                } break;
-            }
-        }
+        LogicOperatorListManager.set(data, "options", {
+            prefix: "option[",
+            postfix: "]"
+        });
         // ---
         await BusyIndicatorManager.unbusy();
     }
@@ -298,11 +251,10 @@ class WorldEditor extends CustomElement {
     async setItems(data) {
         await BusyIndicatorManager.busy();
         // ---
-        for (const name in data) {
-            LogicOperatorRegistry.setAndLinkOperator(`item[${name}]`, {
-                type: "value"
-            }, "items");
-        }
+        LogicOperatorListManager.setValues(data, "items", {
+            prefix: "item[",
+            postfix: "]"
+        });
         // ---
         await BusyIndicatorManager.unbusy();
     }
@@ -310,17 +262,16 @@ class WorldEditor extends CustomElement {
     async setFilterConfig(data) {
         await BusyIndicatorManager.busy();
         // ---
+        LogicOperatorListManager.setStates(data, "filter", {
+            prefix: "filter[",
+            postfix: "]"
+        });
+        // ---
         const filterConfig = {};
         for (const name in data) {
             const entry = data[name];
             const values = entry.values;
             filterConfig[name] = values;
-            // ---
-            LogicOperatorRegistry.setAndLinkOperator(`filter[${name}]`, {
-                type: "state",
-                options: deepClone(entry.values),
-                value: entry.default ?? entry.values[0]
-            }, "filter");
         }
         scope.filterConfig = filterConfig;
         if (this.#activeDetailEditor != null) {

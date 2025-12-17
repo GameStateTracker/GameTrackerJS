@@ -26,7 +26,9 @@ export default class DataGridCellCoordinates extends DataGridCell {
         });
         /* --- */
         this.addEventListener("rowdata", () => {
-            const {entityType = "", entityName = "", entityLabel = ""} = this.rowData ?? {};
+            const {
+                entityType = "", entityName = "", entityLabel = ""
+            } = this.rowData ?? {};
             this.#inputEl.setCurrentMarker(entityType, `${this.prefix}${entityName}${this.postfix}`, entityLabel);
         });
     }
@@ -72,11 +74,12 @@ export default class DataGridCellCoordinates extends DataGridCell {
     }
 
     static get observedAttributes() {
-        return [...super.observedAttributes, "editable", "row-key", "prefix", "postfix"];
+        const superObserved = super.observedAttributes ?? [];
+        return [...superObserved, "editable", "row-key", "prefix", "postfix"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
+        super.attributeChangedCallback?.(name, oldValue, newValue);
         if (oldValue != newValue) {
             switch (name) {
                 case "editable": {
@@ -94,7 +97,9 @@ export default class DataGridCellCoordinates extends DataGridCell {
                 } break;
                 case "prefix":
                 case "postfix": {
-                    const {type = "", name = ""} = this.rowData ?? {};
+                    const {
+                        type = "", name = ""
+                    } = this.rowData ?? {};
                     this.#inputEl.setCurrentMarker(type, `${this.prefix}${name}${this.postfix}`, name);
                 } break;
             }
@@ -107,9 +112,15 @@ export default class DataGridCellCoordinates extends DataGridCell {
             this.#valueEl.innerText = "[unset] {100}";
             this.#inputEl.value = null;
         } else {
-            const {x, y, scale} = value;
+            const {
+                x, y, scale
+            } = value;
             this.#valueEl.innerText = `[${x}, ${y}] {${scale}}`;
-            this.#inputEl.value = {x, y, scale};
+            this.#inputEl.value = {
+                x,
+                y,
+                scale
+            };
         }
     }
 
@@ -132,7 +143,9 @@ export default class DataGridCellCoordinates extends DataGridCell {
         if (value == null || typeof value !== "object") {
             return null;
         }
-        const {x = 0, y = 0, scale = 100} = value;
+        const {
+            x = 0, y = 0, scale = 100
+        } = value;
         const xValue = parseInt(x) || 0;
         const yValue = parseInt(y) || 0;
         const scaleValue = parseInt(scale) || 0;

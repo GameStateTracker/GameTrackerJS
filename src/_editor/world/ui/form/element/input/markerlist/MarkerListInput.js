@@ -3,15 +3,9 @@ import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.j
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import {
-    registerFocusable
-} from "/emcJS/util/helper/html/ElementFocusHelper.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import {
-    deepClone
-} from "/emcJS/util/helper/DeepClone.js";
+import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
+import {deepClone} from "/emcJS/util/helper/DeepClone.js";
 import {
     deleteAtIndexImmuted,
     insertAtIndex,
@@ -79,7 +73,9 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         this.#gridEl.addEventListener("edit::pos", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -91,7 +87,9 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         this.#gridEl.addEventListener("edit::visible", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -103,7 +101,9 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         this.#gridEl.addEventListener("edit::ignoreEntryVisibility", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -115,7 +115,9 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         this.#gridEl.addEventListener("edit::accessPenetration", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -127,7 +129,9 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         this.#gridEl.addEventListener("edit::mapOnly", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -139,7 +143,9 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         this.#gridEl.addEventListener("edit::rootOnly", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -235,9 +241,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         this.#searchEl.addEventListener("change", () => {
             const options = {filter: {}};
             if (this.#searchEl.value != "") {
-                options.filter = {
-                    entityName: this.#searchEl.value
-                };
+                options.filter = {entityName: this.#searchEl.value};
             }
             this.#dataManager.updateConfig(options);
         }, true);
@@ -282,11 +286,12 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
     }
 
     static get observedAttributes() {
-        return [...super.observedAttributes, "readonly"];
+        const superObserved = super.observedAttributes ?? [];
+        return [...superObserved, "readonly"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
+        super.attributeChangedCallback?.(name, oldValue, newValue);
         switch (name) {
             case "readonly": {
                 if (oldValue != newValue) {

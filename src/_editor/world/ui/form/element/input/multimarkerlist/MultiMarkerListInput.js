@@ -2,15 +2,9 @@ import AbstractFormElement from "/emcJS/ui/form/element/AbstractFormElement.js";
 import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.js";
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
-import {
-    registerFocusable
-} from "/emcJS/util/helper/html/ElementFocusHelper.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import {
-    deepClone
-} from "/emcJS/util/helper/DeepClone.js";
+import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
+import {deepClone} from "/emcJS/util/helper/DeepClone.js";
 import {
     deleteAtIndex,
     insertAtIndex,
@@ -96,7 +90,9 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
         this.#gridEl.addEventListener("edit::pos", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -108,7 +104,9 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
         this.#gridEl.addEventListener("edit::visible", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -120,7 +118,9 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
         this.#gridEl.addEventListener("edit::ignoreEntryVisibility", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -132,7 +132,9 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
         this.#gridEl.addEventListener("edit::accessPenetration", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -144,7 +146,9 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
         this.#gridEl.addEventListener("edit::mapOnly", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -156,7 +160,9 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
         this.#gridEl.addEventListener("edit::rootOnly", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -288,9 +294,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
         this.#searchEl.addEventListener("change", () => {
             const options = {filter: {}};
             if (this.#searchEl.value != "") {
-                options.filter = {
-                    entityName: this.#searchEl.value
-                };
+                options.filter = {entityName: this.#searchEl.value};
             }
             this.#dataManager.updateConfig(options);
         }, true);
@@ -335,11 +339,12 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
     }
 
     static get observedAttributes() {
-        return [...super.observedAttributes, "readonly"];
+        const superObserved = super.observedAttributes ?? [];
+        return [...superObserved, "readonly"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
+        super.attributeChangedCallback?.(name, oldValue, newValue);
         switch (name) {
             case "readonly": {
                 if (oldValue != newValue) {

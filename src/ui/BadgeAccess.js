@@ -49,11 +49,12 @@ export default class BadgeAccess extends Badge {
     }
 
     static get observedAttributes() {
-        return [...super.observedAttributes, "available", "unopened"];
+        const superObserved = super.observedAttributes ?? [];
+        return [...superObserved, "available", "unopened"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
+        super.attributeChangedCallback?.(name, oldValue, newValue);
         if (oldValue != newValue) {
             switch (name) {
                 case "available": {

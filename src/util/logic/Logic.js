@@ -1,6 +1,4 @@
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
 import LogicGraph from "/emcJS/util/logic_graph/LogicGraph.js";
 import SettingsObserver from "../observer/SettingsObserver.js";
 
@@ -97,6 +95,10 @@ class Logic extends EventTarget {
 
     getAll() {
         return LOGIC_PROCESSOR.getAll();
+    }
+
+    getMemory() {
+        return LOGIC_PROCESSOR.getMemory();
     }
 
     set suspended(val) {

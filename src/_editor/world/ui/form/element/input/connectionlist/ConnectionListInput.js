@@ -3,18 +3,12 @@ import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.j
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import {
-    deepClone
-} from "/emcJS/util/helper/DeepClone.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
+import {deepClone} from "/emcJS/util/helper/DeepClone.js";
 import {
     deleteAtIndexImmuted, insertAtIndex
 } from "/emcJS/util/helper/collection/ArrayMutations.js";
-import {
-    registerFocusable
-} from "/emcJS/util/helper/html/ElementFocusHelper.js";
+import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import CoordinatesInputModal from "../../../../coordinates/modal/CoordinatesInputModal.js";
@@ -60,7 +54,9 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
         this.#gridEl.addEventListener("edit::posA", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -72,7 +68,9 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
         this.#gridEl.addEventListener("edit::posB", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = this.value ?? [];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
@@ -88,7 +86,10 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
             const columnName = event.data.columnName;
             const rowKey = event.data.rowKey;
             if (columnName === "posA" || columnName === "posB") {
-                this.showContextMenu("pos-cell", event, {rowKey, columnName});
+                this.showContextMenu("pos-cell", event, {
+                    rowKey,
+                    columnName
+                });
             } else if (columnName === "name") {
                 this.showContextMenu("name-cell", event, {rowKey});
             }
@@ -101,7 +102,9 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
             this.#removeElement(rowKey);
         });
         this.addContextMenuHandler("pos-cell", "copyvalue", async (event) => {
-            const {rowKey, columnName} = event.props[0];
+            const {
+                rowKey, columnName
+            } = event.props[0];
             const source = this.#getElement(rowKey);
             if (source != null) {
                 try {
@@ -114,7 +117,9 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
             }
         });
         this.addContextMenuHandler("pos-cell", "pastevalue", async (event) => {
-            const {rowKey, columnName} = event.props[0];
+            const {
+                rowKey, columnName
+            } = event.props[0];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
                 try {
@@ -142,9 +147,7 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
         this.#searchEl.addEventListener("change", () => {
             const options = {filter: {}};
             if (this.#searchEl.value != "") {
-                options.filter = {
-                    entityName: this.#searchEl.value
-                };
+                options.filter = {entityName: this.#searchEl.value};
             }
             this.#dataManager.updateConfig(options);
         }, true);
@@ -189,11 +192,12 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
     }
 
     static get observedAttributes() {
-        return [...super.observedAttributes, "readonly"];
+        const superObserved = super.observedAttributes ?? [];
+        return [...superObserved, "readonly"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
+        super.attributeChangedCallback?.(name, oldValue, newValue);
         switch (name) {
             case "readonly": {
                 if (oldValue != newValue) {

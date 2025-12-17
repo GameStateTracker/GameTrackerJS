@@ -1,12 +1,8 @@
 import AbstractFormElement from "/emcJS/ui/form/element/AbstractFormElement.js";
 import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import {
-    registerFocusable
-} from "/emcJS/util/helper/html/ElementFocusHelper.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
+import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
 import MutationObserverManager from "/emcJS/util/observer/manager/MutationObserverManager.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
@@ -49,7 +45,9 @@ export default class OptionAmountListInput extends AbstractFormElement {
         this.#gridEl.addEventListener("edit::value", debounce((event) => {
             event.stopPropagation();
             event.preventDefault();
-            const {value, rowKey} = event.data;
+            const {
+                value, rowKey
+            } = event.data;
             const currentValue = {...this.value};
             if (rowKey in currentValue) {
                 currentValue[rowKey] = value;
@@ -63,9 +61,7 @@ export default class OptionAmountListInput extends AbstractFormElement {
         this.#searchEl.addEventListener("change", () => {
             const options = {filter: {}};
             if (this.#searchEl.value != "") {
-                options.filter = {
-                    name: this.#searchEl.value
-                };
+                options.filter = {name: this.#searchEl.value};
             }
             this.#dataManager.updateConfig(options);
         }, true);
@@ -126,11 +122,12 @@ export default class OptionAmountListInput extends AbstractFormElement {
     }
 
     static get observedAttributes() {
-        return [...super.observedAttributes, "readonly", "sorted"];
+        const superObserved = super.observedAttributes ?? [];
+        return [...superObserved, "readonly", "sorted"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback(name, oldValue, newValue);
+        super.attributeChangedCallback?.(name, oldValue, newValue);
         switch (name) {
             case "readonly": {
                 if (oldValue != newValue) {
@@ -147,13 +144,9 @@ export default class OptionAmountListInput extends AbstractFormElement {
 
     #updateSort(value) {
         if (value) {
-            this.#dataManager.setConfig({
-                sort: ["name"]
-            });
+            this.#dataManager.setConfig({sort: ["name"]});
         } else {
-            this.#dataManager.setConfig({
-                sort: []
-            });
+            this.#dataManager.setConfig({sort: []});
         }
     }
 
