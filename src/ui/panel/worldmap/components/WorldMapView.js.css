@@ -1,0 +1,32 @@
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    user-select: none;
+}
+
+#map {
+    display: block;
+    width: 1000px;
+    height: 1000px;
+    flex-shrink: 0;
+    background-color: var(--page-text-color, #000000);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center;
+    background-origin: content-box;
+    transform-origin: center;
+    transform:
+        translate(calc(var(--offset-x, 0) * 1px),
+            calc(var(--offset-y, 0) * 1px)) scale(calc(var(--zoom, 100) / 100));
+    cursor: grab;
+}
+
+#map.grabbed {
+    cursor: grabbing;
+}
+
+::slotted(*) {
+    position: absolute;
+}

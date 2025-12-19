@@ -10,7 +10,6 @@
 
 #icon {
     position: absolute;
-    box-sizing: content-box;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;

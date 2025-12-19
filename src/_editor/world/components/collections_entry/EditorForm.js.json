@@ -56,7 +56,7 @@
                 "label": "Default Zoom",
                 "min": 10,
                 "max": 200,
-                "scratched": true,
+                "gradations": true,
                 "visible": {
                     "type": "value",
                     "ref": "map.active"

@@ -1,13 +1,6 @@
-// frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
+import {mix} from "/emcJS/util/Mixin.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import ElementManager from "/emcJS/util/html/ElementManager.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
@@ -23,50 +16,10 @@ import "./entries/Area.js";
 import "./entries/Exit.js";
 import "./connection/Connection.js";
 import "./connection/ConnectionPoint.js";
+import TPL from "./WorldMapView.js.html" assert {type: "html"};
+import STYLE from "./WorldMapView.js.css" assert {type: "css"};
 
 const showMapConnectionsObserver = new SettingsObserver("show_map_connections");
-
-const TPL = new HTMLTemplate(`
-<slot id="map">
-</slot>
-`);
-
-const STYLE = new CSSTemplate(`
-:host {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    user-select: none;
-}
-#map {
-    display: block;
-    width: 1000px;
-    height: 1000px;
-    flex-shrink: 0;
-    background-color: var(--page-text-color, #000000);
-    background-repeat: no-repeat;
-    background-size: 100%;
-    background-position: center;
-    background-origin: content-box;
-    transform-origin: center;
-    transform:
-        translate(
-            calc(var(--offset-x, 0) * 1px),
-            calc(var(--offset-y, 0) * 1px)
-        )
-        scale(
-            calc(var(--zoom, 100) / 100)
-        );
-    cursor: grab;
-}
-#map.grabbed {
-    cursor: grabbing;
-}
-::slotted(*) {
-    position: absolute;
-}
-`);
 
 class MapMarkerElementManager extends ElementManager {
 
@@ -84,7 +37,9 @@ class MapMarkerElementManager extends ElementManager {
         if (params.type === "connection") {
             el.innerHTML = "";
             for (const position of params.coordinates) {
-                const {x, y} = position ?? {};
+                const {
+                    x, y
+                } = position ?? {};
                 if (!isNaN(x) && !isNaN(y)) {
                     const connectionPointEl = document.createElement("gt-connection-point");
                     connectionPointEl.label = params.label;
@@ -108,11 +63,7 @@ class MapMarkerElementManager extends ElementManager {
 const ZOOM_MIN = 10;
 const ZOOM_MAX = 200;
 
-const BaseClass = mix(
-    CustomElement
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(CustomElement).with(StateDataEventManagerMixin);
 
 export default class WorldMapView extends BaseClass {
 
@@ -216,7 +167,9 @@ export default class WorldMapView extends BaseClass {
         this.#mapEl.style.width = `${mapData.width}px`;
         this.#mapEl.style.height = `${mapData.height}px`;
         /* value */
-        const {x = 0, y = 0, zoom = mapData.zoom ?? 100} = this.#loadTransformation() ?? {};
+        const {
+            x = 0, y = 0, zoom = mapData.zoom ?? 100
+        } = this.#loadTransformation() ?? {};
         const resultZoom = Math.min(Math.max(ZOOM_MIN, Math.floor(zoom ?? 100)), ZOOM_MAX);
         this.#mapEl.style.setProperty("--zoom", resultZoom);
         this.#mapEl.style.setProperty("--offset-x", x);
@@ -274,7 +227,9 @@ export default class WorldMapView extends BaseClass {
                     const state = this.getState();
                     if (state != null) {
                         const mapData = state.props.map;
-                        const {x = 0, y = 0, zoom = mapData.zoom ?? 100} = this.#loadTransformation() ?? {};
+                        const {
+                            x = 0, y = 0, zoom = mapData.zoom ?? 100
+                        } = this.#loadTransformation() ?? {};
                         const resultZoom = Math.min(Math.max(ZOOM_MIN, Math.floor(zoom ?? 100)), ZOOM_MAX);
                         this.#mapEl.style.setProperty("--zoom", resultZoom);
                         this.#mapEl.style.setProperty("--offset-x", x);
@@ -376,6 +331,7 @@ export default class WorldMapView extends BaseClass {
         }
     }
 
+    // TODO calculate boundaries to be touchy at the center (control by settings?)
     #containBoundaries(vrtX, vrtY, zoom) {
         const scale = zoom / 100;
         const mapEl = this.shadowRoot.getElementById("map");

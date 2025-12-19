@@ -1,7 +1,5 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
+import {mix} from "/emcJS/util/Mixin.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
 import "/emcJS/ui/i18n/I18nTooltip.js";
 import AreaStateManager from "../../../../statemanager/world/area/AreaStateManager.js";
@@ -10,11 +8,7 @@ import WorldListState from "../../../../state/world/WorldListState.js";
 import TPL from "./WorldMapTitle.js.html" assert {type: "html"};
 import STYLE from "./WorldMapTitle.js.css" assert {type: "css"};
 
-const BaseClass = mix(
-    CustomElement
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(CustomElement).with(StateDataEventManagerMixin);
 
 export default class WorldMapTitle extends BaseClass {
 
