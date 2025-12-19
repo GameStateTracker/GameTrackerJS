@@ -20,6 +20,7 @@ import TPL from "./WorldMap.js.html" assert {type: "html"};
 import STYLE from "./WorldMap.js.css" assert {type: "css"};
 
 const showDetailedMapsObserver = new SettingsObserver("show_detailed_maps");
+const mapPanSnapMagnetForce = new SettingsObserver("map_pan_snap_magnet_force");
 
 const SMALL_ZOOM_SPD = 1;
 const NORMAL_ZOOM_SPD = 2;
@@ -41,6 +42,10 @@ export default class WorldMap extends BaseClass {
 
     #metaAreaViewEl;
 
+    #resizeObserver = new ResizeObserver(() => {
+        this.#refreshOverviewViewportSize();
+    });
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
@@ -57,7 +62,6 @@ export default class WorldMap extends BaseClass {
         this.#hintEl = this.shadowRoot.getElementById("hint");
         this.#viewEl = this.shadowRoot.getElementById("view");
         this.#mapSettingsEl = this.shadowRoot.getElementById("map-settings");
-        this.#mapSettingsEl.setContainer(this);
         this.#metaAreaButtonEl = this.shadowRoot.getElementById("meta-area-button");
         this.#metaAreaViewEl = this.shadowRoot.getElementById("meta-area-view");
         this.#viewEl.addEventListener("transform", (event) => {
@@ -100,6 +104,12 @@ export default class WorldMap extends BaseClass {
             return false;
         });
 
+        /* snap */
+        mapPanSnapMagnetForce.onChange(() => {
+            this.#viewEl.panSnapMagnetForce = mapPanSnapMagnetForce.value / 10;
+        });
+        this.#viewEl.panSnapMagnetForce = mapPanSnapMagnetForce.value / 10;
+
         /* meta area */
         if (WorldListState.config.metaArea.active) {
             this.#metaAreaButtonEl.addEventListener("click", () => {
@@ -111,13 +121,20 @@ export default class WorldMap extends BaseClass {
     }
 
     connectedCallback() {
-        super.connectedCallback();
+        super.connectedCallback?.();
         /* init reference */
         this.ref = WorldListState.area;
         /* init detailed maps button */
         this.#mapSettingsEl.setDetailedMapsVisible(this.detailed == null);
         /* --- */
         this.#mapSettingsEl.setResetButtonActive(!this.#viewEl.isDefaultTransformation());
+        this.#resizeObserver.observe(this.#viewEl);
+        this.#refreshOverviewViewportSize();
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback?.();
+        this.#resizeObserver.disconnect();
     }
 
     applyDefaultValues() {
@@ -210,6 +227,12 @@ export default class WorldMap extends BaseClass {
         } else {
             return res !== "false";
         }
+    }
+
+    #refreshOverviewViewportSize() {
+        const cntW = this.#viewEl.clientWidth;
+        const cntH = this.#viewEl.clientHeight;
+        this.#mapSettingsEl.setViewportSize(cntW, cntH);
     }
 
 }

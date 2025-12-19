@@ -75,7 +75,11 @@ export default class WorldMapView extends BaseClass {
 
     #offsetY = 0;
 
+    #mapWrapperEl;
+
     #mapEl;
+
+    #panSnapMagnetForce = 0;
 
     constructor() {
         super();
@@ -88,12 +92,13 @@ export default class WorldMapView extends BaseClass {
         });
 
         /* MAP EVENTS */
+        this.#mapWrapperEl = this.shadowRoot.getElementById("map-wrapper");
         this.#mapEl = this.shadowRoot.getElementById("map");
-        const mapEventManager = new EventTargetManager(this.#mapEl, false);
-        this.#mapEl.addEventListener("mousedown", (event) => {
-            if (event.target === this.#mapEl || event.target.tagName === "GT-CONNECTION-POINT") {
+        const mapEventManager = new EventTargetManager(this.#mapWrapperEl, false);
+        this.#mapWrapperEl.addEventListener("mousedown", (event) => {
+            if (event.target === this.#mapWrapperEl || event.target === this.#mapEl || event.target.tagName === "GT-CONNECTION-POINT") {
                 if (!this.fixed && event.button === 0) {
-                    this.#mapEl.classList.add("grabbed");
+                    this.#mapWrapperEl.classList.add("grabbed");
                     mapEventManager.active = true;
                 }
                 event.preventDefault();
@@ -101,7 +106,7 @@ export default class WorldMapView extends BaseClass {
             }
         });
         mapEventManager.set("mousemove", (event) => {
-            if (this.#mapEl.classList.contains("grabbed")) {
+            if (this.#mapWrapperEl.classList.contains("grabbed")) {
                 if (event.button === 0) {
                     const vrtX = this.#offsetX;
                     const vrtY = this.#offsetY;
@@ -112,17 +117,17 @@ export default class WorldMapView extends BaseClass {
             }
         });
         mapEventManager.set("mouseup", (event) => {
-            if (this.#mapEl.classList.contains("grabbed")) {
+            if (this.#mapWrapperEl.classList.contains("grabbed")) {
                 if (event.button === 0) {
-                    this.#mapEl.classList.remove("grabbed");
+                    this.#mapWrapperEl.classList.remove("grabbed");
                     mapEventManager.active = false;
                 }
             }
         });
         mapEventManager.set("mouseleave", (event) => {
-            if (event.target === this.#mapEl) {
+            if (event.target === this.#mapWrapperEl) {
                 if (event.button === 0) {
-                    this.#mapEl.classList.remove("grabbed");
+                    this.#mapWrapperEl.classList.remove("grabbed");
                     mapEventManager.active = false;
                 }
             }
@@ -138,7 +143,7 @@ export default class WorldMapView extends BaseClass {
 
     applyDefaultValues() {
         /* map */
-        this.#mapEl.style.backgroundColor = "#000000";
+        this.#mapWrapperEl.style.backgroundColor = "#000000";
         this.#mapEl.style.backgroundImage = "";
         this.#mapEl.style.width = "600px";
         this.#mapEl.style.height = "600px";
@@ -162,7 +167,7 @@ export default class WorldMapView extends BaseClass {
     applyStateValues(state) {
         /* map */
         const mapData = state.props.map;
-        this.#mapEl.style.backgroundColor = mapData.backgroundColor;
+        this.#mapWrapperEl.style.backgroundColor = mapData.backgroundColor;
         this.#mapEl.style.backgroundImage = `url("${mapData.backgroundImage}")`;
         this.#mapEl.style.width = `${mapData.width}px`;
         this.#mapEl.style.height = `${mapData.height}px`;
@@ -255,6 +260,15 @@ export default class WorldMapView extends BaseClass {
         return this.#offsetY;
     }
 
+    set panSnapMagnetForce(value) {
+        value = parseFloat(value) || 0;
+        this.#panSnapMagnetForce = value;
+    }
+
+    get panSnapMagnetForce() {
+        return this.#panSnapMagnetForce;
+    }
+
     setTranslation(x, y) {
         this.#setTranslation(x, y);
         this.#saveTransformation();
@@ -268,9 +282,8 @@ export default class WorldMapView extends BaseClass {
             this.#offsetX = offsetX;
             this.#offsetY = offsetY;
             /* style */
-            const mapEl = this.shadowRoot.getElementById("map");
-            mapEl.style.setProperty("--offset-x", offsetX);
-            mapEl.style.setProperty("--offset-y", offsetY);
+            this.#mapEl.style.setProperty("--offset-x", offsetX);
+            this.#mapEl.style.setProperty("--offset-y", offsetY);
             /* event */
             const ev = new Event("transform");
             ev.zoom = this.#zoom;
@@ -280,47 +293,35 @@ export default class WorldMapView extends BaseClass {
         }
     }
 
-    setZoom(zoom/* , anchorX = 0, anchorY = 0 */) {
-        this.#setZoom(zoom/* , anchorX, anchorY */);
+    setZoom(zoom, anchorX = 0, anchorY = 0) {
+        this.#setZoom(zoom, anchorX, anchorY);
         this.#saveTransformation();
     }
 
-    #setZoom(zoom/* , anchorX = 0, anchorY = 0 */) {
+    #setZoom(zoom, anchorX = 0, anchorY = 0) {
         zoom = Math.min(Math.max(ZOOM_MIN, Math.floor(zoom)), ZOOM_MAX);
         if (this.#zoom != zoom) {
-            const mapEl = this.shadowRoot.getElementById("map");
+            const oldZoom = this.#zoom;
             this.#zoom = zoom;
             const x = this.#offsetX;
             const y = this.#offsetY;
 
             /* calculate anchor focus shift */
-            // const scale = 100 / zoom;
-            // const oldScale = 100 / old;
+            const scale = 100 / zoom;
+            const oldScale = 100 / oldZoom;
 
-            // const newX = x * oldScale / scale;
-            // const newY = y * oldScale / scale;
-
-            // const newDiffX = anchorX * scale;
-            // const newDiffY = anchorY * scale;
-            // const oldDiffX = anchorX * oldScale;
-            // const oldDiffY = anchorY * oldScale;
-
-            // console.log("zoom diff\n\"x\": %d, \"y\": %d", focusDiffX, focusDiffY);
-
-            // const newX = x - focusDiffX;
-            // const newY = y - focusDiffY;
-
-            // console.log("zoom result\n\"x\": %d, \"y\": %d", newX, newY);
+            const newX = (x - anchorX) * oldScale / scale + anchorX;
+            const newY = (y - anchorY) * oldScale / scale + anchorY;
 
             /* recalculate offsets to stay inside boundaries */
-            const [offsetX, offsetY] = this.#containBoundaries(x, y, zoom);
+            const [offsetX, offsetY] = this.#containBoundaries(newX, newY, zoom);
             this.#offsetX = offsetX;
             this.#offsetY = offsetY;
 
             /* style */
-            mapEl.style.setProperty("--zoom", zoom);
-            mapEl.style.setProperty("--offset-x", offsetX);
-            mapEl.style.setProperty("--offset-y", offsetY);
+            this.#mapEl.style.setProperty("--zoom", zoom);
+            this.#mapEl.style.setProperty("--offset-x", offsetX);
+            this.#mapEl.style.setProperty("--offset-y", offsetY);
 
             /* event */
             const ev = new Event("transform");
@@ -331,31 +332,48 @@ export default class WorldMapView extends BaseClass {
         }
     }
 
-    // TODO calculate boundaries to be touchy at the center (control by settings?)
-    #containBoundaries(vrtX, vrtY, zoom) {
+    #containBoundaries(mapPosX, mapPosY, zoom) {
         const scale = zoom / 100;
-        const mapEl = this.shadowRoot.getElementById("map");
-        const parW = this.clientWidth;
-        const parH = this.clientHeight;
-        const vrtW = mapEl.clientWidth * scale;
-        const vrtH = mapEl.clientHeight * scale;
+        const viewportWidth = this.clientWidth;
+        const viewportHeight = this.clientHeight;
+        const mapWidth = this.#mapEl.clientWidth * scale;
+        const mapHeight = this.#mapEl.clientHeight * scale;
 
-        if (parW > vrtW) {
-            const dst = parW / 2 - vrtW / 2;
-            vrtX = Math.min(Math.max(-dst, vrtX), dst);
+        // boundary
+        if (viewportWidth > mapWidth) {
+            const maxPanDistanceX = viewportWidth / 2;
+            mapPosX = delimitBoundaryPosValue(mapPosX, maxPanDistanceX);
         } else {
-            const dst = -(parW / 2 - vrtW / 2);
-            vrtX = Math.min(Math.max(-dst, vrtX), dst);
+            const maxPanDistanceX = mapWidth / 2;
+            mapPosX = delimitBoundaryPosValue(mapPosX, maxPanDistanceX);
         }
-        if (parH > vrtH) {
-            const dst = parH / 2 - vrtH / 2;
-            vrtY = Math.min(Math.max(-dst, vrtY), dst);
+        if (viewportHeight > mapHeight) {
+            const maxPanDistanceY = viewportHeight / 2;
+            mapPosY = delimitBoundaryPosValue(mapPosY, maxPanDistanceY);
         } else {
-            const dst = -(parH / 2 - vrtH / 2);
-            vrtY = Math.min(Math.max(-dst, vrtY), dst);
+            const maxPanDistanceY = mapHeight / 2;
+            mapPosY = delimitBoundaryPosValue(mapPosY, maxPanDistanceY);
         }
 
-        return [vrtX, vrtY];
+        // magnet
+        if (this.#panSnapMagnetForce > 0) {
+            if (viewportWidth > mapWidth) {
+                const panMagnetDistance = viewportWidth / 2 - mapWidth / 2;
+                mapPosX = snapToMagnet(mapPosX, panMagnetDistance, this.#panSnapMagnetForce);
+            } else {
+                const panMagnetDistance = -(viewportWidth / 2 - mapWidth / 2);
+                mapPosX = snapToMagnet(mapPosX, panMagnetDistance, this.#panSnapMagnetForce);
+            }
+            if (viewportHeight > mapHeight) {
+                const panMagnetDistance = viewportHeight / 2 - mapHeight / 2;
+                mapPosY = snapToMagnet(mapPosY, panMagnetDistance, this.#panSnapMagnetForce);
+            } else {
+                const panMagnetDistance = -(viewportHeight / 2 - mapHeight / 2);
+                mapPosY = snapToMagnet(mapPosY, panMagnetDistance, this.#panSnapMagnetForce);
+            }
+        }
+
+        return [mapPosX, mapPosY];
     }
 
     refreshList() {
@@ -459,4 +477,20 @@ function calculateTooltipPosition(posX, posY, mapW, mapH) {
         tooltip += "left";
     }
     return tooltip || "top";
+}
+
+function delimitBoundaryPosValue(posValue, maxDistance) {
+    return Math.min(Math.max(-maxDistance, posValue), maxDistance);
+}
+
+function snapToMagnet(posValue, panMagnetDistance, panMagnetForce) {
+    const panMagnetStart = panMagnetDistance - panMagnetForce;
+    const panMagnetStop = panMagnetDistance + panMagnetForce;
+    if (posValue > panMagnetStart && posValue < panMagnetStop) {
+        return panMagnetDistance;
+    }
+    if (posValue < -panMagnetStart && posValue > -panMagnetStop) {
+        return -panMagnetDistance;
+    }
+    return posValue;
 }

@@ -1,12 +1,30 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import {mix} from "/emcJS/util/Mixin.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
+import ElementManager from "/emcJS/util/html/ElementManager.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
-
 import AreaStateManager from "../../../../../statemanager/world/area/AreaStateManager.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
+import "./entries/OverviewPOI.js";
 import TPL from "./WorldMapOverview.js.html" assert {type: "html"};
 import STYLE from "./WorldMapOverview.js.css" assert {type: "css"};
+
+class POIElementManager extends ElementManager {
+
+    composer(key, params) {
+        const el = document.createElement("gt-worldmap-overview-poi");
+        el.ref = key;
+        el.type = params.type;
+        return el;
+    }
+
+    mutator(el, key, params) {
+        el.left = params.x;
+        el.top = params.y;
+        el.scale = params.scale;
+    }
+
+}
 
 const ZOOM_MIN = 10;
 const ZOOM_MAX = 200;
@@ -15,11 +33,13 @@ const BaseClass = mix(CustomElement).with(StateDataEventManagerMixin);
 
 export default class WorldMapOverview extends BaseClass {
 
-    #containerEl;
+    #poiElementManager;
+
+    #mapEl;
 
     #focusEl;
 
-    #mapEl;
+    #poiPlaneEl;
 
     #width = 0;
 
@@ -31,14 +51,22 @@ export default class WorldMapOverview extends BaseClass {
 
     #offsetY = 0;
 
+    #viewportWidth = 0;
+
+    #viewportHeight = 0;
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
-
         /* --- */
-        this.#focusEl = this.shadowRoot.getElementById("focus");
+        this.registerStateHandler("listChange", () => {
+            this.#refreshPOIList();
+        });
+        /* --- */
         this.#mapEl = this.shadowRoot.getElementById("map");
+        this.#focusEl = this.shadowRoot.getElementById("focus");
+        this.#poiPlaneEl = this.shadowRoot.getElementById("poi-plane");
         const mapEventManager = new EventTargetManager(this.#mapEl, false);
         this.#mapEl.addEventListener("mousedown", (event) => {
             if (event.button === 0) {
@@ -64,10 +92,8 @@ export default class WorldMapOverview extends BaseClass {
                 mapEventManager.active = false;
             }
         });
-
-        window.addEventListener("resize", () => {
-            this.#refreshMaskBoundaries();
-        });
+        /* --- */
+        this.#poiElementManager = new POIElementManager(this.#poiPlaneEl);
     }
 
     connectedCallback() {
@@ -82,19 +108,20 @@ export default class WorldMapOverview extends BaseClass {
     }
 
     #moveFocus(x, y) {
-        const oWidth = this.clientWidth;
-        const oHeight = this.clientHeight;
+        const mapViewWidth = this.#mapEl.clientWidth;
+        const mapViewHeight = this.#mapEl.clientHeight;
         const scale = Math.max(this.#width, this.#height) * this.#zoom / 100;
         /* event */
         const ev = new Event("move");
-        ev.x = -(x - oWidth / 2) * (scale / oWidth);
-        ev.y = -(y - oHeight / 2) * (scale / oHeight);
+        ev.x = -(x - mapViewWidth / 2) * (scale / mapViewWidth);
+        ev.y = -(y - mapViewHeight / 2) * (scale / mapViewHeight);
         this.dispatchEvent(ev);
     }
 
-    setContainer(containerEl) {
-        if (this.#containerEl != containerEl) {
-            this.#containerEl = containerEl;
+    setViewportSize(viewportWidth, viewportHeight) {
+        if (this.#viewportWidth != viewportWidth || this.#viewportHeight != viewportHeight) {
+            this.#viewportWidth = viewportWidth;
+            this.#viewportHeight = viewportHeight;
             this.#refreshMaskBoundaries();
         }
     }
@@ -110,6 +137,9 @@ export default class WorldMapOverview extends BaseClass {
         this.#mapEl.style.backgroundImage = "";
         this.#focusEl.style.backgroundImage = "";
         this.#refreshMaskBoundaries();
+        /* POI plane */
+        this.#resizePOIPlane();
+        this.#refreshPOIList();
     }
 
     applyStateValues(state) {
@@ -127,6 +157,9 @@ export default class WorldMapOverview extends BaseClass {
         this.#mapEl.style.backgroundImage = `url("${mapData.backgroundImage}")`;
         this.#focusEl.style.backgroundImage = `url("${mapData.backgroundImage}")`;
         this.#refreshMaskBoundaries();
+        /* POI plane */
+        this.#resizePOIPlane();
+        this.#refreshPOIList();
     }
 
     set ref(val) {
@@ -153,42 +186,75 @@ export default class WorldMapOverview extends BaseClass {
     }
 
     #refreshMaskBoundaries() {
-        if (this.#containerEl == null || this.#width <= 0 || this.#height <= 0) {
+        if (this.#viewportWidth <= 0 || this.#viewportHeight <= 0 || this.#width <= 0 || this.#height <= 0) {
             this.#focusEl.style.setProperty("--left", 0);
             this.#focusEl.style.setProperty("--top", 0);
             this.#focusEl.style.setProperty("--right", 0);
             this.#focusEl.style.setProperty("--bottom", 0);
         } else {
-            const oWidth = this.clientWidth;
-            const oHeight = this.clientHeight;
+            const mapViewWidth = this.#mapEl.clientWidth;
+            const mapViewHeight = this.#mapEl.clientHeight;
 
-            const scaleX = oWidth / Math.max(this.#width, this.#height);
-            const scaleY = oHeight / Math.max(this.#width, this.#height);
-            const mapW = this.#width * this.#zoom / 100;
-            const mapH = this.#height * this.#zoom / 100;
+            const scaleFactor = Math.max(this.#width, this.#height);
+            const scaleX = mapViewWidth / scaleFactor;
+            const scaleY = mapViewHeight / scaleFactor;
+            const mapWidth = this.#width * this.#zoom / 100;
+            const mapHeight = this.#height * this.#zoom / 100;
 
-            const minmapW = this.#width * scaleX;
+            const minmapWidth = this.#width * scaleX;
             const minmapH = this.#height * scaleY;
-            const cntW = this.#containerEl.clientWidth;
-            const cntH = this.#containerEl.clientHeight;
-            const rectW = minmapW / mapW * cntW;
-            const rectH = minmapH / mapH * cntH;
-            const halfW = rectW / 2;
-            const halfH = rectH / 2;
+            const focusRectWidth = minmapWidth / mapWidth * this.#viewportWidth;
+            const focusRectHeight = minmapH / mapHeight * this.#viewportHeight;
+            const focusRectHalfWidth = focusRectWidth / 2;
+            const focusRectHalfHeight = focusRectHeight / 2;
 
-            const posX = -this.#offsetX * minmapW / mapW;
-            const posY = -this.#offsetY * minmapH / mapH;
+            const posX = -this.#offsetX * minmapWidth / mapWidth;
+            const posY = -this.#offsetY * minmapH / mapHeight;
 
-            const left = oWidth / 2 + posX - halfW;
-            const top = oHeight / 2 + posY - halfH;
-            const right = oWidth / 2 - posX - halfW;
-            const bottom = oHeight / 2 - posY - halfH;
+            const left = mapViewWidth / 2 + posX - focusRectHalfWidth;
+            const top = mapViewHeight / 2 + posY - focusRectHalfHeight;
+            const right = mapViewWidth / 2 - posX - focusRectHalfWidth;
+            const bottom = mapViewHeight / 2 - posY - focusRectHalfHeight;
 
             this.#focusEl.style.setProperty("--left", left);
             this.#focusEl.style.setProperty("--top", top);
             this.#focusEl.style.setProperty("--right", right);
             this.#focusEl.style.setProperty("--bottom", bottom);
         }
+    }
+
+    #resizePOIPlane() {
+        this.#poiPlaneEl.style.width = `${this.#width}px`;
+        this.#poiPlaneEl.style.height = `${this.#height}px`;
+        const mapViewWidth = this.#mapEl.clientWidth;
+        const mapViewHeight = this.#mapEl.clientHeight;
+        const scaleFactor = Math.max(this.#width, this.#height);
+        const scaleX = mapViewWidth / scaleFactor;
+        const scaleY = mapViewHeight / scaleFactor;
+        this.#poiPlaneEl.style.transform = `scaleX(${scaleX}) scaleY(${scaleY})`;
+    }
+
+    #refreshPOIList() {
+        const elManagerData = [];
+        const state = this.getState();
+        if (state != null) {
+            const list = state.getList();
+            if (list != null && list.length > 0) {
+                for (const record of list) {
+                    if (!isNaN(record.x) && !isNaN(record.y)) {
+                        const loc = record.entry;
+                        elManagerData.push({
+                            key: loc.ref,
+                            type: record.type,
+                            x: record.x,
+                            y: record.y,
+                            scale: record.scale
+                        });
+                    }
+                }
+            }
+        }
+        this.#poiElementManager.manage(elManagerData);
     }
 
 }

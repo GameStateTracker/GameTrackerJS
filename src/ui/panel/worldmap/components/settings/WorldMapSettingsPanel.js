@@ -9,6 +9,7 @@ import TPL from "./WorldMapSettingsPanel.js.html" assert {type: "html"};
 import STYLE from "./WorldMapSettingsPanel.js.css" assert {type: "css"};
 
 const showDetailedMapsObserver = new SettingsObserver("show_detailed_maps");
+const mapPanSnapMagnetForce = new SettingsObserver("map_pan_snap_magnet_force");
 
 export default class WorldMapSettingsPanel extends CustomElement {
 
@@ -19,6 +20,8 @@ export default class WorldMapSettingsPanel extends CustomElement {
     #zoomSliderEl;
 
     #detailedMapsEl;
+
+    #snapSliderEl;
 
     constructor() {
         super();
@@ -56,6 +59,15 @@ export default class WorldMapSettingsPanel extends CustomElement {
         });
         this.#detailedMapsEl.value = showDetailedMapsObserver.value;
         /* --- */
+        this.#snapSliderEl = this.shadowRoot.getElementById("snap-slider");
+        this.#snapSliderEl.addEventListener("input", () => {
+            mapPanSnapMagnetForce.value = this.#snapSliderEl.value;
+        });
+        mapPanSnapMagnetForce.onChange(() => {
+            this.#snapSliderEl.value = mapPanSnapMagnetForce.value;
+        });
+        this.#snapSliderEl.value = mapPanSnapMagnetForce.value;
+        /* --- */
         const iconEl = this.shadowRoot.getElementById("icon");
         iconEl.addEventListener("click", (event) => {
             this.open = true;
@@ -74,13 +86,17 @@ export default class WorldMapSettingsPanel extends CustomElement {
                 event.stopPropagation();
             }
         });
-        window.addEventListener("mousedown", (event) => {
-            console.log(event);
-            this.open = false;
+        window.addEventListener("mousedown", () => {
+            if (this.open) {
+                this.open = false;
+                this.blur();
+            }
         });
-        window.addEventListener("touchstart", (event) => {
-            console.log(event);
-            this.open = false;
+        window.addEventListener("touchstart", () => {
+            if (this.open) {
+                this.open = false;
+                this.blur();
+            }
         });
     }
 
@@ -109,8 +125,8 @@ export default class WorldMapSettingsPanel extends CustomElement {
         this.#zoomSliderEl.value = zoom;
     }
 
-    setContainer(containerEl) {
-        this.#mapOverviewEl.setContainer(containerEl);
+    setViewportSize(viewportWidth, viewportHeight) {
+        this.#mapOverviewEl.setViewportSize(viewportWidth, viewportHeight);
     }
 
     setDetailedMapsVisible(value) {

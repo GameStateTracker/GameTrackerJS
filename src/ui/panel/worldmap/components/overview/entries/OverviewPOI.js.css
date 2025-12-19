@@ -1,0 +1,76 @@
+:host {
+    --size: 0px;
+    --rotation: 0deg;
+    --border-radius: 0%;
+    position: absolute;
+    display: inline-flex;
+    width: var(--size, 0px);
+    height: var(--size, 0px);
+    transform: translate(calc(var(--size, 0px) * -0.5), calc(var(--size, 0px) * -0.5)) rotate(var(--rotation, 0deg));
+    user-select: none;
+}
+
+:host([type="Location"]) {
+    --size: 32px;
+    --rotation: 0deg;
+    --border-radius: 50%;
+}
+
+:host([type="Area"]) {
+    --size: 48px;
+    --rotation: 0deg;
+    --border-radius: 25%;
+}
+
+:host([type="Exit"]) {
+    --size: 48px;
+    --rotation: 0deg;
+    --border-radius: 50% 50% 5% 5%;
+}
+
+#marker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    color: black;
+    background-color: var(--page-text-color, #000000);
+    border: solid 4px black;
+    border-radius: var(--border-radius, 0px);
+    font-weight: bold;
+}
+
+:host([data-state="opened"]) {
+    z-index: 0;
+}
+
+:host([data-state="available"]) {
+    z-index: 3;
+}
+
+:host([data-state="unavailable"]) {
+    z-index: 1;
+}
+
+:host([data-state="possible"]) {
+    z-index: 2;
+}
+
+
+:host([data-state="opened"]) #marker {
+    background-color: var(--world-entry-status-opened-color, #777777);
+}
+
+:host([data-state="available"]) #marker {
+    background-color: var(--world-entry-status-available-color, #00ff00);
+}
+
+:host([data-state="unavailable"]) #marker {
+    background-color: var(--world-entry-status-unavailable-color, #ff0000);
+}
+
+:host([data-state="possible"]) #marker {
+    background-color: var(--world-entry-status-possible-color, #ffff00);
+}
