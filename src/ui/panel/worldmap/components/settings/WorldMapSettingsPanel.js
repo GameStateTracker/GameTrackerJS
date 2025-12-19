@@ -116,6 +116,24 @@ export default class WorldMapSettingsPanel extends CustomElement {
         return this.getBooleanAttribute("open");
     }
 
+    static get observedAttributes() {
+        const superObserved = super.observedAttributes ?? [];
+        return [...superObserved, "open"];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback?.(name, oldValue, newValue);
+        if (oldValue != newValue) {
+            switch (name) {
+                case "open": {
+                    if (this.open) {
+                        this.#mapOverviewEl.refreshView();
+                    }
+                } break;
+            }
+        }
+    }
+
     setResetButtonActive(value) {
         this.#resetTransformEl.disabled = !value;
     }

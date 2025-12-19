@@ -97,7 +97,13 @@ export default class WorldMapOverview extends BaseClass {
     }
 
     connectedCallback() {
+        super.connectedCallback?.();
+        this.refreshView();
+    }
+
+    refreshView() {
         this.#refreshMaskBoundaries();
+        this.#resizePOIPlane();
     }
 
     setTransform(x, y, zoom) {
@@ -171,10 +177,12 @@ export default class WorldMapOverview extends BaseClass {
     }
 
     static get observedAttributes() {
-        return ["ref"];
+        const superObserved = super.observedAttributes ?? [];
+        return [...superObserved, "ref"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
+        super.attributeChangedCallback?.(name, oldValue, newValue);
         if (oldValue != newValue) {
             switch (name) {
                 case "ref": {
