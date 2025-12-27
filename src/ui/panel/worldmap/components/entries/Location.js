@@ -1,7 +1,6 @@
 // frameworks
 import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
-import "/emcJS/ui/overlay/Tooltip.js";
 
 import UIRegistry from "../../../../../registry/UIRegistry.js";
 import WorldMapMarkedEntry from "../abstract/MarkedEntry.js";

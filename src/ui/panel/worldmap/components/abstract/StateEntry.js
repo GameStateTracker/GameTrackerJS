@@ -2,7 +2,7 @@
 import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import {mix} from "/emcJS/util/Mixin.js";
-import "/emcJS/ui/overlay/Tooltip.js";
+import "/emcJS/ui/tooltip/Tooltip.js";
 
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";

@@ -1,10 +1,7 @@
 // frameworks
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
 import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
-import "/emcJS/ui/overlay/Tooltip.js";
 import "/emcJS/ui/icon/Icon.js";
 
 import WorldListState from "../../../../../state/world/WorldListState.js";

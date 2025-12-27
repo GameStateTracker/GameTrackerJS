@@ -1,7 +1,6 @@
 // frameworks
 import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
-import "/emcJS/ui/overlay/Tooltip.js";
 import "/emcJS/ui/icon/Icon.js";
 
 import WorldListState from "../../../../../state/world/WorldListState.js";
