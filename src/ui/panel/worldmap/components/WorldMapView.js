@@ -4,6 +4,7 @@ import {debounce} from "/emcJS/util/Debouncer.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import ElementManager from "/emcJS/util/html/ElementManager.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
+import "/emcJS/ui/bubble/BubbleLayer.js";
 import ParameterStorage from "../../../../storage/ParameterStorage.js";
 import SettingsObserver from "../../../../util/observer/SettingsObserver.js";
 import AreaStateManager from "../../../../statemanager/world/area/AreaStateManager.js";

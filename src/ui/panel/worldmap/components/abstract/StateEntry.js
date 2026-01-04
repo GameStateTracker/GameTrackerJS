@@ -2,18 +2,18 @@
 import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import {mix} from "/emcJS/util/Mixin.js";
-import "/emcJS/ui/tooltip/Tooltip.js";
+import "/emcJS/ui/bubble/Bubble.js";
 
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
 import WorldMapEntry from "./Entry.js";
 
 const TPL = new HTMLTemplate(`
-<emc-tooltip position="top" id="tooltip">
+<emc-bubble id="bubble">
     <div id="header" class="textarea">
         <emc-i18n-label id="text"></emc-i18n-label>
     </div>
-</emc-tooltip>
+</emc-bubble>
 `);
 
 const STYLE = new CSSTemplate(`
@@ -24,7 +24,7 @@ const STYLE = new CSSTemplate(`
     flex: 1;
     color: var(--page-text-color, #000000);
 }
-#tooltip {
+#bubble {
     display: none;
     flex-direction: column;
     justify-content: flex-start;
@@ -34,8 +34,8 @@ const STYLE = new CSSTemplate(`
     white-space: nowrap;
     --tooltip-scale: calc((1 / (var(--zoom, 100) / 100)) * (1 / (var(--scale, 100) / 100)));
 }
-#marker:hover + #tooltip,
-:host(.ctx-marked) #tooltp {
+#marker:hover + #bubble,
+:host(.ctx-marked) #bubble {
     display: flex;
 }
 .textarea {
@@ -59,19 +59,22 @@ const BaseClass = mix(WorldMapEntry).with(StateDataEventManagerMixin);
 
 export default class WorldMapStateEntry extends BaseClass {
 
-    #tooltipEl;
+    #bubbleEl;
 
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
         STYLE.apply(this.shadowRoot);
         /* --- */
-        this.#tooltipEl = this.shadowRoot.getElementById("tooltip");
+        this.#bubbleEl = this.shadowRoot.getElementById("bubble");
         /* state handler */
         this.registerStateHandler("access", (event) => {
             const access = event.value;
             const accessValue = access.value;
             this.applyAccess(("" + accessValue).toLowerCase(), access);
+        });
+        this.addEventListener("mouseenter", () => {
+            this.#bubbleEl.refreshTooltipPosition();
         });
     }
 
@@ -128,17 +131,9 @@ export default class WorldMapStateEntry extends BaseClass {
         this.setAttribute("ref", val);
     }
 
-    get tooltip() {
-        return this.getAttribute("tooltip");
-    }
-
-    set tooltip(val) {
-        this.setAttribute("tooltip", val);
-    }
-
     static get observedAttributes() {
         const superObserved = super.observedAttributes ?? [];
-        return [...superObserved, "ref", "tooltip"];
+        return [...superObserved, "ref"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -153,9 +148,6 @@ export default class WorldMapStateEntry extends BaseClass {
                     if (textEl != null) {
                         textEl.i18nValue = this.textRef;
                     }
-                } break;
-                case "tooltip": {
-                    this.#tooltipEl.position = newValue;
                 } break;
             }
         }

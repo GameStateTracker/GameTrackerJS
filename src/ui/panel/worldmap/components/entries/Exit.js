@@ -103,14 +103,14 @@ const STYLE = new CSSTemplate(`
 
 function applyElements(target) {
     const textEl = target.getElementById("text");
-    const tooltipEl = target.getElementById("tooltip");
+    const bubbleEl = target.getElementById("bubble");
     const tpl = TPL.generate();
     /* can enter */
     const canenterEl = tpl.getElementById("canenter");
     textEl.insertAdjacentElement("beforebegin", canenterEl);
     /* area */
     const areaEl = tpl.getElementById("area");
-    tooltipEl.append(areaEl);
+    bubbleEl.append(areaEl);
 }
 
 export default class WorldMapExit extends WorldMapMarkedEntry {
