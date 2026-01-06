@@ -6,17 +6,24 @@
     box-sizing: border-box;
     user-select: none;
 }
+
 #form-container {
     height: 100%;
+    --form-border-color: transparent;
+    --form-border-width: 0px;
+    --form-border-radius: 0px;
 }
+
 #detail-form {
     display: flex;
     flex: 1;
     padding: 10px;
 }
+
 #type-grid {
     width: 100%;
 }
+
 h1 {
     font-size: 1.5em;
     margin: 10px;
