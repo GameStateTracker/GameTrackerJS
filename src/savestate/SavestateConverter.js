@@ -33,6 +33,7 @@ class SavestateConverter extends EventTarget {
                 const fn = CONVERTER_FN[i - OFFSET];
                 if (typeof fn == "function") {
                     const newState = fn(state);
+                    newState.version = state.version;
                     if (newState.data == null) {
                         newState.data = state.data;
                     }
