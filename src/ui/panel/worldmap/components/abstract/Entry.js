@@ -2,9 +2,7 @@
 import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
+import {mix} from "/emcJS/util/Mixin.js";
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
 import "/emcJS/ui/i18n/I18nLabel.js";
 
@@ -28,7 +26,8 @@ const STYLE = new GlobalStyle(`
 :host([hidden]:not([hidden="false"])) {
     display: none;
 }
-:host(:hover) {
+:host(:hover),
+:host(.ctx-marked) {
     z-index: 1000;
 }
 #marker {
@@ -47,17 +46,13 @@ const STYLE = new GlobalStyle(`
     font-size: calc(var(--size, 0px) * 0.4);
     line-height: 1em;
 }
-#marker:hover,
+:host(:hover) #marker,
 :host(.ctx-marked) #marker {
     box-shadow: 0 0 calc(2px * (1 / (var(--zoom, 100) / 100)) * (1 / (var(--scale, 100) / 100))) calc(4px * (1 / (var(--zoom, 100) / 100)) * (1 / (var(--scale, 100) / 100))) #67ffea;
 }
 `);
 
-const BaseClass = mix(
-    CustomElement
-).with(
-    ContextMenuManagerMixin
-);
+const BaseClass = mix(CustomElement).with(ContextMenuManagerMixin);
 
 export default class WorldMapEntry extends BaseClass {
 

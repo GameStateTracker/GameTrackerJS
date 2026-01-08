@@ -1,5 +1,5 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import CtxMenuLayer from "/emcJS/ui/overlay/ctxmenu/CtxMenuLayer.js";
+import ContextMenuLayer from "/emcJS/ui/overlay/ctxmenu/ContextMenuLayer.js";
 import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
 import ItemsResource from "../../../data/resource/ItemsResource.js";
 import UIRegistry from "../../../registry/UIRegistry.js";
@@ -148,7 +148,7 @@ export default class ItemGridInteractive extends CustomElement {
 
         if (Array.isArray(contentGrid)) {
             const ctxMnu = ItemGridInteractive.createItemGridContextMenu(contentGrid);
-            const catcherEl = CtxMenuLayer.findNextLayer(target);
+            const catcherEl = ContextMenuLayer.findNextLayer(target);
             catcherEl.append(ctxMnu);
 
             el.addEventListener("click", (event) => {
