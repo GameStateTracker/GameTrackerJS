@@ -19,6 +19,8 @@
 :host([open]:not([open="false"])) {
     width: auto;
     height: auto;
+    max-height: calc(100% - 20px);
+    overflow-y: auto;
 }
 
 #content {

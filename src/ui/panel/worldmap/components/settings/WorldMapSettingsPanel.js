@@ -76,6 +76,11 @@ export default class WorldMapSettingsPanel extends CustomElement {
             return false;
         });
 
+        this.addEventListener("wheel", (event) => {
+            if (this.open) {
+                event.stopPropagation();
+            }
+        });
         this.addEventListener("mousedown", (event) => {
             if (this.open) {
                 event.stopPropagation();
