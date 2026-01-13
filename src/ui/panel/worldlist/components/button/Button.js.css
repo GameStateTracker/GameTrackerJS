@@ -1,0 +1,40 @@
+#text::before {
+    align-items: center;
+    justify-content: center;
+    height: 1em;
+    min-width: 1em;
+    font-size: 1.3em;
+    line-height: 1em;
+    font-family: "monospace", monospace;
+    font-weight: bold;
+    transform-origin: center;
+}
+
+#text[icon]::before {
+    display: inline-flex;
+    content: attr(icon);
+}
+
+#text[icon=""]::before {
+    display: none;
+}
+
+:host([text]:not([text=""])) #button::before {
+    margin-right: 5px;
+}
+
+:host(.rotate-icon-0) #button::before {
+    rotate: 0deg;
+}
+
+:host(.rotate-icon-90) #button::before {
+    rotate: 90deg;
+}
+
+:host(.rotate-icon-180) #button::before {
+    rotate: 180deg;
+}
+
+:host(.rotate-icon-270) #button::before {
+    rotate: 270deg;
+}

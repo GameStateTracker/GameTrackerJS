@@ -1,7 +1,18 @@
 
 import WorldListEntry from "../abstract/Entry.js";
+// import TPL from "./Button.js.html" assert {type: "html"};
+import STYLE from "./Button.js.css" assert {type: "css"};
 
 export default class WorldListButton extends WorldListEntry {
+
+    #textEl;
+
+    constructor() {
+        super();
+        STYLE.apply(this.shadowRoot);
+        /* --- */
+        this.#textEl = this.shadowRoot.getElementById("text");
+    }
 
     clickHandler(/* event */) {
         this.dispatchEvent(new Event("click"));
@@ -15,20 +26,30 @@ export default class WorldListButton extends WorldListEntry {
         this.setAttribute("text", val);
     }
 
+    set icon(value) {
+        this.setAttribute("icon", value);
+    }
+
+    get icon() {
+        return this.getAttribute("icon");
+    }
+
     static get observedAttributes() {
-        return ["text"];
+        return ["text", "icon"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue != newValue) {
-            switch (name) {
-                case "text": {
-                    const textEl = this.shadowRoot.getElementById("text");
-                    if (textEl != null) {
-                        textEl.i18nValue = newValue;
-                    }
-                } break;
-            }
+        switch (name) {
+            case "text": {
+                if (oldValue != newValue) {
+                    this.#textEl.i18nValue = newValue;
+                }
+            } break;
+            case "icon": {
+                if (oldValue != newValue) {
+                    this.#textEl.setAttribute("icon", newValue);
+                }
+            } break;
         }
     }
 
