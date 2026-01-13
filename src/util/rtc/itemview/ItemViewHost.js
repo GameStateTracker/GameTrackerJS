@@ -80,9 +80,10 @@ export default class ItemViewHost extends EventTarget {
     async close() {
         const res = await this.#rtcClient.unregister();
         if (!res.success) {
-            await ModalDialog.alert("Error closing Room", "The Room could not be closed.");
+            await ModalDialog.alert("Error unregistering Host", "The Host could not be closed.\nThe token is possibly already removed.");
             return false;
         }
+        await this.#rtcClient.disconnect();
         this.#eventTargetManager.switchTarget(null);
         this.#isHosting = false;
         return true;
@@ -95,7 +96,7 @@ export default class ItemViewHost extends EventTarget {
             this.#isHosting = true;
             return true;
         } else {
-            await ModalDialog.alert("Error registering to Lobby", "An error occured while registering your instance.\nThe name is possibly already in use.");
+            await ModalDialog.alert("Error registering Host", "An error occured while registering your instance.\nThe token is possibly already in use.");
             return false;
         }
     }
