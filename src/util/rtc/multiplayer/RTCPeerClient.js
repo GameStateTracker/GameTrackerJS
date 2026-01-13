@@ -30,7 +30,7 @@ export default class RTCPeerClient extends RTCPeer {
         this.#eventTargetManager.clear();
     }
 
-    async rtcMessageHandler(key, msg) {
+    async rtcMessageHandler(remoteID, msg) {
         if (msg.type == "join") {
             Toast.info(`Multiplayer: "${msg.data}" joined`);
         } else if (msg.type == "synced") {
@@ -56,7 +56,7 @@ export default class RTCPeerClient extends RTCPeer {
             });
             this.unmute();
         } else {
-            await super.rtcMessageHandler(key, msg);
+            await super.rtcMessageHandler(remoteID, msg);
         }
     }
 

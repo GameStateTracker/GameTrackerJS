@@ -68,7 +68,7 @@ export default class RTCPeer extends EventTarget {
         await this.#rtcClient.disconnect();
     }
 
-    async rtcMessageHandler(key, msg) {
+    async rtcMessageHandler(remoteID, msg) {
         if (msg.type == "event") {
             const storage = SYNC_STORAGES.get(msg.category);
             if (storage != null) {

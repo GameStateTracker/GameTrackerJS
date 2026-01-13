@@ -115,12 +115,12 @@ export default class RTCPeerHost extends RTCPeer {
         }
     }
 
-    async rtcMessageHandler(key, msg) {
+    async rtcMessageHandler(remoteID, msg) {
         const rtcClient = RTC.get(this);
         if (msg.type == "name") {
             const reverseLookup = REV_LOOKUP.get(this);
             if (msg.data == this.username || reverseLookup.has(msg.data)) {
-                rtcClient.sendOne("data", key, {
+                rtcClient.sendOne("data", remoteID, {
                     type: "name",
                     data: {
                         success: false,
@@ -129,22 +129,22 @@ export default class RTCPeerHost extends RTCPeer {
                 });
             } else {
                 const clients = CLIENTS.get(this);
-                rtcClient.sendOne("data", key, {
+                rtcClient.sendOne("data", remoteID, {
                     type: "name",
                     data: {
                         success: true,
                         name: msg.data
                     }
                 });
-                rtcClient.sendOne("data", key, {
+                rtcClient.sendOne("data", remoteID, {
                     type: "state",
                     data: this.getNetworkSafeState()
                 });
-                clients.set(key, msg.data);
+                clients.set(remoteID, msg.data);
                 // or spectators.set(key, msg.data);
-                reverseLookup.set(msg.data, key);
+                reverseLookup.set(msg.data, remoteID);
                 Toast.info(`Multiplayer: "${msg.data}" joined`);
-                rtcClient.sendButOne("data", key, {
+                rtcClient.sendButOne("data", remoteID, {
                     type: "join",
                     data: msg.data
                 });
@@ -153,7 +153,7 @@ export default class RTCPeerHost extends RTCPeer {
                     type: "room",
                     data: data
                 });
-                rtcClient.sendOne("data", key, {type: "synced"});
+                rtcClient.sendOne("data", remoteID, {type: "synced"});
                 /* roomupdate event */
                 const ev = new Event("roomupdate");
                 ev.data = data;
@@ -161,8 +161,8 @@ export default class RTCPeerHost extends RTCPeer {
             }
         } else if (msg.type == "event") {
             const clients = CLIENTS.get(this);
-            if (clients.has(key) && await super.rtcMessageHandler(key, msg)) {
-                rtcClient.sendButOne("data", key, msg);
+            if (clients.has(remoteID) && await super.rtcMessageHandler(remoteID, msg)) {
+                rtcClient.sendButOne("data", remoteID, msg);
             }
         }
     }

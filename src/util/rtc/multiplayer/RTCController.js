@@ -1,6 +1,6 @@
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import RTCClient from "/rtc/RTCClient.js";
+import LobbyClient from "/rtc/LobbyClient.js";
 import RTCPeerHost from "./RTCPeerHost.js";
 import RTCPeerClient from "./RTCPeerClient.js";
 
@@ -39,7 +39,7 @@ export default class RTCController extends EventTarget {
 
     constructor(port) {
         super();
-        this.#rtcClient = new RTCClient(port, CONFIG, ["data"]);
+        this.#rtcClient = new LobbyClient(port, "/lobby", CONFIG, ["data"]);
         this.#rtcClientEventManager = new EventTargetManager(this.#rtcClient);
         this.#rtcPeerEventManager.set("roomupdate", (event) => {
             const ev = new Event("roomupdate");
@@ -49,7 +49,7 @@ export default class RTCController extends EventTarget {
     }
 
     setLogger(value) {
-        RTCClient.setLogger(value);
+        LobbyClient.setLogger(value);
     }
 
     async getInstances(supressError) {
