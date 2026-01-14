@@ -2,7 +2,7 @@ import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import Savestate from "../../../savestate/Savestate.js";
-import RTCPeer from "./RTCPeer.js";
+import MultiplayerPeer from "./MultiplayerPeer.js";
 
 const EVENT_TARGET_MANAGER = new WeakMap();
 
@@ -12,7 +12,7 @@ const CLIENTS = new WeakMap();
 const SPECTATORS = new WeakMap();
 const REV_LOOKUP = new WeakMap();
 
-export default class RTCPeerHost extends RTCPeer {
+export default class RTCPeerHost extends MultiplayerPeer {
 
     constructor(rtcClient, username, version) {
         super(rtcClient, username);

@@ -6,3 +6,18 @@ export const RTC_CONFIG = {
         username: "iamgroot"
     }]
 };
+
+export const DEFAULT_ITEM_VIEW_STORAGES = [
+    "items",
+    "options"
+];
+
+export const  DEFAULT_MULTIPLAYER_STORAGES = [
+    "items",
+    "locations",
+    "exitBindings",
+    "areaHints",
+    "locationItems",
+    "startItems",
+    "options"
+];

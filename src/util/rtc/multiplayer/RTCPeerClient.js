@@ -2,14 +2,14 @@ import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import Savestate from "../../../savestate/Savestate.js";
-import RTCPeer from "./RTCPeer.js";
+import MultiplayerPeer from "./MultiplayerPeer.js";
 
 const STORAGES = {
     // GameTrackerJS
     filter: Savestate.getStorage("filter")
 };
 
-export default class RTCPeerClient extends RTCPeer {
+export default class RTCPeerClient extends MultiplayerPeer {
 
     #eventTargetManager;
 

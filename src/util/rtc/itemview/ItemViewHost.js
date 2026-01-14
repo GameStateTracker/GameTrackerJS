@@ -2,13 +2,14 @@ import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import RTCClient from "/rtc/RTCClient.js";
 import Savestate from "../../../savestate/Savestate.js";
-import OptionsStorage from "../../../savestate/storage/OptionsStorage.js";
 import SettingsStorage from "../../../storage/SettingsStorage.js";
-import {RTC_CONFIG} from "../RTCConfig.js";
-
-const ITEM_STORAGE = Savestate.getStorage("items");
+import {
+    DEFAULT_ITEM_VIEW_STORAGES as DEFAULT_STORAGES, RTC_CONFIG
+} from "../RTCConfig.js";
 
 export default class ItemViewHost extends EventTarget {
+
+    #syncedStorages = new Map();
 
     #isHosting = false;
 
@@ -16,58 +17,28 @@ export default class ItemViewHost extends EventTarget {
 
     #eventTargetManager = new EventTargetManager();
 
-    constructor(port) {
+    constructor(port, syncedStorages = DEFAULT_STORAGES) {
         super();
         this.#rtcClient = new RTCClient(port, "/rtc", RTC_CONFIG, ["data"]);
 
+        this.registerSyncedStorages(syncedStorages);
+
         /* RTC */
         this.#eventTargetManager.set("ready:data", () => {
-            if (this.#rtcClient != null) {
-                this.#rtcClient.send("data", {
-                    type: "sync",
-                    data: {
-                        items: ITEM_STORAGE.getAll(),
-                        options: OptionsStorage.getAll(),
-                        settings: SettingsStorage.getAll()
-                    }
-                });
-            }
+            this.sendSync();
         });
 
         /* SAVESTATE */
-        ITEM_STORAGE.addEventListener("change", (event) => {
-            if (this.#rtcClient != null) {
-                this.#rtcClient.send("data", {
-                    type: "items",
-                    data: event.data
-                });
-            }
+        Savestate.addEventListener("load", () => {
+            this.sendSync();
         });
-        OptionsStorage.addEventListener("change", (event) => {
-            if (this.#rtcClient != null) {
-                this.#rtcClient.send("data", {
-                    type: "options",
-                    data: event.data
-                });
-            }
-        });
+
+        /* SETTINGS */
         SettingsStorage.addEventListener("change", (event) => {
             if (this.#rtcClient != null) {
                 this.#rtcClient.send("data", {
                     type: "settings",
                     data: event.data
-                });
-            }
-        });
-        Savestate.addEventListener("load", () => {
-            if (this.#rtcClient != null) {
-                this.#rtcClient.send("data", {
-                    type: "sync",
-                    data: {
-                        items: ITEM_STORAGE.getAll(),
-                        options: OptionsStorage.getAll(),
-                        settings: SettingsStorage.getAll()
-                    }
                 });
             }
         });
@@ -98,6 +69,50 @@ export default class ItemViewHost extends EventTarget {
         } else {
             await ModalDialog.alert("Error registering Host", "An error occured while registering your instance.\nThe token is possibly already in use.");
             return false;
+        }
+    }
+
+    registerSyncedStorages(names) {
+        if (Array.isArray(names)) {
+            for (const name of names) {
+                if (!this.#syncedStorages.has(name)) {
+                    const storage = this.#prepareStorage(name);
+                    this.#syncedStorages.add(name, storage);
+                }
+            }
+        } else if (typeof names === "string") {
+            if (!this.#syncedStorages.has(names)) {
+                const storage = this.#prepareStorage(names);
+                this.#syncedStorages.add(names, storage);
+            }
+        }
+    }
+
+    #prepareStorage(name) {
+        const storage = Savestate.getStorage(name);
+        storage.addEventListener("change", (event) => {
+            if (!this.isMuted()) {
+                this.#rtcClient.send("data", {
+                    type: "update",
+                    category: name,
+                    data: event.data
+                });
+            }
+        });
+        return storage;
+    }
+
+    sendSync() {
+        if (this.#rtcClient != null) {
+            const data = {};
+            for (const [name, storage] of this.#syncedStorages) {
+                data[name] = storage.getAll();
+            }
+            this.#rtcClient.send("data", {
+                type: "sync",
+                data,
+                settings: SettingsStorage.getAll()
+            });
         }
     }
 

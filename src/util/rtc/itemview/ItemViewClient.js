@@ -1,13 +1,14 @@
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import RTCClient from "/rtc/RTCClient.js";
 import Savestate from "../../../savestate/Savestate.js";
-import OptionsStorage from "../../../savestate/storage/OptionsStorage.js";
 import SettingsStorage from "../../../storage/SettingsStorage.js";
-import {RTC_CONFIG} from "../RTCConfig.js";
-
-const ITEM_STORAGE = Savestate.getStorage("items");
+import {
+    DEFAULT_ITEM_VIEW_STORAGES as DEFAULT_STORAGES, RTC_CONFIG
+} from "../RTCConfig.js";
 
 export default class ItemViewClient extends EventTarget {
+
+    #syncedStorages = new Map();
 
     #isConnected = false;
 
@@ -15,9 +16,12 @@ export default class ItemViewClient extends EventTarget {
 
     #eventTargetManager = new EventTargetManager();
 
-    constructor(port) {
+    constructor(port, syncedStorages = DEFAULT_STORAGES) {
         super();
         this.#rtcClient = new RTCClient(port, "/rtc", RTC_CONFIG, ["data"]);
+
+        this.registerSyncedStorages(syncedStorages);
+
         /* RTC */
         this.#eventTargetManager.set(["closed", "failed"], async (/* key */) => {
             this.#isConnected = false;
@@ -44,19 +48,22 @@ export default class ItemViewClient extends EventTarget {
     }
 
     async rtcMessageHandler(remoteID, msg) {
-        if (msg.type == "items") {
-            ITEM_STORAGE.setAll(msg.data);
-        } else if (msg.type == "options") {
-            OptionsStorage.setAll(msg.data);
+        if (msg.type == "update") {
+            const storage = this.#syncedStorages.get(msg.category);
+            if (storage != null) {
+                storage.setAll(msg.data);
+            }
         } else if (msg.type == "settings") {
             SettingsStorage.setAll(msg.data);
         } else if (msg.type == "sync") {
-            const {
-                items, options, settings
-            } = msg.data;
-            SettingsStorage.deserialize(settings);
-            OptionsStorage.deserialize(options);
-            ITEM_STORAGE.deserialize(items);
+            SettingsStorage.deserialize(msg.settings);
+            const stateData = {};
+            for (const [name] of this.#syncedStorages) {
+                if (name in msg.data) {
+                    stateData[name] = msg.data[name];
+                }
+            }
+            Savestate.deserialize(stateData);
         }
     }
 
@@ -72,6 +79,22 @@ export default class ItemViewClient extends EventTarget {
                 }
             });
         });
+    }
+
+    registerSyncedStorages(names) {
+        if (Array.isArray(names)) {
+            for (const name of names) {
+                if (!this.#syncedStorages.has(name)) {
+                    const storage = Savestate.getStorage(name);
+                    this.#syncedStorages.add(name, storage);
+                }
+            }
+        } else if (typeof names === "string") {
+            if (!this.#syncedStorages.has(names)) {
+                const storage = Savestate.getStorage(name);
+                this.#syncedStorages.add(names, storage);
+            }
+        }
     }
 
 }
