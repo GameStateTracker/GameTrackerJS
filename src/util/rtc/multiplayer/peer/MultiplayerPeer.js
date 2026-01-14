@@ -1,7 +1,12 @@
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import Counter from "../../Counter.js";
-import Savestate from "../../../savestate/Savestate.js";
-import {DEFAULT_ITEM_VIEW_STORAGES as DEFAULT_STORAGES} from "../RTCConfig.js";
+import EventManager from "/emcJS/util/event/EventManager.js";
+import Counter from "../../../Counter.js";
+import Savestate from "../../../../savestate/Savestate.js";
+import {
+    DATA_CHANNEL_NAME, DEFAULT_STORAGES
+} from "../config/MultiplayerConfig.js";
+
+const FILTER_STORAGE = Savestate.getStorage("filter");
 
 export default class MultiplayerPeer extends EventTarget {
 
@@ -15,6 +20,8 @@ export default class MultiplayerPeer extends EventTarget {
 
     #eventTargetManager = new EventTargetManager();
 
+    #storageEventManager = new EventManager(false);
+
     constructor(rtcClient, username, syncedStorages = DEFAULT_STORAGES) {
         super();
         this.#rtcClient = rtcClient;
@@ -23,7 +30,8 @@ export default class MultiplayerPeer extends EventTarget {
         this.registerSyncedStorages(syncedStorages);
 
         /* RTC */
-        this.#eventTargetManager.set("message:data", (event) => {
+        this.#eventTargetManager.switchTarget(this.#rtcClient);
+        this.#eventTargetManager.set(`message:${DATA_CHANNEL_NAME}`, (event) => {
             const {
                 remoteID, data
             } = event;
@@ -36,22 +44,22 @@ export default class MultiplayerPeer extends EventTarget {
             for (const name of names) {
                 if (!this.#syncedStorages.has(name)) {
                     const storage = this.#prepareStorage(name);
-                    this.#syncedStorages.add(name, storage);
+                    this.#syncedStorages.set(name, storage);
                 }
             }
         } else if (typeof names === "string") {
             if (!this.#syncedStorages.has(names)) {
                 const storage = this.#prepareStorage(names);
-                this.#syncedStorages.add(names, storage);
+                this.#syncedStorages.set(names, storage);
             }
         }
     }
 
     #prepareStorage(name) {
         const storage = Savestate.getStorage(name);
-        storage.addEventListener("change", (event) => {
+        this.#storageEventManager.set(storage, "change", (event) => {
             if (!this.isMuted()) {
-                this.#rtcClient.send("data", {
+                this.#rtcClient.send(DATA_CHANNEL_NAME, {
                     type: "update",
                     category: name,
                     data: event.data
@@ -61,6 +69,12 @@ export default class MultiplayerPeer extends EventTarget {
         return storage;
     }
 
+    disconnect() {
+        this.#eventTargetManager.switchTarget(null);
+        this.#eventTargetManager.clear();
+        this.#storageEventManager.clear();
+    }
+
     async rtcMessageHandler(remoteID, msg) {
         if (msg.type == "update") {
             const storage = this.#syncedStorages.get(msg.category);
@@ -68,8 +82,10 @@ export default class MultiplayerPeer extends EventTarget {
                 this.mute();
                 storage.setAll(msg.data);
                 this.unmute();
+                return true;
             }
         }
+        return false;
     }
 
     getSyncSavestate() {
@@ -81,13 +97,19 @@ export default class MultiplayerPeer extends EventTarget {
     }
 
     setSyncSavestate(data) {
-        const stateData = {};
+        const filter = FILTER_STORAGE.getAll();
+        const stateData = {
+            data: {filter},
+            meta: {"init_window_shown": true}
+        };
         for (const [name] of this.#syncedStorages) {
             if (name in data) {
-                stateData[name] = data[name];
+                stateData.data[name] = data[name];
             }
         }
+        this.mute();
         Savestate.deserialize(stateData);
+        this.unmute();
     }
 
     get username() {

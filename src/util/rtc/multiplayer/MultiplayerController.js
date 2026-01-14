@@ -1,19 +1,12 @@
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import LobbyClient from "/rtc/LobbyClient.js";
-import RTCPeerHost from "./RTCPeerHost.js";
-import RTCPeerClient from "./RTCPeerClient.js";
-
-// TODO create listentry editor for using custom stun/turn server config
-
-const CONFIG = {
-    iceTransportPolicy: "all", // all | relay
-    iceServers: [{urls: "stun:stun.zidargs.net:18001"}, {urls: "stun:stun.l.google.com:19302"}, {
-        urls: "turn:turn.zidargs.net:18001",
-        credential: "fHNsIeqdgVcUAypvaxDVE6tywaMlP1fA",
-        username: "iamgroot"
-    }]
-};
+import MultiplayerClient from "./peer/MultiplayerClient.js";
+import MultiplayerHost from "./peer/MultiplayerHost.js";
+import {RTC_CONFIG} from "../config/RTCConfig.js";
+import {
+    DATA_CHANNEL_NAME, MessageTypes
+} from "./config/MultiplayerConfig.js";
 
 async function promtName(name) {
     name = await ModalDialog.prompt("Please select a username", "Please enter a name (at least 3 characters).", name);
@@ -27,7 +20,9 @@ async function promtName(name) {
     return name;
 }
 
-export default class RTCController extends EventTarget {
+export default class MultiplayerController extends EventTarget {
+
+    #syncedStorages = [];
 
     #rtcClient;
 
@@ -37,9 +32,10 @@ export default class RTCController extends EventTarget {
 
     #rtcPeerEventManager = new EventTargetManager();
 
-    constructor(port) {
+    constructor(port, syncedStorages) {
         super();
-        this.#rtcClient = new LobbyClient(port, "/lobby", CONFIG, ["data"]);
+        this.#syncedStorages = syncedStorages;
+        this.#rtcClient = new LobbyClient(port, "/lobby", RTC_CONFIG, [DATA_CHANNEL_NAME]);
         this.#rtcClientEventManager = new EventTargetManager(this.#rtcClient);
         this.#rtcPeerEventManager.set("roomupdate", (event) => {
             const ev = new Event("roomupdate");
@@ -77,9 +73,10 @@ export default class RTCController extends EventTarget {
                 const username = await promtName(name);
                 if (!username) {
                     await ModalDialog.alert("Aborted Lobby creation", "Lobby will be closed now.");
-                    await this.close();
+                    await this.#rtcClient.unregister();
+                    return false;
                 } else {
-                    this.#rtcPeer = new RTCPeerHost(this.#rtcClient, username, version);
+                    this.#rtcPeer = new MultiplayerHost(this.#rtcClient, username, this.#syncedStorages);
                     this.#rtcPeerEventManager.switchTarget(this.#rtcPeer);
                     /* roomupdate */
                     const ev = new Event("roomupdate");
@@ -106,11 +103,11 @@ export default class RTCController extends EventTarget {
             });
             this.#rtcClient.connect(name, pass, version).then(async (res) => {
                 if (res.success === true) {
-                    this.#rtcClient.setMessageHandler("data", async (key, msg) => {
-                        if (msg.type == "name") {
+                    this.#rtcClient.setMessageHandler(DATA_CHANNEL_NAME, async (key, msg) => {
+                        if (msg.type == MessageTypes.NAME) {
                             if (msg.data.success) {
                                 this.#rtcClientEventManager.clear();
-                                this.#rtcPeer = new RTCPeerClient(this.#rtcClient, msg.data.name);
+                                this.#rtcPeer = new MultiplayerClient(this.#rtcClient, msg.data.name, this.#syncedStorages);
                                 this.#rtcPeerEventManager.switchTarget(this.#rtcPeer);
                                 resolve(true);
                             } else {
@@ -142,8 +139,8 @@ export default class RTCController extends EventTarget {
         if (!name) {
             return false;
         }
-        this.#rtcClient.send("data", {
-            type: "name",
+        this.#rtcClient.send(DATA_CHANNEL_NAME, {
+            type: MessageTypes.NAME,
             data: name
         });
         return true;

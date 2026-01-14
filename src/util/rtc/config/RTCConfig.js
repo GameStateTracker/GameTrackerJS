@@ -1,3 +1,5 @@
+
+// TODO create listentry editor for using custom stun/turn server config
 export const RTC_CONFIG = {
     iceTransportPolicy: "all", // all | relay
     iceServers: [{urls: "stun:stun.zidargs.net:18001"}, {urls: "stun:stun.l.google.com:19302"}, {
@@ -6,18 +8,3 @@ export const RTC_CONFIG = {
         username: "iamgroot"
     }]
 };
-
-export const DEFAULT_ITEM_VIEW_STORAGES = [
-    "items",
-    "options"
-];
-
-export const  DEFAULT_MULTIPLAYER_STORAGES = [
-    "items",
-    "locations",
-    "exitBindings",
-    "areaHints",
-    "locationItems",
-    "startItems",
-    "options"
-];

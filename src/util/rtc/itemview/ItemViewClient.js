@@ -2,9 +2,11 @@ import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import RTCClient from "/rtc/RTCClient.js";
 import Savestate from "../../../savestate/Savestate.js";
 import SettingsStorage from "../../../storage/SettingsStorage.js";
+import {RTC_CONFIG} from "../config/RTCConfig.js";
 import {
-    DEFAULT_ITEM_VIEW_STORAGES as DEFAULT_STORAGES, RTC_CONFIG
-} from "../RTCConfig.js";
+    DATA_CHANNEL_NAME, DEFAULT_STORAGES,
+    MessageTypes
+} from "./config/ItemViewConfig.js";
 
 export default class ItemViewClient extends EventTarget {
 
@@ -18,7 +20,7 @@ export default class ItemViewClient extends EventTarget {
 
     constructor(port, syncedStorages = DEFAULT_STORAGES) {
         super();
-        this.#rtcClient = new RTCClient(port, "/rtc", RTC_CONFIG, ["data"]);
+        this.#rtcClient = new RTCClient(port, "/rtc", RTC_CONFIG, [DATA_CHANNEL_NAME]);
 
         this.registerSyncedStorages(syncedStorages);
 
@@ -28,7 +30,7 @@ export default class ItemViewClient extends EventTarget {
             const ev = new Event("disconnected");
             this.dispatchEvent(ev);
         });
-        this.#eventTargetManager.set("message:data", (event) => {
+        this.#eventTargetManager.set(`message:${DATA_CHANNEL_NAME}`, (event) => {
             const {
                 remoteID, data
             } = event;
@@ -48,22 +50,16 @@ export default class ItemViewClient extends EventTarget {
     }
 
     async rtcMessageHandler(remoteID, msg) {
-        if (msg.type == "update") {
+        if (msg.type == MessageTypes.UPDATE) {
             const storage = this.#syncedStorages.get(msg.category);
             if (storage != null) {
                 storage.setAll(msg.data);
             }
-        } else if (msg.type == "settings") {
+        } else if (msg.type == MessageTypes.SETTINGS) {
             SettingsStorage.setAll(msg.data);
-        } else if (msg.type == "sync") {
+        } else if (msg.type == MessageTypes.SYNC) {
             SettingsStorage.deserialize(msg.settings);
-            const stateData = {};
-            for (const [name] of this.#syncedStorages) {
-                if (name in msg.data) {
-                    stateData[name] = msg.data[name];
-                }
-            }
-            Savestate.deserialize(stateData);
+            this.setSyncSavestate(msg.data);
         }
     }
 
@@ -86,15 +82,25 @@ export default class ItemViewClient extends EventTarget {
             for (const name of names) {
                 if (!this.#syncedStorages.has(name)) {
                     const storage = Savestate.getStorage(name);
-                    this.#syncedStorages.add(name, storage);
+                    this.#syncedStorages.set(name, storage);
                 }
             }
         } else if (typeof names === "string") {
             if (!this.#syncedStorages.has(names)) {
                 const storage = Savestate.getStorage(name);
-                this.#syncedStorages.add(names, storage);
+                this.#syncedStorages.set(names, storage);
             }
         }
+    }
+
+    setSyncSavestate(data) {
+        const stateData = {data: {}};
+        for (const [name] of this.#syncedStorages) {
+            if (name in data) {
+                stateData.data[name] = data[name];
+            }
+        }
+        Savestate.deserialize(stateData);
     }
 
 }
