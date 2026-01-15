@@ -1,3 +1,4 @@
+import {isStringNotEmpty} from "/emcJS/util/helper/CheckType.js";
 import Enum from "/emcJS/data/Enum.js";
 
 export const DATA_CHANNEL_NAME = "data";
@@ -32,8 +33,24 @@ export class MessageTypes extends Enum {
 
 export class ClientTypes extends Enum {
 
-    static PLAYER = new this("player");
+    #label;
 
-    static SPECTATOR = new this("spectator");
+    constructor(value, label) {
+        if (!isStringNotEmpty(label)) {
+            throw new TypeError("label must be a non empty string");
+        }
+        super(value);
+        this.#label = label;
+    }
+
+    get label() {
+        return this.#label;
+    }
+
+    static PLAYER = new this("player", "Player");
+
+    static SPECTATOR = new this("spectator", "Spectator");
+
+    static defaultType = this.PLAYER;
 
 }

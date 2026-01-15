@@ -18,7 +18,7 @@ export default class MultiplayerHost extends MultiplayerPeer {
 
     #reverseLookup = new Map();
 
-    #preferredClientMode = ClientTypes.PLAYER;
+    #joiningClientType = ClientTypes.defaultType;
 
     #eventTargetManager = new EventTargetManager();
 
@@ -50,6 +50,19 @@ export default class MultiplayerHost extends MultiplayerPeer {
         Savestate.addEventListener("load", () => {
             this.sendSync();
         });
+    }
+
+    set joiningClientType(value) {
+        if (!(value instanceof ClientTypes)) {
+            value = ClientTypes.get(value);
+        }
+        if (value != null) {
+            this.#joiningClientType = value;
+        }
+    }
+
+    get joiningClientType() {
+        return this.#joiningClientType;
     }
 
     async lockRoom() {
@@ -109,7 +122,7 @@ export default class MultiplayerHost extends MultiplayerPeer {
                 });
                 this.sendSync();
                 this.#clients.set(remoteID, {
-                    type: this.#preferredClientMode,
+                    type: this.#joiningClientType,
                     name: username
                 });
                 this.#reverseLookup.set(username, remoteID);
