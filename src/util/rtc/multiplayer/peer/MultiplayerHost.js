@@ -12,6 +12,8 @@ export default class MultiplayerHost extends MultiplayerPeer {
 
     #isHosting = false;
 
+    #isRoomVisible = false;
+
     #rtcClient;
 
     #clients = new Map();
@@ -65,15 +67,6 @@ export default class MultiplayerHost extends MultiplayerPeer {
         return this.#joiningClientType;
     }
 
-    async lockRoom() {
-        const res = await this.#rtcClient.unregister();
-        if (!res.success) {
-            await ModalDialog.alert("Error closing Room", "The Room could not be closed.");
-            return false;
-        }
-        return true;
-    }
-
     async close() {
         await this.#rtcClient.unregister();
         await this.#rtcClient.disconnect();
@@ -87,6 +80,23 @@ export default class MultiplayerHost extends MultiplayerPeer {
 
     isHosting() {
         return this.#isHosting;
+    }
+
+    async setRoomVisible(/* value */) {
+        // if (this.#isRoomVisible != value) {
+        //     const res = await this.#rtcClient.setVisible(value);
+        //     if (!res.success) {
+        //         ModalDialog.alert("Error changing room visibility", "The Room visibility could not be changed.");
+        //         return false;
+        //     }
+        //     this.#isRoomVisible = value;
+        //     Toast.success("Multiplayer: Room visibility changed");
+        // }
+        return true;
+    }
+
+    isRoomVisible() {
+        return this.#isRoomVisible;
     }
 
     sendSync() {
