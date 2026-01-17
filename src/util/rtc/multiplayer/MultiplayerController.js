@@ -42,6 +42,10 @@ export default class MultiplayerController extends EventTarget {
             ev.data = event.data;
             this.dispatchEvent(ev);
         });
+        this.#rtcPeerEventManager.set("disconnected", () => {
+            const ev = new Event("disconnected");
+            this.dispatchEvent(ev);
+        });
     }
 
     setLogger(value) {
@@ -66,17 +70,17 @@ export default class MultiplayerController extends EventTarget {
         return this.#rtcPeer;
     }
 
-    async host(name, pass, desc, version, data) {
-        if (name) {
-            const res = await this.#rtcClient.register(name, pass, desc, version, data);
+    async host(roomName, pass, version, data) {
+        if (roomName) {
+            const res = await this.#rtcClient.register(roomName, pass, version, data);
             if (res.success === true) {
-                const username = await promtName(name);
+                const username = await promtName(roomName);
                 if (!username) {
                     await ModalDialog.alert("Aborted Lobby creation", "Lobby will be closed now.");
                     await this.#rtcClient.unregister();
                     return false;
                 } else {
-                    this.#rtcPeer = new MultiplayerHost(this.#rtcClient, username, this.#syncedStorages);
+                    this.#rtcPeer = new MultiplayerHost(this.#rtcClient, roomName, username, data.visible, this.#syncedStorages);
                     this.#rtcPeerEventManager.switchTarget(this.#rtcPeer);
                     /* roomupdate */
                     const ev = new Event("roomupdate");
@@ -94,20 +98,20 @@ export default class MultiplayerController extends EventTarget {
         }
     }
 
-    join(name, pass, version) {
+    join(roomName, pass, version) {
         return new Promise((resolve) => {
             this.#rtcClientEventManager.set(["closed", "failed"], async () => {
                 await ModalDialog.alert("Connection failed", "Something went wrong connecting to the host.\nPlease try again later!");
                 this.#rtcClientEventManager.clear();
                 resolve(false);
             });
-            this.#rtcClient.connect(name, pass, version).then(async (res) => {
+            this.#rtcClient.connect(roomName, pass, version).then(async (res) => {
                 if (res.success === true) {
                     this.#rtcClient.setMessageHandler(DATA_CHANNEL_NAME, async (key, msg) => {
                         if (msg.type == MessageTypes.NAME) {
                             if (msg.data.success) {
                                 this.#rtcClientEventManager.clear();
-                                this.#rtcPeer = new MultiplayerClient(this.#rtcClient, msg.data.name, this.#syncedStorages);
+                                this.#rtcPeer = new MultiplayerClient(this.#rtcClient, roomName, msg.data.name, this.#syncedStorages);
                                 this.#rtcPeerEventManager.switchTarget(this.#rtcPeer);
                                 resolve(true);
                             } else {

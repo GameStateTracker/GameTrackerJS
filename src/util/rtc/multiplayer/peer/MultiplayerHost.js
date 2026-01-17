@@ -12,7 +12,7 @@ export default class MultiplayerHost extends MultiplayerPeer {
 
     #isHosting = false;
 
-    #isRoomVisible = false;
+    #isRoomVisible = true;
 
     #rtcClient;
 
@@ -24,28 +24,27 @@ export default class MultiplayerHost extends MultiplayerPeer {
 
     #eventTargetManager = new EventTargetManager();
 
-    constructor(rtcClient, username, syncedStorages) {
-        super(rtcClient, username, syncedStorages);
+    constructor(rtcClient, roomName, username, visible, syncedStorages) {
+        super(rtcClient, roomName, username, syncedStorages);
         this.#rtcClient = rtcClient;
+        this.#isRoomVisible = !!(visible ?? true);
 
         /* RTC */
         this.#eventTargetManager.switchTarget(this.#rtcClient);
         this.#eventTargetManager.set(["closed"], async (event) => {
             const {remoteID} = event;
-            let name = "";
             if (this.#clients.has(remoteID)) {
-                name = this.#clients.get(remoteID);
+                const clientData = this.#clients.get(remoteID);
+                const name = clientData.name;
                 this.#clients.delete(remoteID);
                 this.#reverseLookup.delete(name);
-            } else {
-                return;
+                Toast.warn(`Multiplayer: "${name}" left`);
+                rtcClient.send(DATA_CHANNEL_NAME, {
+                    type: MessageTypes.LEAVE,
+                    data: name
+                });
+                this.refreshUserList();
             }
-            Toast.warn(`Multiplayer: "${name}" left`);
-            rtcClient.send(DATA_CHANNEL_NAME, {
-                type: MessageTypes.LEAVE,
-                data: name
-            });
-            this.refreshUserList();
         });
 
         /* SAVESTATE */
@@ -67,7 +66,7 @@ export default class MultiplayerHost extends MultiplayerPeer {
         return this.#joiningClientType;
     }
 
-    async close() {
+    async disconnect() {
         await this.#rtcClient.unregister();
         await this.#rtcClient.disconnect();
         this.#isHosting = false;
@@ -82,16 +81,16 @@ export default class MultiplayerHost extends MultiplayerPeer {
         return this.#isHosting;
     }
 
-    async setRoomVisible(/* value */) {
-        // if (this.#isRoomVisible != value) {
-        //     const res = await this.#rtcClient.setVisible(value);
-        //     if (!res.success) {
-        //         ModalDialog.alert("Error changing room visibility", "The Room visibility could not be changed.");
-        //         return false;
-        //     }
-        //     this.#isRoomVisible = value;
-        //     Toast.success("Multiplayer: Room visibility changed");
-        // }
+    async setRoomVisibility(value) {
+        if (this.#isRoomVisible != value) {
+            const res = await this.#rtcClient.setRoomVisibility(value);
+            if (!res.success) {
+                ModalDialog.alert("Error changing room visibility", "The Room visibility could not be changed.");
+                return false;
+            }
+            this.#isRoomVisible = value;
+            Toast.success("Multiplayer: Room visibility changed");
+        }
         return true;
     }
 
@@ -99,19 +98,27 @@ export default class MultiplayerHost extends MultiplayerPeer {
         return this.#isRoomVisible;
     }
 
-    sendSync() {
+    sendSync(remoteID) {
         if (this.#rtcClient != null) {
-            const data = this.getSyncSavestate();
-            this.#rtcClient.send(DATA_CHANNEL_NAME, {
-                type: MessageTypes.SYNC,
-                data
-            });
+            if (remoteID != null) {
+                const data = this.getSyncSavestate();
+                this.#rtcClient.sendOne(DATA_CHANNEL_NAME, remoteID, {
+                    type: MessageTypes.SYNC,
+                    data
+                });
+            } else {
+                const data = this.getSyncSavestate();
+                this.#rtcClient.send(DATA_CHANNEL_NAME, {
+                    type: MessageTypes.SYNC,
+                    data
+                });
+            }
         }
     }
 
     async rtcMessageHandler(remoteID, msg) {
         if (msg.type == MessageTypes.SYNC) {
-            this.sendSync();
+            this.sendSync(remoteID);
         } else if (msg.type == MessageTypes.NAME) {
             const username = msg.data;
             if (username == this.username || this.#reverseLookup.has(username)) {
@@ -130,7 +137,7 @@ export default class MultiplayerHost extends MultiplayerPeer {
                         name: username
                     }
                 });
-                this.sendSync();
+                this.sendSync(remoteID);
                 this.#clients.set(remoteID, {
                     type: this.#joiningClientType,
                     name: username
@@ -143,8 +150,15 @@ export default class MultiplayerHost extends MultiplayerPeer {
                 });
                 this.refreshUserList();
             }
-        } else if (this.#clients.has(remoteID) && await super.rtcMessageHandler(remoteID, msg)) {
-            this.#rtcClient.sendButOne(DATA_CHANNEL_NAME, remoteID, msg);
+        } else if (this.#clients.has(remoteID)) {
+            const clientData = this.#clients.get(remoteID);
+            if (clientData.type === ClientTypes.PLAYER) {
+                if (await super.rtcMessageHandler(remoteID, msg)) {
+                    this.#rtcClient.sendButOne(DATA_CHANNEL_NAME, remoteID, msg);
+                }
+            } else if (clientData.type === ClientTypes.SPECTATOR) {
+                this.sendSync(remoteID);
+            }
         }
     }
 
@@ -163,11 +177,11 @@ export default class MultiplayerHost extends MultiplayerPeer {
     getUserList() {
         const players = [];
         const spectators = [];
-        for (const client of this.#clients.values()) {
-            if (client.type === ClientTypes.PLAYER) {
-                players.push(client.name);
-            } else if (client.type === ClientTypes.SPECTATOR) {
-                spectators.push(client.name);
+        for (const clientData of this.#clients.values()) {
+            if (clientData.type === ClientTypes.PLAYER) {
+                players.push(clientData.name);
+            } else if (clientData.type === ClientTypes.SPECTATOR) {
+                spectators.push(clientData.name);
             }
         }
         return {
@@ -187,6 +201,20 @@ export default class MultiplayerHost extends MultiplayerPeer {
                     data: reason
                 });
                 await this.#rtcClient.cutConnection(key);
+            }
+        }
+    }
+
+    updateRole(name, role) {
+        const clientType = ClientTypes.get(role);
+        if (clientType != null) {
+            const remoteId = this.#reverseLookup.get(name);
+            if (remoteId != null) {
+                const clientData = this.#clients.get(remoteId);
+                if (clientData != null) {
+                    clientData.type = ClientTypes.get(role);
+                    this.refreshUserList();
+                }
             }
         }
     }

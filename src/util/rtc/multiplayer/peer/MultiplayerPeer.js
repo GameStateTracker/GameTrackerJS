@@ -14,17 +14,20 @@ export default class MultiplayerPeer extends EventTarget {
 
     #rtcClient;
 
+    #roomName;
+
     #username;
 
     #muted = new Counter();
 
     #eventTargetManager = new EventTargetManager();
 
-    #storageEventManager = new EventManager(false);
+    #storageEventManager = new EventManager();
 
-    constructor(rtcClient, username, syncedStorages = DEFAULT_STORAGES) {
+    constructor(rtcClient, roomName, username, syncedStorages = DEFAULT_STORAGES) {
         super();
         this.#rtcClient = rtcClient;
+        this.#roomName = roomName;
         this.#username = username;
 
         this.registerSyncedStorages(syncedStorages);
@@ -110,6 +113,10 @@ export default class MultiplayerPeer extends EventTarget {
         this.mute();
         Savestate.deserialize(stateData);
         this.unmute();
+    }
+
+    get roomName() {
+        return this.#roomName;
     }
 
     get username() {

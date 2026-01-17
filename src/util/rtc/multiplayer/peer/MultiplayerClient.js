@@ -14,8 +14,8 @@ export default class MultiplayerClient extends MultiplayerPeer {
 
     #eventTargetManager = new EventTargetManager();
 
-    constructor(rtcClient, username, syncedStorages) {
-        super(rtcClient, username, syncedStorages);
+    constructor(rtcClient, roomName, username, syncedStorages) {
+        super(rtcClient, roomName, username, syncedStorages);
         this.#rtcClient = rtcClient;
 
         /* RTC */
