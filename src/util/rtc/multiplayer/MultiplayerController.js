@@ -1,5 +1,6 @@
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
+import ConnectionError from "/rtc/error/ConnectionError.js";
 import LobbyClient from "/rtc/LobbyClient.js";
 import MultiplayerClient from "./peer/MultiplayerClient.js";
 import MultiplayerHost from "./peer/MultiplayerHost.js";
@@ -43,8 +44,7 @@ export default class MultiplayerController extends EventTarget {
             this.dispatchEvent(ev);
         });
         this.#rtcPeerEventManager.set("disconnected", () => {
-            const ev = new Event("disconnected");
-            this.dispatchEvent(ev);
+            this.dispatchEvent(new Event("disconnected"));
         });
     }
 
@@ -72,6 +72,11 @@ export default class MultiplayerController extends EventTarget {
 
     async host(roomName, pass, version, data) {
         if (roomName) {
+            this.#rtcClientEventManager.set("connector_closed", async () => {
+                this.#rtcClient.disconnect();
+                this.#rtcClientEventManager.clear();
+                this.dispatchEvent(new Event("disconnected"));
+            });
             const res = await this.#rtcClient.register(roomName, pass, version, data);
             if (res.success === true) {
                 const username = await promtName(roomName);
@@ -88,6 +93,10 @@ export default class MultiplayerController extends EventTarget {
                     this.dispatchEvent(ev);
                     return true;
                 }
+            } else if (res.error instanceof ConnectionError) {
+                console.error(res.error);
+                await ModalDialog.alert("Error registering to Lobby", "Could not reach server.");
+                return false;
             } else {
                 await ModalDialog.alert("Error registering to Lobby", "An error occured while registering your room to the lobby.\nCheck if the room already exists and try again!");
                 return false;
@@ -102,6 +111,7 @@ export default class MultiplayerController extends EventTarget {
         return new Promise((resolve) => {
             this.#rtcClientEventManager.set(["closed", "failed"], async () => {
                 await ModalDialog.alert("Connection failed", "Something went wrong connecting to the host.\nPlease try again later!");
+                this.#rtcClient.disconnect();
                 this.#rtcClientEventManager.clear();
                 resolve(false);
             });
@@ -117,6 +127,7 @@ export default class MultiplayerController extends EventTarget {
                             } else {
                                 await ModalDialog.alert("Username taken", `The username "${msg.data.name}" is already taken.\nPlease choose another one!`);
                                 if (!await this.#promptPeerName(msg.data.name)) {
+                                    this.#rtcClient.disconnect();
                                     this.#rtcClientEventManager.clear();
                                     resolve(false);
                                 }
@@ -125,12 +136,14 @@ export default class MultiplayerController extends EventTarget {
                     });
                     this.#rtcClientEventManager.set("connected", async () => {
                         if (!await this.#promptPeerName("")) {
+                            this.#rtcClient.disconnect();
                             this.#rtcClientEventManager.clear();
                             resolve(false);
                         }
                     });
                 } else {
                     await ModalDialog.alert("Connection refused", res.error);
+                    this.#rtcClient.disconnect();
                     this.#rtcClientEventManager.clear();
                     resolve(false);
                 }

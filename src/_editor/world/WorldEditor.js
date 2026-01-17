@@ -2,6 +2,7 @@ import OptionGroupRegistry from "/emcJS/data/registry/form/OptionGroupRegistry.j
 import TokenRegistry from "/emcJS/data/registry/form/TokenRegistry.js";
 import LogicOperatorRegistry from "/emcJS/data/registry/LogicOperatorRegistry.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
+import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import TypeValidator from "/emcJS/util/type/TypeValidator.js";
 import {deepClone} from "/emcJS/util/helper/DeepClone.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
@@ -55,6 +56,8 @@ class WorldEditor extends CustomElement {
 
     #tagsTokenRegistry = new TokenRegistry("worldEditor_tags");
 
+    #detailEditorEventManager = new EventTargetManager();
+
     constructor() {
         super();
         this.shadowRoot.append(TPL.generate());
@@ -85,6 +88,27 @@ class WorldEditor extends CustomElement {
         new Controller_Areas_Entry(this, this.#structureEditorTreeEl, this.#formEl_AreasEntry);
         new Controller_Exits(this, this.#structureEditorTreeEl, this.#formEl_Exits);
         new Controller_Exits_Entry(this, this.#structureEditorTreeEl, this.#formEl_ExitsEntry);
+        this.#detailEditorEventManager.set("change", () => {
+            this.dispatchEvent(new Event("statechange", {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            }));
+        });
+        this.#detailEditorEventManager.set("clear", () => {
+            this.dispatchEvent(new Event("statechange", {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            }));
+        });
+        this.#detailEditorEventManager.set("load", () => {
+            this.dispatchEvent(new Event("statechange", {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            }));
+        });
         /* --- */
         DataManager.addEventListener("change", (event) => {
             const {
@@ -109,6 +133,53 @@ class WorldEditor extends CustomElement {
                     LogicOperatorRegistry.deleteOperator(`arealist[${name}]`);
                 }
             }
+            /* --- */
+            this.dispatchEvent(new Event("change", {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            }));
+            this.dispatchEvent(new Event("statechange", {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            }));
+        });
+        DataManager.addEventListener("flush", () => {
+            this.dispatchEvent(new Event("flush", {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            }));
+            this.dispatchEvent(new Event("statechange", {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            }));
+        });
+        DataManager.addEventListener("load", () => {
+            this.dispatchEvent(new Event("load", {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            }));
+            this.dispatchEvent(new Event("statechange", {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            }));
+        });
+        DataManager.addEventListener("reset", () => {
+            this.dispatchEvent(new Event("reset", {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            }));
+            this.dispatchEvent(new Event("statechange", {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            }));
         });
         LogicOperatorRegistry.setAndLinkOperator("$IS_DONE", {type: "value"}, "special");
         LogicOperatorRegistry.setAndLinkOperator("$IS_AVAILABLE", {type: "value"}, "special");
@@ -184,10 +255,12 @@ class WorldEditor extends CustomElement {
     async switchDetailEditor(detailEditorEl) {
         await BusyIndicatorManager.busy();
         if (this.#activeDetailEditor != null) {
+            this.#detailEditorEventManager.disconnect();
             this.#activeDetailEditor.resetScroll();
             this.#activeDetailEditor.classList.remove("active");
         }
         if (detailEditorEl != null) {
+            this.#detailEditorEventManager.switchTarget(detailEditorEl);
             const data = DataManager.readEntity(scope.entityType, scope.entityName);
             detailEditorEl.setName(scope.entityName);
             detailEditorEl.setFilterConfig(scope.filterConfig);

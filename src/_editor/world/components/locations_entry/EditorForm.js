@@ -72,6 +72,16 @@ export default class EditorForm_Locations_Entry extends CustomElement {
         /* --- */
         this.#filterInputEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
         this.#visibleInputEl.addOperatorGroup(...LOGIC_OPERATOR_GROUPS);
+        /* --- */
+        this.#formContext.addEventListener("clear", () => {
+            this.dispatchEvent(new Event("clear"));
+        });
+        this.#formContext.addEventListener("change", () => {
+            this.dispatchEvent(new Event("change"));
+        });
+        this.#formContext.addEventListener("load", () => {
+            this.dispatchEvent(new Event("load"));
+        });
     }
 
     acceptChanges() {

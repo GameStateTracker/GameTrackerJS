@@ -46,7 +46,7 @@ export default class ItemViewClient extends EventTarget {
         await this.#rtcClient.disconnect();
         this.#isConnected = false;
         /* EVENTS */
-        this.#eventTargetManager.switchTarget(null);
+        this.#eventTargetManager.disconnect();
     }
 
     async rtcMessageHandler(remoteID, msg) {

@@ -72,7 +72,7 @@ export default class MultiplayerHost extends MultiplayerPeer {
         this.#isHosting = false;
         /* clean up */
         super.disconnect();
-        this.#eventTargetManager.switchTarget(null);
+        this.#eventTargetManager.disconnect();
         this.#clients.clear();
         this.#reverseLookup.clear();
     }

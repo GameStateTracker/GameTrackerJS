@@ -60,7 +60,7 @@ export default class ItemViewHost extends EventTarget {
             return false;
         }
         await this.#rtcClient.disconnect();
-        this.#eventTargetManager.switchTarget(null);
+        this.#eventTargetManager.disconnect();
         this.#storageEventManager.active = false;
         this.#isHosting = false;
         return true;

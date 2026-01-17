@@ -58,6 +58,16 @@ export default class EditorForm_WorldConfig extends CustomElement {
             const options = Object.keys(this.#areaHintEl.value);
             this.#optionGroupRegistry.setAll(options);
         });
+        /* --- */
+        this.#formContext.addEventListener("clear", () => {
+            this.dispatchEvent(new Event("clear"));
+        });
+        this.#formContext.addEventListener("change", () => {
+            this.dispatchEvent(new Event("change"));
+        });
+        this.#formContext.addEventListener("load", () => {
+            this.dispatchEvent(new Event("load"));
+        });
     }
 
     acceptChanges() {

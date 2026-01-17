@@ -112,12 +112,15 @@ export default class EditorForm_Areas_Entry extends CustomElement {
         /* --- */
         this.#formContext.addEventListener("clear", () => {
             this.#updateMapData(this.#formContext.getData());
+            this.dispatchEvent(new Event("clear"));
         });
         this.#formContext.addEventListener("change", () => {
             this.#updateMapData(this.#formContext.getData());
+            this.dispatchEvent(new Event("change"));
         });
         this.#formContext.addEventListener("load", () => {
             this.#updateMapData(this.#formContext.getData());
+            this.dispatchEvent(new Event("load"));
         });
     }
 

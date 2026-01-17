@@ -73,8 +73,8 @@ export default class MultiplayerPeer extends EventTarget {
     }
 
     disconnect() {
-        this.#eventTargetManager.switchTarget(null);
-        this.#eventTargetManager.clear();
+        this.#eventTargetManager.disconnect();
+        this.#eventTargetManager.reset();
         this.#storageEventManager.clear();
     }
 

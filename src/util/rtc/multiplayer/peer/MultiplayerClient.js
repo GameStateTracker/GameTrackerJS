@@ -35,7 +35,7 @@ export default class MultiplayerClient extends MultiplayerPeer {
         this.#isConnected = false;
         /* clean up */
         super.disconnect();
-        this.#eventTargetManager.switchTarget(null);
+        this.#eventTargetManager.disconnect();
     }
 
     isConnected() {
