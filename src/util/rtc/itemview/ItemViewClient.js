@@ -1,5 +1,5 @@
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import RTCClient from "/rtc/RTCClient.js";
+import RTCClient from "/RTCClient/RTCClient.js";
 import Savestate from "../../../savestate/Savestate.js";
 import SettingsStorage from "../../../storage/SettingsStorage.js";
 import {RTC_CONFIG} from "../config/RTCConfig.js";
