@@ -49,7 +49,7 @@ export default class MultiplayerController extends EventTarget {
     }
 
     setLogger(value) {
-        LobbyClient.setLogger(value);
+        this.#rtcClient.setLogger(value);
     }
 
     async getInstances(supressError) {
