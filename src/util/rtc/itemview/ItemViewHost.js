@@ -4,13 +4,18 @@ import EventManager from "/emcJS/util/event/EventManager.js";
 import RTCClient from "/RTCClient/RTCClient.js";
 import Savestate from "../../../savestate/Savestate.js";
 import SettingsStorage from "../../../storage/SettingsStorage.js";
-import {RTC_CONFIG} from "../config/RTCConfig.js";
+import RTCConfig from "../../../data/RTCConfig.js";
 import {
-    DATA_CHANNEL_NAME, DEFAULT_STORAGES,
-    ENDPOINT_BASE,
-    ENDPOINT_NAME,
+    DATA_CHANNEL_NAME,
+    DEFAULT_STORAGES,
     MessageTypes
 } from "./config/ItemViewConfig.js";
+
+const RTC_CONFIG = RTCConfig.ice;
+
+const ENDPOINT_BASE = RTCConfig.base;
+
+const ENDPOINT_NAME = RTCConfig.services.itemview;
 
 export default class ItemViewHost extends EventTarget {
 

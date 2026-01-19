@@ -1,12 +1,6 @@
 import {isStringNotEmpty} from "/emcJS/util/helper/CheckType.js";
 import Enum from "/emcJS/data/Enum.js";
 
-// TODO define this in tracker not here
-export const ENDPOINT_BASE = "/rtc/";
-
-// TODO define this in tracker not here
-export const ENDPOINT_NAME = "lobby";
-
 export const DATA_CHANNEL_NAME = "data";
 
 export const DEFAULT_STORAGES = [

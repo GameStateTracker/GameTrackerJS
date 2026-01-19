@@ -4,10 +4,17 @@ import ConnectionError from "/RTCClient/error/ConnectionError.js";
 import LobbyClient from "/RTCClient/LobbyClient.js";
 import MultiplayerClient from "./peer/MultiplayerClient.js";
 import MultiplayerHost from "./peer/MultiplayerHost.js";
-import {RTC_CONFIG} from "../config/RTCConfig.js";
+import RTCConfig from "../../../data/RTCConfig.js";
 import {
-    DATA_CHANNEL_NAME, ENDPOINT_BASE, ENDPOINT_NAME, MessageTypes
+    DATA_CHANNEL_NAME,
+    MessageTypes
 } from "./config/MultiplayerConfig.js";
+
+const RTC_CONFIG = RTCConfig.ice;
+
+const ENDPOINT_BASE = RTCConfig.base;
+
+const ENDPOINT_NAME = RTCConfig.services.multiplayer;
 
 async function promtName(name) {
     name = await ModalDialog.prompt("Please select a username", "Please enter a name (at least 3 characters).", name);
