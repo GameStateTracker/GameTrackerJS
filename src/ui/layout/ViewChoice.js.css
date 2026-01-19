@@ -8,15 +8,18 @@
     color: var(--page-text-color, #ffffff);
     user-select: none;
 }
+
 #body {
     display: flex;
     flex: 1;
     overflow-y: auto;
     overflow-x: auto;
 }
+
 ::slotted(*) {
     display: none;
 }
+
 ::slotted(.panel) {
     flex-direction: column;
     flex: 1;
@@ -29,9 +32,11 @@
     color: var(--page-text-color, #ffffff);
     user-select: none;
 }
+
 ::slotted(.panel.active) {
     display: flex;
 }
+
 #categories {
     display: flex;
     flex-direction: column;
@@ -40,6 +45,7 @@
     overflow-x: hidden;
     overflow-y: auto;
 }
+
 #categories emc-option {
     display: inline-block;
     width: 40px;
@@ -54,22 +60,27 @@
     margin: 2px;
     filter: drop-shadow(black 1px 1px 1px);
 }
+
 #categories emc-option emc-icon {
     width: 100%;
     height: 100%;
     pointer-events: none;
 }
+
 #categories emc-option.active {
-    box-shadow: var(--navigation-marker-color, #ffffff) 0px 0px 2px 2px, var(--navigation-marker-color, #ffffff) 0px 0px 3px 2px inset;
+    box-shadow: var(--navigation-button-marker-color, #ffffff) 0px 0px 2px 2px, var(--navigation-button-marker-color, #ffffff) 0px 0px 3px 2px inset;
     cursor: default;
 }
+
 #categories emc-option:not(.active) {
     opacity: 0.7;
 }
+
 @media (orientation: portrait) {
     :host {
         flex-direction: column;
     }
+
     #categories {
         flex-direction: row;
         overflow-x: auto;

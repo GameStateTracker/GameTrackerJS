@@ -1,8 +1,6 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
 import "/emcJS/ui/form/element/input/range/RangeInput.js";
 import "../../marker/AreaMarker.js";
 import "../../marker/ConnectionMarker.js";
@@ -55,7 +53,9 @@ export default class MapPosInput extends CustomElement {
         this.#posYInputEl = this.shadowRoot.getElementById("pos-y");
         this.#posScaleInputEl = this.shadowRoot.getElementById("pos-scale");
         this.#mapEl.addEventListener("click", (event) => {
-            const {offsetX, offsetY} = event;
+            const {
+                offsetX, offsetY
+            } = event;
             this.#posXInputEl.value = offsetX;
             this.#posYInputEl.value = offsetY;
             this.#xValue = offsetX;
@@ -107,7 +107,9 @@ export default class MapPosInput extends CustomElement {
     });
 
     set value(value) {
-        const {x = 0, y = 0, scale = 100} = value ?? {};
+        const {
+            x = 0, y = 0, scale = 100
+        } = value ?? {};
         const xValue = parseInt(x);
         const yValue = parseInt(y);
         const scaleValue = parseInt(scale);
@@ -153,9 +155,7 @@ export default class MapPosInput extends CustomElement {
                 scale: this.#scaleValue
             };
         }
-        return {
-            scale: this.#scaleValue
-        };
+        return {scale: this.#scaleValue};
     }
 
     setCurrentMarker(currentType, currentName, currentLabel) {
@@ -176,7 +176,9 @@ export default class MapPosInput extends CustomElement {
     async loadMapData(mapData) {
         await BusyIndicatorManager.busy();
         if (mapData != null && mapData.active && mapData.backgroundImage) {
-            const {backgroundColor, backgroundImage, width, height} = mapData;
+            const {
+                backgroundColor, backgroundImage, width, height
+            } = mapData;
             this.#mapEl.style.backgroundColor = backgroundColor;
             this.#mapEl.style.backgroundImage = `url("${backgroundImage}")`;
             this.#mapEl.style.width = `${width}px`;
@@ -200,14 +202,26 @@ export default class MapPosInput extends CustomElement {
         await BusyIndicatorManager.busy();
         this.#connectionMarkerList = [];
         for (const entry of connections ?? []) {
-            const {label, posA, posB} = entry;
+            const {
+                label, posA, posB
+            } = entry;
             if (posA != null) {
-                const markerEl = this.#createMarker("connection", `${label}_posA`, posA.x, posA.y, posA.scale, label);
+                const markerEl = this.#createMarker("connection", `${label}_posA`, {
+                    x: posA.x,
+                    y: posA.y,
+                    scale: posA.scale,
+                    label
+                });
                 this.#connectionMarkerList.push(markerEl);
                 this.#entryMarkerLookup.set(`Connection::${label}_posA`, markerEl);
             }
             if (posB != null) {
-                const markerEl = this.#createMarker("connection", `${label}_posB`, posB.x, posB.y, posB.scale, label);
+                const markerEl = this.#createMarker("connection", `${label}_posB`, {
+                    x: posB.x,
+                    y: posB.y,
+                    scale: posB.scale,
+                    label
+                });
                 this.#connectionMarkerList.push(markerEl);
                 this.#entryMarkerLookup.set(`Connection::${label}_posB`, markerEl);
             }
@@ -221,10 +235,18 @@ export default class MapPosInput extends CustomElement {
         this.#entryMarkerList = [];
         this.#entryMarkerLookup.clear();
         for (const entry of entries ?? []) {
-            const {pos = {}, ref = {}} = entry ?? {};
-            const {type = null, name = null} = ref ?? {};
+            const {
+                pos = {}, ref = {}
+            } = entry ?? {};
+            const {
+                type = null, name = null
+            } = ref ?? {};
             if (type != null && pos != null) {
-                const markerEl = this.#createMarker(type, name, pos.x, pos.y, pos.scale);
+                const markerEl = this.#createMarker(type, name, {
+                    x: pos.x,
+                    y: pos.y,
+                    scale: pos.scale
+                });
                 this.#entryMarkerList.push(markerEl);
                 this.#entryMarkerLookup.set(`${type}::${name}`, markerEl);
             }
@@ -233,7 +255,10 @@ export default class MapPosInput extends CustomElement {
         await BusyIndicatorManager.unbusy();
     }
 
-    #createMarker(type, name, x, y, scale, label) {
+    #createMarker(type, name, data) {
+        const {
+            x, y, scale, label
+        } = data;
         if (!isNaN(x) && !isNaN(y)) {
             type = type.toLowerCase();
             const el = document.createElement(`gt-edt-world-editor-input-position-marker-${type}`);
@@ -264,7 +289,13 @@ export default class MapPosInput extends CustomElement {
             } else {
                 const type = this.#currentMarkerType ?? "";
                 const name = this.#currentMarkerName ?? "";
-                this.#currentMarkerEl = this.#createMarker(type, name ?? "", this.#xValue, this.#yValue, this.#scaleValue, this.#currentMarkerLabel);
+
+                this.#currentMarkerEl = this.#createMarker(type, name ?? "", {
+                    x: this.#xValue,
+                    y: this.#yValue,
+                    scale: this.#scaleValue,
+                    label: this.#currentMarkerLabel
+                });
                 if (this.#currentMarkerEl != null) {
                     this.#entryMarkerLookup.set(`${type}::${name}`, this.#currentMarkerEl);
                     this.#currentMarkerEl.classList.add("active");

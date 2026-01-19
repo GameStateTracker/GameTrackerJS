@@ -1,6 +1,7 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import TPL from "./AbstractMarker.js.html" assert {type: "html"};
 import STYLE from "./AbstractMarker.js.css" assert {type: "css"};
+import {isStringNotEmpty} from "/emcJS/util/helper/CheckType.js";
 
 export default class AbstractMarker extends CustomElement {
 
@@ -51,22 +52,26 @@ export default class AbstractMarker extends CustomElement {
         switch (name) {
             case "x": {
                 if (oldValue != newValue) {
-                    this.style.left = `${newValue}px`;
+                    this.style.left = `${parseInt(newValue) || 0}px`;
                 }
             } break;
             case "y": {
                 if (oldValue != newValue) {
-                    this.style.top = `${newValue}px`;
+                    this.style.top = `${parseInt(newValue) || 0}px`;
                 }
             } break;
             case "scale": {
                 if (oldValue != newValue) {
-                    this.style.setProperty("--scale", newValue);
+                    this.style.setProperty("--scale", parseInt(newValue) || 100);
                 }
             } break;
             case "label": {
                 if (oldValue != newValue) {
-                    this.shadowRoot.getElementById("label").innerHTML = newValue;
+                    if (isStringNotEmpty(newValue)) {
+                        this.shadowRoot.getElementById("label").innerHTML = newValue;
+                    } else {
+                        this.shadowRoot.getElementById("label").innerHTML = "";
+                    }
                 }
             } break;
         }

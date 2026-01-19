@@ -17,7 +17,7 @@ import LogicElementModal from "/emcJS/ui/form/element/input/logic/components/mod
 import ModalDialogAddTypeEntities from "../../../../modal/ModalDialogAddTypeEntities.js";
 import CoordinatesInputModal from "../../../../coordinates/modal/CoordinatesInputModal.js";
 import RelationCellContextMenu from "./ctxmnu/RelationCellContextMenu.js";
-import PosCellContextMenu from "./ctxmnu/PosCellContextMenu.js";
+import CopyPasteCellContextMenu from "./ctxmnu/CopyPasteCellContextMenu.js";
 import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/form/button/Button.js";
 import "/emcJS/ui/dataview/datagrid/DataGrid.js";
@@ -163,12 +163,15 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         });
         /* --- */
         this.setContextMenu("relation-cell", RelationCellContextMenu);
-        this.setContextMenu("pos-cell", PosCellContextMenu);
+        this.setContextMenu("cell-copypaste", CopyPasteCellContextMenu);
         this.#gridEl.addEventListener("menu", (event) => {
             const columnName = event.data.columnName;
             const rowKey = event.data.rowKey;
-            if (columnName === "pos") {
-                this.showContextMenu("pos-cell", event, {rowKey});
+            if (columnName === "pos" || columnName === "visible") {
+                this.showContextMenu("cell-copypaste", event, {
+                    rowKey,
+                    columnName
+                });
             } else if (columnName === "relation") {
                 this.showContextMenu("relation-cell", event, {rowKey});
             }
@@ -188,12 +191,14 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
             const {rowKey} = event.props[0];
             this.#removeElement(rowKey);
         });
-        this.addContextMenuHandler("pos-cell", "copyvalue", async (event) => {
-            const {rowKey} = event.props[0];
+        this.addContextMenuHandler("cell-copypaste", "copyvalue", async (event) => {
+            const {
+                rowKey, columnName
+            } = event.props[0];
             const source = this.#getElement(rowKey);
             if (source != null) {
                 try {
-                    const cbText = JSON.stringify(source.pos);
+                    const cbText = JSON.stringify(source[columnName]);
                     await navigator.clipboard.writeText(cbText);
                 } catch {
                     Toast.error("could not write to clipboard");
@@ -201,8 +206,10 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
                 Toast.success("value saved to clipboard");
             }
         });
-        this.addContextMenuHandler("pos-cell", "pastevalue", async (event) => {
-            const {rowKey} = event.props[0];
+        this.addContextMenuHandler("cell-copypaste", "pastevalue", async (event) => {
+            const {
+                rowKey, columnName
+            } = event.props[0];
             const index = this.#getElementIndex(rowKey);
             if (index >= 0) {
                 try {
@@ -210,7 +217,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
                     const cbText = await navigator.clipboard.readText();
                     const value = JSON.parse(cbText);
                     const newValue = deepClone(currentValue);
-                    newValue[index].pos = value;
+                    newValue[index][columnName] = value;
                     this.value = newValue;
                 } catch {
                     Toast.error("could not read from clipboard");

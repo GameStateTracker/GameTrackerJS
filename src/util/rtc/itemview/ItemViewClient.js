@@ -5,6 +5,8 @@ import SettingsStorage from "../../../storage/SettingsStorage.js";
 import {RTC_CONFIG} from "../config/RTCConfig.js";
 import {
     DATA_CHANNEL_NAME, DEFAULT_STORAGES,
+    ENDPOINT_BASE,
+    ENDPOINT_NAME,
     MessageTypes
 } from "./config/ItemViewConfig.js";
 
@@ -20,7 +22,7 @@ export default class ItemViewClient extends EventTarget {
 
     constructor(port, syncedStorages = DEFAULT_STORAGES) {
         super();
-        this.#rtcClient = new RTCClient(port, "/rtc", RTC_CONFIG, [DATA_CHANNEL_NAME]);
+        this.#rtcClient = new RTCClient(port, ENDPOINT_BASE, ENDPOINT_NAME, RTC_CONFIG, [DATA_CHANNEL_NAME]);
 
         this.registerSyncedStorages(syncedStorages);
 

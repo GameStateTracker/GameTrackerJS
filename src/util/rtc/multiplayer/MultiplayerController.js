@@ -6,7 +6,7 @@ import MultiplayerClient from "./peer/MultiplayerClient.js";
 import MultiplayerHost from "./peer/MultiplayerHost.js";
 import {RTC_CONFIG} from "../config/RTCConfig.js";
 import {
-    DATA_CHANNEL_NAME, MessageTypes
+    DATA_CHANNEL_NAME, ENDPOINT_BASE, ENDPOINT_NAME, MessageTypes
 } from "./config/MultiplayerConfig.js";
 
 async function promtName(name) {
@@ -36,7 +36,7 @@ export default class MultiplayerController extends EventTarget {
     constructor(port, syncedStorages) {
         super();
         this.#syncedStorages = syncedStorages;
-        this.#rtcClient = new LobbyClient(port, "/lobby", RTC_CONFIG, [DATA_CHANNEL_NAME]);
+        this.#rtcClient = new LobbyClient(port, ENDPOINT_BASE, ENDPOINT_NAME, RTC_CONFIG, [DATA_CHANNEL_NAME]);
         this.#rtcClientEventManager = new EventTargetManager(this.#rtcClient);
         this.#rtcPeerEventManager.set("roomupdate", (event) => {
             const ev = new Event("roomupdate");

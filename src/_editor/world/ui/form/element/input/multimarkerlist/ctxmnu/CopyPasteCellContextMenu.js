@@ -1,0 +1,25 @@
+import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
+
+// TODO extract ctxmenus into own folder and use in multimarkerlist and markerlist together
+export default class CopyPasteCellContextMenu extends ContextMenu {
+
+    initItems() {
+        super.setItems([
+            {
+                menuAction: "copyvalue",
+                content: "Copy value"
+            },
+            {
+                menuAction: "pastevalue",
+                content: "Paste value"
+            }
+        ]);
+    }
+
+    setItems() {
+        // nothing
+    }
+
+}
+
+customElements.define("gt-edt-input-multi-marker-list-ctxmnu-cell-copypaste", CopyPasteCellContextMenu);
