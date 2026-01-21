@@ -15,4 +15,6 @@ export class MessageTypes extends Enum {
 
     static SETTINGS = new this("settings");
 
+    static ACCESS = new this("access");
+
 }

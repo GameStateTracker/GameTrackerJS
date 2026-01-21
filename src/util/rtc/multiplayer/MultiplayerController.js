@@ -14,7 +14,7 @@ const RTC_CONFIG = RTCConfig.ice;
 
 const ENDPOINT_BASE = RTCConfig.base;
 
-const ENDPOINT_NAME = RTCConfig.services.multiplayer;
+const ENDPOINT_NAME = RTCConfig.services.multiplayer ?? "multiplayer";
 
 async function promtName(name) {
     name = await ModalDialog.prompt("Please select a username", "Please enter a name (at least 3 characters).", name);
@@ -30,8 +30,6 @@ async function promtName(name) {
 
 export default class MultiplayerController extends EventTarget {
 
-    #syncedStorages = [];
-
     #rtcClient;
 
     #rtcPeer;
@@ -40,9 +38,8 @@ export default class MultiplayerController extends EventTarget {
 
     #rtcPeerEventManager = new EventTargetManager();
 
-    constructor(port, syncedStorages) {
+    constructor(port) {
         super();
-        this.#syncedStorages = syncedStorages;
         this.#rtcClient = new LobbyClient(port, ENDPOINT_BASE, ENDPOINT_NAME, RTC_CONFIG, [DATA_CHANNEL_NAME]);
         this.#rtcClientEventManager = new EventTargetManager(this.#rtcClient);
         this.#rtcPeerEventManager.set("roomupdate", (event) => {
@@ -92,7 +89,7 @@ export default class MultiplayerController extends EventTarget {
                     await this.#rtcClient.unregister();
                     return false;
                 } else {
-                    this.#rtcPeer = new MultiplayerHost(this.#rtcClient, roomName, username, data.visible, this.#syncedStorages);
+                    this.#rtcPeer = new MultiplayerHost(this.#rtcClient, roomName, username, data.visible);
                     this.#rtcPeerEventManager.switchTarget(this.#rtcPeer);
                     /* roomupdate */
                     const ev = new Event("roomupdate");
@@ -128,7 +125,7 @@ export default class MultiplayerController extends EventTarget {
                         if (msg.type == MessageTypes.NAME) {
                             if (msg.data.success) {
                                 this.#rtcClientEventManager.clear();
-                                this.#rtcPeer = new MultiplayerClient(this.#rtcClient, roomName, msg.data.name, this.#syncedStorages);
+                                this.#rtcPeer = new MultiplayerClient(this.#rtcClient, roomName, msg.data.name);
                                 this.#rtcPeerEventManager.switchTarget(this.#rtcPeer);
                                 resolve(true);
                             } else {

@@ -4,6 +4,7 @@ import EventManager from "/emcJS/util/event/EventManager.js";
 import RTCClient from "/RTCClient/RTCClient.js";
 import Savestate from "../../../savestate/Savestate.js";
 import SettingsStorage from "../../../storage/SettingsStorage.js";
+import WorldSummaryHandler from "../../handler/WorldSummaryHandler.js";
 import RTCConfig from "../../../data/RTCConfig.js";
 import {
     DATA_CHANNEL_NAME,
@@ -15,7 +16,11 @@ const RTC_CONFIG = RTCConfig.ice;
 
 const ENDPOINT_BASE = RTCConfig.base;
 
-const ENDPOINT_NAME = RTCConfig.services.itemview;
+const ENDPOINT_NAME = RTCConfig.services.itemview ?? "itemview";
+
+const SYNCED_STORAGES = RTCConfig.storages.itemview ?? DEFAULT_STORAGES;
+
+const worldSummaryHandler = new WorldSummaryHandler();
 
 export default class ItemViewHost extends EventTarget {
 
@@ -29,11 +34,11 @@ export default class ItemViewHost extends EventTarget {
 
     #storageEventManager = new EventManager(false);
 
-    constructor(port, syncedStorages = DEFAULT_STORAGES) {
+    constructor(port) {
         super();
         this.#rtcClient = new RTCClient(port, ENDPOINT_BASE, ENDPOINT_NAME, RTC_CONFIG, [DATA_CHANNEL_NAME]);
 
-        this.registerSyncedStorages(syncedStorages);
+        this.registerSyncedStorages(SYNCED_STORAGES);
 
         /* RTC */
         this.#eventTargetManager.set(`ready:${DATA_CHANNEL_NAME}`, () => {
@@ -53,6 +58,13 @@ export default class ItemViewHost extends EventTarget {
                     data: event.data
                 });
             }
+        });
+
+        worldSummaryHandler.addEventListener("access", (event) => {
+            this.#rtcClient.send(DATA_CHANNEL_NAME, {
+                type: MessageTypes.ACCESS,
+                data: event.value
+            });
         });
     }
 
@@ -120,7 +132,8 @@ export default class ItemViewHost extends EventTarget {
             this.#rtcClient.send(DATA_CHANNEL_NAME, {
                 type: MessageTypes.SYNC,
                 data,
-                settings: SettingsStorage.getAll()
+                settings: SettingsStorage.getAll(),
+                access: worldSummaryHandler.access
             });
         }
     }

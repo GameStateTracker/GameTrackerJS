@@ -16,9 +16,11 @@ export default class LocationState extends CustomElement {
         const exitsEl = this.shadowRoot.getElementById("exits-available");
 
         /* LIST HANDLER */
-        const listHandler = this.generateList();
+        const listHandler = this.#generateList();
         listHandler.addEventListener("access", (event) => {
-            const {reachable_min, reachable_max, unopened_min, unopened_max, done_min, done_max, entrances_min, entrances_max} = event.value;
+            const {
+                reachable_min, reachable_max, unopened_min, unopened_max, done_min, done_max, entrances_min, entrances_max
+            } = event.value;
             if (reachable_min == reachable_max) {
                 availEl.innerHTML = reachable_min;
             } else {
@@ -47,7 +49,7 @@ export default class LocationState extends CustomElement {
         });
     }
 
-    generateList() {
+    #generateList() {
         const worldSummaryHandler = new WorldSummaryHandler();
         window.worldSummaryHandler = worldSummaryHandler;
         return worldSummaryHandler;

@@ -1,27 +1,27 @@
 import {immute} from "/emcJS/data/Immutable.js";
 import JSONCResource from "/emcJS/data/resource/file/JSONCResource.js";
 import {
-    isArrayOf, isDictOf, isStringNotEmpty
+    isArrayOf, isDictOf, isObject, isStringNotEmpty
 } from "/emcJS/util/helper/CheckType.js";
 
+const DEFAULT_ICE = {
+    iceTransportPolicy: "all", // all | relay
+    iceServers: [
+        {urls: "stun:stun.zidargs.net:18001"},
+        {urls: "stun:stun.l.google.com:19302"},
+        {
+            urls: "turn:turn.zidargs.net:18001",
+            credential: "fHNsIeqdgVcUAypvaxDVE6tywaMlP1fA",
+            username: "iamgroot"
+        }
+    ]
+};
+
 const RTCConfig = {
-    ice: {
-        iceTransportPolicy: "all", // all | relay
-        iceServers: [
-            {urls: "stun:stun.zidargs.net:18001"},
-            {urls: "stun:stun.l.google.com:19302"},
-            {
-                urls: "turn:turn.zidargs.net:18001",
-                credential: "fHNsIeqdgVcUAypvaxDVE6tywaMlP1fA",
-                username: "iamgroot"
-            }
-        ]
-    },
+    ice: DEFAULT_ICE,
     base: "/",
-    services: {
-        multiplayer: "lobby",
-        itemview: "itemview"
-    }
+    services: {},
+    storages: {}
 };
 
 function matchStun(value) {
@@ -47,17 +47,23 @@ function matchIceServers(value) {
 }
 
 try {
-    const rawData = await JSONCResource.get("/database/rtcconfig.json");
+    const rawData = await JSONCResource.get("/config/rtcconfig.json");
     const data = rawData.get();
     if (isStringNotEmpty(data.base)) {
         RTCConfig.base = data.base;
     }
-    if (data.services != null) {
-        if (isStringNotEmpty(data.services.multiplayer)) {
-            RTCConfig.services.multiplayer = data.services.multiplayer;
+    if (isObject(data.services)) {
+        for (const name in data.services) {
+            if (isStringNotEmpty(data.services[name])) {
+                RTCConfig.services[name] = data.services[name];
+            }
         }
-        if (isStringNotEmpty(data.services.itemview)) {
-            RTCConfig.services.itemview = data.services.itemview;
+    }
+    if (isObject(data.storages)) {
+        for (const name in data.storages) {
+            if (isArrayOf(data.storages[name], isStringNotEmpty)) {
+                RTCConfig.storages[name] = data.storages[name];
+            }
         }
     }
     if (data.ice != null) {

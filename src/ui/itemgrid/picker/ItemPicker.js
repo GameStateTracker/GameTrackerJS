@@ -1,9 +1,7 @@
 import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import Panel from "/emcJS/ui/layout/Panel.js";
-import {
-    isStringNotEmpty
-} from "/emcJS/util/helper/CheckType.js";
+import {isStringNotEmpty} from "/emcJS/util/helper/CheckType.js";
 import GridsResource from "../../../data/resource/GridsResource.js";
 import "./components/Item.js";
 
@@ -15,8 +13,8 @@ const TPL = new HTMLTemplate(`
 const STYLE = new CSSTemplate(`
 :host {
     display: block;
-    min-width: min-content;
-    min-height: min-content;
+    width: min-content;
+    height: min-content;
 }
 #content {
     display: content;

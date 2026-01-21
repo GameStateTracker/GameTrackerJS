@@ -1,5 +1,6 @@
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import EventManager from "/emcJS/util/event/EventManager.js";
+import RTCConfig from "../../../../data/RTCConfig.js";
 import Counter from "../../../Counter.js";
 import Savestate from "../../../../savestate/Savestate.js";
 import {
@@ -7,6 +8,8 @@ import {
 } from "../config/MultiplayerConfig.js";
 
 const FILTER_STORAGE = Savestate.getStorage("filter");
+
+const SYNCED_STORAGES = RTCConfig.storages.multiplayer ?? DEFAULT_STORAGES;
 
 export default class MultiplayerPeer extends EventTarget {
 
@@ -24,13 +27,13 @@ export default class MultiplayerPeer extends EventTarget {
 
     #storageEventManager = new EventManager();
 
-    constructor(rtcClient, roomName, username, syncedStorages = DEFAULT_STORAGES) {
+    constructor(rtcClient, roomName, username) {
         super();
         this.#rtcClient = rtcClient;
         this.#roomName = roomName;
         this.#username = username;
 
-        this.registerSyncedStorages(syncedStorages);
+        this.registerSyncedStorages(SYNCED_STORAGES);
 
         /* RTC */
         this.#eventTargetManager.switchTarget(this.#rtcClient);

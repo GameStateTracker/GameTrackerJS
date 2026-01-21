@@ -13,7 +13,9 @@ const RTC_CONFIG = RTCConfig.ice;
 
 const ENDPOINT_BASE = RTCConfig.base;
 
-const ENDPOINT_NAME = RTCConfig.services.itemview;
+const ENDPOINT_NAME = RTCConfig.services.itemview ?? "itemview";
+
+const SYNCED_STORAGES = RTCConfig.storages.itemview ?? DEFAULT_STORAGES;
 
 export default class ItemViewClient extends EventTarget {
 
@@ -25,11 +27,11 @@ export default class ItemViewClient extends EventTarget {
 
     #eventTargetManager = new EventTargetManager();
 
-    constructor(port, syncedStorages = DEFAULT_STORAGES) {
+    constructor(port) {
         super();
         this.#rtcClient = new RTCClient(port, ENDPOINT_BASE, ENDPOINT_NAME, RTC_CONFIG, [DATA_CHANNEL_NAME]);
 
-        this.registerSyncedStorages(syncedStorages);
+        this.registerSyncedStorages(SYNCED_STORAGES);
 
         /* RTC */
         this.#eventTargetManager.set(["closed", "failed"], async (/* key */) => {
@@ -64,23 +66,34 @@ export default class ItemViewClient extends EventTarget {
             }
         } else if (msg.type == MessageTypes.SETTINGS) {
             SettingsStorage.setAll(msg.data);
+        } else if (msg.type == MessageTypes.ACCESS) {
+            const ev = new Event("access");
+            ev.value = msg.data;
+            this.dispatchEvent(ev);
         } else if (msg.type == MessageTypes.SYNC) {
             SettingsStorage.deserialize(msg.settings);
             this.setSyncSavestate(msg.data);
+            const ev = new Event("access");
+            ev.value = msg.access;
+            this.dispatchEvent(ev);
         }
     }
 
     connect(name, pass, version) {
-        return new Promise((resolve) => {
-            this.#rtcClient.connect(name, pass, version).then(async (res) => {
-                if (res.success) {
-                    this.#eventTargetManager.switchTarget(this.#rtcClient);
-                    this.#isConnected = true;
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-            });
+        return new Promise((resolve, reject) => {
+            try {
+                this.#rtcClient.connect(name, pass, version).then(async (res) => {
+                    if (res.success) {
+                        this.#eventTargetManager.switchTarget(this.#rtcClient);
+                        this.#isConnected = true;
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                });
+            } catch (err) {
+                reject(err);
+            }
         });
     }
 
