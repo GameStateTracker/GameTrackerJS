@@ -2,7 +2,7 @@
 import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
 import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import Panel from "/emcJS/ui/layout/Panel.js";
-import SearchAnd from "/emcJS/util/search/SearchAnd.js";
+import SearchEvery from "/emcJS/util/search/SearchEvery.js";
 import "/emcJS/ui/input/SearchField.js";
 import "/emcJS/ui/input/SearchSelect.js";
 import "/emcJS/ui/input/TokenSelect.js";
@@ -186,7 +186,7 @@ export default class ExitList extends Panel {
                     if (!el.value || !unbound.checked) {
                         if (search.value) {
                             const mode = searchMode.value;
-                            const regEx = new SearchAnd(search.value);
+                            const regEx = new SearchEvery(search.value);
                             const transAccess = Language.translate(`exit[${el.getAttribute("access")}]`);
                             const transValue = Language.translate(`entrance[${el.getAttribute("value")}]`);
                             const transAccessRes = mode != "value" && regEx.test(transAccess);

@@ -1,5 +1,5 @@
 import CustomElementDelegating from "/emcJS/ui/element/CustomElementDelegating.js";
-import SearchAnd from "/emcJS/util/search/SearchAnd.js";
+import SearchEvery from "/emcJS/util/search/SearchEvery.js";
 import {
     getInnerText
 } from "/emcJS/util/helper/ui/ExtractText.js";
@@ -37,7 +37,7 @@ export default class EntranceSelectList extends CustomElementDelegating {
         searchEl.addEventListener("change", (event) => {
             const all = this.querySelectorAll(`[value]`);
             if (event.value) {
-                const regEx = new SearchAnd(event.value);
+                const regEx = new SearchEvery(event.value);
                 if (this.style.height == "" || this.style.width == "") {
                     const rect = this.getBoundingClientRect();
                     this.style.width = `${rect.width}px`;
