@@ -17,6 +17,8 @@ const ENDPOINT_NAME = RTCConfig.services.itemview ?? "itemview";
 
 const SYNCED_STORAGES = RTCConfig.storages.itemview ?? DEFAULT_STORAGES;
 
+// TODO add EventManager activated when player is joined
+// should contain all savestate related events
 export default class ItemViewClient extends EventTarget {
 
     #syncedStorages = new Map();

@@ -6,6 +6,8 @@ import {
     DATA_CHANNEL_NAME, MessageTypes
 } from "../config/MultiplayerConfig.js";
 
+// TODO add EventManager activated when player is joined
+// should contain all savestate related events
 export default class MultiplayerClient extends MultiplayerPeer {
 
     #isConnected = false;

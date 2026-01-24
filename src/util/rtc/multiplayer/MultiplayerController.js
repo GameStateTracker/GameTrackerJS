@@ -127,12 +127,14 @@ export default class MultiplayerController extends EventTarget {
                                 this.#rtcClientEventManager.clear();
                                 this.#rtcPeer = new MultiplayerClient(this.#rtcClient, roomName, msg.data.name);
                                 this.#rtcPeerEventManager.switchTarget(this.#rtcPeer);
+                                this.#rtcClient.setMessageHandler(DATA_CHANNEL_NAME);
                                 resolve(true);
                             } else {
                                 await ModalDialog.alert("Username taken", `The username "${msg.data.name}" is already taken.\nPlease choose another one!`);
                                 if (!await this.#promptPeerName(msg.data.name)) {
                                     this.#rtcClient.disconnect();
                                     this.#rtcClientEventManager.clear();
+                                    this.#rtcClient.setMessageHandler(DATA_CHANNEL_NAME);
                                     resolve(false);
                                 }
                             }

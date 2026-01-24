@@ -8,6 +8,8 @@ import {
     DATA_CHANNEL_NAME, MessageTypes
 } from "../config/MultiplayerConfig.js";
 
+// TODO add EventManager activated when player is hosting
+// should contain all savestate related events
 export default class MultiplayerHost extends MultiplayerPeer {
 
     #isHosting = false;

@@ -22,6 +22,8 @@ const SYNCED_STORAGES = RTCConfig.storages.itemview ?? DEFAULT_STORAGES;
 
 const worldSummaryHandler = new WorldSummaryHandler();
 
+// TODO add EventManager activated when player is hosting
+// should contain all savestate related events
 export default class ItemViewHost extends EventTarget {
 
     #syncedStorages = new Map();
