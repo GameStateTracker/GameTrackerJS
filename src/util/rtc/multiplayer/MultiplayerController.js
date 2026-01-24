@@ -40,6 +40,9 @@ export default class MultiplayerController extends EventTarget {
 
     constructor(port) {
         super();
+        if (port == null) {
+            port = window.location.hostname == "localhost" ? 8001 : "";
+        }
         this.#rtcClient = new LobbyClient(port, ENDPOINT_BASE, ENDPOINT_NAME, RTC_CONFIG, [DATA_CHANNEL_NAME]);
         this.#rtcClientEventManager = new EventTargetManager(this.#rtcClient);
         this.#rtcPeerEventManager.set("roomupdate", (event) => {

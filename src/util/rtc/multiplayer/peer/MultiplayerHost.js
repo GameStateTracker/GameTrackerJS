@@ -26,6 +26,8 @@ export default class MultiplayerHost extends MultiplayerPeer {
 
     #eventTargetManager = new EventTargetManager();
 
+    #savestateEventManager = new EventTargetManager(Savestate);
+
     constructor(rtcClient, roomName, username, visible, syncedStorages) {
         super(rtcClient, roomName, username, syncedStorages);
         this.#rtcClient = rtcClient;
@@ -50,7 +52,7 @@ export default class MultiplayerHost extends MultiplayerPeer {
         });
 
         /* SAVESTATE */
-        Savestate.addEventListener("load", () => {
+        this.#savestateEventManager.set("load", () => {
             this.sendSync();
         });
     }
@@ -75,6 +77,7 @@ export default class MultiplayerHost extends MultiplayerPeer {
         /* clean up */
         super.disconnect();
         this.#eventTargetManager.disconnect();
+        this.#savestateEventManager.disconnect();
         this.#clients.clear();
         this.#reverseLookup.clear();
     }

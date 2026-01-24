@@ -25,7 +25,7 @@ export default class MultiplayerPeer extends EventTarget {
 
     #eventTargetManager = new EventTargetManager();
 
-    #storageEventManager = new EventManager();
+    #savestateEventManager = new EventManager();
 
     constructor(rtcClient, roomName, username) {
         super();
@@ -63,7 +63,7 @@ export default class MultiplayerPeer extends EventTarget {
 
     #prepareStorage(name) {
         const storage = Savestate.getStorage(name);
-        this.#storageEventManager.set(storage, "change", (event) => {
+        this.#savestateEventManager.set(storage, "change", (event) => {
             if (!this.isMuted()) {
                 this.#rtcClient.send(DATA_CHANNEL_NAME, {
                     type: "update",
@@ -78,7 +78,7 @@ export default class MultiplayerPeer extends EventTarget {
     disconnect() {
         this.#eventTargetManager.disconnect();
         this.#eventTargetManager.reset();
-        this.#storageEventManager.clear();
+        this.#savestateEventManager.clear();
     }
 
     async rtcMessageHandler(remoteID, msg) {

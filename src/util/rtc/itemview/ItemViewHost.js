@@ -34,7 +34,7 @@ export default class ItemViewHost extends EventTarget {
 
     #eventTargetManager = new EventTargetManager();
 
-    #storageEventManager = new EventManager(false);
+    #savestateEventManager = new EventManager(false);
 
     constructor(port) {
         super();
@@ -48,12 +48,12 @@ export default class ItemViewHost extends EventTarget {
         });
 
         /* SAVESTATE */
-        Savestate.addEventListener("load", () => {
+        this.#savestateEventManager.set(Savestate, "load", () => {
             this.sendSync();
         });
 
         /* SETTINGS */
-        SettingsStorage.addEventListener("change", (event) => {
+        this.#savestateEventManager.set(SettingsStorage, "change", (event) => {
             if (this.#rtcClient != null) {
                 this.#rtcClient.send(DATA_CHANNEL_NAME, {
                     type: MessageTypes.SETTINGS,
@@ -62,7 +62,7 @@ export default class ItemViewHost extends EventTarget {
             }
         });
 
-        worldSummaryHandler.addEventListener("access", (event) => {
+        this.#savestateEventManager.set(worldSummaryHandler, "access", (event) => {
             this.#rtcClient.send(DATA_CHANNEL_NAME, {
                 type: MessageTypes.ACCESS,
                 data: event.value
@@ -82,7 +82,7 @@ export default class ItemViewHost extends EventTarget {
         }
         await this.#rtcClient.disconnect();
         this.#eventTargetManager.disconnect();
-        this.#storageEventManager.active = false;
+        this.#savestateEventManager.active = false;
         this.#isHosting = false;
         return true;
     }
@@ -91,7 +91,7 @@ export default class ItemViewHost extends EventTarget {
         const res = await this.#rtcClient.register(name, pass, version, data);
         if (res.success === true) {
             this.#eventTargetManager.switchTarget(this.#rtcClient);
-            this.#storageEventManager.active = true;
+            this.#savestateEventManager.active = true;
             this.#isHosting = true;
             return true;
         } else {
@@ -118,7 +118,7 @@ export default class ItemViewHost extends EventTarget {
 
     #prepareStorage(name) {
         const storage = Savestate.getStorage(name);
-        this.#storageEventManager.set(storage, "change", (event) => {
+        this.#savestateEventManager.set(storage, "change", (event) => {
             this.#rtcClient.send(DATA_CHANNEL_NAME, {
                 type: MessageTypes.UPDATE,
                 category: name,
