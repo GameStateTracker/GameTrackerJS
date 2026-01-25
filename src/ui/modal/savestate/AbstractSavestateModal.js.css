@@ -1,0 +1,6 @@
+#modal {
+    min-width: min(1000px, calc(100dvw - 50px));
+    max-width: min(1000px, calc(100dvw - 50px));
+    min-height: min(600px, calc(100dvh - 50px));
+    max-height: min(600px, calc(100dvh - 50px));
+}
