@@ -6,7 +6,7 @@ import TPL from "./LoadSavestateModal.js.html" assert {type: "html"};
 
 export default class LoadSavestateModal extends AbstractSavestateModal {
 
-    #savestateGridEl;
+    savestateListEl;
 
     #statenameEl;
 
@@ -22,13 +22,13 @@ export default class LoadSavestateModal extends AbstractSavestateModal {
         const footerEl = this.shadowRoot.getElementById("footer");
         footerEl.append(els);
         /* --- */
-        this.#savestateGridEl = this.shadowRoot.getElementById("savestate-grid");
+        this.savestateListEl = this.shadowRoot.getElementById("savestate-list");
         this.#statenameEl = this.shadowRoot.getElementById("statename");
         this.#loadEl = this.shadowRoot.getElementById("load");
         this.#cancelEl = this.shadowRoot.getElementById("cancel");
 
-        this.registerTargetEventHandler(this.#savestateGridEl, "change", () => {
-            this.#statenameEl.value = this.#savestateGridEl.value;
+        this.registerTargetEventHandler(this.savestateListEl, "change", () => {
+            this.#statenameEl.value = this.savestateListEl.value;
         });
 
         this.registerTargetEventHandler(this.#loadEl, "click", async () => {

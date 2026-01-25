@@ -4,3 +4,7 @@
     min-height: min(600px, calc(100dvh - 50px));
     max-height: min(600px, calc(100dvh - 50px));
 }
+
+#savestate-list {
+    height: 0px;
+}

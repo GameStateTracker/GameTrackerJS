@@ -1,0 +1,36 @@
+:host {
+    margin: 0px;
+}
+
+#container {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-width: var(--select-option-divider-width, 1px);
+    border-color: var(--select-option-divider-color, #222222);
+    border-radius: 0px;
+}
+
+:host(:last-child) #container {
+    border-bottom: none;
+}
+
+#auto {
+    margin-right: 4px;
+    opacity: 0.4;
+    font-style: italic;
+}
+
+#name {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#date,
+#version {
+    margin-left: 10px;
+    font-size: 0.8em;
+    opacity: 0.4;
+}
