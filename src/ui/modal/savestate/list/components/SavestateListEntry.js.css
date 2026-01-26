@@ -15,17 +15,18 @@
     border-bottom: none;
 }
 
-#auto {
-    margin-right: 4px;
-    opacity: 0.4;
-    font-style: italic;
-}
-
 #name {
     flex: 1;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+#name.autosave::before {
+    margin-right: 4px;
+    opacity: 0.4;
+    font-style: italic;
+    content: "[auto]";
 }
 
 #date,

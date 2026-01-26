@@ -1,13 +1,11 @@
 import DataListSelectEntry from "/emcJS/ui/dataview/datalist/components/DataListSelectEntry.js";
 import DateUtil from "/emcJS/util/date/DateUtil.js";
-import TPL from "./SavestateEntry.js.html" assert {type: "html"};
-import STYLE from "./SavestateEntry.js.css" assert {type: "css"};
+import TPL from "./SavestateListEntry.js.html" assert {type: "html"};
+import STYLE from "./SavestateListEntry.js.css" assert {type: "css"};
 
-export default class SavestateEntry extends DataListSelectEntry {
+export default class SavestateListEntry extends DataListSelectEntry {
 
     #contentEl;
-
-    #autoEl;
 
     #nameEl;
 
@@ -22,7 +20,6 @@ export default class SavestateEntry extends DataListSelectEntry {
         /* --- */
         this.#contentEl = this.shadowRoot.getElementById("content");
         this.#contentEl.append(els);
-        this.#autoEl = this.shadowRoot.getElementById("auto");
         this.#nameEl = this.shadowRoot.getElementById("name");
         this.#dateEl = this.shadowRoot.getElementById("date");
         this.#versionEl = this.shadowRoot.getElementById("version");
@@ -34,8 +31,8 @@ export default class SavestateEntry extends DataListSelectEntry {
             name,
             timestamp,
             version
-        } = data.data;
-        this.#autoEl.innerText = autosave === "true" ? "[auto]" : "";
+        } = data;
+        this.#nameEl.classList.toggle("autosave", autosave);
         this.#nameEl.innerText = name;
         this.#dateEl.innerHTML = this.#convertDate(timestamp);
         this.#versionEl.innerHTML = this.#convertVersion(version);
@@ -59,4 +56,4 @@ export default class SavestateEntry extends DataListSelectEntry {
 
 }
 
-customElements.define("gt-modal-savestate-entry", SavestateEntry);
+customElements.define("gt-modal-savestate-list-entry", SavestateListEntry);

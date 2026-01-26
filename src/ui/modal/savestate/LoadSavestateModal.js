@@ -1,12 +1,14 @@
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
+import "/emcJS/ui/form/element/input/string/StringInput.js";
+import "/emcJS/ui/form/button/Button.js";
 import SavestateHandler from "../../../savestate/SavestateHandler.js";
 import AbstractSavestateModal from "./AbstractSavestateModal.js";
 import TPL from "./LoadSavestateModal.js.html" assert {type: "html"};
 
 export default class LoadSavestateModal extends AbstractSavestateModal {
 
-    savestateListEl;
+    #savestateListEl;
 
     #statenameEl;
 
@@ -22,13 +24,13 @@ export default class LoadSavestateModal extends AbstractSavestateModal {
         const footerEl = this.shadowRoot.getElementById("footer");
         footerEl.append(els);
         /* --- */
-        this.savestateListEl = this.shadowRoot.getElementById("savestate-list");
+        this.#savestateListEl = this.shadowRoot.getElementById("savestate-list");
         this.#statenameEl = this.shadowRoot.getElementById("statename");
         this.#loadEl = this.shadowRoot.getElementById("load");
         this.#cancelEl = this.shadowRoot.getElementById("cancel");
 
-        this.registerTargetEventHandler(this.savestateListEl, "change", () => {
-            this.#statenameEl.value = this.savestateListEl.value;
+        this.registerTargetEventHandler(this.#savestateListEl, "change", () => {
+            this.#statenameEl.value = this.#savestateListEl.value[0];
         });
 
         this.registerTargetEventHandler(this.#loadEl, "click", async () => {
@@ -52,6 +54,13 @@ export default class LoadSavestateModal extends AbstractSavestateModal {
             this.remove();
             this.dispatchEvent(new Event("cancel"));
         });
+    }
+
+    async show(activeState) {
+        if (activeState != null) {
+            this.#statenameEl.value = activeState;
+        }
+        await super.show(activeState);
     }
 
 }
