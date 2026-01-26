@@ -14,7 +14,7 @@ export default class ModalDialogAddTypeEntities extends ModalDialog {
     #addContinuousEl;
 
     constructor() {
-        super({title: "Select entity"});
+        super("Select entity");
         const els = TPL.generate();
         STYLE.apply(this.shadowRoot);
         /* --- */
