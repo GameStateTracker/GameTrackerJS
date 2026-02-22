@@ -4,6 +4,7 @@ import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js"
 import Toast from "/emcJS/ui/overlay/message/Toast.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
+import Axes2D from "/emcJS/enum/Axes2D.js";
 import {debounce} from "/emcJS/util/Debouncer.js";
 import {deepClone} from "/emcJS/util/helper/DeepClone.js";
 import {
@@ -37,6 +38,10 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         return 0;
     }
 
+    static get AXES() {
+        return Axes2D;
+    }
+
     #searchEl;
 
     #gridEl;
@@ -49,7 +54,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
 
     constructor() {
         super();
-        this.shadowRoot.getElementById("field").append(TPL.generate());
+        TPL.apply(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.addEventListener("keydown", () => {
@@ -258,15 +263,11 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         super.formDisabledCallback(disabled);
         this.#searchEl.disabled = disabled;
         this.#gridEl.disabled = disabled;
-        this.#addEl.disabled = disabled || this.readonly;
+        this.#addEl.disabled = disabled;
     }
 
-    formResetCallback() {
-        this.value = super.value || "";
-    }
-
-    formStateRestoreCallback(state/* , mode */) {
-        this.value = state;
+    focus(options) {
+        this.#searchEl.focus(options);
     }
 
     get defaultValue() {
@@ -284,12 +285,20 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         return super.value;
     }
 
-    set readonly(value) {
+    set readOnly(value) {
         this.setBooleanAttribute("readonly", value);
     }
 
-    get readonly() {
+    get readOnly() {
         return this.getBooleanAttribute("readonly");
+    }
+
+    set resize(value) {
+        this.setEnumAttribute("resize", value, Axes2D);
+    }
+
+    get resize() {
+        return this.getEnumAttribute("resize");
     }
 
     static get observedAttributes() {
@@ -302,8 +311,8 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
         switch (name) {
             case "readonly": {
                 if (oldValue != newValue) {
-                    this.#gridEl.readonly = this.readonly;
-                    this.#addEl.disabled = this.disabled || this.readonly;
+                    this.#gridEl.readOnly = this.readOnly;
+                    this.#addEl.disabled = this.disabled || this.readOnly;
                 }
             } break;
         }

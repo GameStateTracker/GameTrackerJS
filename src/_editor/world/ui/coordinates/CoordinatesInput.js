@@ -1,14 +1,12 @@
-import CustomFormElementDelegating from "/emcJS/ui/element/CustomFormElementDelegating.js";
-import {
-    isEqual
-} from "/emcJS/util/helper/Comparator.js";
+import CustomFormElement from "/emcJS/ui/element/CustomFormElement.js";
+import {isEqual} from "/emcJS/util/helper/Comparator.js";
 import "/emcJS/ui/i18n/I18nTooltip.js";
 import CoordinatesInputModal from "./modal/CoordinatesInputModal.js";
 import TPL from "./CoordinatesInput.js.html" assert {type: "html"};
 import STYLE from "./CoordinatesInput.js.css" assert {type: "css"};
 
 // TODO use modal handler
-export default class CoordinatesInput extends CustomFormElementDelegating {
+export default class CoordinatesInput extends CustomFormElement {
 
     #value;
 
@@ -31,14 +29,13 @@ export default class CoordinatesInput extends CustomFormElementDelegating {
         /* --- */
         this.#textEl = this.shadowRoot.getElementById("text");
         this.#buttonEl = this.shadowRoot.getElementById("button");
-        this.#buttonEl.addEventListener("click", () => {
+        this.#buttonEl.addEventListener("click", async () => {
             this.#coordinatesInputModal.setCurrentMarker(this.#currentType, this.#currentName, this.#currentLabel);
-            this.#coordinatesInputModal.value = this.value;
-            this.#coordinatesInputModal.onsubmit = () => {
-                this.value = this.#coordinatesInputModal.value;
+            const result = await this.#coordinatesInputModal.show(this.value);
+            if (result) {
+                this.value = result;
                 this.#coordinatesInputModal.setCurrentMarker();
-            };
-            this.#coordinatesInputModal.show();
+            }
         });
     }
 
@@ -76,11 +73,11 @@ export default class CoordinatesInput extends CustomFormElementDelegating {
         return this.#value ?? super.value;
     }
 
-    set readonly(value) {
+    set readOnly(value) {
         this.setBooleanAttribute("readonly", value);
     }
 
-    get readonly() {
+    get readOnly() {
         return this.getBooleanAttribute("readonly");
     }
 
@@ -119,7 +116,9 @@ export default class CoordinatesInput extends CustomFormElementDelegating {
     }
 
     #applyValue(value) {
-        const {x, y, scale = 100} = this.#convertValue(value);
+        const {
+            x, y, scale = 100
+        } = this.#convertValue(value);
         if (x == -1 || y == -1) {
             this.#textEl.innerText = "unset";
         } else {
@@ -129,11 +128,21 @@ export default class CoordinatesInput extends CustomFormElementDelegating {
 
     #convertValue(value) {
         if (typeof value !== "object") {
-            return {x: -1, y: -1, scale: 100};
+            return {
+                x: -1,
+                y: -1,
+                scale: 100
+            };
         }
-        const {x, y, scale = 100} = value;
+        const {
+            x, y, scale = 100
+        } = value;
         if (x == null || y == null) {
-            return {x: -1, y: -1, scale: 100};
+            return {
+                x: -1,
+                y: -1,
+                scale: 100
+            };
         }
         const xValue = parseInt(x) || 0;
         const yValue = parseInt(y) || 0;

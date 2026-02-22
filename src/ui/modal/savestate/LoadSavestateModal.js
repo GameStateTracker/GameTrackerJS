@@ -29,11 +29,11 @@ export default class LoadSavestateModal extends AbstractSavestateModal {
         this.#loadEl = this.shadowRoot.getElementById("load");
         this.#cancelEl = this.shadowRoot.getElementById("cancel");
 
-        this.registerTargetEventHandler(this.#savestateListEl, "change", () => {
+        this.#savestateListEl.addEventListener("change", () => {
             this.#statenameEl.value = this.#savestateListEl.value[0];
         });
 
-        this.registerTargetEventHandler(this.#loadEl, "click", async () => {
+        this.#loadEl.addEventListener("click", async () => {
             const stateName = this.#statenameEl.value;
             if (!stateName) {
                 await ModalDialog.alert("No state selected", "Please select a state to load!");
@@ -50,7 +50,7 @@ export default class LoadSavestateModal extends AbstractSavestateModal {
             this.dispatchEvent(new Event("submit"));
         });
 
-        this.registerTargetEventHandler(this.#cancelEl, "click", () => {
+        this.#cancelEl.addEventListener("click", () => {
             this.remove();
             this.dispatchEvent(new Event("cancel"));
         });

@@ -78,12 +78,12 @@ class FilterButton extends EventTargetListenerElementMixin(CustomElement) {
         this.setAttribute("value", val);
     }
 
-    get readonly() {
+    get readOnly() {
         const val = this.getAttribute("readonly");
         return !!val && val != "false";
     }
 
-    set readonly(val) {
+    set readOnly(val) {
         this.setAttribute("readonly", val);
     }
 
@@ -133,7 +133,7 @@ class FilterButton extends EventTargetListenerElementMixin(CustomElement) {
     }
 
     next(event) {
-        if (!this.readonly) {
+        if (!this.readOnly) {
             const all = this.querySelectorAll("[value]");
             const oldValue = this.value;
             let value = oldValue;
@@ -155,7 +155,7 @@ class FilterButton extends EventTargetListenerElementMixin(CustomElement) {
     }
 
     revert(event) {
-        if (!this.readonly) {
+        if (!this.readOnly) {
             const all = this.querySelectorAll("[value]");
             const oldValue = this.value;
             let value = oldValue;

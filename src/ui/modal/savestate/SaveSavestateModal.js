@@ -31,11 +31,11 @@ export default class SaveSavestateModal extends AbstractSavestateModal {
         this.#saveEl = this.shadowRoot.getElementById("save");
         this.#cancelEl = this.shadowRoot.getElementById("cancel");
 
-        this.registerTargetEventHandler(this.#savestateListEl, "change", () => {
+        this.#savestateListEl.addEventListener("change", () => {
             this.#statenameEl.value = this.#savestateListEl.value[0];
         });
 
-        this.registerTargetEventHandler(this.#saveEl, "click", async () => {
+        this.#saveEl.addEventListener("click", async () => {
             const stateName = this.#statenameEl.value;
             if (!stateName) {
                 await ModalDialog.alert("State name is empty", "Please enter a name to save the state or select an existing state to overwrite it!");
@@ -53,7 +53,7 @@ export default class SaveSavestateModal extends AbstractSavestateModal {
             this.close();
         });
 
-        this.registerTargetEventHandler(this.#cancelEl, "click", () => {
+        this.#cancelEl.addEventListener("click", () => {
             this.remove();
             this.dispatchEvent(new Event("cancel"));
         });

@@ -1,49 +1,10 @@
-// frameworks
 import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
-
 import OptionsResource from "../../data/resource/OptionsResource.js";
-import SettingsAliasRegistry from "../../registry/SettingsAliasRegistry.js";
-
-const SET_TYPES = [
-    "list",
-    "-list"
-];
-
-const DEFAULTS = new Map();
+import StorageDefaultValues from "../../data/StorageDefaultValues.js";
 
 const CUSTOM_DEFAULTS = new Map();
 
-function resolveOptionValues(values) {
-    if (typeof values !== "object") {
-        values = SettingsAliasRegistry.resolveAlias(values);
-    }
-    if (values == null) {
-        values = [];
-    } else if (!Array.isArray(values)) {
-        values = Object.keys(values);
-    }
-    return values;
-}
-
-function resolveDefaults() {
-    for (const [key, value] of Object.entries(OptionsResource.get())) {
-        if (SET_TYPES.indexOf(value.type) >= 0) {
-            const values = resolveOptionValues(value.values);
-            const defaultValues = resolveOptionValues(value.default);
-            const defaultValueSet = new Set(defaultValues);
-            for (const el of values) {
-                DEFAULTS.set(el, defaultValueSet.has(el));
-            }
-        } else {
-            DEFAULTS.set(key, value.default);
-        }
-    }
-}
-
-resolveDefaults();
-SettingsAliasRegistry.addEventListener("change", () => {
-    resolveDefaults();
-});
+const defaultValues = new StorageDefaultValues(Object.entries(OptionsResource.get()));
 
 let INSTANCE = null;
 
@@ -62,11 +23,11 @@ class OptionsStorage extends ObservableStorage {
     }
 
     getDefault(key) {
-        return CUSTOM_DEFAULTS.get(key) ?? DEFAULTS.get(key);
+        return CUSTOM_DEFAULTS.get(key) ?? defaultValues.get(key);
     }
 
     set(key, value) {
-        if (CUSTOM_DEFAULTS.has(key) || DEFAULTS.has(key)) {
+        if (CUSTOM_DEFAULTS.has(key) || defaultValues.has(key)) {
             super.set(key, value);
         }
     }
@@ -75,7 +36,7 @@ class OptionsStorage extends ObservableStorage {
         const res = {};
         for (const key in values) {
             const value = values[key];
-            if (CUSTOM_DEFAULTS.has(key) || DEFAULTS.has(key)) {
+            if (CUSTOM_DEFAULTS.has(key) || defaultValues.has(key)) {
                 res[key] = value;
             }
         }
@@ -83,14 +44,14 @@ class OptionsStorage extends ObservableStorage {
     }
 
     get(key) {
-        if (CUSTOM_DEFAULTS.has(key) || DEFAULTS.has(key)) {
-            return super.get(key) ?? CUSTOM_DEFAULTS.has(key) ?? DEFAULTS.get(key);
+        if (CUSTOM_DEFAULTS.has(key) || defaultValues.has(key)) {
+            return super.get(key) ?? CUSTOM_DEFAULTS.has(key) ?? defaultValues.get(key);
         }
     }
 
     getAll() {
         const res = {};
-        for (const [key, value] of DEFAULTS) {
+        for (const [key, value] of defaultValues) {
             res[key] = super.get(key) ?? value;
         }
         for (const [key, value] of CUSTOM_DEFAULTS) {
@@ -100,12 +61,12 @@ class OptionsStorage extends ObservableStorage {
     }
 
     has(key) {
-        return CUSTOM_DEFAULTS.has(key) || DEFAULTS.has(key);
+        return CUSTOM_DEFAULTS.has(key) || defaultValues.has(key);
     }
 
     keys() {
         return [
-            ...DEFAULTS.keys(),
+            ...defaultValues.keys(),
             ...CUSTOM_DEFAULTS.keys()
         ];
     }

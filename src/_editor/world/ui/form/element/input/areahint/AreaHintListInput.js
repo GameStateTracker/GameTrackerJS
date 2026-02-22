@@ -4,15 +4,28 @@ import ImageSelectModal from "/emcJS/ui/form/element/select/image/components/Ima
 import {debounce} from "/emcJS/util/Debouncer.js";
 import {deleteAtIndexImmuted} from "/emcJS/util/helper/collection/ArrayMutations.js";
 import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
+import Axes2D from "/emcJS/enum/Axes2D.js";
+import {jsonParseSafe} from "/emcJS/util/helper/JSON.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
-import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "/emcJS/ui/dataview/datagrid/DataGrid.js";
+import "/emcJS/ui/dataview/datagrid/Column.js";
+import "/emcJS/ui/form/FormRow.js";
+import "/emcJS/ui/form/element/input/search/SearchInput.js";
+import "/emcJS/ui/form/button/Button.js";
 import TPL from "./AreaHintListInput.js.html" assert {type: "html"};
 import STYLE from "./AreaHintListInput.js.css" assert {type: "css"};
 
 export default class AreaHintListInput extends AbstractFormElement {
+
+    static get changeDebounceTime() {
+        return 0;
+    }
+
+    static get AXES() {
+        return Axes2D;
+    }
 
     #searchEl;
 
@@ -24,7 +37,7 @@ export default class AreaHintListInput extends AbstractFormElement {
 
     constructor() {
         super();
-        this.shadowRoot.getElementById("field").append(TPL.generate());
+        TPL.apply(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.addEventListener("keydown", () => {
@@ -62,6 +75,10 @@ export default class AreaHintListInput extends AbstractFormElement {
                 currentValue[rowKey].icon = value;
             }
             this.value = currentValue;
+            this.dispatchEvent(new Event("input", {
+                bubbles: true,
+                cancelable: true
+            }));
         }));
         this.#gridEl.addEventListener("edit::counting", debounce((event) => {
             event.stopPropagation();
@@ -74,6 +91,10 @@ export default class AreaHintListInput extends AbstractFormElement {
                 currentValue[rowKey].counting = value;
             }
             this.value = currentValue;
+            this.dispatchEvent(new Event("input", {
+                bubbles: true,
+                cancelable: true
+            }));
         }));
         /* --- */
         this.#dataManager = new SimpleDataProvider(this.#gridEl);
@@ -93,15 +114,15 @@ export default class AreaHintListInput extends AbstractFormElement {
         super.formDisabledCallback(disabled);
         this.#searchEl.disabled = disabled;
         this.#gridEl.disabled = disabled;
-        this.#addEl.disabled = disabled || this.readonly;
+        this.#addEl.disabled = disabled;
     }
 
-    formResetCallback() {
-        this.value = super.value || "";
+    focus(options) {
+        this.#searchEl.focus(options);
     }
 
-    formStateRestoreCallback(state/* , mode */) {
-        this.value = state;
+    set defaultValue(value) {
+        this.setJSONAttribute("value", value);
     }
 
     get defaultValue() {
@@ -110,13 +131,21 @@ export default class AreaHintListInput extends AbstractFormElement {
 
     set value(value) {
         if (typeof value === "string") {
-            value = JSON.parse(value);
+            value = jsonParseSafe(value);
         }
         super.value = value;
     }
 
     get value() {
         return super.value;
+    }
+
+    set resize(value) {
+        this.setEnumAttribute("resize", value, Axes2D);
+    }
+
+    get resize() {
+        return this.getEnumAttribute("resize");
     }
 
     static get observedAttributes() {
@@ -129,8 +158,7 @@ export default class AreaHintListInput extends AbstractFormElement {
         switch (name) {
             case "readonly": {
                 if (oldValue != newValue) {
-                    this.#gridEl.readonly = this.readonly;
-                    this.#addEl.disabled = this.disabled || this.readonly;
+                    this.#gridEl.readOnly = this.readOnly;
                 }
             } break;
         }
@@ -164,6 +192,10 @@ export default class AreaHintListInput extends AbstractFormElement {
             ...currentValue,
             {key: rowKey}
         ];
+        this.dispatchEvent(new Event("input", {
+            bubbles: true,
+            cancelable: true
+        }));
     }
 
     async #removeElement(rowKey) {
@@ -175,6 +207,10 @@ export default class AreaHintListInput extends AbstractFormElement {
         const index = this.#getElementIndex(rowKey);
         if (index >= 0) {
             this.value = deleteAtIndexImmuted(currentValue, index);
+            this.dispatchEvent(new Event("input", {
+                bubbles: true,
+                cancelable: true
+            }));
         }
     }
 

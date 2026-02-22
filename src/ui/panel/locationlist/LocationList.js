@@ -12,11 +12,11 @@ import {getInnerText} from "/emcJS/util/helper/ui/ExtractText.js";
 import {debounce} from "/emcJS/util/Debouncer.js";
 import i18n from "/emcJS/util/I18n.js";
 import SearchEvery from "/emcJS/util/search/SearchEvery.js";
+import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import UIRegistry from "../../../registry/UIRegistry.js";
 import WorldResource from "../../../data/resource/WorldResource.js";
 import LocationStateManager from "../../../statemanager/world/location/LocationStateManager.js";
 import SettingsObserver from "../../../util/observer/SettingsObserver.js";
-import "/emcJS/ui/input/SearchField.js";
 import "./components/entries/LocationListLocation.js";
 import TPL from "./LocationList.js.html" assert {type: "html"};
 import STYLE from "./LocationList.js.css" assert {type: "css"};
@@ -39,6 +39,8 @@ class ListEntryElementManager extends ElementManager {
 // TODO use dataview/datalist
 export default class LocationList extends Panel {
 
+    #searchEl;
+
     #elementManager;
 
     #listEventManager = new EventMultiTargetManager();
@@ -52,11 +54,12 @@ export default class LocationList extends Panel {
         /* --- */
         this.#elementManager = new ListEntryElementManager(this);
         /* search */
-        const searchEl = this.shadowRoot.getElementById("search");
-        searchEl.addEventListener("change", (event) => {
+        this.#searchEl = this.shadowRoot.getElementById("search");
+        this.#searchEl.addEventListener("change", () => {
             const all = this.querySelectorAll("[ref]");
-            if (event.value) {
-                const regEx = new SearchEvery(event.value);
+            const searchValue = this.#searchEl.value;
+            if (searchValue) {
+                const regEx = new SearchEvery(searchValue);
                 for (const el of all) {
                     const value = el.dataset.filtervalue ?? getInnerText(el);
                     if (regEx.test(value)) {

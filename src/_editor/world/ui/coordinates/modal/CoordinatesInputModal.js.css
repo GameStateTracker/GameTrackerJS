@@ -1,25 +1,12 @@
 #modal {
+    width: 100dvw;
+    height: 100dvh;
     max-width: calc(100vw - 20px);
-    max-height: calc(100dvh - 50px);
+    max-height: calc(100dvh - 20px);
     margin-top: 10px;
 }
 
-#footer {
-    display: flex;
-}
-
-#content {
-    flex-direction: row;
-    max-height: calc(100vh - 120px);
-    height: 100vh;
-}
-
-#submit,
-#cancel {
-    margin: 2px;
-}
-
 #input {
-    height: calc(-220px + 100vh);
+    height: 100%;
     width: 100%;
 }

@@ -149,7 +149,7 @@ export default class WorldListSubList extends BaseClass {
     }, 1000);
 
     connectedCallback() {
-        super.connectedCallback();
+        super.connectedCallback?.();
         /* list */
         this.refreshList();
     }

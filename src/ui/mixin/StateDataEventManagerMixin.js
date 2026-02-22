@@ -91,7 +91,7 @@ export default createMixin((superclass) => class StateDataEventManagerMixin exte
 
     connectedCallback() {
         if (super.connectedCallback) {
-            super.connectedCallback();
+            super.connectedCallback?.();
         }
         if (this.#target != null) {
             for (const [name, fns] of this.#subs) {
@@ -107,7 +107,7 @@ export default createMixin((superclass) => class StateDataEventManagerMixin exte
 
     disconnectedCallback() {
         if (super.disconnectedCallback) {
-            super.disconnectedCallback();
+            super.disconnectedCallback?.();
         }
         if (this.#target != null) {
             for (const [name, fns] of this.#subs) {

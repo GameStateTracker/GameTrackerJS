@@ -1,35 +1,43 @@
-import Modal from "/emcJS/ui/modal/Modal.js";
+import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import "/emcJS/ui/form/button/Button.js";
 import "./components/MapPosInput.js";
 import TPL from "./CoordinatesInputModal.js.html" assert {type: "html"};
 import STYLE from "./CoordinatesInputModal.js.css" assert {type: "css"};
 
-export default class CoordinatesInputModal extends Modal {
+export default class CoordinatesInputModal extends ModalDialog {
+
+    #contentEl;
 
     #inputEl;
 
     constructor(name) {
         if (typeof name === "string" && name !== "") {
-            super(`Edit coordinates: ${name}`);
+            super(`Edit coordinates: ${name}`, {
+                submit: true,
+                cancel: true
+            });
         } else {
-            super("Edit coordinates");
+            super("Edit coordinates", {
+                submit: true,
+                cancel: true
+            });
         }
         const els = TPL.generate();
         STYLE.apply(this.shadowRoot);
         /* --- */
-        const footerEl = this.shadowRoot.getElementById("footer");
-        const contentEl = this.shadowRoot.getElementById("content");
+        this.#contentEl = this.shadowRoot.getElementById("content");
 
         this.#inputEl = els.getElementById("input");
-        contentEl.append(this.#inputEl);
+        this.#contentEl.append(this.#inputEl);
+    }
 
-        const cancelEl = els.getElementById("cancel");
-        cancelEl.addEventListener("click", () => this.cancel());
-        footerEl.append(cancelEl);
+    async show(value) {
+        this.#inputEl.value = value;
+        return await super.show();
+    }
 
-        const submitEl = els.getElementById("submit");
-        submitEl.addEventListener("click", () => this.submit());
-        footerEl.append(submitEl);
+    getSubmitValue() {
+        return this.#inputEl.value;
     }
 
     set caption(value) {
@@ -42,24 +50,6 @@ export default class CoordinatesInputModal extends Modal {
 
     get caption() {
         return super.caption;
-    }
-
-    submit() {
-        this.dispatchEvent(new Event("submit"));
-        this.remove();
-    }
-
-    cancel() {
-        this.dispatchEvent(new Event("cancel"));
-        this.remove();
-    }
-
-    set value(value) {
-        this.#inputEl.value = value;
-    }
-
-    get value() {
-        return this.#inputEl.value;
     }
 
     setCurrentMarker(currentType, currentName, currentLabel) {

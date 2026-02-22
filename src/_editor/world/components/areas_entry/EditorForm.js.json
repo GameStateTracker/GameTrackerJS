@@ -81,7 +81,7 @@
                 "id": "mapwidth",
                 "name": "map.width",
                 "label": "Width",
-                "readonly": true,
+                "readOnly": true,
                 "visible": {
                     "type": "value",
                     "ref": "map.active"
@@ -92,7 +92,7 @@
                 "id": "mapheight",
                 "name": "map.height",
                 "label": "Height",
-                "readonly": true,
+                "readOnly": true,
                 "visible": {
                     "type": "value",
                     "ref": "map.active"

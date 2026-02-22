@@ -80,7 +80,7 @@ export default class WorldMapStateEntry extends BaseClass {
 
     connectedCallback() {
         if (super.connectedCallback) {
-            super.connectedCallback();
+            super.connectedCallback?.();
         }
         /* --- */
         if (this.ref) {

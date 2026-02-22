@@ -102,6 +102,12 @@ export default class MapPosInput extends CustomElement {
         });
     }
 
+    connectedCallback() {
+        if (this.#currentMarkerEl) {
+            this.#currentMarkerEl.scrollIntoViewIfNeeded();
+        }
+    }
+
     #onChange = debounce(() => {
         this.dispatchEvent(new Event("change"));
     });
@@ -170,6 +176,7 @@ export default class MapPosInput extends CustomElement {
         this.#currentMarkerEl = this.#entryMarkerLookup.get(`${type}::${name}`);
         if (this.#currentMarkerEl) {
             this.#currentMarkerEl.classList.add("active");
+            this.#currentMarkerEl.scrollIntoViewIfNeeded();
         }
     }
 

@@ -1,0 +1,49 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+}
+
+#searchbar {
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 4px 2px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    border-bottom: solid 2px #cccccc;
+    font-size: 1rem;
+}
+
+#search {
+    flex: 1;
+    margin: 0px 2px;
+}
+
+label {
+    display: flex;
+    align-items: center;
+    margin: 0px 6px 0px 2px;
+}
+
+#hide-bound {
+    margin-right: 4px;
+}
+
+#scroll-container {
+    flex: 1;
+    overflow: auto;
+}
+
+::slotted(*) {
+    border-bottom: solid 2px var(--list-border-bottom-color, #000000);
+}
+
+::slotted(.hidden) {
+    display: none;
+}

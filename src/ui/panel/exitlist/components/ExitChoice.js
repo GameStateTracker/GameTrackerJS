@@ -1,9 +1,6 @@
-// frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
+
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
-
 import ExitStateManager from "../../../../statemanager/world/exit/ExitStateManager.js";
 import StateDataEventManagerMixin from "../../../mixin/StateDataEventManagerMixin.js";
 import Badge from "../../../Badge.js";
@@ -12,94 +9,15 @@ import ExitBindingContextMenu from "../../../ctxmenu/ExitBindingContextMenu.js";
 import Language from "../../../../util/Language.js";
 import DefaultAreaState from "../../../../state/world/area/DefaultAreaState.js";
 import WorldListState from "../../../../state/world/WorldListState.js";
+import TPL from "./ExitChoice.js.html" assert {type: "html"};
+import STYLE from "./ExitChoice.js.css" assert {type: "css"};
 
 // TODO use i18n-label instead of apply label method
-
-const TPL = new HTMLTemplate(`
-<div class="textarea">
-    <div id="text"></div>
-    <gt-badge id="badge"></gt-badge>
-</div>
-<div class="pointer">→</div>
-<div class="textarea">
-    <div id="value"></div>
-</div>
-`);
-
-const STYLE = new CSSTemplate(`
-:host {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    cursor: pointer;
-    padding: 3px;
-    user-select: none;
-}
-:host([hidden]:not([hidden="false"])) {
-    display: none;
-}
-:host(:hover) {
-    background-color: var(--main-hover-color, #ffffff32);
-}
-.textarea {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex: 1;
-    height: 50px;
-    margin: 2px;
-    word-break: break-word;
-}
-.textarea:empty,
-.textarea.hidden {
-    display: none;
-}
-.pointer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    flex-grow: 0;
-    flex-shrink: 0;
-}
-#value:empty::after {
-    display: inline;
-    font-style: italic;
-    content: "no association";
-}
-#text {
-    display: flex;
-    align-items: center;
-}
-#text,
-#value {
-    color: var(--page-text-color, #ffffff);
-}
-@media (max-width: 1000px) {
-    :host {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .pointer {
-        display: none;
-    }
-}
-:host(.markname) #text,
-:host(.markvalue) #value {
-    color: var(--page-back-color, #000000);
-    background-color: var(--page-text-color, #ffffff);
-    outline: 2px solid var(--page-text-color, #ffffff);
-}
-`);
-
 export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventManagerMixin(CustomElement)) {
 
     constructor() {
         super();
-        this.shadowRoot.append(TPL.generate());
+        TPL.apply(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.registerStateHandler("visibility", (event) => {
@@ -107,6 +25,11 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
         });
         this.registerStateHandler("value", (event) => {
             this.value = event.value ?? "";
+        });
+        this.registerStateHandler("access", (event) => {
+            const access = event.value;
+            const accessValue = access.value;
+            this.applyAccess(("" + accessValue).toLowerCase(), access);
         });
 
         /* context menu */
@@ -187,6 +110,10 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
         this.hidden = !state.isVisible();
     }
 
+    applyAccess(value = "undefined"/* , data = {} */) {
+        this.access = value;
+    }
+
     set ref(val) {
         this.setAttribute("ref", val);
     }
@@ -203,12 +130,20 @@ export default class ExitChoice extends ContextMenuManagerMixin(StateDataEventMa
         return this.getAttribute("value");
     }
 
-    get hidden() {
-        return this.getAttribute("hidden") != "false";
+    set access(val) {
+        this.setAttribute("access", val);
+    }
+
+    get access() {
+        return this.getAttribute("access");
     }
 
     set hidden(val) {
         this.setAttribute("hidden", !!val);
+    }
+
+    get hidden() {
+        return this.getAttribute("hidden") != "false";
     }
 
     static get observedAttributes() {

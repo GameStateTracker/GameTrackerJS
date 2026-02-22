@@ -2,6 +2,7 @@ import AbstractFormElement from "/emcJS/ui/form/element/AbstractFormElement.js";
 import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
 import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
+import Axes2D from "/emcJS/enum/Axes2D.js";
 import {debounce} from "/emcJS/util/Debouncer.js";
 import MutationObserverManager from "/emcJS/util/observer/manager/MutationObserverManager.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
@@ -16,6 +17,14 @@ const MUTATION_CONFIG = {
 };
 
 export default class OptionAmountListInput extends AbstractFormElement {
+
+    static get changeDebounceTime() {
+        return 0;
+    }
+
+    static get AXES() {
+        return Axes2D;
+    }
 
     #options = [];
 
@@ -33,7 +42,7 @@ export default class OptionAmountListInput extends AbstractFormElement {
 
     constructor() {
         super();
-        this.shadowRoot.getElementById("field").append(TPL.generate());
+        TPL.apply(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.#optionsContainerEl = this.shadowRoot.getElementById("options-container");
@@ -53,6 +62,10 @@ export default class OptionAmountListInput extends AbstractFormElement {
                 currentValue[rowKey] = value;
             }
             this.value = currentValue;
+            this.dispatchEvent(new Event("input", {
+                bubbles: true,
+                cancelable: true
+            }));
         }, 300));
         /* --- */
         this.#dataManager = new SimpleDataProvider(this.#gridEl);
@@ -71,14 +84,6 @@ export default class OptionAmountListInput extends AbstractFormElement {
         super.formDisabledCallback(disabled);
         this.#searchEl.disabled = disabled;
         this.#gridEl.disabled = disabled;
-    }
-
-    formResetCallback() {
-        this.value = super.value;
-    }
-
-    formStateRestoreCallback(state/* , mode */) {
-        this.value = state;
     }
 
     get defaultValue() {
@@ -105,11 +110,11 @@ export default class OptionAmountListInput extends AbstractFormElement {
         return res;
     }
 
-    set readonly(value) {
+    set readOnly(value) {
         this.setBooleanAttribute("readonly", value);
     }
 
-    get readonly() {
+    get readOnly() {
         return this.getBooleanAttribute("readonly");
     }
 
@@ -119,6 +124,14 @@ export default class OptionAmountListInput extends AbstractFormElement {
 
     get sorted() {
         return this.getBooleanAttribute("sorted");
+    }
+
+    set resize(value) {
+        this.setEnumAttribute("resize", value, Axes2D);
+    }
+
+    get resize() {
+        return this.getEnumAttribute("resize");
     }
 
     static get observedAttributes() {
@@ -131,7 +144,7 @@ export default class OptionAmountListInput extends AbstractFormElement {
         switch (name) {
             case "readonly": {
                 if (oldValue != newValue) {
-                    this.#gridEl.readonly = this.readonly;
+                    this.#gridEl.readOnly = this.readOnly;
                 }
             } break;
             case "sorted": {

@@ -88,11 +88,11 @@ export default class ItemElement extends BaseClass {
         return this.getAttribute("value");
     }
 
-    set readonly(val) {
+    set readOnly(val) {
         this.setAttribute("readonly", val);
     }
 
-    get readonly() {
+    get readOnly() {
         return this.getAttribute("readonly");
     }
 
@@ -150,7 +150,7 @@ export default class ItemElement extends BaseClass {
     }
 
     next(event) {
-        if (!this.readonly) {
+        if (!this.readOnly) {
             const state = this.getState();
             if (state != null) {
                 const data = state.props;
@@ -187,7 +187,7 @@ export default class ItemElement extends BaseClass {
     }
 
     prev(event) {
-        if (!this.readonly) {
+        if (!this.readOnly) {
             const state = this.getState();
             if (state != null) {
                 const data = state.props;

@@ -106,7 +106,7 @@ export default createMixin((superclass) => class MultiStateDataEventManagerMixin
 
     connectedCallback() {
         if (super.connectedCallback) {
-            super.connectedCallback();
+            super.connectedCallback?.();
         }
         if (this.#targets.size <= 0) {
             this.applyDefaultValues();
@@ -124,7 +124,7 @@ export default createMixin((superclass) => class MultiStateDataEventManagerMixin
 
     disconnectedCallback() {
         if (super.disconnectedCallback) {
-            super.disconnectedCallback();
+            super.disconnectedCallback?.();
         }
         for (const target of this.#targets) {
             for (const [name, fns] of this.#subs) {

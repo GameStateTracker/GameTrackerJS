@@ -1,49 +1,10 @@
-// frameworks
 import ObservableIDBProxyStorage from "/emcJS/data/storage/observable/ObservableIDBProxyStorage.js";
-
 import SettingsResource from "../data/resource/SettingsResource.js";
-import SettingsAliasRegistry from "../registry/SettingsAliasRegistry.js";
+import StorageDefaultValues from "../data/StorageDefaultValues.js";
 
 // TODO sync data to other page instances
 
-const SET_TYPES = [
-    "list",
-    "-list"
-];
-
-const DEFAULTS = new Map();
-
-function resolveOptionValues(values) {
-    if (typeof values !== "object") {
-        values = SettingsAliasRegistry.resolveAlias(values);
-    }
-    if (values == null) {
-        values = [];
-    } else if (!Array.isArray(values)) {
-        values = Object.keys(values);
-    }
-    return values;
-}
-
-function resolveDefaults() {
-    for (const [key, value] of Object.entries(SettingsResource.get())) {
-        if (SET_TYPES.indexOf(value.type) >= 0) {
-            const values = resolveOptionValues(value.values);
-            const defaultValues = resolveOptionValues(value.default);
-            const defaultValueSet = new Set(defaultValues);
-            for (const el of values) {
-                DEFAULTS.set(el, defaultValueSet.has(el));
-            }
-        } else {
-            DEFAULTS.set(key, value.default);
-        }
-    }
-}
-
-resolveDefaults();
-SettingsAliasRegistry.addEventListener("change", () => {
-    resolveDefaults();
-});
+const defaultValues = new StorageDefaultValues(Object.entries(SettingsResource.get()));
 
 class AppSettingsStorage extends ObservableIDBProxyStorage {
 
@@ -52,7 +13,7 @@ class AppSettingsStorage extends ObservableIDBProxyStorage {
     }
 
     set(key, value) {
-        if (DEFAULTS.has(key)) {
+        if (defaultValues.has(key)) {
             super.set(key, value);
         }
     }
@@ -61,7 +22,7 @@ class AppSettingsStorage extends ObservableIDBProxyStorage {
         const res = {};
         for (const key in values) {
             const value = values[key];
-            if (DEFAULTS.has(key)) {
+            if (defaultValues.has(key)) {
                 res[key] = value;
             }
         }
@@ -69,30 +30,30 @@ class AppSettingsStorage extends ObservableIDBProxyStorage {
     }
 
     get(key) {
-        if (DEFAULTS.has(key)) {
-            return super.get(key) ?? DEFAULTS.get(key);
+        if (defaultValues.has(key)) {
+            return super.get(key) ?? defaultValues.get(key);
         }
     }
 
     getAll() {
         const res = {};
-        for (const [key, value] of DEFAULTS) {
+        for (const [key, value] of defaultValues) {
             res[key] = super.get(key) ?? value;
         }
         return res;
     }
 
     has(key) {
-        return DEFAULTS.has(key);
+        return defaultValues.has(key);
     }
 
     keys() {
-        return DEFAULTS.keys();
+        return defaultValues.keys();
     }
 
     deserialize(data = {}) {
         const res = {};
-        for (const [key] of DEFAULTS) {
+        for (const [key] of defaultValues) {
             const newValue = data[key];
             if (newValue != null) {
                 res[key] = newValue;
@@ -103,7 +64,7 @@ class AppSettingsStorage extends ObservableIDBProxyStorage {
 
     overwrite(data = {}) {
         const res = {};
-        for (const [key] of DEFAULTS) {
+        for (const [key] of defaultValues) {
             if (key in data) {
                 const newValue = data[key];
                 res[key] = newValue;

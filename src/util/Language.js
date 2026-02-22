@@ -26,11 +26,11 @@ class Language {
         return I18n.getLanguages();
     }
 
-    translate(index) {
-        if (!index) {
+    translate(key) {
+        if (!key) {
             return "";
         }
-        return I18n.get(index);
+        return I18n.get(key);
     }
 
     generateLabel(key) {

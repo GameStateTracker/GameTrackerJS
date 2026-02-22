@@ -3,7 +3,6 @@ import Toast from "/emcJS/ui/overlay/message/Toast.js";
 import DateUtil from "/emcJS/util/date/DateUtil.js";
 import {createArchive} from "/emcJS/util/zip/Deflate.js";
 import FileSystem from "/emcJS/util/file/FileSystem.js";
-import "/emcJS/ui/form/element/input/string/StringInput.js";
 import "/emcJS/ui/form/button/Button.js";
 import SavestateHandler from "../../../savestate/SavestateHandler.js";
 import SavestateManager from "../../../savestate/SavestateManager.js";
@@ -37,7 +36,7 @@ export default class ManageSavestateModal extends AbstractSavestateModal {
         this.#importEl = this.shadowRoot.getElementById("import");
         this.#exportEl = this.shadowRoot.getElementById("export");
 
-        this.registerTargetEventHandler(this.#savestateListEl, "change", () => {
+        this.#savestateListEl.addEventListener("change", () => {
             const hasSelected = this.#savestateListEl.value.length > 0;
             this.#deleteEl.disabled = !hasSelected;
             this.#renameEl.disabled = !hasSelected;
@@ -45,7 +44,7 @@ export default class ManageSavestateModal extends AbstractSavestateModal {
         });
 
         // DELETE
-        this.registerTargetEventHandler(this.#deleteEl, "click", async () => {
+        this.#deleteEl.addEventListener("click", async () => {
             const stateNames = this.#savestateListEl.value;
             if (!stateNames) {
                 await ModalDialog.alert("No state(s) selected", "Please select a state to delete!");
@@ -64,7 +63,7 @@ export default class ManageSavestateModal extends AbstractSavestateModal {
         });
 
         // RENAME
-        this.registerTargetEventHandler(this.#renameEl, "click", async () => {
+        this.#renameEl.addEventListener("click", async () => {
             const stateNames = this.#savestateListEl.value;
             if (!stateNames) {
                 await ModalDialog.alert("No state selected", "Please select a state to rename!");
@@ -100,7 +99,7 @@ export default class ManageSavestateModal extends AbstractSavestateModal {
         });
 
         // IMPORT
-        this.registerTargetEventHandler(this.#importEl, "click", async () => {
+        this.#importEl.addEventListener("click", async () => {
             const res = await FileSystem.load(".json");
             if (res == null || res.data == null || res.data.data == null || res.data.name == null) {
                 await ModalDialog.alert("Warning", "Did not find any data to import.");
@@ -139,7 +138,7 @@ export default class ManageSavestateModal extends AbstractSavestateModal {
         });
 
         // EXPORT
-        this.registerTargetEventHandler(this.#exportEl, "click", async () => {
+        this.#exportEl.addEventListener("click", async () => {
             const stateNames = this.#savestateListEl.value;
             if (!stateNames) {
                 await ModalDialog.alert("No state selected", "Please select a state to export!");

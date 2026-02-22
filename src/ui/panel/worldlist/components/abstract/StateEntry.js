@@ -27,7 +27,7 @@ export default class WorldListStateEntry extends BaseClass {
 
     connectedCallback() {
         if (super.connectedCallback) {
-            super.connectedCallback();
+            super.connectedCallback?.();
         }
         /* --- */
         if (this.ref) {

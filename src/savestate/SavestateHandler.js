@@ -1,15 +1,9 @@
 import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
 import LocalStorage from "/emcJS/data/storage/global/LocalStorage.js";
 import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import {
-    deepClone
-} from "/emcJS/util/helper/DeepClone.js";
-import {
-    isEqual
-} from "/emcJS/util/helper/Comparator.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
+import {deepClone} from "/emcJS/util/helper/DeepClone.js";
+import {isEqual} from "/emcJS/util/helper/Comparator.js";
 import Savestate from "./Savestate.js";
 import SavestateConverter from "./SavestateConverter.js";
 
@@ -277,6 +271,9 @@ class SavestateHandler extends EventTarget {
     }
 
     getAll(category) {
+        if (category != null) {
+            return Savestate.getAllFromCategory(category);
+        }
         return Savestate.getAll(category);
     }
 
@@ -291,7 +288,10 @@ class SavestateHandler extends EventTarget {
         console.group("StateConverter - Test");
         try {
             for (let i = offset; i < version; ++i) {
-                console.log(`Version[${i}]: `, SavestateConverter.convert({version: i, data: {}}));
+                console.log(`Version[${i}]: `, SavestateConverter.convert({
+                    version: i,
+                    data: {}
+                }));
             }
         } catch (err) {
             console.error(err);

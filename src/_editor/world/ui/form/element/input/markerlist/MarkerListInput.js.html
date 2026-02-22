@@ -1,16 +1,18 @@
-<div class="header">
-    <emc-input-search id="search" nohover></emc-input-search>
+<div id="container">
+    <div id="header">
+        <emc-input-search id="search"></emc-input-search>
+    </div>
+    <emc-datagrid id="grid" stretched="relation" sortable>
+        <emc-datagrid-column name="relation" label="Entity" type="relation"></emc-datagrid-column>
+        <emc-datagrid-column name="pos" label="Position" type="coordinates" width="150" editable action="pos"></emc-datagrid-column>
+        <emc-datagrid-column name="visible" label="Visible" type="boolorlogic" width="150" editable action="visible"></emc-datagrid-column>
+        <emc-datagrid-column name="ignoreEntryVisibility" label="Ignore Entry Visibility" type="boolean" width="50" editable action="ignoreEntryVisibility"></emc-datagrid-column>
+        <emc-datagrid-column name="accessPenetration" label="Access Penetration" type="boolorlogic" width="150" editable nullable action="accessPenetration"></emc-datagrid-column>
+        <emc-datagrid-column name="mapOnly" label="Map Only" type="boolean" width="50" editable action="mapOnly"></emc-datagrid-column>
+        <emc-datagrid-column name="rootOnly" label="Root Only" type="boolean" width="50" editable action="rootOnly"></emc-datagrid-column>
+        <emc-datagrid-column name="remove" label="" type="button" width="50" text="" icon-type="font" icon="trash" tooltip="Remove" action="remove" fixed="end"></emc-datagrid-column>
+    </emc-datagrid>
+    <emc-form-row id="footer" align="end">
+        <emc-button id="add" text="Add entry" icon-type="font" icon="add"></emc-button>
+    </emc-form-row>
 </div>
-<emc-datagrid id="grid" stretched="relation" sortable>
-    <emc-datagrid-column name="relation" label="Entity" type="relation"></emc-datagrid-column>
-    <emc-datagrid-column name="pos" label="Position" type="coordinates" width="150" editable action="pos"></emc-datagrid-column>
-    <emc-datagrid-column name="visible" label="Visible" type="boolorlogic" width="150" editable action="visible"></emc-datagrid-column>
-    <emc-datagrid-column name="ignoreEntryVisibility" label="Ignore Entry Visibility" type="boolean" width="50" editable action="ignoreEntryVisibility"></emc-datagrid-column>
-    <emc-datagrid-column name="accessPenetration" label="Access Penetration" type="boolorlogic" width="150" editable nullable action="accessPenetration"></emc-datagrid-column>
-    <emc-datagrid-column name="mapOnly" label="Map Only" type="boolean" width="50" editable action="mapOnly"></emc-datagrid-column>
-    <emc-datagrid-column name="rootOnly" label="Root Only" type="boolean" width="50" editable action="rootOnly"></emc-datagrid-column>
-    <emc-datagrid-column name="remove" label="" type="button" width="50" text="" icon="✖" tooltip="Remove" action="remove" fixed="end"></emc-datagrid-column>
-</emc-datagrid>
-<emc-form-row class="footer" align="end">
-    <emc-button id="add" text="Add entity" icon="+"></emc-button>
-</emc-form-row>

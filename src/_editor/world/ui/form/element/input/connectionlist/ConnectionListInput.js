@@ -9,6 +9,7 @@ import {
     deleteAtIndexImmuted, insertAtIndex
 } from "/emcJS/util/helper/collection/ArrayMutations.js";
 import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
+import Axes2D from "/emcJS/enum/Axes2D.js";
 import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
 import CoordinatesInputModal from "../../../../coordinates/modal/CoordinatesInputModal.js";
@@ -23,6 +24,14 @@ import STYLE from "./ConnectionListInput.js.css" assert {type: "css"};
 
 export default class ConnectionListInput extends ContextMenuManagerMixin(AbstractFormElement) {
 
+    static get changeDebounceTime() {
+        return 0;
+    }
+
+    static get AXES() {
+        return Axes2D;
+    }
+
     #searchEl;
 
     #gridEl;
@@ -33,7 +42,7 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
 
     constructor() {
         super();
-        this.shadowRoot.getElementById("field").append(TPL.generate());
+        TPL.apply(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.addEventListener("keydown", () => {
@@ -63,6 +72,10 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
                 const newValue = deepClone(currentValue);
                 newValue[index].posA = value;
                 this.value = newValue;
+                this.dispatchEvent(new Event("input", {
+                    bubbles: true,
+                    cancelable: true
+                }));
             }
         }));
         this.#gridEl.addEventListener("edit::posB", debounce((event) => {
@@ -77,6 +90,10 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
                 const newValue = deepClone(currentValue);
                 newValue[index].posB = value;
                 this.value = newValue;
+                this.dispatchEvent(new Event("input", {
+                    bubbles: true,
+                    cancelable: true
+                }));
             }
         }));
         /* --- */
@@ -129,6 +146,10 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
                     const newValue = deepClone(currentValue);
                     newValue[index][columnName] = value;
                     this.value = newValue;
+                    this.dispatchEvent(new Event("input", {
+                        bubbles: true,
+                        cancelable: true
+                    }));
                 } catch {
                     Toast.error("could not read from clipboard");
                 }
@@ -157,15 +178,11 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
         super.formDisabledCallback(disabled);
         this.#searchEl.disabled = disabled;
         this.#gridEl.disabled = disabled;
-        this.#addEl.disabled = disabled || this.readonly;
+        this.#addEl.disabled = disabled;
     }
 
-    formResetCallback() {
-        this.value = super.value || "";
-    }
-
-    formStateRestoreCallback(state/* , mode */) {
-        this.value = state;
+    focus(options) {
+        this.#searchEl.focus(options);
     }
 
     get defaultValue() {
@@ -183,12 +200,20 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
         return super.value;
     }
 
-    set readonly(value) {
+    set readOnly(value) {
         this.setBooleanAttribute("readonly", value);
     }
 
-    get readonly() {
+    get readOnly() {
         return this.getBooleanAttribute("readonly");
+    }
+
+    set resize(value) {
+        this.setEnumAttribute("resize", value, Axes2D);
+    }
+
+    get resize() {
+        return this.getEnumAttribute("resize");
     }
 
     static get observedAttributes() {
@@ -201,8 +226,8 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
         switch (name) {
             case "readonly": {
                 if (oldValue != newValue) {
-                    this.#gridEl.readonly = this.readonly;
-                    this.#addEl.disabled = this.disabled || this.readonly;
+                    this.#gridEl.readOnly = this.readOnly;
+                    this.#addEl.disabled = this.disabled || this.readOnly;
                 }
             } break;
         }
@@ -304,6 +329,10 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
                 newEntry
             ];
         }
+        this.dispatchEvent(new Event("input", {
+            bubbles: true,
+            cancelable: true
+        }));
     }
 
     async #removeElement(rowKey) {
@@ -315,6 +344,10 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
         const index = this.#getElementIndex(rowKey);
         if (index >= 0) {
             this.value = deleteAtIndexImmuted(currentValue, index);
+            this.dispatchEvent(new Event("input", {
+                bubbles: true,
+                cancelable: true
+            }));
         }
     }
 

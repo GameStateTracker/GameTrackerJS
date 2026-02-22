@@ -1,67 +1,79 @@
-#field {
+:host {
+    display: inline-block;
+    min-width: 200px;
+    min-height: 400px;
+    --button-color: var(--input-button-text-color, #000000);
+    --button-background-color: var(--input-button-back-color, #ffffff);
+    --button-hover-color: var(--input-button-hover-text-color, #000000);
+    --button-hover-background-color: var(--input-button-hover-back-color, #b3e5ec);
+}
+
+#container {
+    position: relative;
     display: flex;
     flex-direction: column;
-    height: 500px;
-    min-width: 200px;
+    width: 100%;
+    height: 100%;
+    min-width: inherit;
+    max-width: inherit;
+    min-height: inherit;
+    max-height: inherit;
     padding: 0px;
-    color: var(--input-text-color, #000000);
-    background-color: var(--input-back-color, #ffffff);
-    background-image: var(--input-back-image, none);
-    border-style: solid;
-    border-width: var(--input-border-width, 2px);
-    border-color: var(--input-border-color, #222222);
-    border-radius: var(--input-border-radius, 6px);
+    color: var(--color);
+    background-color: var(--background-color);
+    border-style: var(--border-style);
+    border-width: var(--border-width);
+    border-color: var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    resize: none;
 }
 
-:host(:invalid) #field {
-    background-color: var(--input-invalid-back-color, #ffebeb);
-    background-image: var(--input-invalid-back-image, none);
-    border-color: var(--input-invalid-border-color, #ff4444);
+:host([resize="horizontal"]) #container {
+    resize: horizontal;
 }
 
-:host(:disabled) #field {
-    color: var(--input-disabled-text-color, #757575) !important;
-    background-color: var(--input-disabled-back-color, #999999) !important;
-    background-image: var(--input-disabled-back-image, none);
-    border-color: var(--input-disabled-border-color, #6a6a6a) !important;
-    cursor: default !important;
-    opacity: 1 !important;
+:host([resize="vertical"]) #container {
+    resize: vertical;
 }
 
-.header {
+:host([resize="both"]) #container {
+    resize: both;
+}
+
+#header {
     display: flex;
-    border-bottom-style: solid;
-    border-bottom-width: var(--input-border-width, 2px);
-    border-bottom-color: var(--input-border-color, #222222);
+    border-bottom-style: var(--border-style);
+    border-bottom-width: var(--border-width);
+    border-bottom-color: var(--border-color);
 }
 
-:host(:invalid) .header {
-    border-bottom-color: var(--input-invalid-border-color, #ff4444);
+#search {
+    margin: 6px;
+    flex: 1;
 }
 
-:host(:disabled) .header {
-    border-bottom-color: var(--input-disabled-border-color, #6a6a6a) !important;
+#footer {
+    min-height: 18px;
+    padding: 5px 15px;
+    border-top-style: var(--border-style);
+    border-top-width: var(--border-width);
+    border-top-color: var(--border-color);
+
+    > * {
+        min-width: 100px;
+        margin: 2px;
+    }
 }
 
-.footer {
-    display: flex;
-    padding: 6px;
-    border-top-style: solid;
-    border-top-width: var(--input-border-width, 2px);
-    border-top-color: var(--input-border-color, #222222);
-}
-
-:host(:invalid) .footer {
-    border-top-color: var(--input-invalid-border-color, #ff4444);
-}
-
-:host(:disabled) .footer {
-    border-top-color: var(--input-disabled-border-color, #6a6a6a) !important;
+:host([readonly]:not([readonly="false"])) #add {
+    display: none;
 }
 
 #grid {
     flex: 1;
     width: auto;
+    min-height: auto;
     margin: 0px;
     border: none;
     border-radius: 0;

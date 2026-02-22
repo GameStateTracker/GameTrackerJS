@@ -93,7 +93,7 @@ export default class WorldList extends BaseClass {
     }, 1000);
 
     connectedCallback() {
-        super.connectedCallback();
+        super.connectedCallback?.();
         /* init reference */
         this.ref = WorldListState.area;
     }

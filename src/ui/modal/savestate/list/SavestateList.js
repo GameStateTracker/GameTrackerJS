@@ -3,7 +3,7 @@ import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
 import jsonParse from "/emcJS/patches/JSONParser.js";
 import {isEqual} from "/emcJS/util/helper/Comparator.js";
 import "/emcJS/ui/dataview/datalist/DataListSelect.js";
-import "/emcJS/ui/form/element/input/search/SearchInput.js";
+import "/emcJS/ui/form/element/components/searchheader/SearchHeader.js";
 import SavestateManager from "../../../../savestate/SavestateManager.js";
 import SavestateListEntry from "./components/SavestateListEntry.js";
 import TPL from "./SavestateList.js.html" assert {type: "html"};
@@ -13,11 +13,7 @@ export default class SavestateList extends CustomElement {
 
     #value;
 
-    #headerEl;
-
-    #searchEl;
-
-    #headerSelectEl;
+    #searchHeaderEl;
 
     #listEl;
 
@@ -28,7 +24,7 @@ export default class SavestateList extends CustomElement {
         STYLE.apply(this.shadowRoot);
         TPL.apply(this.shadowRoot);
         /* --- */
-        this.#headerEl = this.shadowRoot.getElementById("header");
+        this.#searchHeaderEl = this.shadowRoot.getElementById("search-header");
         this.#listEl = this.shadowRoot.getElementById("list");
         this.#listEl.setListEntryClass(SavestateListEntry);
         this.#dataManager = new SimpleDataProvider(this.#listEl, null, {
@@ -37,37 +33,30 @@ export default class SavestateList extends CustomElement {
                 sort: ["!autosave", "name"]
             }
         });
-        this.registerTargetEventHandler(this.#listEl, "selection", (event) => {
+        this.#listEl.addEventListener("selection", (event) => {
             event.stopPropagation();
             event.preventDefault();
             this.value = event.data;
         });
+        this.#listEl.addEventListener("selection-header", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            this.#searchHeaderEl.selected = event.value;
+        });
         /* --- */
-        this.#headerSelectEl = document.createElement("input");
-        this.#headerSelectEl.type = "checkbox";
-        this.#headerSelectEl.name = "multiselect";
-        this.#headerSelectEl.className = "multi-select";
-        this.#headerEl.prepend(this.#headerSelectEl);
-        this.registerTargetEventHandler(this.#headerSelectEl, "change", () => {
-            const value = this.#headerSelectEl.checked;
+        this.#searchHeaderEl.addEventListener("select", () => {
+            const value = this.#searchHeaderEl.selected;
             if (value) {
                 this.#listEl.selectAll();
             } else {
                 this.#listEl.clearSelected();
             }
         });
-        this.registerTargetEventHandler(this.#listEl, "selection-header", (event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            this.#headerSelectEl.checked = event.checked;
-            this.#headerSelectEl.indeterminate = event.indeterminate;
-        });
-        /* --- */
-        this.#searchEl = this.shadowRoot.getElementById("search");
-        this.registerTargetEventHandler(this.#searchEl, "change", () => {
+        this.#searchHeaderEl.addEventListener("search", () => {
             const options = {filter: {}};
-            if (this.#searchEl.value != "") {
-                options.filter = {name: this.#searchEl.value};
+            const searchValue = this.#searchHeaderEl.search;
+            if (searchValue != "") {
+                options.filter = {name: searchValue};
             }
             this.#dataManager.updateConfig(options);
         }, true);
@@ -109,7 +98,9 @@ export default class SavestateList extends CustomElement {
         switch (name) {
             case "multiple": {
                 if (oldValue != newValue) {
-                    this.#listEl.multiple = this.multiple;
+                    const multiple = this.multiple;
+                    this.#listEl.multiple = multiple;
+                    this.#searchHeaderEl.selectable = multiple;
                 }
             } break;
         }

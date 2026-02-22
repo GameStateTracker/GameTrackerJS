@@ -1,16 +1,13 @@
 import CustomElementDelegating from "/emcJS/ui/element/CustomElementDelegating.js";
 import SearchEvery from "/emcJS/util/search/SearchEvery.js";
-import {
-    getInnerText
-} from "/emcJS/util/helper/ui/ExtractText.js";
-import "/emcJS/ui/input/SearchField.js";
+import {getInnerText} from "/emcJS/util/helper/ui/ExtractText.js";
+import ListSelectionHelper from "/emcJS/util/helper/ui/ListSelectionHelper.js";
+import "/emcJS/ui/form/element/input/search/SearchInput.js";
 import "./EntranceSelectOption.js";
 import TPL from "./EntranceSelectList.js.html" assert {type: "html"};
 import STYLE from "./EntranceSelectList.js.css" assert {type: "css"};
-import ListSelectionHelper from "/emcJS/util/helper/ui/ListSelectionHelper.js";
 
 // TODO implement tag filter
-
 export default class EntranceSelectList extends CustomElementDelegating {
 
     constructor() {
@@ -34,10 +31,10 @@ export default class EntranceSelectList extends CustomElementDelegating {
         });
         /* --- */
         const searchEl = this.shadowRoot.getElementById("search");
-        searchEl.addEventListener("change", (event) => {
+        searchEl.addEventListener("change", () => {
             const all = this.querySelectorAll(`[value]`);
-            if (event.value) {
-                const regEx = new SearchEvery(event.value);
+            if (searchEl.value) {
+                const regEx = new SearchEvery(searchEl.value);
                 if (this.style.height == "" || this.style.width == "") {
                     const rect = this.getBoundingClientRect();
                     this.style.width = `${rect.width}px`;
@@ -126,7 +123,7 @@ export default class EntranceSelectList extends CustomElementDelegating {
     }
 
     #choose(value) {
-        if (!this.readonly) {
+        if (!this.readOnly) {
             if (this.multiple) {
                 const arr = this.value;
                 const set = new Set(arr);
