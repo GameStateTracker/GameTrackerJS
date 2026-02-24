@@ -37,7 +37,7 @@ applySettingsChoices(SettingsStorage.getAll());
 export default class TrackerSettingsOverlay extends SettingsOverlay {
 
     constructor() {
-        super("App settings");
+        super("Tracker settings");
         /* --- */
         this.loadConfig(settingsConfigHandler.config, settingsConfigHandler.defaultValues);
         /* --- */
