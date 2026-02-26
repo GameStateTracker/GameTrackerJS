@@ -36,11 +36,11 @@ export default class MultiplayerHost extends MultiplayerPeer {
         /* RTC */
         this.#eventTargetManager.switchTarget(this.#rtcClient);
         this.#eventTargetManager.set(["closed"], async (event) => {
-            const {remoteID} = event;
-            if (this.#clients.has(remoteID)) {
-                const clientData = this.#clients.get(remoteID);
+            const {remoteId} = event;
+            if (this.#clients.has(remoteId)) {
+                const clientData = this.#clients.get(remoteId);
                 const name = clientData.name;
-                this.#clients.delete(remoteID);
+                this.#clients.delete(remoteId);
                 this.#reverseLookup.delete(name);
                 Toast.warn(`Multiplayer: "${name}" left`);
                 rtcClient.send(DATA_CHANNEL_NAME, {
@@ -103,11 +103,11 @@ export default class MultiplayerHost extends MultiplayerPeer {
         return this.#isRoomVisible;
     }
 
-    sendSync(remoteID) {
+    sendSync(remoteId) {
         if (this.#rtcClient != null) {
-            if (remoteID != null) {
+            if (remoteId != null) {
                 const data = this.getSyncSavestate();
-                this.#rtcClient.sendOne(DATA_CHANNEL_NAME, remoteID, {
+                this.#rtcClient.sendOne(DATA_CHANNEL_NAME, remoteId, {
                     type: MessageTypes.SYNC,
                     data
                 });
@@ -121,13 +121,13 @@ export default class MultiplayerHost extends MultiplayerPeer {
         }
     }
 
-    async rtcMessageHandler(remoteID, msg) {
+    async rtcMessageHandler(remoteId, msg) {
         if (msg.type == MessageTypes.SYNC) {
-            this.sendSync(remoteID);
+            this.sendSync(remoteId);
         } else if (msg.type == MessageTypes.NAME) {
             const username = msg.data;
             if (username == this.username || this.#reverseLookup.has(username)) {
-                this.#rtcClient.sendOne(DATA_CHANNEL_NAME, remoteID, {
+                this.#rtcClient.sendOne(DATA_CHANNEL_NAME, remoteId, {
                     type: MessageTypes.NAME,
                     data: {
                         success: false,
@@ -135,34 +135,35 @@ export default class MultiplayerHost extends MultiplayerPeer {
                     }
                 });
             } else {
-                this.#rtcClient.sendOne(DATA_CHANNEL_NAME, remoteID, {
+                this.#rtcClient.renameInstance(remoteId, username);
+                this.#rtcClient.sendOne(DATA_CHANNEL_NAME, remoteId, {
                     type: MessageTypes.NAME,
                     data: {
                         success: true,
                         name: username
                     }
                 });
-                this.sendSync(remoteID);
-                this.#clients.set(remoteID, {
+                this.sendSync(remoteId);
+                this.#clients.set(remoteId, {
                     type: this.#joiningClientType,
                     name: username
                 });
-                this.#reverseLookup.set(username, remoteID);
+                this.#reverseLookup.set(username, remoteId);
                 Toast.info(`Multiplayer: "${username}" joined`);
-                this.#rtcClient.sendButOne(DATA_CHANNEL_NAME, remoteID, {
+                this.#rtcClient.sendButOne(DATA_CHANNEL_NAME, remoteId, {
                     type: MessageTypes.JOIN,
                     data: username
                 });
                 this.refreshUserList();
             }
-        } else if (this.#clients.has(remoteID)) {
-            const clientData = this.#clients.get(remoteID);
+        } else if (this.#clients.has(remoteId)) {
+            const clientData = this.#clients.get(remoteId);
             if (clientData.type === ClientTypes.PLAYER) {
-                if (await super.rtcMessageHandler(remoteID, msg)) {
-                    this.#rtcClient.sendButOne(DATA_CHANNEL_NAME, remoteID, msg);
+                if (await super.rtcMessageHandler(remoteId, msg)) {
+                    this.#rtcClient.sendButOne(DATA_CHANNEL_NAME, remoteId, msg);
                 }
             } else if (clientData.type === ClientTypes.SPECTATOR) {
-                this.sendSync(remoteID);
+                this.sendSync(remoteId);
             }
         }
     }

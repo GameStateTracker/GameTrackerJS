@@ -4,12 +4,16 @@ import RTCConfig from "../../../../data/RTCConfig.js";
 import Counter from "../../../Counter.js";
 import Savestate from "../../../../savestate/Savestate.js";
 import {
-    DATA_CHANNEL_NAME, DEFAULT_STORAGES
+    DATA_CHANNEL_NAME, DEFAULT_STORAGES,
+    PING_CHANNEL_NAME
 } from "../config/MultiplayerConfig.js";
 
 const FILTER_STORAGE = Savestate.getStorage("filter");
 
 const SYNCED_STORAGES = RTCConfig.storages.multiplayer ?? DEFAULT_STORAGES;
+
+const MSG_TYPE_PING = "PING";
+const MSG_TYPE_PONG = "PONG";
 
 export default class MultiplayerPeer extends EventTarget {
 
@@ -39,10 +43,48 @@ export default class MultiplayerPeer extends EventTarget {
         this.#eventTargetManager.switchTarget(this.#rtcClient);
         this.#eventTargetManager.set(`message:${DATA_CHANNEL_NAME}`, (event) => {
             const {
-                remoteID, data
+                remoteId, data
             } = event;
-            this.rtcMessageHandler(remoteID, data);
+            this.rtcMessageHandler(remoteId, data);
         });
+        this.#eventTargetManager.set(`message:${PING_CHANNEL_NAME}`, (event) => {
+            const {
+                remoteId, data
+            } = event;
+            if (data.type === MSG_TYPE_PING) {
+                this.#rtcClient.sendOne(PING_CHANNEL_NAME, remoteId, {
+                    type: MSG_TYPE_PONG,
+                    timestamp: data.timestamp
+                });
+            } else if (data.type === MSG_TYPE_PONG) {
+                const sendTime = data.timestamp;
+                const nowTime = (new Date()).valueOf();
+                const ev = new Event("ping");
+                ev.data = {
+                    remoteId: remoteId,
+                    sendTime,
+                    nowTime,
+                    time: nowTime - sendTime
+                };
+                this.dispatchEvent(ev);
+            }
+        });
+    }
+
+    ping(remoteId) {
+        const timestamp = (new Date()).valueOf();
+        if (remoteId != null) {
+            this.#rtcClient.sendOne(PING_CHANNEL_NAME, remoteId, {
+                type: MSG_TYPE_PING,
+                timestamp
+            });
+        } else {
+            this.#rtcClient.send(PING_CHANNEL_NAME, {
+                type: MSG_TYPE_PING,
+                timestamp
+            });
+        }
+        return timestamp;
     }
 
     registerSyncedStorages(names) {
@@ -81,7 +123,7 @@ export default class MultiplayerPeer extends EventTarget {
         this.#savestateEventManager.clear();
     }
 
-    async rtcMessageHandler(remoteID, msg) {
+    async rtcMessageHandler(remoteId, msg) {
         if (msg.type == "update") {
             const storage = this.#syncedStorages.get(msg.category);
             if (storage != null) {

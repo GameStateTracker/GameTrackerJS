@@ -1,6 +1,8 @@
 import {isStringNotEmpty} from "/emcJS/util/helper/CheckType.js";
 import Enum from "/emcJS/data/Enum.js";
 
+export const PING_CHANNEL_NAME = "ping";
+
 export const DATA_CHANNEL_NAME = "data";
 
 export const DEFAULT_STORAGES = [

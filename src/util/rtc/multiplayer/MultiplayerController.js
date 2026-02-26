@@ -7,7 +7,8 @@ import MultiplayerHost from "./peer/MultiplayerHost.js";
 import RTCConfig from "../../../data/RTCConfig.js";
 import {
     DATA_CHANNEL_NAME,
-    MessageTypes
+    MessageTypes,
+    PING_CHANNEL_NAME
 } from "./config/MultiplayerConfig.js";
 
 const RTC_CONFIG = RTCConfig.ice;
@@ -43,7 +44,8 @@ export default class MultiplayerController extends EventTarget {
         if (port == null) {
             port = window.location.hostname == "localhost" ? 8001 : "";
         }
-        this.#rtcClient = new LobbyClient(port, ENDPOINT_BASE, ENDPOINT_NAME, RTC_CONFIG, [DATA_CHANNEL_NAME]);
+        this.#rtcClient = new LobbyClient(port, ENDPOINT_BASE, ENDPOINT_NAME, RTC_CONFIG, [DATA_CHANNEL_NAME, PING_CHANNEL_NAME]);
+        this.#rtcClient.blacklistChannelLogging(PING_CHANNEL_NAME);
         this.#rtcClientEventManager = new EventTargetManager(this.#rtcClient);
         this.#rtcPeerEventManager.set("roomupdate", (event) => {
             const ev = new Event("roomupdate");
@@ -51,12 +53,24 @@ export default class MultiplayerController extends EventTarget {
             this.dispatchEvent(ev);
         });
         this.#rtcPeerEventManager.set("disconnected", () => {
+            this.#rtcPeer = null;
             this.dispatchEvent(new Event("disconnected"));
+        });
+        this.#rtcPeerEventManager.set("ping", (event) => {
+            const ev = new Event("ping");
+            ev.data = event.data;
+            this.dispatchEvent(ev);
         });
     }
 
     setLogger(value) {
         this.#rtcClient.setLogger(value);
+    }
+
+    ping(remoteId) {
+        if (this.#rtcPeer != null) {
+            return this.#rtcPeer.ping(remoteId);
+        }
     }
 
     async getInstances(supressError) {
@@ -71,6 +85,10 @@ export default class MultiplayerController extends EventTarget {
             return [];
         }
         return res.data;
+    }
+
+    isConnected() {
+        return this.#rtcPeer != null;
     }
 
     getPeer() {
@@ -124,7 +142,7 @@ export default class MultiplayerController extends EventTarget {
             });
             this.#rtcClient.connect(roomName, pass, version).then(async (res) => {
                 if (res.success === true) {
-                    this.#rtcClient.setMessageHandler(DATA_CHANNEL_NAME, async (key, msg) => {
+                    this.#rtcClient.setMessageHandler(DATA_CHANNEL_NAME, async (remoteId, msg) => {
                         if (msg.type == MessageTypes.NAME) {
                             if (msg.data.success) {
                                 this.#rtcClientEventManager.clear();
@@ -143,7 +161,9 @@ export default class MultiplayerController extends EventTarget {
                             }
                         }
                     });
-                    this.#rtcClientEventManager.set("connected", async () => {
+                    this.#rtcClientEventManager.set("connected", async (event) => {
+                        const {remoteId} = event;
+                        this.#rtcClient.renameInstance(remoteId, "HOST");
                         if (!await this.#promptPeerName("")) {
                             this.#rtcClient.disconnect();
                             this.#rtcClientEventManager.clear();

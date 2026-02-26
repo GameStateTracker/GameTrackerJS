@@ -43,9 +43,9 @@ export default class ItemViewClient extends EventTarget {
         });
         this.#eventTargetManager.set(`message:${DATA_CHANNEL_NAME}`, (event) => {
             const {
-                remoteID, data
+                remoteId, data
             } = event;
-            this.rtcMessageHandler(remoteID, data);
+            this.rtcMessageHandler(remoteId, data);
         });
     }
 
@@ -60,7 +60,7 @@ export default class ItemViewClient extends EventTarget {
         this.#eventTargetManager.disconnect();
     }
 
-    async rtcMessageHandler(remoteID, msg) {
+    async rtcMessageHandler(remoteId, msg) {
         if (msg.type == MessageTypes.UPDATE) {
             const storage = this.#syncedStorages.get(msg.category);
             if (storage != null) {

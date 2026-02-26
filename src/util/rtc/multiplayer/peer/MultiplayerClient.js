@@ -44,7 +44,7 @@ export default class MultiplayerClient extends MultiplayerPeer {
         return this.#isConnected;
     }
 
-    async rtcMessageHandler(remoteID, msg) {
+    async rtcMessageHandler(remoteId, msg) {
         if (msg.type == MessageTypes.JOIN) {
             Toast.info(`Multiplayer: "${msg.data}" joined`);
         } else if (msg.type == MessageTypes.LEAVE) {
@@ -58,7 +58,7 @@ export default class MultiplayerClient extends MultiplayerPeer {
         } else if (msg.type == MessageTypes.SYNC) {
             this.setSyncSavestate(msg.data);
         } else {
-            await super.rtcMessageHandler(remoteID, msg);
+            await super.rtcMessageHandler(remoteId, msg);
         }
     }
 
