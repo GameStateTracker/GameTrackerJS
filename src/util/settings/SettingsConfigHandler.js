@@ -36,9 +36,9 @@ export default class SettingsConfigHandler {
                 continue;
             }
             if (this.#combinedFieldKeys.has(key)) {
+                const vKey = this.#combinedFieldKeys.get(key);
+                result[vKey] = result[vKey] ?? [];
                 if (value) {
-                    const vKey = this.#combinedFieldKeys.get(key);
-                    result[vKey] = result[vKey] ?? [];
                     result[vKey].push(key);
                 }
                 continue;
