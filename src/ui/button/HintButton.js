@@ -1,62 +1,21 @@
-// frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import "/emcJS/ui/input/Option.js";
-
 import AreaStateManager from "../../statemanager/world/area/AreaStateManager.js";
 import StateDataEventManagerMixin from "../mixin/StateDataEventManagerMixin.js";
+import TPL from "./HintButton.js.html" assert {type: "html"};
+import STYLE from "./HintButton.js.css" assert {type: "css"};
 
-const TPL = new HTMLTemplate(`
-<emc-option value="" style="background-image: url('/images/icons/area_nohint.svg')"></emc-option>
-<emc-option value="woth" style="background-image: url('/images/icons/area_woth.svg')"></emc-option>
-<emc-option value="barren" style="background-image: url('/images/icons/area_barren.svg')"></emc-option>
-`);
+const DESCRIPTION = "Set the \"Way of the Hero\"/\"Barren\" state of the area, depicting if there is any item counted towards progression";
 
-const STYLE = new CSSTemplate(`
-:host {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-}
-slot {
-    width: 100%;
-    height: 100%;
-}
-:not([value]),
-[value]:not(.active) {
-    display: none !important;
-}
-[value] {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    color: white;
-    font-size: 1em;
-    text-shadow: -1px 0 1px black, 0 1px 1px black, 1px 0 1px black, 0 -1px 1px black;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-origin: content-box;
-    flex-grow: 0;
-    flex-shrink: 0;
-    min-height: 0;
-    white-space: normal;
-    padding: 0;
-    line-height: 0.7em;
-}
-`);
+export default class HintButton extends StateDataEventManagerMixin(CustomElement) {
 
-class HintButton extends StateDataEventManagerMixin(CustomElement) {
+    #optionEls =  new Map();
+
+    #selectedEl;
 
     constructor() {
         super();
-        this.shadowRoot.append(TPL.generate());
+        TPL.apply(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.registerStateHandler("hint", (event) => {
@@ -64,6 +23,10 @@ class HintButton extends StateDataEventManagerMixin(CustomElement) {
         });
         this.addEventListener("click", (event) => this.next(event));
         this.addEventListener("contextmenu", (event) => this.revert(event));
+
+        this.#optionEls.set("", this.shadowRoot.querySelector("[value='']"));
+        this.#optionEls.set("woth", this.shadowRoot.querySelector("[value='woth']"));
+        this.#optionEls.set("barren", this.shadowRoot.querySelector("[value='barren']"));
     }
 
     connectedCallback() {
@@ -117,25 +80,28 @@ class HintButton extends StateDataEventManagerMixin(CustomElement) {
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue != newValue) {
             switch (name) {
-                case "ref":
-                    {
-                        // state
-                        const state = AreaStateManager.get(newValue);
-                        this.switchState(state);
+                case "ref": {
+                    // state
+                    const state = AreaStateManager.get(newValue);
+                    this.switchState(state);
+                } break;
+                case "value": {
+                    if (this.#selectedEl) {
+                        this.#selectedEl.classList.remove("active");
+                        this.#selectedEl = null;
                     }
-                    break;
-                case "value":
-                    {
-                        const oe = this.shadowRoot.querySelector(`.active`);
-                        if (oe) {
-                            oe.classList.remove("active");
-                        }
-                        const ne = this.shadowRoot.querySelector(`[value="${newValue}"]`);
-                        if (ne) {
-                            ne.classList.add("active");
-                        }
+                    const ne = this.#optionEls.get(newValue);
+                    if (ne) {
+                        ne.classList.add("active");
+                        this.#selectedEl = ne;
                     }
-                    break;
+                    this.#applyTooltip();
+
+                    const ev = new Event("change");
+                    ev.oldValue = oldValue;
+                    ev.value = newValue;
+                    this.dispatchEvent(ev);
+                } break;
             }
         }
     }
@@ -164,6 +130,14 @@ class HintButton extends StateDataEventManagerMixin(CustomElement) {
         }
         event.preventDefault();
         return false;
+    }
+
+    #applyTooltip() {
+        if (this.#selectedEl != null) {
+            this.title = `${DESCRIPTION}\n\nActive value: ${this.#selectedEl.dataset.description ?? this.#selectedEl.value}`;
+        } else {
+            this.title = `${DESCRIPTION}\n\nActive value: [No value selected]`;
+        }
     }
 
 }

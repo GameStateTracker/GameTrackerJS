@@ -1,41 +1,14 @@
-// frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
-
 import FilterContextMenu from "../ctxmenu/FilterContextMenu.js";
+import TPL from "./FilterMenuButton.js.html" assert {type: "html"};
+import STYLE from "./FilterMenuButton.js.css" assert {type: "css"};
 
-const TPL = new HTMLTemplate(`
-<emc-icon id="icon" src="/images/icons/filter.svg"></emc-icon>
-`);
-
-const STYLE = new CSSTemplate(`
-:host {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    user-select: none;
-    cursor: pointer;
-}
-#icon {
-    width: 100%;
-    height: 100%;
-    min-height: auto;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    background-origin: content-box;
-}
-`);
-
-class FilterMenuButton extends ContextMenuManagerMixin(CustomElement) {
+export default class FilterMenuButton extends ContextMenuManagerMixin(CustomElement) {
 
     constructor() {
         super();
-        this.shadowRoot.append(TPL.generate());
+        TPL.apply(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* --- */
 

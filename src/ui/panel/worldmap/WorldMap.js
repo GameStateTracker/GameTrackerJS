@@ -111,6 +111,8 @@ export default class WorldMap extends BaseClass {
 
         /* meta area */
         if (WorldListState.config.metaArea.active) {
+            this.#metaAreaButtonEl.style.display = "";
+            this.#metaAreaButtonEl.title = WorldListState.config.metaArea.description ?? "";
             this.#metaAreaButtonEl.addEventListener("click", () => {
                 this.#metaAreaViewEl.show();
             });

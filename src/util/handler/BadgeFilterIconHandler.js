@@ -1,11 +1,7 @@
 import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
 import LogicCompiler from "/emcJS/util/logic/processor/LogicCompiler.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import {
-    deepClone
-} from "/emcJS/util/helper/DeepClone.js";
+import {debounce} from "/emcJS/util/Debouncer.js";
+import {deepClone} from "/emcJS/util/helper/DeepClone.js";
 import TrackerLogicDataCollector from "../logic/TrackerLogicDataCollector.js";
 
 const EVENTS = ["load", "change"];
@@ -107,25 +103,13 @@ export default class BadgeFilterIconHandler extends EventTarget {
             if (Array.isArray(this.#badgeConfig.badge)) {
                 for (const entry of this.#badgeConfig.badge) {
                     if (entry.values == null || Object.entries(entry.values).every(([key, value]) => this.#values.get(key) === value)) {
-                        return entry.image ?? this.#badgeConfig.images[entry.index] ?? "";
+                        return entry.image ?? this.#badgeConfig.values[entry.index] ?? "";
                     }
                 }
-                return this.#badgeConfig.images[this.#badgeConfig.values.indexOf(this.#badgeConfig.default)] ?? "";
-            } else {
-                return this.#badgeConfig.images[this.#getLoneFilterIndex()] ?? "";
             }
+            return this.#badgeConfig.values[this.#badgeConfig.default].image ?? "";
         }
         return "";
-    }
-
-    #getLoneFilterIndex() {
-        for (let i = 0; i < this.#badgeConfig.values.length; ++i) {
-            const key = this.#badgeConfig.values[i];
-            if (this.#values.get(key)) {
-                return i;
-            }
-        }
-        return this.#badgeConfig.values.indexOf(this.#badgeConfig.default);
     }
 
 }

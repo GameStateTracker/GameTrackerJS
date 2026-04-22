@@ -1,57 +1,23 @@
-// frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
 import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
 import "/emcJS/ui/input/Option.js";
-
-// GameTrackerJS
 import FilterResource from "../../data/resource/FilterResource.js";
 import FilterStorage from "../../savestate/storage/FilterStorage.js";
 import FilterObserver from "../../util/observer/FilterObserver.js";
+import TPL from "./FilterButton.js.html" assert {type: "html"};
+import STYLE from "./FilterButton.js.css" assert {type: "css"};
 
-const TPL = new HTMLTemplate(`
-<slot>
-</slot>
-`);
+export default class FilterButton extends EventTargetListenerElementMixin(CustomElement) {
 
-const STYLE = new GlobalStyle(`
-:host {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    user-select: none;
-}
-:host(:not([readonly])),
-:host([readonly="false"]) {
-    cursor: pointer;
-}
-slot {
-    width: 100%;
-    height: 100%;
-}
-::slotted(:not([value])),
-::slotted([value]:not(.active)) {
-    display: none !important;
-}
-::slotted([value]) {
-    width: 100%;
-    height: 100%;
-    min-height: auto;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    background-origin: content-box;
-}
-`);
+    #optionEls =  new Map();
 
-class FilterButton extends EventTargetListenerElementMixin(CustomElement) {
+    #selectedEl;
+
+    #description;
 
     constructor() {
         super();
-        this.shadowRoot.append(TPL.generate());
+        TPL.apply(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* --- */
         this.addEventListener("click", (event) => this.next(event));
@@ -93,56 +59,48 @@ class FilterButton extends EventTargetListenerElementMixin(CustomElement) {
 
     attributeChangedCallback(name, oldValue, newValue) {
         switch (name) {
-            case "ref":
+            case "ref": {
                 if (oldValue != newValue) {
-                    const data = FilterResource.get(this.ref);
                     const filterObserver = new FilterObserver(this.ref);
                     this.switchEventTarget("filterObserver", filterObserver);
-                    this.innerHTML = "";
+                    this.#initData();
                     this.value = filterObserver.value;
-                    for (const i in data.values) {
-                        let img = data.images;
-                        if (Array.isArray(img)) {
-                            img = img[i];
-                        }
-                        const opt = createOption(data.values[i], img);
-                        if (data.values[i] == this.value) {
-                            opt.classList.add("active");
-                        }
-                        this.append(opt);
-                    }
                 }
-                break;
-            case "value":
+            } break;
+            case "value": {
                 if (oldValue != newValue) {
-                    const oe = this.querySelector(`.active`);
-                    if (oe) {
-                        oe.classList.remove("active");
+                    if (this.#selectedEl) {
+                        this.#selectedEl.classList.remove("active");
+                        this.#selectedEl = null;
                     }
-                    const ne = this.querySelector(`[value="${newValue}"]`);
+                    const ne = this.#optionEls.get(newValue);
                     if (ne) {
                         ne.classList.add("active");
+                        this.#selectedEl = ne;
                     }
+                    this.#applyTooltip();
+
                     const ev = new Event("change");
                     ev.oldValue = oldValue;
                     ev.value = newValue;
                     this.dispatchEvent(ev);
                 }
-                break;
+            } break;
         }
     }
 
     next(event) {
         if (!this.readOnly) {
-            const all = this.querySelectorAll("[value]");
             const oldValue = this.value;
             let value = oldValue;
-            if (all.length) {
-                const opt = this.querySelector(`[value="${oldValue}"]`);
-                if (!!opt && !!opt.nextElementSibling) {
-                    value = opt.nextElementSibling.getAttribute("value");
+            if (this.#optionEls.size) {
+                const opt = this.#selectedEl;
+                const nextOptEl = opt?.nextElementSibling;
+                if (nextOptEl != null) {
+                    value = nextOptEl.getAttribute("value");
                 } else {
-                    value = all[0].getAttribute("value");
+                    const firstOptEl = this.querySelector("[value]");
+                    value = firstOptEl.getAttribute("value");
                 }
             }
             if (value != oldValue) {
@@ -156,15 +114,16 @@ class FilterButton extends EventTargetListenerElementMixin(CustomElement) {
 
     revert(event) {
         if (!this.readOnly) {
-            const all = this.querySelectorAll("[value]");
             const oldValue = this.value;
             let value = oldValue;
-            if (all.length) {
-                const opt = this.querySelector(`[value="${oldValue}"]`);
-                if (!!opt && !!opt.previousElementSibling) {
-                    value = opt.previousElementSibling.getAttribute("value");
+            if (this.#optionEls.size) {
+                const opt = this.#selectedEl;
+                const prevOptEl = opt?.previousElementSibling;
+                if (prevOptEl != null) {
+                    value = prevOptEl.getAttribute("value");
                 } else {
-                    value = all[all.length - 1].getAttribute("value");
+                    const lastOptEl = this.querySelector(":nth-last-match(1 of [value])");
+                    value = lastOptEl.getAttribute("value");
                 }
             }
             if (value != oldValue) {
@@ -176,13 +135,48 @@ class FilterButton extends EventTargetListenerElementMixin(CustomElement) {
         return false;
     }
 
+    #initData() {
+        const data = FilterResource.get(this.ref);
+        const {
+            description,
+            values
+        } = data;
+
+        this.#description = description;
+
+        this.innerHTML = "";
+        this.#optionEls.clear();
+        for (const [value, props] of Object.entries(values)) {
+            const {
+                image,
+                description
+            } = props;
+
+            const opt = document.createElement("emc-option");
+            opt.value = value;
+            opt.style.backgroundImage = `url("${image}"`;
+            opt.dataset.description = description;
+
+            if (data.values[value] == this.value) {
+                opt.classList.add("active");
+                this.#selectedEl = opt;
+            }
+
+            this.#optionEls.set(value, opt);
+            this.append(opt);
+        }
+
+        this.#applyTooltip();
+    }
+
+    #applyTooltip() {
+        if (this.#selectedEl != null) {
+            this.title = `${this.#description}\n\nActive value: ${this.#selectedEl.dataset.description ?? this.#selectedEl.value}`;
+        } else {
+            this.title = `${this.#description}\n\nActive value: [No value selected]`;
+        }
+    }
+
 }
 
 customElements.define("gt-filterbutton", FilterButton);
-
-function createOption(value, img) {
-    const opt = document.createElement("emc-option");
-    opt.value = value;
-    opt.style.backgroundImage = `url("${img}"`;
-    return opt;
-}
