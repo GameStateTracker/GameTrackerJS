@@ -1,8 +1,8 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import UIRegistry from "../../../../../registry/UIRegistry.js";
-import ItemsResource from "../../../../../data/resource/ItemsResource.js";
 import "/emcJS/ui/input/Option.js";
 import "/emcJS/ui/i18n/I18nTooltip.js";
+import UIRegistry from "../../../../../registry/UIRegistry.js";
+import ItemsResource from "../../../../../data/resource/ItemsResource.js";
 import "../../../../../state/item/StartSettingsState.js";
 import TPL from "./ItemMirror.js.html" assert {type: "html"};
 import STYLE from "./ItemMirror.js.css" assert {type: "css"};

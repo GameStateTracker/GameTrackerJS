@@ -1,7 +1,5 @@
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
+import {mix} from "/emcJS/util/Mixin.js";
 import ItemStateManager from "../../../../../statemanager/item/ItemStateManager.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
 import "/emcJS/ui/input/Option.js";
@@ -10,11 +8,7 @@ import "../../../../../state/item/StartSettingsState.js";
 import TPL from "./ItemElement.js.html" assert {type: "html"};
 import STYLE from "./ItemElement.js.css" assert {type: "css"};
 
-const BaseClass = mix(
-    CustomElement
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(CustomElement).with(StateDataEventManagerMixin);
 
 export default class ItemElement extends BaseClass {
 
@@ -61,6 +55,12 @@ export default class ItemElement extends BaseClass {
             this.style.visibility = "";
         } else {
             this.style.visibility = "hidden";
+        }
+        /* text */
+        if (state.props.tooltip != null) {
+            this.#tooltipEl.i18nTooltip = state.props.tooltip;
+        } else {
+            this.#tooltipEl.i18nTooltip = this.textRef;
         }
     }
 
@@ -139,8 +139,6 @@ export default class ItemElement extends BaseClass {
                     // state
                     const state = ItemStateManager.get(this.ref);
                     this.switchState(state);
-                    /* text */
-                    this.#tooltipEl.i18nTooltip = this.textRef;
                 } break;
                 case "value": {
                     this.refreshValue();

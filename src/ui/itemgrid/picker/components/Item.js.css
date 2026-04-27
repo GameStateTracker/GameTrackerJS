@@ -1,0 +1,36 @@
+:host {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-origin: border-box;
+    user-select: none;
+}
+
+:host(:hover) {
+    background-size: 100%;
+}
+
+:host([halign="start"]) #value {
+    justify-content: flex-start;
+}
+
+:host([halign="end"]) #value {
+    justify-content: flex-end;
+}
+
+:host([valign="start"]) #value {
+    align-items: flex-start;
+}
+
+:host([valign="end"]) #value {
+    align-items: flex-end;
+}
+
+#value {
+    width: 100%;
+    height: 100%;
+}

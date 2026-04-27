@@ -1,55 +1,11 @@
-// frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
 import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-
+import {mix} from "/emcJS/util/Mixin.js";
 import ItemStates from "../../../../statemanager/item/ItemStateManager.js";
 import StateDataEventManagerMixin from "../../../mixin/StateDataEventManagerMixin.js";
+import TPL from "./Item.js.html" assert {type: "html"};
+import STYLE from "./Item.js.css" assert {type: "css"};
 
-const TPL = new HTMLTemplate(`
-<emc-i18n-tooltip id="tooltip">
-    <div id="value">
-    </div>
-</emc-i18n-tooltip>
-`);
-
-const STYLE = new GlobalStyle(`
-:host {
-    display: inline-flex;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    background-size: 80%;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-origin: border-box;
-    user-select: none;
-}
-:host(:hover) {
-    background-size: 100%;
-}
-:host([halign="start"]) #value {
-    justify-content: flex-start;
-}
-:host([halign="end"]) #value {
-    justify-content: flex-end;
-}
-:host([valign="start"]) #value {
-    align-items: flex-start;
-}
-:host([valign="end"]) #value {
-    align-items: flex-end;
-}
-`);
-
-const BaseClass = mix(
-    CustomElement
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(CustomElement).with(StateDataEventManagerMixin);
 
 function resolveIcon(icon) {
     if (icon == null) {
@@ -140,6 +96,10 @@ export default class Item extends BaseClass {
                 } break;
             }
         }
+    }
+
+    get textRef() {
+        return `item[${this.ref}]`;
     }
 
 }

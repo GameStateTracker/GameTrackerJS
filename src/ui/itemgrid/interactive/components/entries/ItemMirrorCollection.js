@@ -1,18 +1,14 @@
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
+import {mix} from "/emcJS/util/Mixin.js";
 import MultiStateDataEventManagerMixin from "../../../../mixin/MultiStateDataEventManagerMixin.js";
 import ItemMirror from "./ItemMirror.js";
 import TPL from "./ItemMirrorCollection.js.html" assert {type: "html"};
 import STYLE from "./ItemMirrorCollection.js.css" assert {type: "css"};
 
-const BaseClass = mix(
-    ItemMirror
-).with(
-    MultiStateDataEventManagerMixin
-);
+const BaseClass = mix(ItemMirror).with(MultiStateDataEventManagerMixin);
 
 export default class ItemMirrorCollection extends BaseClass {
+
+    #tooltipEl;
 
     #valueEl;
 
@@ -23,8 +19,10 @@ export default class ItemMirrorCollection extends BaseClass {
     constructor() {
         super();
         const tpl = TPL.generate();
-        this.shadowRoot.getElementById("tooltip").append(tpl);
         STYLE.apply(this.shadowRoot);
+        /* --- */
+        this.#tooltipEl = this.shadowRoot.getElementById("tooltip");
+        this.#tooltipEl.append(tpl);
         /* --- */
         this.#valueEl = this.shadowRoot.getElementById("value");
         this.#currentEl = this.shadowRoot.getElementById("current");

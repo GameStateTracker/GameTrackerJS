@@ -84,7 +84,9 @@ export default class ItemGridInteractive extends CustomElement {
     }
 
     static createConditional(target, element) {
-        const {condition, onTrue, onFalse} = element;
+        const {
+            condition, onTrue, onFalse
+        } = element;
 
         const el = document.createElement("gt-itemgrid-conditional");
 
@@ -112,7 +114,9 @@ export default class ItemGridInteractive extends CustomElement {
     }
 
     static createItemMirror(element) {
-        const {value, icon, halign, valign, tooltip} = element;
+        const {
+            value, icon, halign, valign, tooltip
+        } = element;
 
         const el = document.createElement("gt-itemgrid-itemmirror");
 
@@ -135,7 +139,9 @@ export default class ItemGridInteractive extends CustomElement {
     }
 
     static createItemMirrorCollection(target, element) {
-        const {value, icon, halign, valign, tooltip, hideMax, contentGrid = [[]], counting = false, countBlacklist = []} = element;
+        const {
+            value, icon, halign, valign, tooltip, hideMax, contentGrid = [[]], counting = false, countBlacklist = []
+        } = element;
 
         const el = document.createElement("gt-itemgrid-itemmirror-collection");
 
@@ -192,7 +198,9 @@ export default class ItemGridInteractive extends CustomElement {
     }
 
     static createText(element) {
-        const {value, halign, valign, width, height} = element;
+        const {
+            value, halign, valign, width, height
+        } = element;
 
         const el = document.createElement("DIV");
 
