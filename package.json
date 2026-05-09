@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@emcjs/core": "https://github.com/ZidArgs/emcJS-Core.git/#1.0.7",
-    "@emcjs/fe": "https://github.com/ZidArgs/emcJS-FE.git/#0.0.8",
+    "@emcjs/fe": "https://github.com/ZidArgs/emcJS-FE.git/#0.0.9",
     "rtcclient": "git+https://bitbucket.org/zidargs/rtcclient.git/#1.2.13"
   },
   "devDependencies": {
@@ -20,12 +20,10 @@
     "@babel/plugin-syntax-import-assertions": "^7.27.1",
     "@babel/plugin-syntax-top-level-await": "^7.14.5",
     "@stylistic/eslint-plugin": "^5.3.1",
-    "del": "^5.1.0",
+    "@zidargs/buildtools": "https://github.com/ZidArgs/buildtools.git/#1.1.0",
     "eslint": "^9.35.0",
-    "glob-all": "^3.1.0",
     "gulp": "^4.0.2",
-    "gulp-changed": "^5.0.4",
-    "through": "^2.3.8"
+    "gulp-changed": "^5.0.4"
   },
   "exports": {
     "./*": "./src/*"
