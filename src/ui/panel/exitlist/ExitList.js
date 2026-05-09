@@ -1,7 +1,7 @@
-import Panel from "/emcJS/ui/layout/Panel.js";
-import SearchEvery from "/emcJS/util/search/SearchEvery.js";
-import "/emcJS/ui/form/element/input/search/SearchInput.js";
-import "/emcJS/ui/form/element/input/switch/SwitchInput.js";
+import Panel from "@emcjs/fe/ui/layout/Panel.js";
+import SearchEvery from "@emcjs/core/util/search/SearchEvery.js";
+import "@emcjs/fe/ui/form/element/input/search/SearchInput.js";
+import "@emcjs/fe/ui/form/element/input/switch/SwitchInput.js";
 import WorldResource from "../../../data/resource/WorldResource.js";
 import WorldStateManagerRegistry from "../../../statemanager/WorldStateManagerRegistry.js";
 import Language from "../../../util/Language.js";

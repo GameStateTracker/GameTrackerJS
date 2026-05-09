@@ -1,5 +1,5 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import {mix} from "/emcJS/util/Mixin.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
 import WorldStateManagerRegistry from "../../../../../../statemanager/WorldStateManagerRegistry.js";
 import StateDataEventManagerMixin from "../../../../../mixin/StateDataEventManagerMixin.js";
 import TPL from "./OverviewPOI.js.html" assert {type: "html"};

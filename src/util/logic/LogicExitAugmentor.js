@@ -66,7 +66,9 @@ export default class LogicExitAugmentor {
     #changeBinding() {
         const changes = [];
         if (this.#exit.visible) {
-            const {ref, value} = this.#exit;
+            const {
+                ref, value
+            } = this.#exit;
             if (typeof ref === "string" && typeof value === "string") {
                 LogicExitAugmentor.applyBinding(changes, ref, value);
             }
@@ -93,10 +95,18 @@ export default class LogicExitAugmentor {
             if (!to) {
                 if (Array.isArray(GATEWAYS_VARIANTS) && GATEWAYS_VARIANTS.length > 0) {
                     for (const variant of GATEWAYS_VARIANTS) {
-                        changes.push({source: `${sourceVal}{${variant}}`, target: `${targetVal}{${variant}}`, reroute: to});
+                        changes.push({
+                            source: `${sourceVal}{${variant}}`,
+                            target: `${targetVal}{${variant}}`,
+                            reroute: to
+                        });
                     }
                 } else {
-                    changes.push({source: sourceVal, target: targetVal, reroute: to});
+                    changes.push({
+                        source: sourceVal,
+                        target: targetVal,
+                        reroute: to
+                    });
                 }
             } else {
                 const [reroute] = to.split(" -> ");
@@ -104,10 +114,18 @@ export default class LogicExitAugmentor {
                 if (reroute) {
                     if (Array.isArray(GATEWAYS_VARIANTS) && GATEWAYS_VARIANTS.length > 0) {
                         for (const variant of GATEWAYS_VARIANTS) {
-                            changes.push({source: `${sourceVal}{${variant}}`, target: `${targetVal}{${variant}}`, reroute: `${rerouteVal}{${variant}}`});
+                            changes.push({
+                                source: `${sourceVal}{${variant}}`,
+                                target: `${targetVal}{${variant}}`,
+                                reroute: `${rerouteVal}{${variant}}`
+                            });
                         }
                     } else {
-                        changes.push({source: sourceVal, target: targetVal, reroute: rerouteVal});
+                        changes.push({
+                            source: sourceVal,
+                            target: targetVal,
+                            reroute: rerouteVal
+                        });
                     }
                 }
             }

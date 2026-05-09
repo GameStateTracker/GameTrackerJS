@@ -1,5 +1,5 @@
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import EventManager from "/emcJS/util/event/EventManager.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
+import EventManager from "@emcjs/core/util/event/EventManager.js";
 import RTCConfig from "../../../../data/RTCConfig.js";
 import Counter from "../../../Counter.js";
 import Savestate from "../../../../savestate/Savestate.js";

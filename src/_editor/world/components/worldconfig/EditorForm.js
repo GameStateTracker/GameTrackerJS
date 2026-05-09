@@ -1,10 +1,10 @@
-import OptionGroupRegistry from "/emcJS/data/registry/form/OptionGroupRegistry.js";
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import FormBuilder from "/emcJS/util/form/FormBuilder.js";
-import FormContext from "/emcJS/util/form/FormContext.js";
-import "/emcJS/ui/form/FormContainer.js";
-import "/emcJS/ui/form/FormComponentsLoader.js";
-import "/emcJS/ui/i18n/I18nLabel.js";
+import OptionGroupRegistry from "@emcjs/fe/registry/form/OptionGroupRegistry.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import FormBuilder from "@emcjs/fe/util/form/FormBuilder.js";
+import FormContext from "@emcjs/fe/util/form/context/FormContext.js";
+import "@emcjs/fe/ui/form/FormContainer.js";
+import "@emcjs/fe/loader/FormComponentsLoader.js";
+import "@emcjs/fe/ui/i18n/I18nLabel.js";
 import TPL from "./EditorForm.js.html" assert {type: "html"};
 import STYLE from "./EditorForm.js.css" assert {type: "css"};
 import FORM_CONFIG from "./EditorForm.js.json" assert {type: "json"};

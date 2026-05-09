@@ -1,11 +1,7 @@
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import ObservableStorageObserver from "/emcJS/util/observer/data/storage/ObservableStorageObserver.js";
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import ObservableStorageObserver from "@emcjs/core/util/observer/data/storage/ObservableStorageObserver.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
 import Savestate from "../../../savestate/Savestate.js";
 // import OptionsStorage from "../../../savestate/storage/OptionsStorage.js";
 import StateListHandler from "../../../util/handler/StateListHandler.js";
@@ -29,14 +25,10 @@ const STORAGES = {
     areaActiveLists: Savestate.getStorage("areaActiveLists")
 };
 
-const BaseClass = mix(
-    DataState
-).with(
-    StateVisibilityMixin,
+const BaseClass = mix(DataState).with(StateVisibilityMixin,
     StateFilterMixin,
     StateAccessPenetrationMixin,
-    StateListContentsMixin
-);
+    StateListContentsMixin);
 
 export default class DefaultAreaState extends BaseClass {
 
@@ -290,7 +282,9 @@ export default class DefaultAreaState extends BaseClass {
 
     getMinMaxAccess() {
         if (this.#activeListHandler != null) {
-            const {done, unopened, reachable, total} = this.#activeListHandler.access;
+            const {
+                done, unopened, reachable, total
+            } = this.#activeListHandler.access;
             return {
                 done_min: done,
                 done_max: done,

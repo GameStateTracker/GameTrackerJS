@@ -1,5 +1,5 @@
-import Logger from "/emcJS/util/log/Logger.js";
-import TypeConfigMap from "/emcJS/data/type/TypeConfigMap.js";
+import Logger from "@emcjs/core/util/log/Logger.js";
+import TypeConfigMap from "@emcjs/core/data/type/TypeConfigMap.js";
 import TYPES from "../../../../_types" assert {type: "json-folder"};
 
 try {

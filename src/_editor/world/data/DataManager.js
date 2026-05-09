@@ -1,5 +1,5 @@
-import TypeEntity from "/emcJS/data/type/TypeEntity.js";
-import TypeStorage from "/emcJS/data/type/TypeStorage.js";
+import TypeEntity from "@emcjs/core/data/type/TypeEntity.js";
+import TypeStorage from "@emcjs/core/data/type/TypeStorage.js";
 import "../util/TypeLoader.js";
 
 const DEFAULT_CONFIG = {

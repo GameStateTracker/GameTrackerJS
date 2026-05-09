@@ -1,14 +1,8 @@
 // frameworks
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import {
-    immute
-} from "/emcJS/data/Immutable.js";
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import {
-    isEqual
-} from "/emcJS/util/helper/Comparator.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {immute} from "@emcjs/core/data/Immutable.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
+import {isEqual} from "@emcjs/core/util/helper/Comparator.js";
 import LocationStateManager from "../../statemanager/world/location/LocationStateManager.js";
 import ListRecordState from "../../state/world/ListRecordState.js";
 import AreaStateManager from "../../statemanager/world/area/AreaStateManager.js";

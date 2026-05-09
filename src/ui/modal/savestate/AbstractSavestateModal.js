@@ -1,4 +1,4 @@
-import Modal from "/emcJS/ui/modal/Modal.js";
+import Modal from "@emcjs/fe/ui/modal/Modal.js";
 import SavestateManager from "../../../savestate/SavestateManager.js";
 import "./list/SavestateList.js";
 import TPL from "./AbstractSavestateModal.js.html" assert {type: "html"};

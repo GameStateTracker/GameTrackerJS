@@ -1,8 +1,8 @@
-import {immute} from "/emcJS/data/Immutable.js";
-import JSONCResource from "/emcJS/data/resource/file/JSONCResource.js";
+import {immute} from "@emcjs/core/data/Immutable.js";
+import JSONCResource from "@emcjs/core/data/resource/file/JSONCResource.js";
 import {
     isArrayOf, isDictOf, isObject, isStringNotEmpty
-} from "/emcJS/util/helper/CheckType.js";
+} from "@emcjs/core/util/helper/CheckType.js";
 
 const DEFAULT_ICE = {
     iceTransportPolicy: "all", // all | relay

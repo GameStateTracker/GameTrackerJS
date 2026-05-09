@@ -1,5 +1,5 @@
-import MessagePortHandler from "/emcJS/worker/util/MessagePortHandler.js";
-import StorageCache from "/emcJS/worker/util/StorageCache.js";
+import MessagePortHandler from "@emcjs/core/worker/util/MessagePortHandler.js";
+import StorageCache from "@emcjs/core/worker/util/StorageCache.js";
 import SavestateCache from "./util/SavestateCache.js";
 
 const SETTINGS = new StorageCache();
@@ -38,7 +38,9 @@ function handleSavestateMessage(msg) {
             }
         } break;
         case "change": {
-            const {category = "", data} = msg;
+            const {
+                category = "", data
+            } = msg;
             if (data != null) {
                 SAVESTATE.set(category, data);
             }
@@ -48,7 +50,9 @@ function handleSavestateMessage(msg) {
             SAVESTATE.notes = value;
         } break;
         case "meta": {
-            const {key, value} = msg;
+            const {
+                key, value
+            } = msg;
             SAVESTATE.setMeta(key, value);
         } break;
     }
@@ -68,16 +72,34 @@ MessagePortHandler.addEventListener("message", (event) => {
 
     /* init */
     if (event.data === "ready") {
-        MessagePortHandler.sendOne({storage: "settings", type: "init", data: SETTINGS.serialize()}, port);
-        MessagePortHandler.sendOne({storage: "parameter", type: "init", data: PARAMETER.serialize()}, port);
-        MessagePortHandler.sendOne({storage: "savestate", type: "init", data: SAVESTATE.serialize()}, port);
-        MessagePortHandler.sendOne({storage: "__logic_results", type: "init", data: Object.fromEntries(LOGIC_RESULTS)}, port);
+        MessagePortHandler.sendOne({
+            storage: "settings",
+            type: "init",
+            data: SETTINGS.serialize()
+        }, port);
+        MessagePortHandler.sendOne({
+            storage: "parameter",
+            type: "init",
+            data: PARAMETER.serialize()
+        }, port);
+        MessagePortHandler.sendOne({
+            storage: "savestate",
+            type: "init",
+            data: SAVESTATE.serialize()
+        }, port);
+        MessagePortHandler.sendOne({
+            storage: "__logic_results",
+            type: "init",
+            data: Object.fromEntries(LOGIC_RESULTS)
+        }, port);
     } else {
         /* echo */
         MessagePortHandler.sendAllButOne(event.data, port);
 
         /* cache */
-        const {storage, ...msg} = event.data;
+        const {
+            storage, ...msg
+        } = event.data;
         switch (storage) {
             case "settings": {
                 handleStorageMessage(SETTINGS, msg);

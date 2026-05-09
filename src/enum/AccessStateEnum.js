@@ -1,5 +1,5 @@
 // frameworks
-import Enum from "/emcJS/data/Enum.js";
+import Enum from "@emcjs/core/enum/Enum.js";
 
 export default class AccessStateEnum extends Enum {
 

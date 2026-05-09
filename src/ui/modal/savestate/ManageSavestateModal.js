@@ -1,9 +1,9 @@
-import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
-import Toast from "/emcJS/ui/overlay/message/Toast.js";
-import DateUtil from "/emcJS/util/date/DateUtil.js";
-import {createArchive} from "/emcJS/util/zip/Deflate.js";
-import FileSystem from "/emcJS/util/file/FileSystem.js";
-import "/emcJS/ui/form/button/Button.js";
+import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
+import Toast from "@emcjs/fe/ui/overlay/message/Toast.js";
+import DateUtil from "@emcjs/core/util/date/DateUtil.js";
+import {createArchive} from "@emcjs/core/util/zip/Deflate.js";
+import FileSystem from "@emcjs/core/util/file/FileSystem.js";
+import "@emcjs/fe/ui/form/button/Button.js";
 import SavestateHandler from "../../../savestate/SavestateHandler.js";
 import SavestateManager from "../../../savestate/SavestateManager.js";
 import AbstractSavestateModal from "./AbstractSavestateModal.js";

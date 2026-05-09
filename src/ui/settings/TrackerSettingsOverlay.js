@@ -1,11 +1,11 @@
-import OptionGroupRegistry from "/emcJS/data/registry/form/OptionGroupRegistry.js";
-import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import SettingsOverlay from "/emcJS/ui/settings/SettingsOverlay.js";
+import OptionGroupRegistry from "@emcjs/fe/registry/form/OptionGroupRegistry.js";
+import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
+import SettingsOverlay from "@emcjs/fe/ui/settings/SettingsOverlay.js";
 import SettingsResource from "../../data/resource/SettingsResource.js";
 import SettingsConfigHandler from "../../util/settings/SettingsConfigHandler.js";
 import SettingsStorage from "../../storage/SettingsStorage.js";
 import Language from "../../util/Language.js";
-import i18n from "/emcJS/util/I18n.js";
+import i18n from "@emcjs/core/util/I18n.js";
 
 const options = SettingsResource.get();
 const settingsConfigHandler = new SettingsConfigHandler(options, (label) => `setting[${label}]`);

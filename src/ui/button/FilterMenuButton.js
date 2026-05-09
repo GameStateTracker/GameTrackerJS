@@ -1,5 +1,5 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
 import FilterContextMenu from "../ctxmenu/FilterContextMenu.js";
 import TPL from "./FilterMenuButton.js.html" assert {type: "html"};
 import STYLE from "./FilterMenuButton.js.css" assert {type: "css"};

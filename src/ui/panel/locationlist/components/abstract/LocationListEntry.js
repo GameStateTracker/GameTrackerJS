@@ -1,22 +1,16 @@
 // frameworks
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import "/emcJS/ui/i18n/I18nLabel.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import "@emcjs/fe/ui/i18n/I18nLabel.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
 
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
 import LocationStateManager from "../../../../../statemanager/world/location/LocationStateManager.js";
 import TPL from "./LocationListEntry.js.html" assert {type: "html"};
 import STYLE from "./LocationListEntry.js.css" assert {type: "css"};
 
-const BaseClass = mix(
-    CustomElement
-).with(
-    StateDataEventManagerMixin,
-    ContextMenuManagerMixin
-);
+const BaseClass = mix(CustomElement).with(StateDataEventManagerMixin,
+    ContextMenuManagerMixin);
 
 export default class LocationListEntry extends BaseClass {
 

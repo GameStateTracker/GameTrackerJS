@@ -1,7 +1,7 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
 import TPL from "./AbstractMarker.js.html" assert {type: "html"};
 import STYLE from "./AbstractMarker.js.css" assert {type: "css"};
-import {isStringNotEmpty} from "/emcJS/util/helper/CheckType.js";
+import {isStringNotEmpty} from "@emcjs/core/util/helper/CheckType.js";
 
 export default class AbstractMarker extends CustomElement {
 

@@ -1,7 +1,7 @@
-import {mix} from "/emcJS/util/Mixin.js";
-import Panel from "/emcJS/ui/layout/Panel.js";
-import "/emcJS/ui/i18n/I18nLabel.js";
-import "/emcJS/ui/i18n/I18nTooltip.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import Panel from "@emcjs/fe/ui/layout/Panel.js";
+import "@emcjs/fe/ui/i18n/I18nLabel.js";
+import "@emcjs/fe/ui/i18n/I18nTooltip.js";
 
 import WorldListState from "../../../state/world/WorldListState.js";
 import AreaStateManager from "../../../statemanager/world/area/AreaStateManager.js";

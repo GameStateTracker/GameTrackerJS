@@ -1,7 +1,7 @@
 // frameworks
-import I18n from "/emcJS/util/I18n.js";
-import I18nLabel from "/emcJS/ui/i18n/I18nLabel.js";
-import I18nTooltip from "/emcJS/ui/i18n/I18nTooltip.js";
+import I18n from "@emcjs/core/util/I18n.js";
+import I18nLabel from "@emcjs/fe/ui/i18n/I18nLabel.js";
+import I18nTooltip from "@emcjs/fe/ui/i18n/I18nTooltip.js";
 
 import SettingsObserver from "./observer/SettingsObserver.js";
 

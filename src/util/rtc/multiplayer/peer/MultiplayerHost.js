@@ -1,6 +1,6 @@
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
-import Toast from "/emcJS/ui/overlay/message/Toast.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
+import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
+import Toast from "@emcjs/fe/ui/overlay/message/Toast.js";
 import Savestate from "../../../../savestate/Savestate.js";
 import MultiplayerPeer from "./MultiplayerPeer.js";
 import {

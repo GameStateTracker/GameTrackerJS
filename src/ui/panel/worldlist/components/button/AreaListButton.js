@@ -1,6 +1,6 @@
 // frameworks
-import {mix} from "/emcJS/util/Mixin.js";
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
 
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";

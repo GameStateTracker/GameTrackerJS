@@ -1,7 +1,7 @@
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
-import Panel from "/emcJS/ui/layout/Panel.js";
-import {isStringNotEmpty} from "/emcJS/util/helper/CheckType.js";
+import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
+import CSSTemplate from "@emcjs/fe/util/template/CSSTemplate.js";
+import Panel from "@emcjs/fe/ui/layout/Panel.js";
+import {isStringNotEmpty} from "@emcjs/core/util/helper/CheckType.js";
 import GridsResource from "../../../data/resource/GridsResource.js";
 import "./components/Item.js";
 

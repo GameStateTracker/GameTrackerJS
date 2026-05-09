@@ -1,10 +1,8 @@
 // frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import "/emcJS/ui/icon/LabeledIcon.js";
+import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
+import CSSTemplate from "@emcjs/fe/util/template/CSSTemplate.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import "@emcjs/fe/ui/icon/LabeledIcon.js";
 
 import UIRegistry from "../../../../../registry/UIRegistry.js";
 import WorldListElement from "../abstract/Element.js";
@@ -40,11 +38,7 @@ function applyElements(target) {
     textEl.insertAdjacentElement("afterend", itemEl);
 }
 
-const BaseClass = mix(
-    WorldListElement
-).with(
-    AccessTextMarkerMixin
-);
+const BaseClass = mix(WorldListElement).with(AccessTextMarkerMixin);
 
 export default class WorldListLocation extends BaseClass {
 

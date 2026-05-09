@@ -1,14 +1,10 @@
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
-import ElementManager from "/emcJS/util/html/ElementManager.js";
-import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
+import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
+import GlobalStyle from "@emcjs/fe/util/template/CSSTemplate.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import EventTargetListenerElementMixin from "@emcjs/fe/ui/mixin/EventTargetListenerElementMixin.js";
+import ElementManager from "@emcjs/fe/util/element/ElementManager.js";
+import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
 import SettingsObserver from "../../../../../util/observer/SettingsObserver.js";
 import UIRegistry from "../../../../../registry/UIRegistry.js";
 import WorldListStateEntry from "./StateEntry.js";
@@ -70,12 +66,8 @@ class ListEntryElementManager extends ElementManager {
 
 }
 
-const BaseClass = mix(
-    WorldListStateEntry
-).with(
-    EventTargetListenerElementMixin,
-    ContextMenuManagerMixin
-);
+const BaseClass = mix(WorldListStateEntry).with(EventTargetListenerElementMixin,
+    ContextMenuManagerMixin);
 
 export default class WorldListSubList extends BaseClass {
 

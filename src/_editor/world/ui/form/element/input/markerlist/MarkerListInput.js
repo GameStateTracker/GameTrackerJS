@@ -1,27 +1,27 @@
-import AbstractFormElement from "/emcJS/ui/form/element/AbstractFormElement.js";
-import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.js";
-import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
-import Toast from "/emcJS/ui/overlay/message/Toast.js";
-import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
-import Axes2D from "/emcJS/enum/Axes2D.js";
-import {debounce} from "/emcJS/util/Debouncer.js";
-import {deepClone} from "/emcJS/util/helper/DeepClone.js";
+import AbstractFormElement from "@emcjs/fe/ui/form/element/AbstractFormElement.js";
+import FormElementRegistry from "@emcjs/fe/registry/form/FormElementRegistry.js";
+import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
+import Toast from "@emcjs/fe/ui/overlay/message/Toast.js";
+import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
+import {registerFocusable} from "@emcjs/fe/util/element/ElementFocusManager.js";
+import Direction from "@emcjs/fe/enum/Direction.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
 import {
     deleteAtIndexImmuted,
     insertAtIndex,
     sortDictListByArrayImmuted
-} from "/emcJS/util/helper/collection/ArrayMutations.js";
-import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
-import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
-import LogicElementModal from "/emcJS/ui/form/element/input/logic/components/modal/LogicElementModal.js";
+} from "@emcjs/core/util/helper/collection/ArrayMutations.js";
+import SimpleDataProvider from "@emcjs/core/util/dataprovider/SimpleDataProvider.js";
+import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
+import LogicElementModal from "@emcjs/fe/ui/form/element/input/logic/components/modal/LogicElementModal.js";
 import ModalDialogAddTypeEntities from "../../../../modal/ModalDialogAddTypeEntities.js";
 import CoordinatesInputModal from "../../../../coordinates/modal/CoordinatesInputModal.js";
 import RelationCellContextMenu from "./ctxmnu/RelationCellContextMenu.js";
 import CopyPasteCellContextMenu from "./ctxmnu/CopyPasteCellContextMenu.js";
-import "/emcJS/ui/form/element/input/search/SearchInput.js";
-import "/emcJS/ui/form/button/Button.js";
-import "/emcJS/ui/dataview/datagrid/DataGrid.js";
+import "@emcjs/fe/ui/form/element/input/search/SearchInput.js";
+import "@emcjs/fe/ui/form/button/Button.js";
+import "@emcjs/fe/ui/dataview/datagrid/DataGrid.js";
 import TPL from "./MarkerListInput.js.html" assert {type: "html"};
 import STYLE from "./MarkerListInput.js.css" assert {type: "css"};
 
@@ -39,7 +39,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
     }
 
     static get AXES() {
-        return Axes2D;
+        return Direction;
     }
 
     #searchEl;
@@ -294,7 +294,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
     }
 
     set resize(value) {
-        this.setEnumAttribute("resize", value, Axes2D);
+        this.setEnumAttribute("resize", value, Direction);
     }
 
     get resize() {

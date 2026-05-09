@@ -1,5 +1,5 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import "/emcJS/ui/input/Option.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import "@emcjs/fe/ui/input/Option.js";
 import AreaStateManager from "../../statemanager/world/area/AreaStateManager.js";
 import StateDataEventManagerMixin from "../mixin/StateDataEventManagerMixin.js";
 import TPL from "./HintButton.js.html" assert {type: "html"};

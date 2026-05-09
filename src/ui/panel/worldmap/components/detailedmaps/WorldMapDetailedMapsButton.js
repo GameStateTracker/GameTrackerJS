@@ -1,6 +1,6 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import "/emcJS/ui/i18n/I18nLabel.js";
-import "/emcJS/ui/icon/Icon.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import "@emcjs/fe/ui/i18n/I18nLabel.js";
+import "@emcjs/fe/ui/icon/Icon.js";
 import SettingsObserver from "../../../../../util/observer/SettingsObserver.js";
 import TPL from "./WorldMapDetailedMapsButton.js.html" assert {type: "html"};
 import STYLE from "./WorldMapDetailedMapsButton.js.css" assert {type: "css"};

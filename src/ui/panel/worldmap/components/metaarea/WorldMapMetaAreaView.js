@@ -1,9 +1,7 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import ElementManager from "/emcJS/util/html/ElementManager.js";
-import "/emcJS/ui/i18n/I18nLabel.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import ElementManager from "@emcjs/fe/util/element/ElementManager.js";
+import "@emcjs/fe/ui/i18n/I18nLabel.js";
 import SettingsObserver from "../../../../../util/observer/SettingsObserver.js";
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
 import WorldListState from "../../../../../state/world/WorldListState.js";
@@ -33,7 +31,9 @@ class MapMarkerElementManager extends ElementManager {
         if (params.type === "connection") {
             el.innerHTML = "";
             for (const position of params.coordinates) {
-                const {x, y} = position ?? {};
+                const {
+                    x, y
+                } = position ?? {};
                 if (!isNaN(x) && !isNaN(y)) {
                     const connectionPointEl = document.createElement("gt-connection-point");
                     connectionPointEl.label = params.label;
@@ -57,11 +57,7 @@ class MapMarkerElementManager extends ElementManager {
 const ZOOM_MIN = 10;
 const ZOOM_MAX = 200;
 
-const BaseClass = mix(
-    CustomElement
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(CustomElement).with(StateDataEventManagerMixin);
 
 export default class WorldMapMetaAreaView extends BaseClass {
 

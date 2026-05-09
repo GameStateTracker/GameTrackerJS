@@ -1,4 +1,4 @@
-import TreeNode from "/emcJS/ui/tree/components/TreeNode.js";
+import TreeNode from "@emcjs/fe/ui/tree/components/TreeNode.js";
 import WorldEditorTreeNode from "../../ui/tree/WorldEditorTreeNode.js";
 import CtxMenu from "./CtxMenu.js";
 
@@ -10,7 +10,11 @@ export default class TreeNode_Areas_Entry extends WorldEditorTreeNode {
         this.setDefaultContextMenu(CtxMenu);
         this.addDefaultContextMenuHandler("delete", (event) => {
             event.stopPropagation();
-            const ev = new Event(`deleteEntity[${this.type}]`, {bubbles: true, cancelable: true, composed: true});
+            const ev = new Event(`deleteEntity[${this.type}]`, {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            });
             ev.data = {
                 element: this,
                 ref: this.ref

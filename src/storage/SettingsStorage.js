@@ -1,4 +1,4 @@
-import ObservableIDBProxyStorage from "/emcJS/data/storage/observable/ObservableIDBProxyStorage.js";
+import ObservableIDBProxyStorage from "@emcjs/core/data/storage/observable/ObservableIDBProxyStorage.js";
 import SettingsResource from "../data/resource/SettingsResource.js";
 import StorageDefaultValues from "../data/StorageDefaultValues.js";
 

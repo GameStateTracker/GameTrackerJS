@@ -1,9 +1,9 @@
-import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
-import LocalStorage from "/emcJS/data/storage/global/LocalStorage.js";
-import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import {debounce} from "/emcJS/util/Debouncer.js";
-import {deepClone} from "/emcJS/util/helper/DeepClone.js";
-import {isEqual} from "/emcJS/util/helper/Comparator.js";
+import IDBStorage from "@emcjs/core/data/storage/IDBStorage.js";
+import LocalStorage from "@emcjs/core/data/storage/global/LocalStorage.js";
+import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
+import {isEqual} from "@emcjs/core/util/helper/Comparator.js";
 import Savestate from "./Savestate.js";
 import SavestateConverter from "./SavestateConverter.js";
 

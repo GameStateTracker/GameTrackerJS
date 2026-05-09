@@ -1,15 +1,15 @@
-import AbstractFormElement from "/emcJS/ui/form/element/AbstractFormElement.js";
-import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.js";
-import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
-import Axes2D from "/emcJS/enum/Axes2D.js";
-import {deepClone} from "/emcJS/util/helper/DeepClone.js";
-import {debounce} from "/emcJS/util/Debouncer.js";
-import {sleep} from "/emcJS/util/process/Sleep.js";
-import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
-import CharacterSearch from "/emcJS/util/search/CharacterSearch.js";
-import LogicElementModal from "/emcJS/ui/form/element/input/logic/components/modal/LogicElementModal.js";
-import "/emcJS/ui/dataview/datagrid/DataGrid.js";
+import AbstractFormElement from "@emcjs/fe/ui/form/element/AbstractFormElement.js";
+import FormElementRegistry from "@emcjs/fe/registry/form/FormElementRegistry.js";
+import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
+import {registerFocusable} from "@emcjs/fe/util/element/ElementFocusManager.js";
+import Direction from "@emcjs/fe/enum/Direction.js";
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {sleep} from "@emcjs/core/util/process/Sleep.js";
+import SimpleDataProvider from "@emcjs/core/util/dataprovider/SimpleDataProvider.js";
+import CharacterSearch from "@emcjs/core/util/search/CharacterSearch.js";
+import LogicElementModal from "@emcjs/fe/ui/form/element/input/logic/components/modal/LogicElementModal.js";
+import "@emcjs/fe/ui/dataview/datagrid/DataGrid.js";
 import TPL from "./FilterInput.js.html" assert {type: "html"};
 import STYLE from "./FilterInput.js.css" assert {type: "css"};
 
@@ -20,7 +20,7 @@ export default class FilterInput extends AbstractFormElement {
     }
 
     static get AXES() {
-        return Axes2D;
+        return Direction;
     }
 
     #filterConfig = [];
@@ -122,7 +122,7 @@ export default class FilterInput extends AbstractFormElement {
     }
 
     set resize(value) {
-        this.setEnumAttribute("resize", value, Axes2D);
+        this.setEnumAttribute("resize", value, Direction);
     }
 
     get resize() {

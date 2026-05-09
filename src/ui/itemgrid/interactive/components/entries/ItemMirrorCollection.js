@@ -1,4 +1,4 @@
-import {mix} from "/emcJS/util/Mixin.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
 import MultiStateDataEventManagerMixin from "../../../../mixin/MultiStateDataEventManagerMixin.js";
 import ItemMirror from "./ItemMirror.js";
 import TPL from "./ItemMirrorCollection.js.html" assert {type: "html"};

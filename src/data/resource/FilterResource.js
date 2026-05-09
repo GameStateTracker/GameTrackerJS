@@ -1,3 +1,5 @@
-import JSONCResource from "/emcJS/data/resource/file/JSONCResource.js";
+import JSONCResource from "@emcjs/core/data/resource/file/JSONCResource.js";
 
-export default await JSONCResource.get("/database/filter.json");
+const FilterResource = await JSONCResource.get("/database/filter.json");
+
+export default FilterResource;

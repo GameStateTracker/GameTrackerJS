@@ -1,6 +1,4 @@
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
 
 class SettingsValuesAliasRegistry extends EventTarget {
 

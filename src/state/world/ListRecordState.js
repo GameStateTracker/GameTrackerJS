@@ -1,18 +1,12 @@
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
 import DataState from "../DataState.js";
 import WorldStateManagerRegistry from "../../statemanager/WorldStateManagerRegistry.js";
 import StateVisibilityMixin from "../mixins/StateVisibilityMixin.js";
 import StateAccessPenetrationMixin from "../mixins/StateAccessPenetrationMixin.js";
 
-const BaseClass = mix(
-    DataState
-).with(
-    StateVisibilityMixin,
-    StateAccessPenetrationMixin
-);
+const BaseClass = mix(DataState).with(StateVisibilityMixin,
+    StateAccessPenetrationMixin);
 
 export default class ListRecordState extends BaseClass {
 

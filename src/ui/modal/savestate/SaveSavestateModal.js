@@ -1,7 +1,7 @@
-import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
-import Toast from "/emcJS/ui/overlay/message/Toast.js";
-import "/emcJS/ui/form/element/input/string/StringInput.js";
-import "/emcJS/ui/form/button/Button.js";
+import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
+import Toast from "@emcjs/fe/ui/overlay/message/Toast.js";
+import "@emcjs/fe/ui/form/element/input/string/StringInput.js";
+import "@emcjs/fe/ui/form/button/Button.js";
 import SavestateHandler from "../../../savestate/SavestateHandler.js";
 import SavestateManager from "../../../savestate/SavestateManager.js";
 import AbstractSavestateModal from "./AbstractSavestateModal.js";

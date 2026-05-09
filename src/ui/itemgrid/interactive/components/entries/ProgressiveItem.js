@@ -1,6 +1,6 @@
-import UIRegistry from "/GameTrackerJS/registry/UIRegistry.js";
+import UIRegistry from "../../../../../registry/UIRegistry.js";
 import ItemElement from "../abstract/ItemElement.js";
-import "/emcJS/ui/input/Option.js";
+import "@emcjs/fe/ui/input/Option.js";
 import "./Item.js";
 import TPL from "./ProgressiveItem.js.html" assert {type: "html"};
 import STYLE from "./ProgressiveItem.js.css" assert {type: "css"};

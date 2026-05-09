@@ -1,7 +1,7 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import {mix} from "/emcJS/util/Mixin.js";
-import "/emcJS/ui/i18n/I18nLabel.js";
-import "/emcJS/ui/i18n/I18nTooltip.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import "@emcjs/fe/ui/i18n/I18nLabel.js";
+import "@emcjs/fe/ui/i18n/I18nTooltip.js";
 import AreaStateManager from "../../../../statemanager/world/area/AreaStateManager.js";
 import StateDataEventManagerMixin from "../../../mixin/StateDataEventManagerMixin.js";
 import WorldListState from "../../../../state/world/WorldListState.js";

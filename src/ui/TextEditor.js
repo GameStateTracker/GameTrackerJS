@@ -1,4 +1,4 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
 import ParameterStorage from "../storage/ParameterStorage.js";
 import TPL from "./TextEditor.js.html" assert {type: "html"};
 import STYLE from "./TextEditor.js.css" assert {type: "css"};

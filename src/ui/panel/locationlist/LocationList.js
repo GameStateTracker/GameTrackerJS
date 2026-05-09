@@ -1,18 +1,18 @@
 // frameworks
-import ElementManager from "/emcJS/util/html/ElementManager.js";
-import EventMultiTargetManager from "/emcJS/util/event/EventMultiTargetManager.js";
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import Panel from "/emcJS/ui/layout/Panel.js";
+import ElementManager from "@emcjs/fe/util/element/ElementManager.js";
+import EventMultiTargetManager from "@emcjs/core/util/event/EventMultiTargetManager.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
+import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
+import Panel from "@emcjs/fe/ui/layout/Panel.js";
 import {
     nodeTextComparator,
     sortChildren
-} from "/emcJS/util/helper/ui/NodeListSort.js";
-import {getInnerText} from "/emcJS/util/helper/ui/ExtractText.js";
-import {debounce} from "/emcJS/util/Debouncer.js";
-import i18n from "/emcJS/util/I18n.js";
-import SearchEvery from "/emcJS/util/search/SearchEvery.js";
-import "/emcJS/ui/form/element/input/search/SearchInput.js";
+} from "@emcjs/fe/util/node/NodeListSort.js";
+import {getInnerText} from "@emcjs/fe/util/node/ExtractText.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import i18n from "@emcjs/core/util/I18n.js";
+import SearchEvery from "@emcjs/core/util/search/SearchEvery.js";
+import "@emcjs/fe/ui/form/element/input/search/SearchInput.js";
 import UIRegistry from "../../../registry/UIRegistry.js";
 import WorldResource from "../../../data/resource/WorldResource.js";
 import LocationStateManager from "../../../statemanager/world/location/LocationStateManager.js";

@@ -1,4 +1,4 @@
-import Panel from "/emcJS/ui/layout/Panel.js";
+import Panel from "@emcjs/fe/ui/layout/Panel.js";
 import GridsResource from "../../../data/resource/GridsResource.js";
 import "../../itemgrid/interactive/ItemGridInteractive.js";
 import TPL from "./ItemGrid.js.html" assert {type: "html"};

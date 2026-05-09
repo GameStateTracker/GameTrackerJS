@@ -1,5 +1,5 @@
 // frameworks
-import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
+import ObservableStorage from "@emcjs/core/data/storage/observable/ObservableStorage.js";
 
 import FilterResource from "../../data/resource/FilterResource.js";
 

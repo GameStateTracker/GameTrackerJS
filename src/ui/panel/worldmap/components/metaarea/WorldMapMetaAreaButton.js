@@ -1,8 +1,6 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import "/emcJS/ui/i18n/I18nLabel.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import "@emcjs/fe/ui/i18n/I18nLabel.js";
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
 import WorldListState from "../../../../../state/world/WorldListState.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
@@ -12,11 +10,7 @@ import "../entries/Exit.js";
 import TPL from "./WorldMapMetaAreaButton.js.html" assert {type: "html"};
 import STYLE from "./WorldMapMetaAreaButton.js.css" assert {type: "css"};
 
-const BaseClass = mix(
-    CustomElement
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(CustomElement).with(StateDataEventManagerMixin);
 
 export default class WorldMapMetaAreaButton extends BaseClass {
 
@@ -41,7 +35,9 @@ export default class WorldMapMetaAreaButton extends BaseClass {
         });
 
         /* --- */
-        const {icon = "", ref} = WorldListState.config.metaArea;
+        const {
+            icon = "", ref
+        } = WorldListState.config.metaArea;
         this.#iconEl.style.backgroundImage = `url("${icon}")`;
         const state = WorldStateManagerRegistry.get(ref?.type)?.get(ref?.name);
         this.switchState(state);

@@ -1,5 +1,5 @@
-import {isStringNotEmpty} from "/emcJS/util/helper/CheckType.js";
-import Enum from "/emcJS/data/Enum.js";
+import {isStringNotEmpty} from "@emcjs/core/util/helper/CheckType.js";
+import Enum from "@emcjs/core/enum/Enum.js";
 
 export const PING_CHANNEL_NAME = "ping";
 

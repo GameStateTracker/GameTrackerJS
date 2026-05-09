@@ -1,24 +1,24 @@
-import AbstractFormElement from "/emcJS/ui/form/element/AbstractFormElement.js";
-import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.js";
-import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
-import Toast from "/emcJS/ui/overlay/message/Toast.js";
-import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import {debounce} from "/emcJS/util/Debouncer.js";
-import {deepClone} from "/emcJS/util/helper/DeepClone.js";
+import AbstractFormElement from "@emcjs/fe/ui/form/element/AbstractFormElement.js";
+import FormElementRegistry from "@emcjs/fe/registry/form/FormElementRegistry.js";
+import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
+import Toast from "@emcjs/fe/ui/overlay/message/Toast.js";
+import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
 import {
     deleteAtIndexImmuted, insertAtIndex
-} from "/emcJS/util/helper/collection/ArrayMutations.js";
-import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
-import Axes2D from "/emcJS/enum/Axes2D.js";
-import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
-import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
+} from "@emcjs/core/util/helper/collection/ArrayMutations.js";
+import {registerFocusable} from "@emcjs/fe/util/element/ElementFocusManager.js";
+import Direction from "@emcjs/fe/enum/Direction.js";
+import SimpleDataProvider from "@emcjs/core/util/dataprovider/SimpleDataProvider.js";
+import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
 import CoordinatesInputModal from "../../../../coordinates/modal/CoordinatesInputModal.js";
 import PosCellContextMenu from "./ctxmnu/PosCellContextMenu.js";
 import NameCellContextMenu from "./ctxmnu/NameCellContextMenu.js";
-import "/emcJS/ui/form/element/input/search/SearchInput.js";
-import "/emcJS/ui/form/button/Button.js";
-import "/emcJS/ui/dataview/datagrid/DataGrid.js";
-import "/emcJS/ui/dataview/datagrid/DataGrid.js";
+import "@emcjs/fe/ui/form/element/input/search/SearchInput.js";
+import "@emcjs/fe/ui/form/button/Button.js";
+import "@emcjs/fe/ui/dataview/datagrid/DataGrid.js";
+import "@emcjs/fe/ui/dataview/datagrid/DataGrid.js";
 import TPL from "./ConnectionListInput.js.html" assert {type: "html"};
 import STYLE from "./ConnectionListInput.js.css" assert {type: "css"};
 
@@ -29,7 +29,7 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
     }
 
     static get AXES() {
-        return Axes2D;
+        return Direction;
     }
 
     #searchEl;
@@ -209,7 +209,7 @@ export default class ConnectionListInput extends ContextMenuManagerMixin(Abstrac
     }
 
     set resize(value) {
-        this.setEnumAttribute("resize", value, Axes2D);
+        this.setEnumAttribute("resize", value, Direction);
     }
 
     get resize() {

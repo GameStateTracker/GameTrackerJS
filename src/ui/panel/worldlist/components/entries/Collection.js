@@ -1,6 +1,6 @@
 // frameworks
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
-import "/emcJS/ui/icon/Icon.js";
+import CSSTemplate from "@emcjs/fe/util/template/CSSTemplate.js";
+import "@emcjs/fe/ui/icon/Icon.js";
 
 import AccessStateEnum from "../../../../../enum/AccessStateEnum.js";
 import UIRegistry from "../../../../../registry/UIRegistry.js";

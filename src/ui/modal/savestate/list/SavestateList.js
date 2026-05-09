@@ -1,9 +1,9 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
-import jsonParse from "/emcJS/patches/JSONParser.js";
-import {isEqual} from "/emcJS/util/helper/Comparator.js";
-import "/emcJS/ui/dataview/datalist/DataListSelect.js";
-import "/emcJS/ui/form/element/components/searchheader/SearchHeader.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import SimpleDataProvider from "@emcjs/core/util/dataprovider/SimpleDataProvider.js";
+import jsonParse from "@emcjs/core/patches/JSONParser.js";
+import {isEqual} from "@emcjs/core/util/helper/Comparator.js";
+import "@emcjs/fe/ui/dataview/datalist/DataListSelect.js";
+import "@emcjs/fe/ui/form/element/components/searchheader/SearchHeader.js";
 import SavestateManager from "../../../../savestate/SavestateManager.js";
 import SavestateListEntry from "./components/SavestateListEntry.js";
 import TPL from "./SavestateList.js.html" assert {type: "html"};

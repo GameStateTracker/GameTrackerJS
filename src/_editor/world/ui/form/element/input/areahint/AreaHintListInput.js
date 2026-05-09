@@ -1,19 +1,19 @@
-import AbstractFormElement from "/emcJS/ui/form/element/AbstractFormElement.js";
-import FormElementRegistry from "/emcJS/data/registry/form/FormElementRegistry.js";
-import ImageSelectModal from "/emcJS/ui/form/element/select/image/components/ImageSelectModal.js";
-import {debounce} from "/emcJS/util/Debouncer.js";
-import {deleteAtIndexImmuted} from "/emcJS/util/helper/collection/ArrayMutations.js";
-import {registerFocusable} from "/emcJS/util/helper/html/ElementFocusHelper.js";
-import Axes2D from "/emcJS/enum/Axes2D.js";
-import {jsonParseSafe} from "/emcJS/util/helper/JSON.js";
-import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import SimpleDataProvider from "/emcJS/util/dataprovider/SimpleDataProvider.js";
-import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
-import "/emcJS/ui/dataview/datagrid/DataGrid.js";
-import "/emcJS/ui/dataview/datagrid/Column.js";
-import "/emcJS/ui/form/FormRow.js";
-import "/emcJS/ui/form/element/input/search/SearchInput.js";
-import "/emcJS/ui/form/button/Button.js";
+import AbstractFormElement from "@emcjs/fe/ui/form/element/AbstractFormElement.js";
+import FormElementRegistry from "@emcjs/fe/registry/form/FormElementRegistry.js";
+import ImageSelectModal from "@emcjs/fe/ui/form/element/select/image/components/ImageSelectModal.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {deleteAtIndexImmuted} from "@emcjs/core/util/helper/collection/ArrayMutations.js";
+import {registerFocusable} from "@emcjs/fe/util/element/ElementFocusManager.js";
+import Direction from "@emcjs/fe/enum/Direction.js";
+import {jsonParseSafe} from "@emcjs/core/util/helper/JSON.js";
+import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
+import SimpleDataProvider from "@emcjs/core/util/dataprovider/SimpleDataProvider.js";
+import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
+import "@emcjs/fe/ui/dataview/datagrid/DataGrid.js";
+import "@emcjs/fe/ui/dataview/datagrid/Column.js";
+import "@emcjs/fe/ui/form/FormRow.js";
+import "@emcjs/fe/ui/form/element/input/search/SearchInput.js";
+import "@emcjs/fe/ui/form/button/Button.js";
 import TPL from "./AreaHintListInput.js.html" assert {type: "html"};
 import STYLE from "./AreaHintListInput.js.css" assert {type: "css"};
 
@@ -24,7 +24,7 @@ export default class AreaHintListInput extends AbstractFormElement {
     }
 
     static get AXES() {
-        return Axes2D;
+        return Direction;
     }
 
     #searchEl;
@@ -141,7 +141,7 @@ export default class AreaHintListInput extends AbstractFormElement {
     }
 
     set resize(value) {
-        this.setEnumAttribute("resize", value, Axes2D);
+        this.setEnumAttribute("resize", value, Direction);
     }
 
     get resize() {

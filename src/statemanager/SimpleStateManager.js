@@ -1,6 +1,4 @@
-import {
-    getFromObjectByPath
-} from "/emcJS/util/helper/collection/ObjectContent.js";
+import {getFromObjectByPath} from "@emcjs/core/util/helper/collection/ObjectContent.js";
 import DataState from "../state/DataState.js";
 
 export default class SimpleStateManager {
@@ -85,7 +83,10 @@ export default class SimpleStateManager {
             next: () => {
                 if (index < keys.length) {
                     const key = keys[index++];
-                    return {value: [key, this.get(key)], done: false};
+                    return {
+                        value: [key, this.get(key)],
+                        done: false
+                    };
                 } else {
                     return {done: true};
                 }

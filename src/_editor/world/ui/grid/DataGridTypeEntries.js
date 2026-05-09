@@ -1,9 +1,9 @@
-import CustomElementDelegating from "/emcJS/ui/element/CustomElementDelegating.js";
-import TypeStorageDataProvider from "/emcJS/util/dataprovider/TypeStorageDataProvider.js";
-import TypeStorage from "/emcJS/data/type/TypeStorage.js";
-import "/emcJS/ui/form/element/input/search/SearchInput.js";
-import "/emcJS/ui/dataview/datagrid/DataGrid.js";
-import "/emcJS/ui/dataview/toolbar/DataViewControlToolbar.js";
+import CustomElementDelegating from "@emcjs/fe/ui/element/CustomElementDelegating.js";
+import TypeStorageDataProvider from "@emcjs/core/util/dataprovider/TypeStorageDataProvider.js";
+import TypeStorage from "@emcjs/core/data/type/TypeStorage.js";
+import "@emcjs/fe/ui/form/element/input/search/SearchInput.js";
+import "@emcjs/fe/ui/dataview/datagrid/DataGrid.js";
+import "@emcjs/fe/ui/dataview/toolbar/DataViewControlToolbar.js";
 import TPL from "./DataGridTypeEntries.js.html" assert {type: "html"};
 import STYLE from "./DataGridTypeEntries.js.css" assert {type: "css"};
 
@@ -47,22 +47,19 @@ export default class DataGridTypeEntries extends CustomElementDelegating {
         });
         /* --- */
         this.#controlToolbarEl = this.shadowRoot.getElementById("control-toolbar");
-        /* --- */
         this.#dataManager = new TypeStorageDataProvider(this.#gridEl, null, {
             config: {
                 sort: ["entityName"],
                 pageSize: 15
-            },
-            toolbar: this.#controlToolbarEl
+            }
         });
+        this.#controlToolbarEl.setDataProvider(this.#dataManager);
         /* --- */
         this.#searchEl = this.shadowRoot.getElementById("search");
         this.#searchEl.addEventListener("change", () => {
             const options = {filter: {}};
             if (this.#searchEl.value != "") {
-                options.filter = {
-                    entityName: this.#searchEl.value
-                };
+                options.filter = {entityName: this.#searchEl.value};
             }
             this.#dataManager.updateConfig(options);
         }, true);

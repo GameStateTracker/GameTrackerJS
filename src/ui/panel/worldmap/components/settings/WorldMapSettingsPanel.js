@@ -1,8 +1,8 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import "/emcJS/ui/form/FormRow.js";
-import "/emcJS/ui/form/button/Button.js";
-import "/emcJS/ui/form/element/input/slider/SliderInput.js";
-import "/emcJS/ui/form/element/input/switch/SwitchInput.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import "@emcjs/fe/ui/form/FormRow.js";
+import "@emcjs/fe/ui/form/button/Button.js";
+import "@emcjs/fe/ui/form/element/input/slider/SliderInput.js";
+import "@emcjs/fe/ui/form/element/input/switch/SwitchInput.js";
 import SettingsObserver from "../../../../../util/observer/SettingsObserver.js";
 import "../overview/WorldMapOverview.js";
 import TPL from "./WorldMapSettingsPanel.js.html" assert {type: "html"};

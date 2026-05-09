@@ -1,23 +1,11 @@
 // frameworks
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import {
-    immute
-} from "/emcJS/data/Immutable.js";
-import {
-    isEqual
-} from "/emcJS/util/helper/Comparator.js";
-import {
-    getStringOrDefault
-} from "/emcJS/util/helper/GetType.js";
-import {
-    isString
-} from "/emcJS/util/helper/CheckType.js";
-import ObservableStorageObserver from "/emcJS/util/observer/data/storage/ObservableStorageObserver.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {immute} from "@emcjs/core/data/Immutable.js";
+import {isEqual} from "@emcjs/core/util/helper/Comparator.js";
+import {getStringOrDefault} from "@emcjs/core/util/helper/GetType.js";
+import {isString} from "@emcjs/core/util/helper/CheckType.js";
+import ObservableStorageObserver from "@emcjs/core/util/observer/data/storage/ObservableStorageObserver.js";
 
 import Savestate from "../../../savestate/Savestate.js";
 import StateDataEventManager from "../../../util/StateDataEventManager.js";
@@ -25,18 +13,12 @@ import AccessStateEnum from "../../../enum/AccessStateEnum.js";
 import Logic from "../../../util/logic/Logic.js";
 import AreaStateManager from "../../../statemanager/world/area/AreaStateManager.js";
 import EntranceStateManager from "../../../statemanager/world/entrance/EntranceStateManager.js";
-import {
-    emptyState
-} from "../EmptyState.js";
+import {emptyState} from "../EmptyState.js";
 import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";
-import WorldResource, {
-    getGatewayIn
-} from "../../../data/resource/WorldResource.js";
-import {
-    getDefaultAccess
-} from "../../../util/helper/ListAccessHelper.js";
+import WorldResource, {getGatewayIn} from "../../../data/resource/WorldResource.js";
+import {getDefaultAccess} from "../../../util/helper/ListAccessHelper.js";
 
 const CONFIG = WorldResource.get("config");
 const GATEWAYS_VARIANTS = CONFIG.gateways?.variants;
@@ -93,12 +75,8 @@ function getLogicAccess(reachable) {
     return immute(res);
 }
 
-const BaseClass = mix(
-    DataState
-).with(
-    StateVisibilityMixin,
-    StateFilterMixin
-);
+const BaseClass = mix(DataState).with(StateVisibilityMixin,
+    StateFilterMixin);
 
 export default class DefaultExitState extends BaseClass {
 

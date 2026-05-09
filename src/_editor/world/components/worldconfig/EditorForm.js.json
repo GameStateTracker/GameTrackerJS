@@ -34,6 +34,15 @@
                 }
             },
             {
+                "type": "TextInput",
+                "name": "metaArea.description",
+                "label": "Button Tooltip",
+                "visible": {
+                    "type": "value",
+                    "ref": "metaArea.active"
+                }
+            },
+            {
                 "type": "ImageSelect",
                 "name": "metaArea.icon",
                 "label": "Icon",

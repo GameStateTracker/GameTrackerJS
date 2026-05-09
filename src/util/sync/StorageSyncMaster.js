@@ -33,7 +33,9 @@ function handleSavestateMessage(msg) {
             }
         } break;
         case "change": {
-            const {category = "", data} = msg;
+            const {
+                category = "", data
+            } = msg;
             if (data != null) {
                 Savestate.set(category, data);
             }
@@ -43,7 +45,9 @@ function handleSavestateMessage(msg) {
             Savestate.notes = value;
         } break;
         case "meta": {
-            const {key, value} = msg;
+            const {
+                key, value
+            } = msg;
             Savestate.setMeta(key, value);
         } break;
     }
@@ -52,15 +56,33 @@ function handleSavestateMessage(msg) {
 if (StorageSync.isActive()) {
     const muted = new Counter();
 
-    StorageSync.postMessage({storage: "settings", type: "init", data: SettingsStorage.serialize()});
-    StorageSync.postMessage({storage: "parameter", type: "init", data: ParameterStorage.serialize()});
-    StorageSync.postMessage({storage: "savestate", type: "init", data: Savestate.serialize()});
-    StorageSync.postMessage({storage: "__logic_results", type: "init", data: Logic.getAll()});
+    StorageSync.postMessage({
+        storage: "settings",
+        type: "init",
+        data: SettingsStorage.serialize()
+    });
+    StorageSync.postMessage({
+        storage: "parameter",
+        type: "init",
+        data: ParameterStorage.serialize()
+    });
+    StorageSync.postMessage({
+        storage: "savestate",
+        type: "init",
+        data: Savestate.serialize()
+    });
+    StorageSync.postMessage({
+        storage: "__logic_results",
+        type: "init",
+        data: Logic.getAll()
+    });
 
     // listen
     StorageSync.addEventListener("message", (event) => {
         muted.add();
-        const {storage, ...msg} = event.data;
+        const {
+            storage, ...msg
+        } = event.data;
         switch (storage) {
             case "settings": {
                 handleStorageMessage(SettingsStorage, msg);
@@ -79,13 +101,21 @@ if (StorageSync.isActive()) {
     SettingsStorage.addEventListener("load", (event) => {
         if (!muted.value) {
             const {data = {}} = event;
-            StorageSync.postMessage({storage: "settings", type: "load", data});
+            StorageSync.postMessage({
+                storage: "settings",
+                type: "load",
+                data
+            });
         }
     });
     SettingsStorage.addEventListener("change", (event) => {
         if (!muted.value) {
             const {data = {}} = event;
-            StorageSync.postMessage({storage: "settings", type: "change", data});
+            StorageSync.postMessage({
+                storage: "settings",
+                type: "change",
+                data
+            });
         }
     });
 
@@ -93,13 +123,21 @@ if (StorageSync.isActive()) {
     ParameterStorage.addEventListener("load", (event) => {
         if (!muted.value) {
             const {data = {}} = event;
-            StorageSync.postMessage({storage: "parameter", type: "load", data});
+            StorageSync.postMessage({
+                storage: "parameter",
+                type: "load",
+                data
+            });
         }
     });
     ParameterStorage.addEventListener("change", (event) => {
         if (!muted.value) {
             const {data = {}} = event;
-            StorageSync.postMessage({storage: "parameter", type: "change", data});
+            StorageSync.postMessage({
+                storage: "parameter",
+                type: "change",
+                data
+            });
         }
     });
 
@@ -107,30 +145,56 @@ if (StorageSync.isActive()) {
     Savestate.addEventListener("load", (event) => {
         if (!muted.value) {
             const {data = {}} = event;
-            StorageSync.postMessage({storage: "savestate", type: "load", data});
+            StorageSync.postMessage({
+                storage: "savestate",
+                type: "load",
+                data
+            });
         }
     });
     Savestate.addEventListener("change", (event) => {
         if (!muted.value) {
-            const {category = "", data = {}} = event;
-            StorageSync.postMessage({storage: "savestate", type: "change", category, data});
+            const {
+                category = "", data = {}
+            } = event;
+            StorageSync.postMessage({
+                storage: "savestate",
+                type: "change",
+                category,
+                data
+            });
         }
     });
     Savestate.addEventListener("notes", (event) => {
         if (!muted.value) {
             const {value = ""} = event;
-            StorageSync.postMessage({storage: "savestate", type: "notes", value});
+            StorageSync.postMessage({
+                storage: "savestate",
+                type: "notes",
+                value
+            });
         }
     });
     Savestate.addEventListener("meta", (event) => {
         if (!muted.value) {
-            const {key, value} = event;
-            StorageSync.postMessage({storage: "savestate", type: "meta", key, value});
+            const {
+                key, value
+            } = event;
+            StorageSync.postMessage({
+                storage: "savestate",
+                type: "meta",
+                key,
+                value
+            });
         }
     });
 
     // send logic results
     Logic.addEventListener("change", (event) => {
-        StorageSync.postMessage({storage: "__logic_results", type: "change", data: event.data});
+        StorageSync.postMessage({
+            storage: "__logic_results",
+            type: "change",
+            data: event.data
+        });
     });
 }

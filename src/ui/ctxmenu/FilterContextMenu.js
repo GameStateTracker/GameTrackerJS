@@ -1,6 +1,6 @@
 // frameworks
-import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
-import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
+import GlobalStyle from "@emcjs/fe/util/template/CSSTemplate.js";
+import ContextMenu from "@emcjs/fe/ui/overlay/ctxmenu/ContextMenu.js";
 
 import FilterResource from "../../data/resource/FilterResource.js";
 import "../button/FilterButton.js";

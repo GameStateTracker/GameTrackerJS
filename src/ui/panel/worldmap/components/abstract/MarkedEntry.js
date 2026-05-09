@@ -1,7 +1,7 @@
 // frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
-import "/emcJS/ui/icon/Icon.js";
+import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
+import CSSTemplate from "@emcjs/fe/util/template/CSSTemplate.js";
+import "@emcjs/fe/ui/icon/Icon.js";
 
 import WorldMapStateEntry from "./StateEntry.js";
 import Badge from "../../../../Badge.js";

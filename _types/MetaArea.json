@@ -16,6 +16,11 @@
                 "Collection"
             ]
         },
+        "description": {
+            "@type": "String",
+            "optional": true,
+            "default": ""
+        },
         "icon": {
             "@type": "Image",
             "optional": true,

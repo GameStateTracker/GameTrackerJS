@@ -1,7 +1,7 @@
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import LogicCompiler from "/emcJS/util/logic/processor/LogicCompiler.js";
-import {debounce} from "/emcJS/util/Debouncer.js";
-import {deepClone} from "/emcJS/util/helper/DeepClone.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
+import LogicCompiler from "@emcjs/core/util/logic/processor/LogicCompiler.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
 import TrackerLogicDataCollector from "../logic/TrackerLogicDataCollector.js";
 
 const EVENTS = ["load", "change"];

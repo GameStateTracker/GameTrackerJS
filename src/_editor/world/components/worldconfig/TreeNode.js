@@ -1,4 +1,4 @@
-import TreeNode from "/emcJS/ui/tree/components/TreeNode.js";
+import TreeNode from "@emcjs/fe/ui/tree/components/TreeNode.js";
 import WorldEditorTreeNode from "../../ui/tree/WorldEditorTreeNode.js";
 
 export default class TreeNode_WorldConfig extends WorldEditorTreeNode {

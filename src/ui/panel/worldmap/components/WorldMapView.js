@@ -1,10 +1,10 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import {mix} from "/emcJS/util/Mixin.js";
-import {debounce} from "/emcJS/util/Debouncer.js";
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import ElementManager from "/emcJS/util/html/ElementManager.js";
-import "/emcJS/ui/i18n/I18nLabel.js";
-import "/emcJS/ui/bubble/BubbleLayer.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
+import ElementManager from "@emcjs/fe/util/element/ElementManager.js";
+import "@emcjs/fe/ui/i18n/I18nLabel.js";
+import "@emcjs/fe/ui/bubble/BubbleLayer.js";
 import ParameterStorage from "../../../../storage/ParameterStorage.js";
 import SettingsObserver from "../../../../util/observer/SettingsObserver.js";
 import AreaStateManager from "../../../../statemanager/world/area/AreaStateManager.js";

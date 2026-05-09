@@ -1,17 +1,9 @@
 // frameworks
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import {
-    immute
-} from "/emcJS/data/Immutable.js";
-import ObservableStorageObserver from "/emcJS/util/observer/data/storage/ObservableStorageObserver.js";
-import {
-    isEqual
-} from "/emcJS/util/helper/Comparator.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {immute} from "@emcjs/core/data/Immutable.js";
+import ObservableStorageObserver from "@emcjs/core/util/observer/data/storage/ObservableStorageObserver.js";
+import {isEqual} from "@emcjs/core/util/helper/Comparator.js";
 
 import Savestate from "../../../savestate/Savestate.js";
 import Logic from "../../../util/logic/Logic.js";
@@ -20,9 +12,7 @@ import ItemStateManager from "../../../statemanager/item/ItemStateManager.js";
 import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";
-import {
-    getDefaultAccess
-} from "../../../util/helper/ListAccessHelper.js";
+import {getDefaultAccess} from "../../../util/helper/ListAccessHelper.js";
 
 const STORAGES = {
     locations: Savestate.getStorage("locations"),
@@ -51,12 +41,8 @@ function getLogicAccess(checked, reachable) {
     return immute(res);
 }
 
-const BaseClass = mix(
-    DataState
-).with(
-    StateVisibilityMixin,
-    StateFilterMixin
-);
+const BaseClass = mix(DataState).with(StateVisibilityMixin,
+    StateFilterMixin);
 
 /* TODO add $IN_ROOT
 add function to write this.setLogicData("$IN_ROOT", value)

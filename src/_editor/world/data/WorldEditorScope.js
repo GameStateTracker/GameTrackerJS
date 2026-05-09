@@ -1,6 +1,4 @@
-import {
-    deepClone
-} from "/emcJS/util/helper/DeepClone.js";
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
 
 class WorldEditorScope extends EventTarget {
 

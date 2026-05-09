@@ -1,19 +1,15 @@
 // frameworks
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
-import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
-import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import CSSTemplate from "@emcjs/fe/util/template/CSSTemplate.js";
+import ContextMenu from "@emcjs/fe/ui/overlay/ctxmenu/ContextMenu.js";
+import EventTargetListenerElementMixin from "@emcjs/fe/ui/mixin/EventTargetListenerElementMixin.js";
 import ExitStateManager from "../../statemanager/world/exit/ExitStateManager.js";
 import EntranceStateManager from "../../statemanager/world/entrance/EntranceStateManager.js";
 import Savestate from "../../savestate/Savestate.js";
 import EntranceBindingHandler from "../../util/handler/EntranceBindingHandler.js";
 import "../entrance/EntranceSelectList.js";
 
-const STORAGES = {
-    exitBindings: Savestate.getStorage("exitBindings")
-};
+const STORAGES = {exitBindings: Savestate.getStorage("exitBindings")};
 
 const STYLE = new CSSTemplate(`
 ::slotted(#select) {
@@ -24,11 +20,7 @@ const STYLE = new CSSTemplate(`
 }
 `);
 
-const BaseClass = mix(
-    ContextMenu
-).with(
-    EventTargetListenerElementMixin
-);
+const BaseClass = mix(ContextMenu).with(EventTargetListenerElementMixin);
 
 export default class ExitBindingContextMenu extends BaseClass {
 

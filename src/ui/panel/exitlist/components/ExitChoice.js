@@ -1,6 +1,6 @@
 
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
 import ExitStateManager from "../../../../statemanager/world/exit/ExitStateManager.js";
 import StateDataEventManagerMixin from "../../../mixin/StateDataEventManagerMixin.js";
 import Badge from "../../../Badge.js";

@@ -1,4 +1,4 @@
-import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
+import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
 import DataManager from "../../data/DataManager.js";
 import ComponentController from "../../util/ComponentController.js";
 // import LocationEntryModal from "../components/modal/LocationEntryModal.js";

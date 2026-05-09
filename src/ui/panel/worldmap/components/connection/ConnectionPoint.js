@@ -1,4 +1,4 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
 import TPL from "./ConnectionPoint.js.html" assert {type: "html"};
 import STYLE from "./ConnectionPoint.js.css" assert {type: "css"};
 

@@ -1,6 +1,4 @@
-import {
-    getRegion
-} from "../../data/resource/WorldResource.js";
+import {getRegion} from "../../data/resource/WorldResource.js";
 import SavestateHandler from "../../savestate/SavestateHandler.js";
 import ExitStateManager from "../../statemanager/world/exit/ExitStateManager.js";
 import Logic from "../logic/Logic.js";
@@ -13,7 +11,9 @@ function initRedirects() {
     const initTransalation = [];
     for (const entry of AUGMENTORS) {
         if (entry.exit.visible) {
-            const {ref, value} = entry.exit;
+            const {
+                ref, value
+            } = entry.exit;
             if (typeof ref === "string" && typeof value === "string") {
                 LogicExitAugmentor.applyBinding(initTransalation, ref, value);
             }

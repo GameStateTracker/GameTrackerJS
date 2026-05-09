@@ -1,4 +1,4 @@
-import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
+import ObservableStorage from "@emcjs/core/data/storage/observable/ObservableStorage.js";
 import OptionsResource from "../../data/resource/OptionsResource.js";
 import StorageDefaultValues from "../../data/StorageDefaultValues.js";
 

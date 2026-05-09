@@ -1,9 +1,7 @@
 // frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
+import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
 
 import WorldListStateEntry from "./StateEntry.js";
 import "../../../../Badge.js";
@@ -19,11 +17,7 @@ function applyElements(target) {
     textEl.insertAdjacentElement("afterend", badgeEl);
 }
 
-const BaseClass = mix(
-    WorldListStateEntry
-).with(
-    ContextMenuManagerMixin
-);
+const BaseClass = mix(WorldListStateEntry).with(ContextMenuManagerMixin);
 
 export default class WorldListElement extends BaseClass {
 

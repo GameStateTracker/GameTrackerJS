@@ -1,6 +1,6 @@
-import CustomFormElement from "/emcJS/ui/element/CustomFormElement.js";
-import {isEqual} from "/emcJS/util/helper/Comparator.js";
-import "/emcJS/ui/i18n/I18nTooltip.js";
+import CustomFormElement from "@emcjs/fe/ui/element/CustomFormElement.js";
+import {isEqual} from "@emcjs/core/util/helper/Comparator.js";
+import "@emcjs/fe/ui/i18n/I18nTooltip.js";
 import CoordinatesInputModal from "./modal/CoordinatesInputModal.js";
 import TPL from "./CoordinatesInput.js.html" assert {type: "html"};
 import STYLE from "./CoordinatesInput.js.css" assert {type: "css"};

@@ -1,5 +1,5 @@
-import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
-import "/emcJS/ui/form/button/Button.js";
+import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
+import "@emcjs/fe/ui/form/button/Button.js";
 import "./components/MapPosInput.js";
 import TPL from "./CoordinatesInputModal.js.html" assert {type: "html"};
 import STYLE from "./CoordinatesInputModal.js.css" assert {type: "css"};

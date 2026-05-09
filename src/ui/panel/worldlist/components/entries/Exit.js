@@ -1,13 +1,9 @@
 // frameworks
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
-import "/emcJS/ui/icon/Icon.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
+import CSSTemplate from "@emcjs/fe/util/template/CSSTemplate.js";
+import "@emcjs/fe/ui/icon/Icon.js";
 
 import WorldListState from "../../../../../state/world/WorldListState.js";
 import DefaultAreaState from "../../../../../state/world/area/DefaultAreaState.js";
@@ -92,12 +88,8 @@ function applyElements(target) {
     headerEl.append(areaEl);
 }
 
-const BaseClass = mix(
-    WorldListSubListElement
-).with(
-    AccessTextMarkerMixin,
-    AccessListMarkerMixin
-);
+const BaseClass = mix(WorldListSubListElement).with(AccessTextMarkerMixin,
+    AccessListMarkerMixin);
 
 export default class WorldListExit extends BaseClass {
 

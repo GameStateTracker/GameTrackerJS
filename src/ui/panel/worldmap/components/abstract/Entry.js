@@ -1,10 +1,10 @@
 // frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import {mix} from "/emcJS/util/Mixin.js";
-import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
-import "/emcJS/ui/i18n/I18nLabel.js";
+import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
+import GlobalStyle from "@emcjs/fe/util/template/CSSTemplate.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
+import "@emcjs/fe/ui/i18n/I18nLabel.js";
 
 const TPL = new HTMLTemplate(`
 <div id="marker"></div>

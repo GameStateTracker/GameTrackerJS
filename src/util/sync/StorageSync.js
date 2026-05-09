@@ -1,5 +1,5 @@
-import Path from "/emcJS/util/file/Path.js";
-import SharedWorkerRegistry from "/emcJS/worker/SharedWorkerRegistry.js";
+import Path from "@emcjs/core/util/file/Path.js";
+import SharedWorkerRegistry from "@emcjs/core/registry/worker/SharedWorkerRegistry.js";
 
 const MODULE_PATH = new Path(import.meta.url);
 
@@ -9,7 +9,7 @@ function getWorker() {
         //     const workerPath = MODULE_PATH.getAbsolute("./worker/StorageSync.w.js");
         //     return SharedWorkerRegistry.register("StorageSync", workerPath, "module");
         // }
-        const workerPath = MODULE_PATH.getAbsolute("./worker/StorageSync.leg_w.js");
+        const workerPath = MODULE_PATH.getAbsolute("./worker/StorageSync.w.leg.js");
         return SharedWorkerRegistry.register("StorageSync", workerPath);
     }
 }

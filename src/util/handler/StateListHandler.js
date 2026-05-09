@@ -1,24 +1,14 @@
 // frameworks
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import {
-    immute
-} from "/emcJS/data/Immutable.js";
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import {
-    isEqual
-} from "/emcJS/util/helper/Comparator.js";
-import {
-    mergeMapsInto
-} from "/emcJS/util/helper/collection/MergeMaps.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {immute} from "@emcjs/core/data/Immutable.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
+import {isEqual} from "@emcjs/core/util/helper/Comparator.js";
+import {mergeMapsInto} from "@emcjs/core/util/helper/collection/MergeMaps.js";
 
 import AccessStateEnum from "../../enum/AccessStateEnum.js";
 import OptionsObserver from "../observer/OptionsObserver.js";
 import ListRecordState from "../../state/world/ListRecordState.js";
-import {
-    getDefaultAccess
-} from "../helper/ListAccessHelper.js";
+import {getDefaultAccess} from "../helper/ListAccessHelper.js";
 
 const detachedEntrancesObserver = new OptionsObserver("detached_entrances");
 
@@ -158,7 +148,9 @@ export default class StateListHandler extends EventTarget {
             }
         }
         for (const [, location] of access.locations) {
-            const {done, unopened, reachable, total} = location;
+            const {
+                done, unopened, reachable, total
+            } = location;
             access.done += done;
             access.unopened += unopened;
             access.reachable += reachable;

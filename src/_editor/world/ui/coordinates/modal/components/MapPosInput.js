@@ -1,7 +1,7 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import {debounce} from "/emcJS/util/Debouncer.js";
-import "/emcJS/ui/form/element/input/range/RangeInput.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import "@emcjs/fe/ui/form/element/input/range/RangeInput.js";
 import "../../marker/AreaMarker.js";
 import "../../marker/ConnectionMarker.js";
 import "../../marker/ExitMarker.js";

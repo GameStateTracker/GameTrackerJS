@@ -1,10 +1,13 @@
-import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
+import ContextMenu from "@emcjs/fe/ui/overlay/ctxmenu/ContextMenu.js";
 
 export default class CtxMenu_Exits extends ContextMenu {
 
     initItems() {
         super.setItems([
-            {menuAction: "add", content: "Add exit"}
+            {
+                menuAction: "add",
+                content: "Add exit"
+            }
         ]);
     }
 

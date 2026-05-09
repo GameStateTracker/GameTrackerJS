@@ -1,13 +1,9 @@
-import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
-import BusyIndicatorManager from "/emcJS/util/BusyIndicatorManager.js";
-import {
-    isEqual
-} from "/emcJS/util/helper/Comparator.js";
-import {
-    deepClone
-} from "/emcJS/util/helper/DeepClone.js";
+import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
+import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
+import {isEqual} from "@emcjs/core/util/helper/Comparator.js";
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
 import DataManager from "../data/DataManager.js";
-import scope from "../data/WorldEditorScope";
+import scope from "../data/WorldEditorScope.js";
 
 export default class ComponentController extends Object {
 

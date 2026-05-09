@@ -1,5 +1,5 @@
-import DataListSelectEntry from "/emcJS/ui/dataview/datalist/components/DataListSelectEntry.js";
-import DateUtil from "/emcJS/util/date/DateUtil.js";
+import DataListSelectEntry from "@emcjs/fe/ui/dataview/datalist/components/DataListSelectEntry.js";
+import DateUtil from "@emcjs/core/util/date/DateUtil.js";
 import TPL from "./SavestateListEntry.js.html" assert {type: "html"};
 import STYLE from "./SavestateListEntry.js.css" assert {type: "css"};
 

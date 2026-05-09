@@ -1,12 +1,8 @@
 // frameworks
-import ObservableStorageObserver from "/emcJS/util/observer/data/storage/ObservableStorageObserver.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
+import ObservableStorageObserver from "@emcjs/core/util/observer/data/storage/ObservableStorageObserver.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
 
-import {
-    parseSafeRange
-} from "../../util/helper/ItemHelper.js";
+import {parseSafeRange} from "../../util/helper/ItemHelper.js";
 import Savestate from "../../savestate/Savestate.js";
 import OptionsObserver from "../../util/observer/OptionsObserver.js";
 import DataState from "../DataState.js";
@@ -17,11 +13,7 @@ const STORAGES = {
     startItems: Savestate.getStorage("startItems")
 };
 
-const BaseClass = mix(
-    DataState
-).with(
-    StateVisibilityMixin
-);
+const BaseClass = mix(DataState).with(StateVisibilityMixin);
 
 export default class DefaultItemState extends BaseClass {
 

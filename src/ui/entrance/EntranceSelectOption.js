@@ -1,9 +1,7 @@
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import "/emcJS/ui/i18n/I18nLabel.js";
-import "/emcJS/ui/icon/LabeledIcon.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import "@emcjs/fe/ui/i18n/I18nLabel.js";
+import "@emcjs/fe/ui/icon/LabeledIcon.js";
 import StateDataEventManagerMixin from "../mixin/StateDataEventManagerMixin.js";
 import EntranceStateManager from "../../statemanager/world/entrance/EntranceStateManager.js";
 import AreaStateManager from "../../statemanager/world/area/AreaStateManager.js";
@@ -11,11 +9,7 @@ import WorldListState from "../../state/world/WorldListState.js";
 import TPL from "./EntranceSelectOption.js.html" assert {type: "html"};
 import STYLE from "./EntranceSelectOption.js.css" assert {type: "css"};
 
-const BaseClass = mix(
-    CustomElement
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(CustomElement).with(StateDataEventManagerMixin);
 
 export default class EntranceSelectOption extends BaseClass {
 

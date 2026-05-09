@@ -1,6 +1,6 @@
 // frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
+import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
+import CSSTemplate from "@emcjs/fe/util/template/CSSTemplate.js";
 
 import UIRegistry from "../../../../../registry/UIRegistry.js";
 import WorldMapMarkedEntry from "../abstract/MarkedEntry.js";

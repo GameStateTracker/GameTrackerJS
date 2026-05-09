@@ -1,4 +1,4 @@
-import OptionGroupRegistry from "/emcJS/data/registry/form/OptionGroupRegistry.js";
+import OptionGroupRegistry from "@emcjs/fe/registry/form/OptionGroupRegistry.js";
 
 const SET_TYPES = [
     "list",

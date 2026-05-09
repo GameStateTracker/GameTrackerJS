@@ -1,5 +1,5 @@
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
-import DataGridCell from "/emcJS/ui/dataview/datagrid/components/cell/DataGridCell.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
+import DataGridCell from "@emcjs/fe/ui/dataview/datagrid/components/cell/DataGridCell.js";
 import "../../coordinates/CoordinatesInput.js";
 import TPL from "./DataGridCellCoordinates.js.html" assert {type: "html"};
 import STYLE from "./DataGridCellCoordinates.js.css" assert {type: "css"};

@@ -1,5 +1,5 @@
 import StateListHandler from "./StateListHandler.js";
-import EventMultiTargetManager from "/emcJS/util/event/EventMultiTargetManager.js";
+import EventMultiTargetManager from "@emcjs/core/util/event/EventMultiTargetManager.js";
 
 export default class MultiStateListHandler extends EventTarget {
 

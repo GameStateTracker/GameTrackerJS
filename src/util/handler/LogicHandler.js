@@ -1,4 +1,4 @@
-import LogicHandler from "/emcJS/util/logic/processor/LogicHandler.js";
+import LogicHandler from "@emcjs/core/util/logic/processor/LogicHandler.js";
 import LogicDataCollector from "../logic/TrackerLogicDataCollector.js";
 
 const EVENTS = ["load", "change"];

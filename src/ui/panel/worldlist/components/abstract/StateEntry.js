@@ -1,17 +1,11 @@
 // frameworks
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
 
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
 import WorldListEntry from "./Entry.js";
 
-const BaseClass = mix(
-    WorldListEntry
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(WorldListEntry).with(StateDataEventManagerMixin);
 
 export default class WorldListStateEntry extends BaseClass {
 

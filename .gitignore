@@ -4,6 +4,7 @@ dev
 prod
 out
 dist
+lib
 yarn-error.log
 yarn.lock
 *.zip
@@ -12,3 +13,6 @@ yarn.lock
 package-lock.json
 backup.json
 editor/info.log
+import_tree.json
+import_removed.json
+import_unresolved.json

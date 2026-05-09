@@ -1,7 +1,7 @@
 // frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
-import GlobalStyle from "/emcJS/util/html/template/CSSTemplate.js";
-import "/emcJS/ui/icon/Icon.js";
+import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
+import GlobalStyle from "@emcjs/fe/util/template/CSSTemplate.js";
+import "@emcjs/fe/ui/icon/Icon.js";
 
 import WorldListState from "../../../../../state/world/WorldListState.js";
 import UIRegistry from "../../../../../registry/UIRegistry.js";

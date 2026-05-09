@@ -1,8 +1,6 @@
 // frameworks
-import CSSTemplate from "/emcJS/util/html/template/CSSTemplate.js";
-import {
-    createMixin
-} from "/emcJS/util/Mixin.js";
+import CSSTemplate from "@emcjs/fe/util/template/CSSTemplate.js";
+import {createMixin} from "@emcjs/core/mixin/Mixin.js";
 
 const STYLE = new CSSTemplate(`
 :host([access="opened"]) #text {

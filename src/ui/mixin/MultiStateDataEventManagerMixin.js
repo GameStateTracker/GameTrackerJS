@@ -1,7 +1,5 @@
 // frameworks
-import {
-    createMixin
-} from "/emcJS/util/Mixin.js";
+import {createMixin} from "@emcjs/core/mixin/Mixin.js";
 
 import DataState from "../../state/DataState.js";
 

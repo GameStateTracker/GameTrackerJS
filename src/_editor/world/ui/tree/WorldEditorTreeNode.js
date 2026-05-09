@@ -1,5 +1,5 @@
-import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
-import TreeNode from "/emcJS/ui/tree/components/TreeNode.js";
+import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
+import TreeNode from "@emcjs/fe/ui/tree/components/TreeNode.js";
 
 export default class WorldEditorTreeNode extends ContextMenuManagerMixin(TreeNode) {
 
@@ -8,7 +8,11 @@ export default class WorldEditorTreeNode extends ContextMenuManagerMixin(TreeNod
         /* --- */
         this.addEventListener("contentclick", (event) => {
             event.stopPropagation();
-            const ev = new Event(`entitySelect[${this.type}]`, {bubbles: true, cancelable: true, composed: true});
+            const ev = new Event(`entitySelect[${this.type}]`, {
+                bubbles: true,
+                cancelable: true,
+                composed: true
+            });
             ev.data = {
                 element: this,
                 ref: this.ref

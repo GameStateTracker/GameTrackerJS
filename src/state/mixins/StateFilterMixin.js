@@ -1,6 +1,4 @@
-import {
-    createMixin
-} from "/emcJS/util/Mixin.js";
+import {createMixin} from "@emcjs/core/mixin/Mixin.js";
 import FilterHandler from "../../util/handler/FilterHandler.js";
 
 export default createMixin((superclass) => class StateFilterMixin extends superclass {

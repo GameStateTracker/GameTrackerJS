@@ -1,6 +1,4 @@
-import {
-    createMixin
-} from "/emcJS/util/Mixin.js";
+import {createMixin} from "@emcjs/core/mixin/Mixin.js";
 import LogicHandler from "../../util/handler/LogicHandler.js";
 
 export default createMixin((superclass) => class StateVisibilityMixin extends superclass {

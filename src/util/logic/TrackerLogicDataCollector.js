@@ -1,4 +1,4 @@
-import LogicDataCollector from "/emcJS/util/logic/data/LogicDataCollector.js";
+import LogicDataCollector from "@emcjs/core/util/logic/data/LogicDataCollector.js";
 import Savestate from "../../savestate/Savestate.js";
 import SettingsStorage from "../../storage/SettingsStorage.js";
 

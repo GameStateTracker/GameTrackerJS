@@ -1,20 +1,14 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import ContextMenuManagerMixin from "/emcJS/ui/mixin/ContextMenuManagerMixin.js";
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import "/emcJS/ui/tree/Tree.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import "@emcjs/fe/ui/tree/Tree.js";
 import TreeConfigExtractor from "../../util/TreeConfigExtractor.js";
 import TPL from "./StructureEditorTree.js.html" assert {type: "html"};
 import STYLE from "./StructureEditorTree.js.css" assert {type: "css"};
 
 const DEFAULT_TREE_CONFIG_EXTRACTOR = new TreeConfigExtractor();
 
-const BaseClass = mix(
-    CustomElement
-).with(
-    ContextMenuManagerMixin
-);
+const BaseClass = mix(CustomElement).with(ContextMenuManagerMixin);
 
 export default class StructureEditorTree extends BaseClass {
 
@@ -38,7 +32,9 @@ export default class StructureEditorTree extends BaseClass {
             }
         });
         this.#treeEl.addEventListener("menu", (event) => {
-            const {path, element} = event.data;
+            const {
+                path, element
+            } = event.data;
             this.#treeEl.markItemForMenuByPath(path);
             if (path.length === 1) {
                 this.showContextMenu("form", event, {path});

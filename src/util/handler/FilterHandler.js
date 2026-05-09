@@ -1,8 +1,6 @@
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
-import LogicCompiler from "/emcJS/util/logic/processor/LogicCompiler.js";
-import EventTargetManager from "/emcJS/util/event/EventTargetManager.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import LogicCompiler from "@emcjs/core/util/logic/processor/LogicCompiler.js";
+import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
 import TrackerLogicDataCollector from "../logic/TrackerLogicDataCollector.js";
 import FilterStorage from "../../savestate/storage/FilterStorage.js";
 

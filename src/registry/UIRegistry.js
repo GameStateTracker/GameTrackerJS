@@ -1,5 +1,5 @@
 // frameworks
-import ClassRegistry from "/emcJS/data/registry/ClassRegistry.js";
+import ClassRegistry from "@emcjs/core/registry/ClassRegistry.js";
 
 const CATEGORIES = new Map();
 

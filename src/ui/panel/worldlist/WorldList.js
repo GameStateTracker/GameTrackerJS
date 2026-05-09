@@ -1,9 +1,7 @@
-import {
-    mix
-} from "/emcJS/util/Mixin.js";
-import ElementManager from "/emcJS/util/html/ElementManager.js";
-import Panel from "/emcJS/ui/layout/Panel.js";
-import "/emcJS/ui/i18n/I18nLabel.js";
+import {mix} from "@emcjs/core/mixin/Mixin.js";
+import ElementManager from "@emcjs/fe/util/element/ElementManager.js";
+import Panel from "@emcjs/fe/ui/layout/Panel.js";
+import "@emcjs/fe/ui/i18n/I18nLabel.js";
 import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 import WorldListState from "../../../state/world/WorldListState.js";
 import AreaStateManager from "../../../statemanager/world/area/AreaStateManager.js";
@@ -16,9 +14,7 @@ import "./components/entries/Collection.js";
 import "./components/entries/Location.js";
 import "./components/entries/Area.js";
 import "./components/entries/Exit.js";
-import {
-    debounce
-} from "/emcJS/util/Debouncer.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
 import TPL from "./WorldList.js.html" assert {type: "html"};
 import STYLE from "./WorldList.js.css" assert {type: "css"};
 
@@ -35,11 +31,7 @@ class ListEntryElementManager extends ElementManager {
 
 }
 
-const BaseClass = mix(
-    Panel
-).with(
-    StateDataEventManagerMixin
-);
+const BaseClass = mix(Panel).with(StateDataEventManagerMixin);
 
 // TODO add area list name buttons (see TOoTR worldlist TypeButton)
 

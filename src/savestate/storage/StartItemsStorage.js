@@ -1,9 +1,7 @@
 // frameworks
-import ObservableStorage from "/emcJS/data/storage/observable/ObservableStorage.js";
+import ObservableStorage from "@emcjs/core/data/storage/observable/ObservableStorage.js";
 
-import {
-    parseSafeRange
-} from "../../util/helper/ItemHelper.js";
+import {parseSafeRange} from "../../util/helper/ItemHelper.js";
 import ItemsResource from "../../data/resource/ItemsResource.js";
 
 const MAX = new Map();

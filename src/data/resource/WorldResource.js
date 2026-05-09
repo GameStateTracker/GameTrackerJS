@@ -1,4 +1,4 @@
-import JSONCResource from "/emcJS/data/resource/file/JSONCResource.js";
+import JSONCResource from "@emcjs/core/data/resource/file/JSONCResource.js";
 
 const WorldResource = await JSONCResource.get("/database/world.json");
 

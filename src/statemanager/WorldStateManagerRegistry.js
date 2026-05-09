@@ -1,6 +1,4 @@
-import {
-    emptyState
-} from "../state/world/EmptyState.js";
+import {emptyState} from "../state/world/EmptyState.js";
 import WorldStateManager from "./world/WorldStateManager.js";
 
 const VALID_NAME = /[a-zA-Z0-9_./-]+/;

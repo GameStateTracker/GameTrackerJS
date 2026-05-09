@@ -1,4 +1,4 @@
-import ContextMenu from "/emcJS/ui/overlay/ctxmenu/ContextMenu.js";
+import ContextMenu from "@emcjs/fe/ui/overlay/ctxmenu/ContextMenu.js";
 
 // TODO extract ctxmenus into own folder and use in multimarkerlist and markerlist together
 export default class RelationCellContextMenu extends ContextMenu {

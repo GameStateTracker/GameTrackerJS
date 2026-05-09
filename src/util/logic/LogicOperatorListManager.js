@@ -1,5 +1,5 @@
-import LogicOperatorRegistry from "/emcJS/data/registry/LogicOperatorRegistry.js";
-import {deepClone} from "/emcJS/util/helper/DeepClone.js";
+import LogicOperatorRegistry from "@emcjs/core/registry/LogicOperatorRegistry.js";
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
 
 function getEntryType(entry) {
     switch (entry.type) {

@@ -1,7 +1,7 @@
 
-import LocalStorage from "/emcJS/data/storage/global/LocalStorage.js";
-import ModalDialog from "/emcJS/ui/modal/ModalDialog.js";
-import "/emcJS/ui/form/button/Button.js";
+import LocalStorage from "@emcjs/core/data/storage/global/LocalStorage.js";
+import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
+import "@emcjs/fe/ui/form/button/Button.js";
 import TPL from "./ModalDialogAddTypeEntities.js.html" assert {type: "html"};
 import STYLE from "./ModalDialogAddTypeEntities.js.css" assert {type: "css"};
 

@@ -1,7 +1,7 @@
 // frameworks
-import {debounce} from "/emcJS/util/Debouncer.js";
-import IDBStorage from "/emcJS/data/storage/IDBStorage.js";
-import DateUtil from "/emcJS/util/date/DateUtil.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import IDBStorage from "@emcjs/core/data/storage/IDBStorage.js";
+import DateUtil from "@emcjs/core/util/date/DateUtil.js";
 
 import VersionData from "../data/VersionData.js";
 import Savestate from "./Savestate.js";

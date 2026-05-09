@@ -1,5 +1,5 @@
 // frameworks
-import HTMLTemplate from "/emcJS/util/html/template/HTMLTemplate.js";
+import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
 
 import WorldListSubList from "./SubList.js";
 import "../../../../BadgeAccess.js";

@@ -1,8 +1,8 @@
 // frameworks
-import FileLoader from "/emcJS/util/file/FileLoader.js";
-import DateUtil from "/emcJS/util/date/DateUtil.js";
-import {deepClone} from "/emcJS/util/helper/DeepClone.js";
-import DeviceData from "/emcJS/data/DeviceData.js";
+import FileLoader from "@emcjs/core/util/file/FileLoader.js";
+import DateUtil from "@emcjs/core/util/date/DateUtil.js";
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
+import DeviceData from "@emcjs/core/data/DeviceData.js";
 
 async function getData() {
     const res = {

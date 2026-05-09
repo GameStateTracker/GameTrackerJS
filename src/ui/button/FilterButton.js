@@ -1,6 +1,6 @@
-import CustomElement from "/emcJS/ui/element/CustomElement.js";
-import EventTargetListenerElementMixin from "/emcJS/ui/mixin/EventTargetListenerElementMixin.js";
-import "/emcJS/ui/input/Option.js";
+import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
+import EventTargetListenerElementMixin from "@emcjs/fe/ui/mixin/EventTargetListenerElementMixin.js";
+import "@emcjs/fe/ui/input/Option.js";
 import FilterResource from "../../data/resource/FilterResource.js";
 import FilterStorage from "../../savestate/storage/FilterStorage.js";
 import FilterObserver from "../../util/observer/FilterObserver.js";

@@ -1,4 +1,4 @@
-import "/emcJS/ui/icon/LabeledIcon.js";
+import "@emcjs/fe/ui/icon/LabeledIcon.js";
 import LocationListEntry from "../abstract/LocationListEntry.js";
 import UIRegistry from "../../../../../registry/UIRegistry.js";
 import LocationContextMenu from "../../../../ctxmenu/LocationContextMenu.js";

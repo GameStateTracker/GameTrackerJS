@@ -1,6 +1,4 @@
-import {
-    getRegion
-} from "../../data/resource/WorldResource.js";
+import {getRegion} from "../../data/resource/WorldResource.js";
 import TrackerLogicDataCollector from "./TrackerLogicDataCollector.js";
 import Logic from "./Logic.js";
 
