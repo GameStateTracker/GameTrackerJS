@@ -2,7 +2,6 @@ import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
 import {mix} from "@emcjs/core/mixin/Mixin.js";
 import ItemStateManager from "../../../../../statemanager/item/ItemStateManager.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
-import "@emcjs/fe/ui/input/Option.js";
 import "@emcjs/fe/ui/i18n/I18nTooltip.js";
 import "../../../../../state/item/StartSettingsState.js";
 import TPL from "./ItemElement.js.html" assert {type: "html"};

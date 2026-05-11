@@ -1,6 +1,5 @@
 import UIRegistry from "../../../../../registry/UIRegistry.js";
 import ItemElement from "../abstract/ItemElement.js";
-import "@emcjs/fe/ui/input/Option.js";
 import "./Item.js";
 import TPL from "./ProgressiveItem.js.html" assert {type: "html"};
 import STYLE from "./ProgressiveItem.js.css" assert {type: "css"};
@@ -69,16 +68,16 @@ export default class ProgressiveItem extends ItemElement {
                 this.append(opt);
             }
         } else {
-            const opt = document.createElement("emc-option");
-            opt.value = 0;
+            const opt = document.createElement("div");
+            opt.setAttribute("value", 0);
             opt.classList.add("active");
             this.append(opt);
         }
     }
 
     #createOption(value, icon, data, maxValue) {
-        const optionEl = document.createElement("emc-option");
-        optionEl.value = value;
+        const optionEl = document.createElement("div");
+        optionEl.setAttribute("value", value);
         if (icon != null) {
             optionEl.style.backgroundImage = `url('${icon}')`;
         }

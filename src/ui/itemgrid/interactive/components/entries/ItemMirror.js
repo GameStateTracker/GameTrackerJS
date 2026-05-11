@@ -1,5 +1,4 @@
 import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
-import "@emcjs/fe/ui/input/Option.js";
 import "@emcjs/fe/ui/i18n/I18nTooltip.js";
 import UIRegistry from "../../../../../registry/UIRegistry.js";
 import ItemsResource from "../../../../../data/resource/ItemsResource.js";

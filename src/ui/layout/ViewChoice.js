@@ -3,7 +3,7 @@ import {
     isString,
     isStringNotEmpty
 } from "@emcjs/core/util/helper/CheckType.js";
-import "@emcjs/fe/ui/input/Option.js";
+import IconOption from "@emcjs/fe/ui/form/element/components/IconOption.js";
 import "./ViewChoicePanel.js";
 import TPL from "./ViewChoice.js.html" assert {type: "html"};
 import STYLE from "./ViewChoice.js.css" assert {type: "css"};
@@ -194,16 +194,12 @@ export default class ViewChoice extends CustomElement {
     }
 
     #addTabButton(category, name, icon) {
-        const buttonEl = document.createElement("emc-option");
+        const buttonEl = IconOption.create(category, icon);
+        buttonEl.title = name;
         buttonEl.className = "category";
         if (category === this.active) {
             buttonEl.classList.add("active");
         }
-        if (isStringNotEmpty(icon)) {
-            buttonEl.style.backgroundImage = `url('${icon}')`;
-        }
-        buttonEl.value = category;
-        buttonEl.title = name;
         this.#buttonList.set(category, buttonEl);
         this.#categoryEl.append(buttonEl);
     }

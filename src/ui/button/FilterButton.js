@@ -1,6 +1,6 @@
 import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
 import EventTargetListenerElementMixin from "@emcjs/fe/ui/mixin/EventTargetListenerElementMixin.js";
-import "@emcjs/fe/ui/input/Option.js";
+import IconOption from "@emcjs/fe/ui/form/element/components/IconOption.js";
 import FilterResource from "../../data/resource/FilterResource.js";
 import FilterStorage from "../../savestate/storage/FilterStorage.js";
 import FilterObserver from "../../util/observer/FilterObserver.js";
@@ -152,9 +152,7 @@ export default class FilterButton extends EventTargetListenerElementMixin(Custom
                 description
             } = props;
 
-            const opt = document.createElement("emc-option");
-            opt.value = value;
-            opt.style.backgroundImage = `url("${image}"`;
+            const opt = IconOption.create(value, image);
             opt.dataset.description = description;
 
             if (data.values[value] == this.value) {
