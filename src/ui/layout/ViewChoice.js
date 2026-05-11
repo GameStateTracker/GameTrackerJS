@@ -129,11 +129,7 @@ export default class ViewChoice extends CustomElement {
             return panelEl;
         } else {
             buttonEl.title = name;
-            if (isStringNotEmpty(icon)) {
-                buttonEl.style.backgroundImage = `url('${icon}')`;
-            } else {
-                buttonEl.style.backgroundImage = "";
-            }
+            buttonEl.icon = icon;
         }
     }
 
