@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@emcjs/core": "https://github.com/ZidArgs/emcJS-Core.git/#1.0.7",
-    "@emcjs/fe": "https://github.com/ZidArgs/emcJS-FE.git/#0.0.10",
+    "@emcjs/fe": "https://github.com/ZidArgs/emcJS-FE.git/#0.0.11",
     "rtcclient": "git+https://bitbucket.org/zidargs/rtcclient.git/#1.2.13"
   },
   "devDependencies": {
