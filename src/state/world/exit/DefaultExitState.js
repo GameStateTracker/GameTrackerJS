@@ -75,8 +75,10 @@ function getLogicAccess(reachable) {
     return immute(res);
 }
 
-const BaseClass = mix(DataState).with(StateVisibilityMixin,
-    StateFilterMixin);
+const BaseClass = mix(DataState).with(
+    StateVisibilityMixin,
+    StateFilterMixin
+);
 
 export default class DefaultExitState extends BaseClass {
 

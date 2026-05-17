@@ -66,8 +66,10 @@ class ListEntryElementManager extends ElementManager {
 
 }
 
-const BaseClass = mix(WorldListStateEntry).with(EventTargetListenerElementMixin,
-    ContextMenuManagerMixin);
+const BaseClass = mix(WorldListStateEntry).with(
+    EventTargetListenerElementMixin,
+    ContextMenuManagerMixin
+);
 
 export default class WorldListSubList extends BaseClass {
 

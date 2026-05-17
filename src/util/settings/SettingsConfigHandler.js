@@ -144,15 +144,11 @@ function translateInputField(name, config) {
         }
         case "number":
         case "NumberInput": {
-            return createNumberField(
-                "NumberInput", config.desc, config.default, config.visible, config.resettable, config.min, config.max
-            );
+            return createNumberField("NumberInput", config.desc, config.default, config.visible, config.resettable, config.min, config.max);
         }
         case "range":
         case "RangeInput": {
-            return createNumberField(
-                "RangeInput", config.desc, config.default, config.visible, config.resettable, config.min, config.max
-            );
+            return createNumberField("RangeInput", config.desc, config.default, config.visible, config.resettable, config.min, config.max);
         };
         case "choice":
         case "SimpleSelect": {
@@ -197,9 +193,7 @@ function createGenericField(type, description, value, visible, resettable) {
     return result;
 }
 
-function createNumberField(
-    type, description, value, visible, resettable, min, max
-) {
+function createNumberField(type, description, value, visible, resettable, min, max) {
     const result = createGenericField(type, description, value, visible, resettable);
     result.required = true;
     min = parseFloat(min);

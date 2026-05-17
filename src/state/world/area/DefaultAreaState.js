@@ -25,10 +25,12 @@ const STORAGES = {
     areaActiveLists: Savestate.getStorage("areaActiveLists")
 };
 
-const BaseClass = mix(DataState).with(StateVisibilityMixin,
+const BaseClass = mix(DataState).with(
+    StateVisibilityMixin,
     StateFilterMixin,
     StateAccessPenetrationMixin,
-    StateListContentsMixin);
+    StateListContentsMixin
+);
 
 export default class DefaultAreaState extends BaseClass {
 
