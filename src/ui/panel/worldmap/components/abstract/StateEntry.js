@@ -8,7 +8,6 @@ import STYLE from "./StateEntry.js.css" assert {type: "css"};
 
 const BaseClass = mix(Entry).with(StateDataEventManagerMixin);
 
-// TODO make them disappear again if a filter [show/hide excluded locations] is set to hidden
 export default class StateEntry extends BaseClass {
 
     #markerEl;

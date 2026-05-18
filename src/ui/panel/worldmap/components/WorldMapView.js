@@ -54,7 +54,6 @@ class MapMarkerElementManager extends ElementManager {
             el.left = params.x;
             el.top = params.y;
             el.scale = params.scale;
-            // XXX tooltips should really automatically adjust
             el.tooltip = calculateTooltipPosition(params.x, params.y, params.areaWidth, params.areaHeight);
         }
     }

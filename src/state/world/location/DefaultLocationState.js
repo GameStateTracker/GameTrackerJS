@@ -108,6 +108,12 @@ export default class DefaultLocationState extends BaseClass {
         this.addEventListener("filtered", () => {
             this.checkVisibility();
         });
+        this.addEventListener("excluded", () => {
+            this.checkVisibility();
+        });
+        this.addEventListener("excluded_visibility", () => {
+            this.checkVisibility();
+        });
         this.checkVisibility();
 
         setTimeout(() => {
@@ -124,7 +130,7 @@ export default class DefaultLocationState extends BaseClass {
     }
 
     checkVisibility = debounce(() => {
-        const value = this.visible && !this.filtered;
+        const value = this.visible && !this.filtered && this.excludedVisibility;
         if (this.#visible != value) {
             this.#visible = value;
             // external
