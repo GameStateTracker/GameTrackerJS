@@ -1,10 +1,8 @@
-// frameworks
 import {mix} from "@emcjs/core/mixin/Mixin.js";
 import {debounce} from "@emcjs/core/util/Debouncer.js";
 import {immute} from "@emcjs/core/data/Immutable.js";
 import ObservableStorageObserver from "@emcjs/core/util/observer/data/storage/ObservableStorageObserver.js";
 import {isEqual} from "@emcjs/core/util/helper/Comparator.js";
-
 import Savestate from "../../../savestate/Savestate.js";
 import Logic from "../../../util/logic/Logic.js";
 import AccessStateEnum from "../../../enum/AccessStateEnum.js";
@@ -13,6 +11,7 @@ import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";
 import {getDefaultAccess} from "../../../util/helper/ListAccessHelper.js";
+import ExcludedLocationMixin from "../mixin/ExcludedLocationMixin.js";
 
 const STORAGES = {
     locations: Savestate.getStorage("locations"),
@@ -41,8 +40,11 @@ function getLogicAccess(checked, reachable) {
     return immute(res);
 }
 
-const BaseClass = mix(DataState).with(StateVisibilityMixin,
-    StateFilterMixin);
+const BaseClass = mix(DataState).with(
+    StateVisibilityMixin,
+    StateFilterMixin,
+    ExcludedLocationMixin
+);
 
 /* TODO add $IN_ROOT
 add function to write this.setLogicData("$IN_ROOT", value)
@@ -99,8 +101,6 @@ export default class DefaultLocationState extends BaseClass {
             }
         });
 
-        this.#init();
-
         /* EVENT */
         this.addEventListener("visible", () => {
             this.checkVisibility();
@@ -108,19 +108,29 @@ export default class DefaultLocationState extends BaseClass {
         this.addEventListener("filtered", () => {
             this.checkVisibility();
         });
+        this.addEventListener("excluded", () => {
+            this.checkVisibility();
+        });
+        this.addEventListener("excluded_visibility", () => {
+            this.checkVisibility();
+        });
         this.checkVisibility();
+
+        setTimeout(() => {
+            this.#init();
+        }, 0);
     }
 
-    #init = debounce(() => {
+    #init() {
         this.#access = getLogicAccess(this.value, this.reachable);
         this.setLogicData("$IS_DONE", this.#access.value === AccessStateEnum.OPENED);
         this.setLogicData("$IS_AVAILABLE", this.#access.value === AccessStateEnum.AVAILABLE);
         this.setLogicData("$IS_POSSIBLE", false);
         this.setLogicData("$IS_UNAVAILABLE", this.#access.value === AccessStateEnum.UNAVAILABLE);
-    });
+    }
 
     checkVisibility = debounce(() => {
-        const value = this.visible && !this.filtered;
+        const value = this.visible && !this.filtered && this.excludedVisibility;
         if (this.#visible != value) {
             this.#visible = value;
             // external

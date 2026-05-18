@@ -55,8 +55,10 @@ function applyElements(target) {
     textEl.insertAdjacentElement("afterend", entrancesEl);
 }
 
-const BaseClass = mix(WorldListSubListElement).with(AccessTextMarkerMixin,
-    AccessListMarkerMixin);
+const BaseClass = mix(WorldListSubListElement).with(
+    AccessTextMarkerMixin,
+    AccessListMarkerMixin
+);
 
 export default class WorldListArea extends BaseClass {
 

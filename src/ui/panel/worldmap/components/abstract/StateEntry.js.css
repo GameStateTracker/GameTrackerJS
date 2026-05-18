@@ -1,0 +1,51 @@
+#text {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1;
+    color: var(--page-text-color, #000000);
+}
+
+#text.striked {
+    text-decoration: line-through;
+}
+
+#bubble {
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 5px;
+    word-break: keep-all;
+    white-space: nowrap;
+    --tooltip-scale: calc((1 / (var(--zoom, 100) / 100)) * (1 / (var(--scale, 100) / 100)));
+}
+
+#marker:hover + #bubble,
+:host(.ctx-marked) #bubble {
+    display: flex;
+}
+
+#marker.striked {
+    background-size: contain;
+    background-position: center;
+    background-image: linear-gradient(135deg, transparent 30%, black 40%, black 60%, transparent 70%);
+}
+
+.textarea {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 35px;
+    word-break: break-word;
+}
+
+.textarea:empty,
+.textarea.hidden {
+    display: none;
+}
+
+.textarea + .textarea {
+    margin-top: 5px;
+}

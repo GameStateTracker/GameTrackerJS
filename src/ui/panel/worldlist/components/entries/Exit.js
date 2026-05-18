@@ -88,8 +88,10 @@ function applyElements(target) {
     headerEl.append(areaEl);
 }
 
-const BaseClass = mix(WorldListSubListElement).with(AccessTextMarkerMixin,
-    AccessListMarkerMixin);
+const BaseClass = mix(WorldListSubListElement).with(
+    AccessTextMarkerMixin,
+    AccessListMarkerMixin
+);
 
 export default class WorldListExit extends BaseClass {
 

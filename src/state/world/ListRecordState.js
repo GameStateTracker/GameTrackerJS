@@ -5,8 +5,10 @@ import WorldStateManagerRegistry from "../../statemanager/WorldStateManagerRegis
 import StateVisibilityMixin from "../mixins/StateVisibilityMixin.js";
 import StateAccessPenetrationMixin from "../mixins/StateAccessPenetrationMixin.js";
 
-const BaseClass = mix(DataState).with(StateVisibilityMixin,
-    StateAccessPenetrationMixin);
+const BaseClass = mix(DataState).with(
+    StateVisibilityMixin,
+    StateAccessPenetrationMixin
+);
 
 export default class ListRecordState extends BaseClass {
 
@@ -40,6 +42,11 @@ export default class ListRecordState extends BaseClass {
         });
         eventManager.set("listChange", (event) => {
             const ev = new Event("listChange");
+            ev.value = event.value;
+            this.dispatchEvent(ev);
+        });
+        eventManager.set("excluded", (event) => {
+            const ev = new Event("excluded");
             ev.value = event.value;
             this.dispatchEvent(ev);
         });
@@ -91,6 +98,10 @@ export default class ListRecordState extends BaseClass {
 
     get listContents() {
         return !!this.#entry.listContents;
+    }
+
+    get excluded() {
+        return this.#entry.excluded ?? false;
     }
 
     #updateVisibility() {

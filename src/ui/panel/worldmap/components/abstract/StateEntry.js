@@ -1,71 +1,28 @@
-// frameworks
-import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
-import CSSTemplate from "@emcjs/fe/util/template/CSSTemplate.js";
 import {mix} from "@emcjs/core/mixin/Mixin.js";
 import "@emcjs/fe/ui/bubble/Bubble.js";
-
 import WorldStateManagerRegistry from "../../../../../statemanager/WorldStateManagerRegistry.js";
 import StateDataEventManagerMixin from "../../../../mixin/StateDataEventManagerMixin.js";
-import WorldMapEntry from "./Entry.js";
+import Entry from "./Entry.js";
+import TPL from "./StateEntry.js.html" assert {type: "html"};
+import STYLE from "./StateEntry.js.css" assert {type: "css"};
 
-const TPL = new HTMLTemplate(`
-<emc-bubble id="bubble">
-    <div id="header" class="textarea">
-        <emc-i18n-label id="text"></emc-i18n-label>
-    </div>
-</emc-bubble>
-`);
+const BaseClass = mix(Entry).with(StateDataEventManagerMixin);
 
-const STYLE = new CSSTemplate(`
-#text {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex: 1;
-    color: var(--page-text-color, #000000);
-}
-#bubble {
-    display: none;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 5px;
-    word-break: keep-all;
-    white-space: nowrap;
-    --tooltip-scale: calc((1 / (var(--zoom, 100) / 100)) * (1 / (var(--scale, 100) / 100)));
-}
-#marker:hover + #bubble,
-:host(.ctx-marked) #bubble {
-    display: flex;
-}
-.textarea {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    min-height: 35px;
-    word-break: break-word;
-}
-.textarea:empty,
-.textarea.hidden {
-    display: none;
-}
-.textarea + .textarea {
-    margin-top: 5px;
-}
-`);
+export default class StateEntry extends BaseClass {
 
-const BaseClass = mix(WorldMapEntry).with(StateDataEventManagerMixin);
+    #markerEl;
 
-export default class WorldMapStateEntry extends BaseClass {
+    #textEl;
 
     #bubbleEl;
 
     constructor() {
         super();
-        this.shadowRoot.append(TPL.generate());
+        TPL.apply(this.shadowRoot);
         STYLE.apply(this.shadowRoot);
         /* --- */
+        this.#markerEl = this.shadowRoot.getElementById("marker");
+        this.#textEl = this.shadowRoot.getElementById("text");
         this.#bubbleEl = this.shadowRoot.getElementById("bubble");
         /* state handler */
         this.registerStateHandler("access", (event) => {
@@ -75,6 +32,10 @@ export default class WorldMapStateEntry extends BaseClass {
         });
         this.addEventListener("mouseenter", () => {
             this.#bubbleEl.refreshTooltipPosition();
+        });
+        this.registerStateHandler("excluded", (event) => {
+            this.#textEl.classList.toggle("striked", event.value);
+            this.#markerEl.classList.toggle("striked", event.value);
         });
     }
 
@@ -87,16 +48,17 @@ export default class WorldMapStateEntry extends BaseClass {
             const state = WorldStateManagerRegistry.get(this.type).get(this.ref);
             this.switchState(state);
             /* text */
-            const textEl = this.shadowRoot.getElementById("text");
-            if (textEl != null) {
-                textEl.i18nValue = this.textRef;
-            }
+            this.#textEl.i18nValue = this.textRef;
         }
     }
 
     applyDefaultValues() {
         /* access */
         this.applyAccess("unavailable", {});
+        /* marker */
+        this.#markerEl.classList.remove("striked");
+        /* text */
+        this.#textEl.classList.remove("striked");
     }
 
     applyStateValues(state) {
@@ -104,6 +66,10 @@ export default class WorldMapStateEntry extends BaseClass {
         const access = this.getStateAccess(state);
         const accessValue = access.value;
         this.applyAccess(("" + accessValue).toLowerCase(), access);
+        /* marker */
+        this.#markerEl.classList.toggle("striked", state.excluded ?? false);
+        /* text */
+        this.#textEl.classList.toggle("striked", state.excluded ?? false);
     }
 
     getStateAccess(state) {
@@ -112,15 +78,9 @@ export default class WorldMapStateEntry extends BaseClass {
 
     applyAccess(value = "unavailable"/* , data = {} */) {
         /* marker */
-        const markerEl = this.shadowRoot.getElementById("marker");
-        if (markerEl != null) {
-            markerEl.dataset.state = value;
-        }
+        this.#markerEl.dataset.state = value;
         /* text */
-        const textEl = this.shadowRoot.getElementById("text");
-        if (textEl != null) {
-            textEl.dataset.state = value;
-        }
+        this.#textEl.dataset.state = value;
     }
 
     get ref() {
@@ -144,9 +104,8 @@ export default class WorldMapStateEntry extends BaseClass {
                     const state = WorldStateManagerRegistry.get(this.type).get(this.ref);
                     this.switchState(state);
                     /* text */
-                    const textEl = this.shadowRoot.getElementById("text");
-                    if (textEl != null) {
-                        textEl.i18nValue = this.textRef;
+                    if (this.#textEl != null) {
+                        this.#textEl.i18nValue = this.textRef;
                     }
                 } break;
             }
