@@ -1,4 +1,5 @@
 import {mix} from "@emcjs/core/mixin/Mixin.js";
+import EntityState from "@emcjs/core/data/state/entity/EntityState.js";
 import {debounce} from "@emcjs/core/util/Debouncer.js";
 import {immute} from "@emcjs/core/data/Immutable.js";
 import ObservableStorageObserver from "@emcjs/core/util/observer/data/storage/ObservableStorageObserver.js";
@@ -7,7 +8,6 @@ import Savestate from "../../../savestate/Savestate.js";
 import Logic from "../../../util/logic/Logic.js";
 import AccessStateEnum from "../../../enum/AccessStateEnum.js";
 import ItemStateManager from "../../../statemanager/item/ItemStateManager.js";
-import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";
 import {getDefaultAccess} from "../../../util/helper/ListAccessHelper.js";
@@ -40,7 +40,7 @@ function getLogicAccess(checked, reachable) {
     return immute(res);
 }
 
-const BaseClass = mix(DataState).with(
+const BaseClass = mix(EntityState).with(
     StateVisibilityMixin,
     StateFilterMixin,
     ExcludedLocationMixin

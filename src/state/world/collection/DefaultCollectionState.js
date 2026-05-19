@@ -1,9 +1,9 @@
 import {debounce} from "@emcjs/core/util/Debouncer.js";
-import DataState from "../../DataState.js";
+import EntityState from "@emcjs/core/data/state/entity/EntityState.js";
 import StateListHandler from "../../../util/handler/StateListHandler.js";
 import {getDefaultAccess} from "../../../util/helper/ListAccessHelper.js";
 
-export default class DefaultCollectionState extends DataState {
+export default class DefaultCollectionState extends EntityState {
 
     #listHandler = null;
 

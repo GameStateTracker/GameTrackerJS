@@ -1,7 +1,5 @@
-// frameworks
 import {createMixin} from "@emcjs/core/mixin/Mixin.js";
-
-import DataState from "../../state/DataState.js";
+import EntityState from "@emcjs/core/data/state/entity/EntityState.js";
 
 export default createMixin((superclass) => class MultiStateDataEventManagerMixin extends superclass {
 
@@ -19,8 +17,8 @@ export default createMixin((superclass) => class MultiStateDataEventManagerMixin
     }
 
     addState(target) {
-        if (target == null || !(target instanceof DataState)) {
-            throw new TypeError("target must be an instance of DataState");
+        if (target == null || !(target instanceof EntityState)) {
+            throw new TypeError("target must be an instance of EntityState");
         }
         if (!this.#targets.has(target)) {
             this.#targets.add(target);
@@ -36,8 +34,8 @@ export default createMixin((superclass) => class MultiStateDataEventManagerMixin
     }
 
     removeState(target) {
-        if (target == null || !(target instanceof DataState)) {
-            throw new TypeError("target must be an instance of DataState");
+        if (target == null || !(target instanceof EntityState)) {
+            throw new TypeError("target must be an instance of EntityState");
         }
         if (this.#targets.has(target)) {
             this.#targets.delete(target);

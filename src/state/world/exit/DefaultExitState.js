@@ -1,4 +1,4 @@
-// frameworks
+import EntityState from "@emcjs/core/data/state/entity/EntityState.js";
 import {mix} from "@emcjs/core/mixin/Mixin.js";
 import {debounce} from "@emcjs/core/util/Debouncer.js";
 import {immute} from "@emcjs/core/data/Immutable.js";
@@ -6,7 +6,6 @@ import {isEqual} from "@emcjs/core/util/helper/Comparator.js";
 import {getStringOrDefault} from "@emcjs/core/util/helper/GetType.js";
 import {isString} from "@emcjs/core/util/helper/CheckType.js";
 import ObservableStorageObserver from "@emcjs/core/util/observer/data/storage/ObservableStorageObserver.js";
-
 import Savestate from "../../../savestate/Savestate.js";
 import StateDataEventManager from "../../../util/StateDataEventManager.js";
 import AccessStateEnum from "../../../enum/AccessStateEnum.js";
@@ -14,7 +13,6 @@ import Logic from "../../../util/logic/Logic.js";
 import AreaStateManager from "../../../statemanager/world/area/AreaStateManager.js";
 import EntranceStateManager from "../../../statemanager/world/entrance/EntranceStateManager.js";
 import {emptyState} from "../EmptyState.js";
-import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";
 import WorldResource, {getGatewayIn} from "../../../data/resource/WorldResource.js";
@@ -75,7 +73,7 @@ function getLogicAccess(reachable) {
     return immute(res);
 }
 
-const BaseClass = mix(DataState).with(
+const BaseClass = mix(EntityState).with(
     StateVisibilityMixin,
     StateFilterMixin
 );

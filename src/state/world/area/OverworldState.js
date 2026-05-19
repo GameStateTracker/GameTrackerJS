@@ -1,9 +1,9 @@
 import ObservableStorageObserver from "@emcjs/core/util/observer/data/storage/ObservableStorageObserver.js";
+import EntityState from "@emcjs/core/data/state/entity/EntityState.js";
 import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
 import Savestate from "../../../savestate/Savestate.js";
 import AreaStateManager from "../../../statemanager/world/area/AreaStateManager.js";
 import WorldSummaryHandler from "../../../util/handler/WorldSummaryHandler.js";
-import DataState from "../../DataState.js";
 import StateListHandler from "../../../util/handler/StateListHandler.js";
 import {
     getDefaultAccess,
@@ -12,7 +12,7 @@ import {
 
 const STORAGES = {areaActiveLists: Savestate.getStorage("areaActiveLists")};
 
-export default class OverworldState extends DataState {
+export default class OverworldState extends EntityState {
 
     #activeList = null;
 
@@ -175,4 +175,4 @@ export default class OverworldState extends DataState {
 
 }
 
-AreaStateManager.register("overworld", OverworldState);
+AreaStateManager.registerStateClass("overworld", OverworldState);

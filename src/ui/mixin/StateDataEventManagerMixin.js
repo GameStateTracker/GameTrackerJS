@@ -1,7 +1,5 @@
-// frameworks
 import {createMixin} from "@emcjs/core/mixin/Mixin.js";
-
-import DataState from "../../state/DataState.js";
+import EntityState from "@emcjs/core/data/state/entity/EntityState.js";
 
 export default createMixin((superclass) => class StateDataEventManagerMixin extends superclass {
 
@@ -28,7 +26,7 @@ export default createMixin((superclass) => class StateDataEventManagerMixin exte
                     }
                 }
             }
-            if (target instanceof DataState) {
+            if (target instanceof EntityState) {
                 // register new
                 if (this.#target != target) {
                     this.#target = target;

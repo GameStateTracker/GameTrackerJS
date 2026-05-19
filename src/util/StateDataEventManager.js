@@ -1,4 +1,4 @@
-import DataState from "../state/DataState.js";
+import EntityState from "@emcjs/core/data/state/entity/EntityState.js";
 
 export default class StateDataEventManager {
 
@@ -25,7 +25,7 @@ export default class StateDataEventManager {
                     }
                 }
             }
-            if (target instanceof DataState) {
+            if (target instanceof EntityState) {
                 // register new
                 if (this.#target != target) {
                     this.#target = target;

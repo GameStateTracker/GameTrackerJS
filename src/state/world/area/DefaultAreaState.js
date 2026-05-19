@@ -1,4 +1,5 @@
 import {mix} from "@emcjs/core/mixin/Mixin.js";
+import EntityState from "@emcjs/core/data/state/entity/EntityState.js";
 import {debounce} from "@emcjs/core/util/Debouncer.js";
 import ObservableStorageObserver from "@emcjs/core/util/observer/data/storage/ObservableStorageObserver.js";
 import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
@@ -8,7 +9,6 @@ import StateListHandler from "../../../util/handler/StateListHandler.js";
 import MultiStateListHandler from "../../../util/handler/MultiStateListHandler.js";
 import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 import Logic from "../../../util/logic/Logic.js";
-import DataState from "../../DataState.js";
 import StateVisibilityMixin from "../../mixins/StateVisibilityMixin.js";
 import StateFilterMixin from "../../mixins/StateFilterMixin.js";
 import StateAccessPenetrationMixin from "../../mixins/StateAccessPenetrationMixin.js";
@@ -25,7 +25,7 @@ const STORAGES = {
     areaActiveLists: Savestate.getStorage("areaActiveLists")
 };
 
-const BaseClass = mix(DataState).with(
+const BaseClass = mix(EntityState).with(
     StateVisibilityMixin,
     StateFilterMixin,
     StateAccessPenetrationMixin,

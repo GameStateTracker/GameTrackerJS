@@ -1,11 +1,11 @@
 import {mix} from "@emcjs/core/mixin/Mixin.js";
+import EntityState from "@emcjs/core/data/state/entity/EntityState.js";
 import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
-import DataState from "../DataState.js";
 import WorldStateManagerRegistry from "../../statemanager/WorldStateManagerRegistry.js";
 import StateVisibilityMixin from "../mixins/StateVisibilityMixin.js";
 import StateAccessPenetrationMixin from "../mixins/StateAccessPenetrationMixin.js";
 
-const BaseClass = mix(DataState).with(
+const BaseClass = mix(EntityState).with(
     StateVisibilityMixin,
     StateAccessPenetrationMixin
 );

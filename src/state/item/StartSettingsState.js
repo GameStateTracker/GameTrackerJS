@@ -73,5 +73,5 @@ export default class StartSettingsState extends DefaultItemState {
 
 }
 
-ItemStateManager.register("item_startsettings", StartSettingsState);
-ItemStateManager.register("progressive_startsettings", StartSettingsState);
+ItemStateManager.registerStateClass("item_startsettings", StartSettingsState);
+ItemStateManager.registerStateClass("progressive_startsettings", StartSettingsState);

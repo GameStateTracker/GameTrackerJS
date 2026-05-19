@@ -1,7 +1,7 @@
-import DataState from "../DataState.js";
+import EntityState from "@emcjs/core/data/state/entity/EntityState.js";
 import AccessStateEnum from "../../enum/AccessStateEnum.js";
 
-export default class EmptyState extends DataState {
+export default class EmptyState extends EntityState {
 
     constructor() {
         super("_", {});
