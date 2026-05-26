@@ -1,6 +1,7 @@
 import {debounce} from "@emcjs/core/util/Debouncer.js";
-import LogicCompiler from "@emcjs/core/util/logic/processor/LogicCompiler.js";
 import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
+import StatementCompiler from "@emcjs/logic/compiler/StatementCompiler.js";
+import LogicStatement from "@emcjs/logic/compiler/statement/LogicStatement.js";
 import TrackerLogicDataCollector from "../logic/TrackerLogicDataCollector.js";
 import FilterStorage from "../../savestate/storage/FilterStorage.js";
 
@@ -17,6 +18,7 @@ export default class FilterHandler extends EventTarget {
     constructor(config = {}) {
         super();
         for (const filter in config) {
+            this.#values.set(filter, true);
             const filterValue = FilterStorage.get(filter);
             for (const value in config[filter]) {
                 const logic = config[filter][value];
@@ -33,20 +35,30 @@ export default class FilterHandler extends EventTarget {
     }
 
     #compileLogic(filter, value, filterValue, logic) {
+        if (logic == null) {
+            return;
+        }
         const logicKey = `${filter}[${value}]`;
-        this.#values.set(filter, true);
-        if (typeof logic == "object") {
-            const logicFn = LogicCompiler.compile(logic);
-            this.#logics.set(logicKey, logicFn);
-            if (value == filterValue) {
-                const logicValue = this.#execute(logicFn);
-                this.#values.set(filter, logicValue);
-            }
-        } else if (logic != null) {
+        if (logic instanceof LogicStatement) {
             this.#logics.set(logicKey, logic);
-            if (value == filterValue) {
-                const logicValue = !!logic;
-                this.#values.set(filter, logicValue);
+            if (value === filterValue) {
+                this.#values.set(filter, this.#execute(logic));
+            }
+        } else if (typeof logic === "object") {
+            const logicFn = StatementCompiler.compile(logic);
+            this.#logics.set(logicKey, logicFn);
+            if (value === filterValue) {
+                this.#values.set(filter, this.#execute(logicFn));
+            }
+        } else if (typeof logic === "function") {
+            this.#logics.set(logicKey, logic);
+            if (value === filterValue) {
+                this.#values.set(filter, !!logic());
+            }
+        } else {
+            this.#logics.set(logicKey, logic);
+            if (value === filterValue) {
+                this.#values.set(filter, !!logic);
             }
         }
     }
@@ -56,10 +68,12 @@ export default class FilterHandler extends EventTarget {
     }
 
     #execute(logicFn) {
-        if (typeof logicFn == "function") {
-            return !!logicFn((key) => {
+        if (logicFn instanceof LogicStatement) {
+            return !!logicFn.execute((key) => {
                 return this.#getValue(key);
             });
+        } else if (typeof logicFn === "function") {
+            return !!logicFn();
         } else if (logicFn != null) {
             return !!logicFn;
         } else {

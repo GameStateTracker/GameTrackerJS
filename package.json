@@ -1,6 +1,6 @@
 {
   "name": "gametrackerjs",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "Framework for GameTrackers",
   "type": "module",
   "repository": {
@@ -10,8 +10,9 @@
   "author": "Denis Weiß (ZidArgs)",
   "license": "MIT",
   "dependencies": {
-    "@emcjs/core": "https://github.com/ZidArgs/emcJS-Core.git/#1.0.8",
-    "@emcjs/fe": "https://github.com/ZidArgs/emcJS-FE.git/#0.0.11",
+    "@emcjs/core": "https://github.com/ZidArgs/emcJS-Core.git/#1.1.0",
+    "@emcjs/logic": "https://github.com/ZidArgs/emcJS-Logic.git/#0.1.3",
+    "@emcjs/fe": "https://github.com/ZidArgs/emcJS-FE.git/#0.0.13",
     "rtcclient": "git+https://bitbucket.org/zidargs/rtcclient.git/#1.2.13"
   },
   "devDependencies": {

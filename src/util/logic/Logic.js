@@ -1,5 +1,5 @@
 import {debounce} from "@emcjs/core/util/Debouncer.js";
-import LogicGraph from "@emcjs/core/util/logic_graph/LogicGraph.js";
+import LogicGraph from "@emcjs/logic/processor/LogicGraph.js";
 import SettingsObserver from "../observer/SettingsObserver.js";
 
 const logicDebugObserver = new SettingsObserver("debug_logic");

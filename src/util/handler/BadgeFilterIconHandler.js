@@ -1,7 +1,8 @@
 import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
-import LogicCompiler from "@emcjs/core/util/logic/processor/LogicCompiler.js";
 import {debounce} from "@emcjs/core/util/Debouncer.js";
 import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
+import StatementCompiler from "@emcjs/logic/compiler/StatementCompiler.js";
+import LogicStatement from "@emcjs/logic/compiler/statement/LogicStatement.js";
 import TrackerLogicDataCollector from "../logic/TrackerLogicDataCollector.js";
 
 const EVENTS = ["load", "change"];
@@ -41,17 +42,22 @@ export default class BadgeFilterIconHandler extends EventTarget {
     }
 
     #compileLogic(valueRef, logic) {
-        if (typeof logic == "object") {
-            const logicFn = LogicCompiler.compile(logic);
-            this.#logics.set(valueRef, logicFn);
-            const logicValue = this.#execute(logicFn);
-            this.#values.set(valueRef, logicValue);
-        } else if (logic != null) {
-            this.#logics.set(valueRef, logic);
-            const logicValue = !!logic;
-            this.#values.set(valueRef, logicValue);
-        } else {
+        if (logic == null) {
+            this.#logics.set(valueRef, null);
             this.#values.set(valueRef, true);
+        } else if (logic instanceof LogicStatement) {
+            this.#logics.set(valueRef, logic);
+            this.#values.set(valueRef, this.#execute(logic));
+        } else if (typeof logic === "object") {
+            const logicFn = StatementCompiler.compile(logic);
+            this.#logics.set(valueRef, logicFn);
+            this.#values.set(valueRef, this.#execute(logicFn));
+        } else if (typeof logic === "function") {
+            this.#logics.set(valueRef, logic);
+            this.#values.set(valueRef, !!logic());
+        } else {
+            this.#logics.set(valueRef, logic);
+            this.#values.set(valueRef, !!logic);
         }
     }
 
@@ -60,8 +66,8 @@ export default class BadgeFilterIconHandler extends EventTarget {
     }
 
     #execute(logicFn) {
-        if (typeof logicFn == "function") {
-            return !!logicFn((key) => {
+        if (logicFn instanceof LogicStatement) {
+            return !!logicFn.execute((key) => {
                 return this.#getValue(key);
             });
         } else if (logicFn != null) {
