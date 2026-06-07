@@ -1,6 +1,7 @@
 import {debounce} from "@emcjs/core/util/Debouncer.js";
 import LogicGraph from "@emcjs/logic/processor/LogicGraph.js";
 import SettingsObserver from "../observer/SettingsObserver.js";
+import LogicValueAliasesResource from "../../data/resource/LogicValueAliasesResource.js";
 
 const logicDebugObserver = new SettingsObserver("debug_logic");
 
@@ -9,6 +10,11 @@ const LOGIC_PROCESSOR = new LogicGraph(logicDebugObserver.value != "off" && logi
 logicDebugObserver.onChange((event) => {
     LOGIC_PROCESSOR.debug = event.value != "off" && event.value;
 });
+
+for (const key in LogicValueAliasesResource) {
+    const value = LogicValueAliasesResource[key];
+    LOGIC_PROCESSOR.setValueAlias(key, value);
+}
 
 class Logic extends EventTarget {
 
