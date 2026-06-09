@@ -5,6 +5,7 @@ import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
 import EventTargetManager from "@emcjs/core/util/event/EventTargetManager.js";
 import TypeValidator from "@emcjs/core/util/type/TypeValidator.js";
 import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
+import "@emcjs/logic/util/LogicValidator.js";
 import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
 import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
 import "@emcjs/fe/ui/container/CaptionPanel.js";
