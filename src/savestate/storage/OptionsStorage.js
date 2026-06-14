@@ -1,10 +1,9 @@
 import ObservableStorage from "@emcjs/core/data/storage/observable/ObservableStorage.js";
-import OptionsResource from "../../data/resource/OptionsResource.js";
-import StorageDefaultValues from "../../data/StorageDefaultValues.js";
+import SavestateOptionsConfigHandler from "../../util/settings/SavestateOptionsConfigHandler.js";
 
 const CUSTOM_DEFAULTS = new Map();
 
-const defaultValues = new StorageDefaultValues(Object.entries(OptionsResource.get()));
+const defaultValues = SavestateOptionsConfigHandler.defaultValues;
 
 let INSTANCE = null;
 

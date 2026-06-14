@@ -1,15 +1,10 @@
 import OptionGroupRegistry from "@emcjs/fe/registry/form/OptionGroupRegistry.js";
 import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
 import SettingsOverlay from "@emcjs/fe/ui/settings/SettingsOverlay.js";
-import SettingsResource from "../../data/resource/SettingsResource.js";
-import SettingsConfigHandler from "../../util/settings/SettingsConfigHandler.js";
 import SettingsStorage from "../../storage/SettingsStorage.js";
 import Language from "../../util/Language.js";
 import i18n from "@emcjs/core/util/I18n.js";
-
-const options = SettingsResource.get();
-const settingsConfigHandler = new SettingsConfigHandler(options, (label) => `setting[${label}]`);
-window.settings = settingsConfigHandler;
+import TrackerSettingsConfigHandler from "../../util/settings/TrackerSettingsConfigHandler.js";
 
 const languageOptionGroup = new OptionGroupRegistry("I18n.languages");
 setLanguageOptions();
@@ -39,12 +34,12 @@ export default class TrackerSettingsOverlay extends SettingsOverlay {
     constructor() {
         super("Tracker settings");
         /* --- */
-        this.loadConfig(settingsConfigHandler.config, settingsConfigHandler.defaultValues);
+        this.loadConfig(TrackerSettingsConfigHandler.config, TrackerSettingsConfigHandler.defaultValues.unresolved);
         /* --- */
         this.addEventListener("submit", async (event) => {
             await BusyIndicatorManager.busy();
             /* --- */
-            const settings = settingsConfigHandler.convertFromFormData(event.data);
+            const settings = TrackerSettingsConfigHandler.convertFromFormData(event.data);
             SettingsStorage.setAll(settings);
             /* --- */
             applySettingsChoices(settings);
@@ -67,13 +62,13 @@ export default class TrackerSettingsOverlay extends SettingsOverlay {
     async #initValues() {
         await BusyIndicatorManager.busy();
         const values = SettingsStorage.getAll();
-        const data = settingsConfigHandler.convertToFormData(values);
+        const data = TrackerSettingsConfigHandler.convertToFormData(values);
         this.setValuesFlat(data);
         await BusyIndicatorManager.unbusy();
-    };
+    }
 
     async #loadValues(values) {
-        const data = settingsConfigHandler.convertToFormData(values);
+        const data = TrackerSettingsConfigHandler.convertToFormData(values);
         this.setValuesFlat(data, true);
     }
 

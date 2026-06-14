@@ -1,10 +1,9 @@
 import ObservableIDBProxyStorage from "@emcjs/core/data/storage/observable/ObservableIDBProxyStorage.js";
-import SettingsResource from "../data/resource/SettingsResource.js";
-import StorageDefaultValues from "../data/StorageDefaultValues.js";
+import TrackerSettingsConfigHandler from "../util/settings/TrackerSettingsConfigHandler.js";
 
 // TODO sync data to other page instances
 
-const defaultValues = new StorageDefaultValues(Object.entries(SettingsResource.get()));
+const defaultValues = TrackerSettingsConfigHandler.defaultValues;
 
 class AppSettingsStorage extends ObservableIDBProxyStorage {
 

@@ -6,14 +6,10 @@ import OptionsResource from "../../data/resource/OptionsResource.js";
 import ItemsResource from "../../data/resource/ItemsResource.js";
 import RulesetsResource from "../../data/resource/RulesetsResource.js";
 import WorldResource from "../../data/resource/WorldResource.js";
-import SettingsConfigHandler from "../../util/settings/SettingsConfigHandler.js";
 import OptionsStorage from "../../savestate/storage/OptionsStorage.js";
 import StartItemsStorage from "../../savestate/storage/StartItemsStorage.js";
 import TPL from "./SavestateOptionsOverlay.js.html" assert {type: "html"};
-
-const options = OptionsResource.get();
-const settingsConfigHandler = new SettingsConfigHandler(options, (label) => `option[${label}]`);
-window.options = settingsConfigHandler;
+import SavestateOptionsConfigHandler from "../../util/settings/SavestateOptionsConfigHandler.js";
 
 const LOCATIONS = WorldResource.get("locations");
 const LOCATION_NAMES = Object.keys(LOCATIONS).reduce((res, value) => {
@@ -48,7 +44,7 @@ export default class SavestateOptionsOverlay extends SettingsOverlay {
             this.#itemStorage.setDefault(key, 0);
         }
         /* --- */
-        this.loadConfig(settingsConfigHandler.config, settingsConfigHandler.defaultValues);
+        this.loadConfig(SavestateOptionsConfigHandler.config, SavestateOptionsConfigHandler.defaultValues.unresolved);
         /* --- */
         this.#loadPresetOptions();
         this.#optionsPresetButtonEl.addEventListener("click", () => {
@@ -61,7 +57,7 @@ export default class SavestateOptionsOverlay extends SettingsOverlay {
         this.addEventListener("submit", async (event) => {
             await BusyIndicatorManager.busy();
             /* --- */
-            const settings = settingsConfigHandler.convertFromFormData(event.data);
+            const settings = SavestateOptionsConfigHandler.convertFromFormData(event.data);
             OptionsStorage.setAll(settings);
             /* --- */
             const items = this.#itemStorage.getAll();
@@ -92,13 +88,13 @@ export default class SavestateOptionsOverlay extends SettingsOverlay {
         const items = StartItemsStorage.getAll();
         this.#itemStorage.setAll(items);
         const values = OptionsStorage.getAll();
-        const data = settingsConfigHandler.convertToFormData(values);
+        const data = SavestateOptionsConfigHandler.convertToFormData(values);
         this.setValuesFlat(data);
         await BusyIndicatorManager.unbusy();
     }
 
     async #loadValues(values) {
-        const data = settingsConfigHandler.convertToFormData(values);
+        const data = SavestateOptionsConfigHandler.convertToFormData(values);
         this.setValuesFlat(data, true);
     }
 
@@ -162,7 +158,7 @@ export default class SavestateOptionsOverlay extends SettingsOverlay {
             }
         }
 
-        const data = settingsConfigHandler.convertToFormData(options);
+        const data = SavestateOptionsConfigHandler.convertToFormData(options);
         this.setValuesFlat(data);
         this.overwriteItems(items);
     }
