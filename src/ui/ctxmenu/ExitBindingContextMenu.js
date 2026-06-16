@@ -34,12 +34,22 @@ export default class ExitBindingContextMenu extends BaseClass {
     initItems() {
         this.#exitSelectEl = document.createElement("gt-entrance-select-list");
         this.#exitSelectEl.id = "select";
+        this.#exitSelectEl.addEventListener("cancel", (event) => {
+            this.close();
+            event.stopPropagation();
+            return false;
+        });
         this.#exitSelectEl.addEventListener("change", (event) => {
             const ev = new Event("change");
             ev.value = event.value;
             this.dispatchEvent(ev);
         });
         this.#exitSelectEl.addEventListener("click", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            return false;
+        });
+        this.#exitSelectEl.addEventListener("keyup", (event) => {
             event.stopPropagation();
             event.preventDefault();
             return false;

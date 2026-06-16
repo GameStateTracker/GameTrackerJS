@@ -5,6 +5,30 @@ import TrackerSettingsConfigHandler from "../util/settings/TrackerSettingsConfig
 
 const defaultValues = TrackerSettingsConfigHandler.defaultValues;
 
+const HOTKEY_NAMES = TrackerSettingsConfigHandler.getTypeMembers("hotkey");
+const HOTKEY_PARSE_OLD = /(ctrl\+)?(shift\+)?(alt\+)?(meta\+)?(.+)?/i;
+
+function convertOldHotkeys(string) {
+    const params = HOTKEY_PARSE_OLD.exec(string ?? "");
+    let res = "";
+    if (params[1] != null) {
+        res += "ctrl ";
+    }
+    if (params[2] != null) {
+        res += "shift ";
+    }
+    if (params[3] != null) {
+        res += "alt ";
+    }
+    if (params[4] != null) {
+        res += "meta ";
+    }
+    if (params[5] != null) {
+        res += params[5] === " " ? "space" : params[5].toLowerCase();
+    }
+    return res;
+}
+
 class AppSettingsStorage extends ObservableIDBProxyStorage {
 
     constructor() {
@@ -55,7 +79,11 @@ class AppSettingsStorage extends ObservableIDBProxyStorage {
         for (const [key] of defaultValues) {
             const newValue = data[key];
             if (newValue != null) {
-                res[key] = newValue;
+                if (HOTKEY_NAMES.includes(key)) {
+                    res[key] = convertOldHotkeys(newValue);
+                } else {
+                    res[key] = newValue;
+                }
             }
         }
         super.deserialize(res);

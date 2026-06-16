@@ -61,6 +61,9 @@ export default class EntranceSelectList extends CustomElementDelegating {
         selectionHelper.addEventListener("choose", (event) => {
             this.#choose(event.value);
         });
+        selectionHelper.addEventListener("cancel", () => {
+            this.dispatchEvent(new Event("cancel"));
+        });
     }
 
     connectedCallback() {
