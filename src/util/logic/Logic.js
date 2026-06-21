@@ -11,9 +11,12 @@ logicDebugObserver.onChange((event) => {
     LOGIC_PROCESSOR.debug = event.value != "off" && event.value;
 });
 
-for (const key in LogicValueAliasesResource) {
-    const value = LogicValueAliasesResource[key];
-    LOGIC_PROCESSOR.setValueAlias(key, value);
+{ // register logic value aliases
+    const logicValueAliases = LogicValueAliasesResource.get();
+    for (const key in logicValueAliases) {
+        const value = logicValueAliases[key];
+        LOGIC_PROCESSOR.setValueAlias(key, value);
+    }
 }
 
 class Logic extends EventTarget {
@@ -93,6 +96,10 @@ class Logic extends EventTarget {
 
     reset() {
         LOGIC_PROCESSOR.reset();
+    }
+
+    getTargetNodes() {
+        return LOGIC_PROCESSOR.getTargetNodes();
     }
 
     getValue(ref) {
