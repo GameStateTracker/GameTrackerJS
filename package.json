@@ -12,7 +12,7 @@
   "dependencies": {
     "@emcjs/core": "https://github.com/ZidArgs/emcJS-Core.git/#1.2.0",
     "@emcjs/logic": "https://github.com/ZidArgs/emcJS-Logic.git/#0.2.0",
-    "@emcjs/fe": "https://github.com/ZidArgs/emcJS-FE.git/#0.1.5",
+    "@emcjs/fe": "https://github.com/ZidArgs/emcJS-FE.git/#0.1.6",
     "rtcclient": "git+https://bitbucket.org/zidargs/rtcclient.git/#1.2.13"
   },
   "devDependencies": {
