@@ -1,12 +1,13 @@
-import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
-import GlobalStyle from "@emcjs/fe/util/template/CSSTemplate.js";
-import {debounce} from "@emcjs/core/util/Debouncer.js";
 import {mix} from "@emcjs/core/mixin/Mixin.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
+import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
 import EventTargetListenerElementMixin from "@emcjs/fe/ui/mixin/EventTargetListenerElementMixin.js";
 import ElementManager from "@emcjs/fe/util/element/ElementManager.js";
-import ContextMenuManagerMixin from "@emcjs/fe/ui/mixin/ContextMenuManagerMixin.js";
-import SettingsObserver from "../../../../../util/observer/SettingsObserver.js";
+import GlobalStyle from "@emcjs/fe/util/template/CSSTemplate.js";
+import HTMLTemplate from "@emcjs/fe/util/template/HTMLTemplate.js";
 import UIRegistry from "../../../../../registry/UIRegistry.js";
+import SettingsObserver from "../../../../../util/observer/SettingsObserver.js";
 import WorldListStateEntry from "./StateEntry.js";
 
 const TPL = new HTMLTemplate(`
@@ -193,7 +194,8 @@ export default class WorldListSubList extends BaseClass {
                             type: record.type,
                             subtype: loc.props.type,
                             order: definedOrder++,
-                            record
+                            record: record.serialize(),
+                            access: deepClone(record.access)
                         });
                     }
                 }
@@ -205,10 +207,10 @@ export default class WorldListSubList extends BaseClass {
     #sortFunction(entry0, entry1) {
         const {data: data0} = entry0;
         const {data: data1} = entry1;
-        if (data0.record.access.value.orderValue < data1.record.access.value.orderValue) {
+        if (data0.access.value.orderValue < data1.access.value.orderValue) {
             return -1;
         }
-        if (data0.record.access.value.orderValue > data1.record.access.value.orderValue) {
+        if (data0.access.value.orderValue > data1.access.value.orderValue) {
             return 1;
         }
         if (data0.definedOrder < data1.definedOrder) {

@@ -1,22 +1,23 @@
 import {mix} from "@emcjs/core/mixin/Mixin.js";
-import ElementManager from "@emcjs/fe/util/element/ElementManager.js";
-import Panel from "@emcjs/fe/ui/layout/Panel.js";
+import {debounce} from "@emcjs/core/util/Debouncer.js";
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
 import "@emcjs/fe/ui/i18n/I18nLabel.js";
-import SettingsObserver from "../../../util/observer/SettingsObserver.js";
+import Panel from "@emcjs/fe/ui/layout/Panel.js";
+import ElementManager from "@emcjs/fe/util/element/ElementManager.js";
+import UIRegistry from "../../../registry/UIRegistry.js";
 import WorldListState from "../../../state/world/WorldListState.js";
 import AreaStateManager from "../../../statemanager/world/area/AreaStateManager.js";
-import UIRegistry from "../../../registry/UIRegistry.js";
-import StateDataEventManagerMixin from "../../mixin/StateDataEventManagerMixin.js";
+import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 import "../../button/FilterMenuButton.js";
 import "../../button/HintButton.js";
+import StateDataEventManagerMixin from "../../mixin/StateDataEventManagerMixin.js";
 import "./components/button/Button.js";
-import "./components/entries/Collection.js";
-import "./components/entries/Location.js";
 import "./components/entries/Area.js";
+import "./components/entries/Collection.js";
 import "./components/entries/Exit.js";
-import {debounce} from "@emcjs/core/util/Debouncer.js";
-import TPL from "./WorldList.js.html" assert {type: "html"};
-import STYLE from "./WorldList.js.css" assert {type: "css"};
+import "./components/entries/Location.js";
+import STYLE from "./WorldList.js.css" assert { type: "css" };
+import TPL from "./WorldList.js.html" assert { type: "html" };
 
 const worldListSortedObserver = new SettingsObserver("sort_worldlist_by_access");
 
@@ -192,7 +193,8 @@ export default class WorldList extends BaseClass {
                             type: record.type,
                             subtype: loc.props.type,
                             order: definedOrder++,
-                            state: record
+                            record: record.serialize(),
+                            access: deepClone(record.access)
                         });
                     }
                 }
@@ -204,10 +206,10 @@ export default class WorldList extends BaseClass {
     #sortFunction(entry0, entry1) {
         const {data: data0} = entry0;
         const {data: data1} = entry1;
-        if (data0.state.access.value.orderValue < data1.state.access.value.orderValue) {
+        if (data0.access.value.orderValue < data1.access.value.orderValue) {
             return -1;
         }
-        if (data0.state.access.value.orderValue > data1.state.access.value.orderValue) {
+        if (data0.access.value.orderValue > data1.access.value.orderValue) {
             return 1;
         }
         if (data0.definedOrder < data1.definedOrder) {
