@@ -20,6 +20,7 @@ import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 import "./components/entries/LocationListLocation.js";
 import TPL from "./LocationList.js.html" assert {type: "html"};
 import STYLE from "./LocationList.js.css" assert {type: "css"};
+import {deepClone} from "@emcjs/core/util/helper/DeepClone.js";
 
 const locationistSortedObserver = new SettingsObserver("sort_locationlist_by_access");
 
@@ -130,7 +131,8 @@ export default class LocationList extends Panel {
             elManagerData.push({
                 key: ref,
                 type: loc.type,
-                state
+                state: state.serialize(),
+                access: deepClone(state.access)
             });
         }
         // this.classList.toggle("empty", !hasElements);
@@ -151,10 +153,10 @@ export default class LocationList extends Panel {
         const {
             data: data1, element: el1
         } = entry1;
-        if (data0.state.access.value.orderValue < data1.state.access.value.orderValue) {
+        if (data0.access.value.orderValue < data1.access.value.orderValue) {
             return -1;
         }
-        if (data0.state.access.value.orderValue > data1.state.access.value.orderValue) {
+        if (data0.access.value.orderValue > data1.access.value.orderValue) {
             return 1;
         }
         return nodeTextComparator(el0, el1);
