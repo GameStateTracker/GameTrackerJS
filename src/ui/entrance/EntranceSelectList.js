@@ -1,11 +1,18 @@
 import CustomElementDelegating from "@emcjs/fe/ui/element/CustomElementDelegating.js";
 import SearchEvery from "@emcjs/core/util/search/SearchEvery.js";
 import {getInnerText} from "@emcjs/fe/util/node/ExtractText.js";
-import ListSelectionHelper from "@emcjs/fe/util/form/ListSelectionController.js";
+import ListSelectionController from "@emcjs/fe/util/form/ListSelectionController.js";
 import "@emcjs/fe/ui/form/element/input/search/SearchInput.js";
 import "./EntranceSelectOption.js";
 import TPL from "./EntranceSelectList.js.html" assert {type: "html"};
 import STYLE from "./EntranceSelectList.js.css" assert {type: "css"};
+
+const PASSING_EVENT_KEYS = [
+    "Escape",
+    "Enter",
+    "ArrowUp",
+    "ArrowDown"
+];
 
 // TODO implement tag filter
 export default class EntranceSelectList extends CustomElementDelegating {
@@ -31,6 +38,11 @@ export default class EntranceSelectList extends CustomElementDelegating {
         });
         /* --- */
         const searchEl = this.shadowRoot.getElementById("search");
+        searchEl.addEventListener("keydown", (event) => {
+            if (!PASSING_EVENT_KEYS.includes(event.key)) {
+                event.stopPropagation();
+            }
+        });
         searchEl.addEventListener("change", () => {
             const all = this.querySelectorAll(`[value]`);
             if (searchEl.value) {
@@ -57,7 +69,7 @@ export default class EntranceSelectList extends CustomElementDelegating {
         });
         /* --- */
         const scrollContainerEl = this.shadowRoot.getElementById("scroll-container");
-        const selectionHelper = new ListSelectionHelper(this, scrollContainerEl, (el) => el.value === this.value);
+        const selectionHelper = new ListSelectionController(this, scrollContainerEl, (el) => el.value === this.value);
         selectionHelper.addEventListener("choose", (event) => {
             this.#choose(event.value);
         });
