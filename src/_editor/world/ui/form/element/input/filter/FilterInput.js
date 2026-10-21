@@ -126,7 +126,7 @@ export default class FilterInput extends AbstractFormElement {
     }
 
     get resize() {
-        return this.getEnumAttribute("resize");
+        return this.getEnumAttribute("resize", Direction);
     }
 
     async renderValue(value) {

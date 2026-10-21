@@ -349,7 +349,7 @@ export default class MultiMarkerListInput extends ContextMenuManagerMixin(Abstra
     }
 
     get resize() {
-        return this.getEnumAttribute("resize");
+        return this.getEnumAttribute("resize", Direction);
     }
 
     static get observedAttributes() {

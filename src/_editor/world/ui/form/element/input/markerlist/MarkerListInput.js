@@ -298,7 +298,7 @@ export default class MarkerListInput extends ContextMenuManagerMixin(AbstractFor
     }
 
     get resize() {
-        return this.getEnumAttribute("resize");
+        return this.getEnumAttribute("resize", Direction);
     }
 
     static get observedAttributes() {
