@@ -6,6 +6,7 @@ import "@emcjs/fe/ui/i18n/I18nTooltip.js";
 import WorldListState from "../../../state/world/WorldListState.js";
 import AreaStateManager from "../../../statemanager/world/area/AreaStateManager.js";
 import StateDataEventManagerMixin from "../../mixin/StateDataEventManagerMixin.js";
+import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 import "../../button/FilterMenuButton.js";
 import "../../button/HintButton.js";
 import "./components/WorldMapView.js";
@@ -13,8 +14,6 @@ import "./components/settings/WorldMapSettingsPanel.js";
 import "./components/WorldMapTitle.js";
 import "./components/metaarea/WorldMapMetaAreaButton.js";
 import "./components/metaarea/WorldMapMetaAreaView.js";
-import "./components/detailedmaps/WorldMapDetailedMapsButton.js";
-import SettingsObserver from "../../../util/observer/SettingsObserver.js";
 import TPL from "./WorldMap.js.html" assert {type: "html"};
 import STYLE from "./WorldMap.js.css" assert {type: "css"};
 
@@ -169,7 +168,7 @@ export default class WorldMap extends BaseClass {
     }
 
     set detailed(value) {
-        this.setAttribute("detailed", !!value);
+        this.setBooleanAttribute("detailed", !!value);
     }
 
     get detailed() {

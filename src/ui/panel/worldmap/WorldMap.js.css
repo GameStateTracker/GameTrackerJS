@@ -5,42 +5,6 @@
     user-select: none;
 }
 
-#reset-transform-button {
-    position: absolute;
-    background-color: var(--page-back-color, #ffffff);
-    border-style: solid;
-    border-width: 2px;
-    border-color: var(--page-border-color-inverted, #ffffff);
-    transform-origin: bottom left;
-    width: 40px;
-    height: 40px;
-    transition: width .2s, height .2s;
-    overflow: hidden;
-}
-
-#reset-transform-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    bottom: 60px;
-    left: 10px;
-    font-size: 30px;
-    line-height: 1em;
-    cursor: pointer;
-}
-
-#detailed-maps-button {
-    position: absolute;
-    display: none;
-    box-sizing: content-box;
-    bottom: 110px;
-    left: 10px;
-}
-
-#reset-transform-button.hidden {
-    display: none;
-}
-
 #title {
     position: absolute;
     top: 10px;
