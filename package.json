@@ -1,19 +1,23 @@
 {
   "name": "gametrackerjs",
-  "version": "0.11.10",
+  "version": "0.12.0",
   "description": "Framework for GameTrackers",
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@bitbucket.org/zidargs/gametrackerjs.git"
-  },
   "author": "Denis Weiß (ZidArgs)",
   "license": "MIT",
+  "homepage": "https://github.com/GameStateTracker/GameTrackerJS",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:GameStateTracker/GameTrackerJS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GameStateTracker/GameTrackerJS/issues"
+  },
+  "type": "module",
   "dependencies": {
-    "@emcjs/core": "https://github.com/ZidArgs/emcJS-Core.git/#1.3.1",
-    "@emcjs/logic": "https://github.com/ZidArgs/emcJS-Logic.git/#0.2.1",
-    "@emcjs/fe": "https://github.com/ZidArgs/emcJS-FE.git/#0.1.14",
-    "rtcclient": "git+https://bitbucket.org/zidargs/rtcclient.git/#1.2.13"
+    "@emcjs/core": "https://github.com/ZidArgs/emcJS-Core.git/#1.4.0",
+    "@emcjs/logic": "https://github.com/ZidArgs/emcJS-Logic.git/#0.3.0",
+    "@emcjs/fe": "https://github.com/ZidArgs/emcJS-FE.git/#0.2.0",
+    "rtcclient": "https://github.com/ZidArgs/RTCClient.git/#1.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",
@@ -21,7 +25,7 @@
     "@babel/plugin-syntax-import-assertions": "^7.27.1",
     "@babel/plugin-syntax-top-level-await": "^7.14.5",
     "@stylistic/eslint-plugin": "^5.3.1",
-    "@zidargs/buildtools": "https://github.com/ZidArgs/buildtools.git/#1.1.1",
+    "@zidargs/buildtools": "https://github.com/ZidArgs/BuildTools.git/#1.2.1",
     "eslint": "^9.35.0",
     "gulp": "^4.0.2",
     "gulp-changed": "^5.0.4"
