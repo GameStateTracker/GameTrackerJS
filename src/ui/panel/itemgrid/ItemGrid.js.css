@@ -3,21 +3,28 @@
     -moz-user-select: none;
     user-select: none;
 }
+
 :host {
     display: block;
     width: min-content;
     height: min-content;
+    min-width: min-content;
+    min-height: min-content;
 }
+
 #content {
     display: content;
 }
+
 .item-row {
     display: flex;
 }
+
 .item {
     display: flex;
     padding: 2px;
 }
+
 .text,
 .icon,
 .empty {
@@ -26,6 +33,7 @@
     height: 40px;
     padding: 2px;
 }
+
 .icon {
     background-position: center;
     background-repeat: no-repeat;
