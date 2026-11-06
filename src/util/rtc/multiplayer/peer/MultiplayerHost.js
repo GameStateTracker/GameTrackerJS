@@ -22,7 +22,7 @@ export default class MultiplayerHost extends MultiplayerPeer {
 
     #reverseLookup = new Map();
 
-    #joiningClientType = ClientTypes.defaultType;
+    #joiningClientType = ClientTypes.defaultValue;
 
     #eventTargetManager = new EventTargetManager();
 

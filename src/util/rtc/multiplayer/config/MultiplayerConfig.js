@@ -53,6 +53,4 @@ export class ClientTypes extends Enum {
 
     static SPECTATOR = new this("spectator", "Spectator");
 
-    static defaultType = this.PLAYER;
-
 }
