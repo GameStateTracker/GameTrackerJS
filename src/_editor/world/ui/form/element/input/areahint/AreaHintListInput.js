@@ -5,7 +5,7 @@ import {debounce} from "@emcjs/core/util/Debouncer.js";
 import {deleteAtIndexImmuted} from "@emcjs/core/util/helper/collection/ArrayMutations.js";
 import {registerFocusable} from "@emcjs/fe/util/element/ElementFocusManager.js";
 import Direction from "@emcjs/fe/enum/Direction.js";
-import {jsonParseSafe} from "@emcjs/core/util/helper/JSON.js";
+import {safeParseJSON} from "@emcjs/core/util/json/JSON.js";
 import BusyIndicatorManager from "@emcjs/fe/util/busy/BusyIndicatorManager.js";
 import SimpleDataProvider from "@emcjs/core/util/dataprovider/SimpleDataProvider.js";
 import ModalDialog from "@emcjs/fe/ui/modal/ModalDialog.js";
@@ -131,7 +131,7 @@ export default class AreaHintListInput extends AbstractFormElement {
 
     set value(value) {
         if (typeof value === "string") {
-            value = jsonParseSafe(value);
+            value = safeParseJSON(value);
         }
         super.value = value;
     }

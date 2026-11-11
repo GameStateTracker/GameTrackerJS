@@ -1,7 +1,7 @@
 import CustomElement from "@emcjs/fe/ui/element/CustomElement.js";
 import SimpleDataProvider from "@emcjs/core/util/dataprovider/SimpleDataProvider.js";
-import jsonParse from "@emcjs/core/patches/JSONParser.js";
 import {isEqual} from "@emcjs/core/util/helper/Comparator.js";
+import {parseJSON} from "@emcjs/core/util/json/JSON.js";
 import "@emcjs/fe/ui/dataview/datalist/DataListSelect.js";
 import "@emcjs/fe/ui/form/element/components/searchheader/SearchHeader.js";
 import SavestateManager from "../../../../savestate/SavestateManager.js";
@@ -64,7 +64,7 @@ export default class SavestateList extends CustomElement {
 
     set value(value) {
         if (typeof value === "string") {
-            value = jsonParse(value);
+            value = parseJSON(value);
         }
         if (!isEqual(this.value, value)) {
             this.#value = value;
