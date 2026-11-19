@@ -2,13 +2,13 @@ import SettingsStorage from "../../storage/SettingsStorage.js";
 import ParameterStorage from "../../storage/ParameterStorage.js";
 import Savestate from "../../savestate/Savestate.js";
 import Logic from "../logic/Logic.js";
-import StorageSync from "./StorageSync.js";
+import DataSync from "./DataSync.js";
 import Counter from "../Counter.js";
+import WorldListState from "../../state/world/WorldListState.js";
 
 function handleStorageMessage(storage, msg) {
     const type = msg.type;
     switch (type) {
-        case "init":
         case "load": {
             const {data} = msg;
             if (data != null) {
@@ -27,7 +27,6 @@ function handleStorageMessage(storage, msg) {
 function handleSavestateMessage(msg) {
     const type = msg.type;
     switch (type) {
-        case "init":
         case "load": {
             const {data} = msg;
             if (data != null) {
@@ -55,13 +54,40 @@ function handleSavestateMessage(msg) {
     }
 }
 
-if (StorageSync.isActive()) {
+function handleAreaChange(msg) {
+    WorldListState.area = msg.data;
+}
+
+if (DataSync.isActive()) {
     const muted = new Counter();
 
-    StorageSync.postMessage("ready");
+    DataSync.postMessage({
+        storage: "settings",
+        type: "init",
+        data: SettingsStorage.serialize()
+    });
+    DataSync.postMessage({
+        storage: "parameter",
+        type: "init",
+        data: ParameterStorage.serialize()
+    });
+    DataSync.postMessage({
+        storage: "savestate",
+        type: "init",
+        data: Savestate.serialize()
+    });
+    DataSync.postMessage({
+        storage: "__area_change",
+        data: WorldListState.area
+    });
+    DataSync.postMessage({
+        storage: "__logic_results",
+        type: "init",
+        data: Logic.getAll()
+    });
 
     // listen
-    StorageSync.addEventListener("message", (event) => {
+    DataSync.addEventListener("message", (event) => {
         muted.add();
         const {
             storage, ...msg
@@ -76,17 +102,8 @@ if (StorageSync.isActive()) {
             case "savestate": {
                 handleSavestateMessage(msg);
             } break;
-            case "__logic_results": {
-                for (const [key, value] of Object.entries(msg.data)) {
-                    if (value) {
-                        Logic.addReachable(key);
-                    } else {
-                        Logic.deleteReachable(key);
-                    }
-                }
-                const ev = new Event("change");
-                ev.data = msg.data;
-                Logic.dispatchEvent(ev);
+            case "__area_change": {
+                handleAreaChange(msg);
             } break;
         }
         muted.sub();
@@ -96,7 +113,7 @@ if (StorageSync.isActive()) {
     SettingsStorage.addEventListener("load", (event) => {
         if (!muted.value) {
             const {data = {}} = event;
-            StorageSync.postMessage({
+            DataSync.postMessage({
                 storage: "settings",
                 type: "load",
                 data
@@ -106,7 +123,7 @@ if (StorageSync.isActive()) {
     SettingsStorage.addEventListener("change", (event) => {
         if (!muted.value) {
             const {data = {}} = event;
-            StorageSync.postMessage({
+            DataSync.postMessage({
                 storage: "settings",
                 type: "change",
                 data
@@ -118,7 +135,7 @@ if (StorageSync.isActive()) {
     ParameterStorage.addEventListener("load", (event) => {
         if (!muted.value) {
             const {data = {}} = event;
-            StorageSync.postMessage({
+            DataSync.postMessage({
                 storage: "parameter",
                 type: "load",
                 data
@@ -128,7 +145,7 @@ if (StorageSync.isActive()) {
     ParameterStorage.addEventListener("change", (event) => {
         if (!muted.value) {
             const {data = {}} = event;
-            StorageSync.postMessage({
+            DataSync.postMessage({
                 storage: "parameter",
                 type: "change",
                 data
@@ -140,7 +157,7 @@ if (StorageSync.isActive()) {
     Savestate.addEventListener("load", (event) => {
         if (!muted.value) {
             const {data = {}} = event;
-            StorageSync.postMessage({
+            DataSync.postMessage({
                 storage: "savestate",
                 type: "load",
                 data
@@ -152,7 +169,7 @@ if (StorageSync.isActive()) {
             const {
                 category = "", data = {}
             } = event;
-            StorageSync.postMessage({
+            DataSync.postMessage({
                 storage: "savestate",
                 type: "change",
                 category,
@@ -163,11 +180,41 @@ if (StorageSync.isActive()) {
     Savestate.addEventListener("notes", (event) => {
         if (!muted.value) {
             const {value = ""} = event;
-            StorageSync.postMessage({
+            DataSync.postMessage({
                 storage: "savestate",
                 type: "notes",
                 value
             });
         }
+    });
+    Savestate.addEventListener("meta", (event) => {
+        if (!muted.value) {
+            const {
+                key, value
+            } = event;
+            DataSync.postMessage({
+                storage: "savestate",
+                type: "meta",
+                key,
+                value
+            });
+        }
+    });
+
+    // send world area
+    WorldListState.addEventListener("area", (event) => {
+        DataSync.postMessage({
+            storage: "__area_change",
+            data: event.value
+        });
+    });
+
+    // send logic results
+    Logic.addEventListener("change", (event) => {
+        DataSync.postMessage({
+            storage: "__logic_results",
+            type: "change",
+            data: event.data
+        });
     });
 }

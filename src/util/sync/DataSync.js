@@ -6,15 +6,15 @@ const MODULE_PATH = new Path(import.meta.url);
 function getWorker() {
     if (SharedWorkerRegistry.isSupported()) {
         // if (SharedWorkerRegistry.supportsType("module")) {
-        //     const workerPath = MODULE_PATH.getAbsolute("./worker/StorageSync.w.js");
+        //     const workerPath = MODULE_PATH.getAbsolute("./worker/DataSync.w.js");
         //     return SharedWorkerRegistry.register("StorageSync", workerPath, "module");
         // }
-        const workerPath = MODULE_PATH.getAbsolute("./worker/StorageSync.w.leg.js");
+        const workerPath = MODULE_PATH.getAbsolute("./worker/DataSync.w.leg.js");
         return SharedWorkerRegistry.register("StorageSync", workerPath);
     }
 }
 
-class StorageSync extends EventTarget {
+class DataSync extends EventTarget {
 
     #worker = getWorker();
 
@@ -43,4 +43,4 @@ class StorageSync extends EventTarget {
 
 }
 
-export default new StorageSync();
+export default new DataSync();
