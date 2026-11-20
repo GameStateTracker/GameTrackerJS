@@ -7,10 +7,10 @@ function getWorker() {
     if (SharedWorkerRegistry.isSupported()) {
         // if (SharedWorkerRegistry.supportsType("module")) {
         //     const workerPath = MODULE_PATH.getAbsolute("./worker/DataSync.w.js");
-        //     return SharedWorkerRegistry.register("StorageSync", workerPath, "module");
+        //     return SharedWorkerRegistry.register("DataSync", workerPath, "module");
         // }
         const workerPath = MODULE_PATH.getAbsolute("./worker/DataSync.w.leg.js");
-        return SharedWorkerRegistry.register("StorageSync", workerPath);
+        return SharedWorkerRegistry.register("DataSync", workerPath);
     }
 }
 
@@ -23,7 +23,7 @@ class DataSync extends EventTarget {
         /* --- */
         if (this.#worker != null) {
             this.#worker.addEventListener("message", (event) => {
-                console.log("StorageSync", event);
+                console.log("DataSync", event);
                 const ev = new Event("message");
                 ev.data = event.data;
                 this.dispatchEvent(ev);
